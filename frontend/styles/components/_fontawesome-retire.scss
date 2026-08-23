@@ -2,22 +2,26 @@
 //
 // FontAwesome is declared inside assets/font-all.min.css.liquid, which ALSO
 // carries animate.css and two other webfonts -- so that file cannot simply be
-// unlinked. Instead this overrides the `.fa` classes.
+// unlinked. Instead this overrides everything that resolves to the font.
 //
-// Why this stops the 76KB download: a browser only fetches a @font-face file
-// when an element actually needs it to render. Once no element resolves to
-// `font-family: FontAwesome`, the font is never requested. The @font-face rule
-// can stay where it is, unused and free.
+// Why this stops the download: a browser only fetches a @font-face file when
+// an element actually needs it to render. Once nothing resolves to
+// `font-family: FontAwesome`, the font is never requested and the unused
+// @font-face rule can stay where it is, free.
 //
-// suf.css loads after font-all.min.css, so these win on source order without
-// needing !important on specificity grounds -- but the legacy rules use
-// !important themselves, so we must match it.
+// There are TWO ways this theme applies FontAwesome and both must be covered:
+//   1. `.fa fa-*` classes         -- 71 usages across sections/snippets
+//   2. `font-family: FontAwesome` set directly on pseudo-elements -- 12 places
+//      in dt-framework.css.liquid and 8 section files
+// Covering only (1) leaves the font downloading. Everything here uses
+// !important because the legacy rules do.
 
-// Every FontAwesome-bearing element, in all the forms this theme uses.
+// ---------------------------------------------------------------------------
+// 1. Class-based icons
+// ---------------------------------------------------------------------------
 $fa: '.fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"]';
 
 #{$fa} {
-  // Break the link to the webfont. This is the line that prevents the download.
   font-family: inherit !important;
 
   // The glyph lives in a private-use codepoint; without the font it renders as
@@ -27,26 +31,56 @@ $fa: '.fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"]';
   }
 }
 
+// AUDIT MODE -- on while icons are being replaced with SVGs. Renders a labelled
+// orange marker in place of each icon so missing ones identify themselves.
+// Delete this block when the sweep is done.
+#{$fa}::after {
+  content: attr(class);
+  display: inline-block;
+  padding: 0 0.35em;
+  border-radius: 2px;
+  background: #ff6a00;
+  color: #fff;
+  font: 700 10px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
 // ---------------------------------------------------------------------------
-// AUDIT MODE -- on by default while icons are being replaced with SVGs.
+// 2. Direct font-family usages on pseudo-elements.
 //
-// Renders a labelled orange marker wherever an icon used to be, so missing
-// icons are visible on the page AND identify themselves.
-//
-// To switch off: delete this block, or wrap it in `.suf-debug-fa &` and add
-// that class to <html>.
+// These are decorative glyphs, not icons, so they get plain Unicode rather than
+// SVG: the theme only used FontAwesome here for a bullet, a plus and a star.
+// Substituting the character keeps the visual intent and needs no webfont.
 // ---------------------------------------------------------------------------
-#{$fa} {
-  &::after {
-    content: attr(class);
-    display: inline-block;
-    padding: 0 0.35em;
-    border-radius: 2px;
-    background: #ff6a00;
-    color: #fff;
-    font: 700 10px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-    vertical-align: middle;
-  }
+
+// \f111 -- circle, used as a list bullet
+div[class*="sidebar"] .sidebar.list_style .filter-panel li::before,
+#accordian ul ul li::before,
+.home-product-carousel .grouped-content .additional-block ul.menu-links li a::before {
+  font-family: inherit !important;
+  content: '\2022' !important; // bullet
+}
+
+// \f067 -- plus, used as an accordion / FAQ toggle affordance
+#accordian a:not(:only-child)::after,
+.dt-sc-accordion-container .dt-sc-accordion-btn h5::after,
+.dt-sc-product_bundle .dt-sc-thumb-image > div:not(:last-child) > div:first-child::after {
+  font-family: inherit !important;
+  content: '\002B' !important; // plus sign
+}
+
+// \f005 -- star, used for testimonial attribution
+.home-testimonial-block .dt-sc-testimonial-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author::before,
+.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author::before {
+  font-family: inherit !important;
+  content: '\2605' !important; // black star
+}
+
+// \f105 -- angle-right, footer menu. The legacy rule is already commented out;
+// this is here so the sweep is complete if it is ever re-enabled.
+.site-footer .footer_menu.dt-sc-list li a::before {
+  font-family: inherit !important;
+  content: '\203A' !important; // single right angle quote
 }
