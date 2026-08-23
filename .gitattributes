@@ -1,0 +1,25 @@
+# Normalize line endings. The repo lives on the WSL filesystem but is also
+# touched from Windows tooling, so pin LF in the repo AND in the working tree
+# to stop autocrlf from producing whole-file diffs.
+* text=auto eol=lf
+
+# Binary assets: never touch.
+*.png binary
+*.gif binary
+*.jpg binary
+*.jpeg binary
+# Inherited SVGs (one is a 5k-line SVG webfont, one has CRCRLF endings):
+# leave the bytes exactly as committed.
+*.svg -text
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+
+# Generated -- collapse in diffs and mark for GitHub's language stats.
+assets/suf.css linguist-generated=true
+
+# Vendored/minified: don't count toward language stats, don't diff.
+assets/*.min.js linguist-vendored=true
+assets/*.min.css linguist-vendored=true

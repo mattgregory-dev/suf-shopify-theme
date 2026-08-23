@@ -1,0 +1,6 @@
+node_modules/
+
+# Sass build artifacts (assets/suf.css IS committed so `shopify theme push`
+# works from a clean clone without running a build first)
+assets/suf.css.map
+.sass-cache/
