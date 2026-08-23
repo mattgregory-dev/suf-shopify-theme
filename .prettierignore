@@ -22,3 +22,6 @@ locales/
 # Remove entries here as the underlying syntax errors get fixed.
 assets/ajax-cart.js.liquid
 assets/dt-theme.js.liquid
+
+# Retired legacy stylesheet, kept for reference only -- never reformat.
+assets/custom.css
