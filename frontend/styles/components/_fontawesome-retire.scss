@@ -1,0 +1,52 @@
+// Retire FontAwesome without touching the legacy theme.
+//
+// FontAwesome is declared inside assets/font-all.min.css.liquid, which ALSO
+// carries animate.css and two other webfonts -- so that file cannot simply be
+// unlinked. Instead this overrides the `.fa` classes.
+//
+// Why this stops the 76KB download: a browser only fetches a @font-face file
+// when an element actually needs it to render. Once no element resolves to
+// `font-family: FontAwesome`, the font is never requested. The @font-face rule
+// can stay where it is, unused and free.
+//
+// suf.css loads after font-all.min.css, so these win on source order without
+// needing !important on specificity grounds -- but the legacy rules use
+// !important themselves, so we must match it.
+
+// Every FontAwesome-bearing element, in all the forms this theme uses.
+$fa: '.fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"]';
+
+#{$fa} {
+  // Break the link to the webfont. This is the line that prevents the download.
+  font-family: inherit !important;
+
+  // The glyph lives in a private-use codepoint; without the font it renders as
+  // tofu. Suppress it.
+  &::before {
+    content: none !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// AUDIT MODE -- on by default while icons are being replaced with SVGs.
+//
+// Renders a labelled orange marker wherever an icon used to be, so missing
+// icons are visible on the page AND identify themselves.
+//
+// To switch off: delete this block, or wrap it in `.suf-debug-fa &` and add
+// that class to <html>.
+// ---------------------------------------------------------------------------
+#{$fa} {
+  &::after {
+    content: attr(class);
+    display: inline-block;
+    padding: 0 0.35em;
+    border-radius: 2px;
+    background: #ff6a00;
+    color: #fff;
+    font: 700 10px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
