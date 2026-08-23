@@ -96,6 +96,53 @@ additive rule exists to prevent. `suf.liquid` puts `class="suf-body"` on
 `.suf-body`, while component classes (`.suf-footer`, `.suf-social`) are safe
 unscoped because the prefix already makes them unique.
 
+## Accessibility baseline
+
+Applied to all new and forked work from 2026-08-23. Not chasing a specific
+conformance level — these are the practices that prevent the common failures.
+
+**Every interactive control needs an accessible name.** For an icon-only
+control the name goes on the *control*, not the icon:
+
+```liquid
+<a href="{{ routes.cart_url }}" aria-label="{{ 'cart.general.title' | t }}, 3 items">
+  {% render 'suf-icon', icon: 'cart' %}
+</a>
+```
+
+**Icons are decorative by default.** `snippets/suf-icon.liquid` emits
+`aria-hidden="true" focusable="false"` unless you pass `label`. Pass `label`
+only when the icon is the whole control and nothing else names it — never both
+that and an `aria-label` on the parent, or it is announced twice.
+
+**Never `display: none` text that assistive tech still needs.** Use the
+`visually-hidden` mixin in `frontend/styles/_mixins.scss`. `display: none`
+removes the element from the accessibility tree; the mixin does not. The header
+icons were the case in point: the vendor's `.icon__fallback-text` spans were
+the only accessible name those links had, so hiding them the obvious way would
+have produced three unlabelled links.
+
+**Do not duplicate information to assistive tech.** The cart count is in the
+link's `aria-label`, so the visible badge carries `aria-hidden="true"` — it is
+announced once, not twice.
+
+**Landmarks get names, not redundant roles.** `<nav aria-label="Menu">`, not
+`<nav role="navigation">`; the element already implies the role.
+
+**Keep the focus ring.** `:focus-visible` styling in `_suf-base.scss` is
+deliberate. A layout can have no visible focus indicator only if it has
+something better, and none of this does yet.
+
+**Prefer real semantics.** A control that toggles something should be a
+`<button>` with `aria-expanded`, not a `<div>` with a class. The inherited
+header violates this — the mobile menu toggle is a `<div>` and nothing tracks
+expanded state. That is fixed as part of the vanilla-JS rewrite, since it needs
+the JS to maintain the attribute, not just markup.
+
+**How to check:** tab through the page and confirm every stop is visible and
+announces something meaningful, then inspect the accessibility tree in DevTools.
+Both take a minute and catch nearly everything at this level.
+
 ## Naming: the `suf` prefix marks new work
 
 **Everything net-new carries a `suf` marker. This is permanent, not a migration
