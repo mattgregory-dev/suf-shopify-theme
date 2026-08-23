@@ -42,10 +42,13 @@ defaults to `--live-reload hot-reload`. That is not a reason to add a bundler.
 
 `.theme-check.yml` extends `theme-check:recommended`.
 
-- **Baseline is ~719 offenses. This is inherited and expected** for a Vintage
+- **Baseline is ~735 offenses. This is inherited and expected** for a Vintage
   theme (`DeprecatedFilter`, `DeprecatedTag`, lazysizes). **Do not mass-fix.**
   Treat it as a ratchet: lint new work, leave the legacy count alone. It was
-  ~1,080 before unreferenced sections and snippets were removed.
+  ~1,080 before unreferenced sections and snippets were removed, and ~719
+  before `sections/suf-header.liquid` was forked. The fork duplicates 16 of
+  `header.liquid`'s own offenses; that 16 disappears when the legacy header is
+  eventually deleted. New code should still add none.
 - **Trap: `--fail-level` does not work.** Verified on CLI 3.92.1 — exits `0`
   with 178 errors present, at every level. CI gating must parse
   `--output json` and count offenses itself.

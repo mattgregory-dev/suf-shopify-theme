@@ -27,6 +27,21 @@ shopify theme dev    # local server, hot-reloads CSS and sections
 `assets/suf.css` is generated and gitignored, so **a clean clone has no compiled
 CSS**. Always build before pushing — `npm run deploy` does both.
 
+## Two layouts
+
+| Layout | Used by | Weight |
+|---|---|---|
+| `layout/theme.liquid` | every inherited template | the full legacy stack: jQuery, Swiper, select2, handlebars, lazysizes, four legacy stylesheets |
+| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js`, the Indivisible fonts — plus jQuery and two legacy stylesheets, temporarily, for the forked header |
+
+A template opts in with `"layout": "suf"` (JSON) or `{% layout 'suf' %}`
+(Liquid). Only `suf-*` sections belong on the suf layout — inherited sections
+are styled by `dt-framework.css`, which it does not load.
+
+The suf layout has **no cookie banner yet**, and its header is a fork of the
+legacy one that is still being reduced. Read
+[docs/migration.md](docs/migration.md) before assigning it to a live page.
+
 ## Documentation
 
 | Read | For |

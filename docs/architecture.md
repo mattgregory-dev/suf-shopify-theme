@@ -48,6 +48,54 @@ assets/suf.js            hand-written native ES module (NOT generated)
 
 Both files load from `layout/theme.liquid`, marked with `{% comment %}`.
 
+## Layouts: `theme.liquid` and `suf.liquid`
+
+There are two layouts, and which one a page uses is the single biggest factor in
+what it weighs.
+
+| Layout | Used by | Loads |
+|---|---|---|
+| `layout/theme.liquid` | every inherited template | jQuery, dt-plugins (Swiper), select2, handlebars, dt-theme.js, dT_main*.js, ajax-cart, lazysizes, dt-framework.css, dt-custom.css, swiper, select2.css, `suf.css`, `suf.js` |
+| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js`, the Indivisible fonts, `content_for_header` — plus jQuery, `dt-framework.css`, `dt-custom.css` and the two search files, **only** for the forked header |
+
+A template opts in with a top-level key (JSON) or a tag (Liquid):
+
+```json
+{ "layout": "suf", "sections": { "main": { "type": "suf-main-page" } } }
+```
+
+```liquid
+{% layout 'suf' %}
+```
+
+`templates/password.json` already uses the JSON form for `layout/password.liquid`
+— that is the in-repo proof it works on a Vintage theme.
+
+### Rules for suf.liquid
+
+- **Never add a legacy asset back to it.** If a section needs jQuery or
+  dt-framework.css, the section is what needs porting. The moment this layout
+  loads the legacy stack it stops being worth having.
+- **Only `suf-*` sections belong in a suf template.** Inherited sections are
+  styled by `dt-framework.css` and will render unstyled here.
+- **No lazysizes.** Use native `loading="lazy"`, not `class="lazyload"`.
+- **The header is a fork, not new code.** `sections/suf-header.liquid` began as
+  a verbatim copy of `sections/header.liquid` so it can be reduced without
+  touching the ~30 templates that render the original. The legacy assets in the
+  layout exist solely to keep it working and come off as it shrinks. Checklist
+  in [migration.md](migration.md#reducing-the-forked-header).
+- **Never add to the legacy block in the layout.** If something needs jQuery or
+  `dt-framework.css`, port the section instead.
+
+### Why `suf.css` base rules are scoped under `.suf-body`
+
+`suf.css` is loaded by *both* layouts, so an unscoped reset or base-typography
+rule in it would restyle all ~30 inherited templates — exactly the collision the
+additive rule exists to prevent. `suf.liquid` puts `class="suf-body"` on
+`<body>`; `theme.liquid` does not. Base and `.rte` rules therefore nest under
+`.suf-body`, while component classes (`.suf-footer`, `.suf-social`) are safe
+unscoped because the prefix already makes them unique.
+
 ## Naming: the `suf` prefix marks new work
 
 **Everything net-new carries a `suf` marker. This is permanent, not a migration
