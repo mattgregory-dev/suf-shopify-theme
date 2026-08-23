@@ -1,0 +1,163 @@
+@use '../mixins' as m;
+
+// snippets/suf-search.liquid
+//
+// Ported from the inline <style> that lived in snippets/dT_top-search.liquid,
+// rewritten against the design tokens. The old rules read --DTTertiaryColor,
+// --DTColor_Border, --DT_Button_Border_Radius and --DTRadius; those come from
+// the legacy theme and are not what a rebuilt component should follow.
+//
+// Scoped under .suf-body, like every other partial here: suf.css is served on
+// both layouts, and the legacy header renders its own search panel.
+
+.suf-body {
+  .suf-search {
+    position: relative;
+    z-index: 5;
+    background: var(--suf-color-bg);
+    border-block-end: 1px solid var(--suf-color-border);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .suf-search__inner {
+    width: 100%;
+    max-width: var(--suf-container);
+    margin-inline: auto;
+    padding: var(--suf-space-md);
+  }
+
+  .suf-search__form {
+    display: flex;
+    align-items: center;
+    gap: var(--suf-space-sm);
+  }
+
+  // The visible placeholder is enough for sighted users; the label stays for
+  // everyone else rather than being dropped.
+  .suf-search__label {
+    @include m.visually-hidden;
+  }
+
+  .suf-search__field {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    border: 1px solid var(--suf-color-border);
+    border-radius: var(--suf-radius);
+    padding-inline: var(--suf-space-sm);
+  }
+
+  .suf-search__input {
+    flex: 1 1 auto;
+    border: 0;
+    background: none;
+    padding: var(--suf-space-sm);
+    font: inherit;
+    color: var(--suf-color-text);
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  // The ring goes on the field, since the input's own border is suppressed.
+  .suf-search__field:focus-within {
+    outline: 2px solid var(--suf-color-focus);
+    outline-offset: 2px;
+  }
+
+  .suf-search__submit,
+  .suf-search__close {
+    display: grid;
+    place-items: center;
+    appearance: none;
+    background: none;
+    border: 0;
+    padding: var(--suf-space-sm);
+    color: var(--suf-color-text);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--suf-color-accent);
+    }
+  }
+
+  /* ---- suggestions ---- */
+
+  .suf-search__results {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--suf-space-sm);
+    margin: var(--suf-space-sm) 0 0;
+    padding: 0;
+    list-style: none;
+
+    &[hidden] {
+      display: none;
+    }
+
+    @include m.from(m.$bp-md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include m.from(m.$bp-lg) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .suf-search__result {
+    display: flex;
+    align-items: center;
+    gap: var(--suf-space-sm);
+    padding: var(--suf-space-sm);
+    border: 1px solid var(--suf-color-border);
+    border-radius: var(--suf-radius);
+
+    // Keyboard highlight and hover are the same affordance deliberately: the
+    // arrow keys should look like pointing at a row.
+    &.is-active,
+    &:hover {
+      border-color: var(--suf-color-link);
+      background: color-mix(in srgb, var(--suf-color-link) 6%, transparent);
+    }
+  }
+
+  .suf-search__result-image {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--suf-radius);
+  }
+
+  .suf-search__result-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--suf-space-xs);
+    min-width: 0;
+  }
+
+  .suf-search__result-link {
+    color: var(--suf-color-text);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--suf-color-link);
+      text-decoration: underline;
+    }
+  }
+
+  .suf-search__result-price {
+    color: var(--suf-color-text-muted);
+    font-size: 0.875rem;
+  }
+
+  // Announced, not shown: the results themselves are the visible feedback.
+  .suf-search__status {
+    @include m.visually-hidden;
+  }
+}

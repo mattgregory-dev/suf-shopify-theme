@@ -1,0 +1,74 @@
+{% comment %}
+  The sticky search panel, replacing snippets/dT_top-search.liquid.
+
+  The original was a Vue template -- v-model, v-for, :class -- rendered by
+  assets/dT_main.js, a 125 KB webpack bundle of Vue plus axios, with
+  dT_main_app.js on top. Two libraries and 148 KB to autocomplete a search box.
+  This is plain markup driven by assets/suf-search.js, which calls Shopify's
+  native /search/suggest.json.
+
+  The legacy snippet is untouched; the legacy header still renders it.
+
+  Accessibility: this is a combobox. The input owns the listbox via
+  aria-controls, reports open state with aria-expanded, and points at the
+  highlighted option with aria-activedescendant. Results are announced through
+  the status region rather than silently appearing. suf-search.js maintains all
+  of it -- if you change the markup, keep those attributes in sync.
+
+  It degrades correctly with no JavaScript: the form is a real GET to
+  routes.search_url, so pressing Enter searches. Only the suggestions are lost.
+{% endcomment %}
+
+{%- comment -%}
+  /search/suggest.json returns price as a bare number, so the symbol has to
+  come from Liquid rather than be hardcoded in the module.
+{%- endcomment -%}
+<div class="suf-search" data-suf-search data-currency-symbol="{{ cart.currency.symbol }}" hidden>
+  <div class="suf-search__inner">
+    <form
+      class="suf-search__form"
+      method="get"
+      action="{{ routes.search_url }}"
+      role="search"
+      autocomplete="off"
+    >
+      <label class="suf-search__label" for="suf-search-input">
+        {{ 'general.search.placeholder' | t | default: 'Search' }}
+      </label>
+
+      <div class="suf-search__field">
+        <input
+          type="search"
+          id="suf-search-input"
+          name="q"
+          class="suf-search__input"
+          placeholder="{{ 'general.search.placeholder' | t | default: 'Search our store' }}"
+          autocomplete="off"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="suf-search-results"
+          aria-autocomplete="list"
+        >
+        <input type="hidden" name="options[prefix]" value="last">
+
+        <button class="suf-search__submit" type="submit">
+          {% render 'suf-icon', icon: 'search', label: 'Search' %}
+        </button>
+      </div>
+
+      <button class="suf-search__close" type="button" data-suf-search-close aria-label="Close search">
+        {% render 'suf-icon', icon: 'close' %}
+      </button>
+    </form>
+
+    <ul
+      class="suf-search__results"
+      id="suf-search-results"
+      role="listbox"
+      aria-label="Search suggestions"
+      hidden
+    ></ul>
+
+    <p class="suf-search__status" role="status" aria-live="polite"></p>
+  </div>
+</div>

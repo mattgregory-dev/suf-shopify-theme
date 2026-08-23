@@ -12,5 +12,6 @@
 // type="module" is deferred by default, so the DOM is already parsed here.
 
 import "./suf-header.js";
+import "./suf-search.js";
 
 console.debug("[suf] loaded");
