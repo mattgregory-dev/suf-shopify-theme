@@ -1,0 +1,34 @@
+// Design tokens for net-new SUF code.
+//
+// These are CSS custom properties, not Sass variables, on purpose: they are
+// readable at runtime, so they can be overridden per-section, per-template, or
+// from a Liquid `settings.*` value in an inline <style> block. A Sass variable
+// is compile-time only and cannot do that.
+//
+// Everything here is prefixed `--suf-` so it can never collide with the
+// inherited theme's styles.
+
+:root {
+  // Color
+  --suf-color-text: #1a1a1a;
+  --suf-color-text-muted: #6b6b6b;
+  --suf-color-bg: #ffffff;
+  --suf-color-accent: #1a1a1a;
+  --suf-color-border: #e0e0e0;
+
+  // Typography
+  --suf-font-body: inherit;
+  --suf-font-size-base: 1rem;
+  --suf-line-height: 1.5;
+
+  // Spacing scale
+  --suf-space-xs: 0.25rem;
+  --suf-space-sm: 0.5rem;
+  --suf-space-md: 1rem;
+  --suf-space-lg: 2rem;
+  --suf-space-xl: 4rem;
+
+  // Other
+  --suf-radius: 4px;
+  --suf-transition: 150ms ease;
+}

@@ -1,0 +1,19 @@
+@use '../mixins' as m;
+
+// Delete this file once real components exist. It is here to demonstrate the
+// intended pattern: tokens via var(), breakpoints via mixin, native nesting.
+
+.suf-example {
+  padding: var(--suf-space-md);
+  color: var(--suf-color-text);
+  border: 1px solid var(--suf-color-border);
+  border-radius: var(--suf-radius);
+
+  &__title {
+    margin-block-end: var(--suf-space-sm);
+  }
+
+  @include m.from(m.$bp-md) {
+    padding: var(--suf-space-lg);
+  }
+}
