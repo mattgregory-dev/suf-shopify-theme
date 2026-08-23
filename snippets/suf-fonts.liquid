@@ -1,0 +1,67 @@
+{% comment %}
+  Font declarations, shared by every layout.
+
+  Usage:
+    {% render 'suf-fonts', apply: true %}        <- declares faces, applies Arial
+    {% render 'suf-fonts', apply: true, family: "'Hanken Grotesk', Arial, sans-serif" %}
+
+  The faces are always declared; a browser only downloads a font something
+  actually uses, so declaring on a layout that does not apply them costs
+  nothing. `family` chooses what the applying rules set, which is how Hanken
+  Grotesk is live on layout/suf.liquid while layout/theme.liquid stays on Arial
+  until the ~30 legacy templates have been reviewed.
+
+  The applying rules carry !important because both layouts load
+  dt-framework.css, which sets font-family on the same elements at higher
+  specificity.
+
+  ---------------------------------------------------------------------------
+  WHY NOT INDIVISIBLE
+  ---------------------------------------------------------------------------
+  All four Indivisible files -- both .woff and both .woff2, in this repo AND in
+  the live theme, byte-identical -- were destroyed by a UTF-8 text round trip.
+  Every byte >= 0x80 became U+FFFD (EF BF BD), inflating each file ~75% past
+  the length its own header declares. A structural decode finds 0 of 15 WOFF
+  tables readable: tags read "=o?=" and "Nloc" rather than "cmap" and "glyf".
+  No browser can parse them, and the substitution is lossy, so they cannot be
+  repaired. The site rendered in Arial for years as a result.
+
+  Hanken Grotesk replaces it: OFL-licensed, self-hosted, 400 and 700, woff2,
+  latin subset, 27 KB for the pair. Self-hosted rather than linked from
+  Google's CDN -- two fewer origins on the critical path, and Google Fonts
+  sends visitor IPs to Google. See docs/migration.md.
+
+  Both files were verified before being committed: signature wOF2, declared
+  length equal to actual byte length, zero U+FFFD sequences. Do that check on
+  any font added here.
+{% endcomment %}
+{%- assign family = family | default: 'Arial, Helvetica, sans-serif' -%}
+<style>
+  @font-face {
+    font-family: 'Hanken Grotesk';
+    src: url("{{ 'hanken-grotesk-400.woff2' | asset_url }}") format('woff2');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: 'Hanken Grotesk';
+    src: url("{{ 'hanken-grotesk-700.woff2' | asset_url }}") format('woff2');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  {%- if apply -%}
+    p, blockquote, li, a, body, footer, aside, nav, section, article, div, span,
+    input, button, textarea, label {
+      font-family: {{ family }} !important;
+      font-weight: 400;
+    }
+    h1, h2, h3, h4, h5, h6, strong, b, th {
+      font-family: {{ family }} !important;
+      font-weight: 700;
+    }
+  {%- endif -%}
+</style>
