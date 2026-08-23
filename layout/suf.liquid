@@ -1,0 +1,160 @@
+<!doctype html>
+{% comment %}
+  ============================================================================
+  layout/suf.liquid — the layout for rebuilt pages.
+  ============================================================================
+
+  Selected per template, not globally. A JSON template opts in with a top-level
+  key; a Liquid template with a tag:
+
+      { "layout": "suf", "sections": { ... } }        <- JSON
+      {% layout 'suf' %}                              <- Liquid
+
+  templates/password.json already uses the JSON form for layout/password.liquid,
+  which is the proof this works on a Vintage theme.
+
+  WHAT THIS LAYOUT LOADS, AND WHY
+  -------------------------------
+  Net-new:  suf.css, suf.js.
+  Legacy:   jQuery, dt-framework.css, dt-custom.css, dT_main.js, dT_main_app.js
+            — and only because sections/suf-header.liquid still needs them.
+            Each is fenced below and annotated.
+
+  NOT loaded, deliberately: dt-plugins.js (Swiper), dt-theme.js, handlebars,
+  select2 and its stylesheet, ajax-cart, lazysizes, swiper-bundle.min.css.
+  That is roughly 470 KB that theme.liquid loads and this layout does not.
+
+  Consequences, all intended:
+
+  * NO CART DRAWER. The header cart icon falls back to its own href and goes to
+    the cart page. New pages link straight to checkout, so the drawer is not
+    wanted. The mobile NAV drawer still works, because its code is inline in
+    the header section rather than in any file dropped above.
+  * NO LAZYSIZES. Use native loading="lazy", not class="lazyload".
+  * NO COOKIE BANNER yet. See docs/migration.md — resolve before any suf page
+    is assigned to a live page handle.
+  * Legacy sections other than the forked header render only as well as
+    dt-framework.css happens to style them. Prefer suf-* sections here.
+
+  The legacy block below is temporary and shrinks as sections/suf-header.liquid
+  is reduced. Do not add to it — port the section instead. The reduction
+  checklist is in docs/migration.md.
+{% endcomment %}
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="{{ settings.primary_color }}">
+
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if canonical_url != blank -%}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {%- endif -%}
+
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32 }}" type="image/png">
+    {%- endif -%}
+
+    {% render 'SEO-tags' %}
+    {% render 'social-meta-tags' %}
+
+    {% comment %}
+      Both weights are used above the fold -- 400 for body, 700 for headings and
+      the header nav -- so both are preloaded. 27 KB for the pair.
+    {% endcomment %}
+    {{ 'hanken-grotesk-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'hanken-grotesk-700.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+
+    {% comment %}
+      ---- LEGACY, FOR THE HEADER ONLY. See the note at the top of this file.
+      Both stylesheets are Liquid-templated CSS rendered against merchant
+      settings, so neither can be compiled into suf.css. They come off the
+      moment the forked header stops depending on them.
+    {% endcomment %}
+    {{ 'dt-framework.css' | asset_url | stylesheet_tag }}
+    {{ 'dt-custom.css' | asset_url | stylesheet_tag }}
+    {% comment %} ---- end legacy CSS {% endcomment %}
+
+    {% comment %} Loaded last so it wins the cascade against dt-framework. {% endcomment %}
+    {{ 'suf.css' | asset_url | stylesheet_tag }}
+
+    {% comment %}
+      Hanken Grotesk is applied on this layout only. theme.liquid stays on Arial
+      until the legacy templates have been reviewed -- see docs/migration.md.
+    {% endcomment %}
+    {% render 'suf-fonts', apply: true, family: "'Hanken Grotesk', Arial, Helvetica, sans-serif" %}
+
+    {% comment %}
+      ---- LEGACY, FOR THE HEADER ONLY.
+      jQuery is render-blocking on purpose: the header section contains an
+      inline <script> that runs during parse and would throw without it. That
+      inline script is plain jQuery — no plugins, no ajax, no animation — so it
+      is portable to roughly 70 lines of vanilla. Doing that alone will NOT
+      remove jQuery, because dT_main.js and dT_main_app.js are jQuery too.
+    {% endcomment %}
+    {% # theme-check-disable ParserBlockingScript %}
+    <script src="{{ 'jquery-3.5.1.min.js' | asset_url }}"></script>
+    {% # theme-check-enable ParserBlockingScript %}
+
+    {% comment %}
+      dT_main_app.js reads exactly these three strings, and nothing else, from
+      the global that theme.liquid calls DT_THEME. Reproduced here rather than
+      shared so this layout has no dependency on theme.liquid.
+    {% endcomment %}
+    <script>
+      var DT_THEME = {
+        strings: {
+          viewMyWishList: "View my wishlist",
+          minCompareProduct: {{ 'products.product.minCompareProduct' | t | json }},
+          minCompareProductNav: {{ 'products.product.minCompareProductNav' | t | json }}
+        },
+        moneyFormat: {{ shop.money_format | json }}
+      };
+    </script>
+    {% comment %} ---- end legacy head JS {% endcomment %}
+
+    {% comment %}
+      Required. Shopify injects analytics, app embeds and the theme editor
+      bridge here. Removing it breaks the editor and app blocks.
+    {% endcomment %}
+    {{ content_for_header }}
+  </head>
+
+  <body class="suf-body template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}">
+    <a class="suf-skip-link" href="#suf-main">Skip to content</a>
+
+    {% comment %}
+      ---- LEGACY SCAFFOLDING, FOR THE HEADER ONLY.
+      The header's inline JS targets these two elements by class and fills the
+      first one with the mobile menu. They are empty markup, not behaviour, but
+      the mobile nav does not open without them.
+    {% endcomment %}
+    <div class="mobile-menu" data-menu="dt-main-menu"></div>
+    <div class="mobile-menu-overlay"></div>
+
+    {% section 'suf-header' %}
+    {% comment %} ---- end legacy scaffolding {% endcomment %}
+
+    <main id="suf-main" class="suf-main">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'suf-footer' %}
+
+    {% comment %}
+      ---- LEGACY, FOR THE HEADER ONLY.
+      The sticky predictive search. Between them these two cover all five of
+      the search bar's DOM identifiers; dT_search.js and dT_SearchNew.js were
+      the superseded implementations and are already deleted. Shopify's native
+      /search/suggest.json makes replacing these a small fetch module rather
+      than a 148 KB port — that is the step that finally drops jQuery.
+    {% endcomment %}
+    <script src="{{ 'dT_main.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'dT_main_app.js' | asset_url }}" defer="defer"></script>
+    {% comment %} ---- end legacy body JS {% endcomment %}
+
+    {% comment %} Net-new SUF scripts. Native ES module; type=module implies defer. {% endcomment %}
+    <script src="{{ 'suf.js' | asset_url }}" type="module"></script>
+  </body>
+</html>
