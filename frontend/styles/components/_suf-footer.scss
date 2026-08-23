@@ -1,0 +1,151 @@
+@use '../mixins' as m;
+
+// sections/suf-footer.liquid
+//
+// Colour lives here, not in section settings. The legacy footer exposes 30+
+// colour pickers because the theme had no tokens; overriding a --suf-* token is
+// the replacement for that, and it changes every component at once instead of
+// one section.
+
+.suf-footer {
+  margin-block-start: var(--suf-space-xl);
+  background: var(--suf-footer-bg);
+  color: var(--suf-footer-text);
+
+  a {
+    color: var(--suf-footer-link);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--suf-footer-link-hover);
+    }
+  }
+
+  &__inner {
+    display: grid;
+    gap: var(--suf-space-lg);
+    padding-block: var(--suf-space-xl);
+    grid-template-columns: 1fr;
+
+    @include m.from(m.$bp-md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    // The live footer is four columns: about, menu, more info, newsletter.
+    @include m.from(m.$bp-lg) {
+      grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+      gap: var(--suf-space-xl);
+    }
+  }
+
+  &__title {
+    margin-block-end: var(--suf-space-md);
+    font-size: var(--suf-font-size-h5);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  &__logo-img {
+    max-width: 240px;
+  }
+
+  &__about {
+    max-width: var(--suf-measure);
+    color: var(--suf-color-text-muted);
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li + li {
+      margin-block-start: var(--suf-space-sm);
+    }
+  }
+
+  // Merchant HTML (partner logos, the Klaviyo embed). Constrained so an
+  // oversized <img width="310"> cannot blow out the grid column.
+  &__html img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  // Partner seals inside a Custom HTML block. Sized down from the raw
+  // width attributes the live site uses, which are 310px and 160px.
+  &__partners {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--suf-space-md);
+    margin-block-start: var(--suf-space-md);
+
+    img {
+      width: auto;
+      max-height: 48px;
+    }
+  }
+
+  &__bar {
+    background: var(--suf-footer-bar-bg);
+    color: var(--suf-footer-bar-text);
+
+    a {
+      color: var(--suf-footer-bar-text);
+    }
+  }
+
+  &__bar-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--suf-space-md);
+    padding-block: var(--suf-space-md);
+  }
+
+  &__copyright {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  &__payment {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--suf-space-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    svg {
+      display: block;
+      width: 38px;
+      height: auto;
+    }
+  }
+}
+
+.suf-social {
+  display: flex;
+  gap: var(--suf-space-sm);
+  margin-block-start: var(--suf-space-md);
+  padding: 0;
+  list-style: none;
+
+  &__link {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--suf-color-border);
+    border-radius: 50%;
+    transition:
+      border-color var(--suf-transition),
+      color var(--suf-transition);
+
+    &:hover,
+    &:focus-visible {
+      border-color: currentColor;
+    }
+  }
+}

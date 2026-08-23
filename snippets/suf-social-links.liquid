@@ -1,0 +1,24 @@
+{% comment %}
+  Social links, read from the theme settings the legacy footer already uses, so
+  there is a single place to change a URL. Only links that are set render.
+
+  Each <a> is icon-only, so the icon carries an aria-label rather than being
+  hidden from assistive tech.
+{% endcomment %}
+{%- liquid
+  assign networks = 'facebook,instagram,twitter,youtube,linkedin,pinterest' | split: ','
+-%}
+<ul class="suf-social" role="list">
+  {%- for network in networks -%}
+    {%- assign key = 'social_' | append: network | append: '_link' -%}
+    {%- assign url = settings[key] -%}
+    {%- if url != blank -%}
+      {%- assign label = network | capitalize -%}
+      <li>
+        <a class="suf-social__link" href="{{ url }}" target="_blank" rel="noopener">
+          {% render 'suf-icon', icon: network, label: label %}
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

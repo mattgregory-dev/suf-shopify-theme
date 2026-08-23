@@ -1,0 +1,118 @@
+@use '../mixins' as m;
+
+// Base layer for layout/suf.liquid ONLY.
+//
+// theme.liquid loads dt-framework.css, which brings its own reset and base
+// typography. suf.liquid loads none of it, so without this block a suf page
+// renders in browser defaults: Times, 8px body margin, blue underlined links.
+//
+// Everything here is scoped under .suf-body, which only suf.liquid sets. That
+// is deliberate — suf.css is also loaded by theme.liquid, and an unscoped
+// reset there would restyle all ~30 legacy templates. Scoping is what keeps
+// this file additive.
+
+.suf-body {
+  margin: 0;
+  background: var(--suf-color-bg);
+  color: var(--suf-color-text);
+  font-family: var(--suf-font-body);
+  font-size: var(--suf-font-size-base);
+  line-height: var(--suf-line-height);
+  -webkit-font-smoothing: antialiased;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0 0 var(--suf-space-md);
+    font-family: var(--suf-font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: var(--suf-font-size-h1);
+  }
+  h2 {
+    font-size: var(--suf-font-size-h2);
+  }
+  h3 {
+    font-size: var(--suf-font-size-h3);
+  }
+
+  p,
+  ul,
+  ol {
+    margin: 0 0 var(--suf-space-md);
+  }
+
+  a {
+    color: var(--suf-color-link);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+    transition: color var(--suf-transition);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--suf-color-link-hover);
+    }
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  // A visible focus ring is the only keyboard affordance on a layout with no
+  // navigation chrome yet. Do not remove it.
+  :focus-visible {
+    outline: 2px solid var(--suf-color-focus);
+    outline-offset: 2px;
+  }
+}
+
+.suf-main {
+  display: block;
+  min-height: 50vh;
+}
+
+// Skip link: off-screen until focused. The layout has no header, so this is
+// currently the first focusable element on the page.
+.suf-skip-link {
+  position: absolute;
+  inset-inline-start: var(--suf-space-md);
+  inset-block-start: -100%;
+  z-index: 10;
+  padding: var(--suf-space-sm) var(--suf-space-md);
+  background: var(--suf-color-bg);
+  border: 2px solid var(--suf-color-focus);
+  border-radius: var(--suf-radius);
+
+  &:focus {
+    inset-block-start: var(--suf-space-md);
+  }
+}
+
+// Shared content container.
+.suf-page__inner,
+.suf-footer__inner,
+.suf-footer__bar-inner {
+  width: 100%;
+  max-width: var(--suf-container);
+  margin-inline: auto;
+  padding-inline: var(--suf-space-md);
+
+  @include m.from(m.$bp-md) {
+    padding-inline: var(--suf-space-lg);
+  }
+}

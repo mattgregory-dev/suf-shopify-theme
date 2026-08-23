@@ -7,19 +7,50 @@
 //
 // Everything here is prefixed `--suf-` so it can never collide with the
 // inherited theme's styles.
+//
+// Brand colours come from the retired custom.css; see docs/migration.md.
 
 :root {
+  // Brand
+  --suf-brand-red: #c1121f;
+  --suf-brand-navy: #003049;
+  --suf-brand-blue: #0292db;
+  --suf-brand-blue-dark: #0477b1;
+
   // Color
   --suf-color-text: #1a1a1a;
   --suf-color-text-muted: #6b6b6b;
   --suf-color-bg: #ffffff;
-  --suf-color-accent: #1a1a1a;
+  --suf-color-accent: var(--suf-brand-red);
   --suf-color-border: #e0e0e0;
+  --suf-color-link: var(--suf-color-text);
+  --suf-color-link-hover: var(--suf-brand-blue);
+  --suf-color-focus: var(--suf-brand-blue);
 
-  // Typography
-  --suf-font-body: inherit;
+  // Footer. Matches the live footer: white body, dark red bottom bar.
+  --suf-footer-bg: #ffffff;
+  --suf-footer-text: var(--suf-color-text);
+  --suf-footer-link: var(--suf-color-text);
+  --suf-footer-link-hover: var(--suf-brand-blue);
+  --suf-footer-bar-bg: #a70500;
+  --suf-footer-bar-text: #ffffff;
+
+  // Typography.
+  //
+  // Hanken Grotesk, self-hosted, 400 and 700. One family: headings differ by
+  // font-weight, not by a separate face -- the Indivisible setup used two
+  // families ("Regular" and "Bold"), which is what let a broken bold file hide.
+  //
+  // These tokens only bite where .suf-body exists, i.e. on layout/suf.liquid.
+  // Legacy pages are unaffected until theme.liquid's applying rules are flipped.
+  --suf-font-body: 'Hanken Grotesk', Arial, Helvetica, sans-serif;
+  --suf-font-heading: 'Hanken Grotesk', Arial, Helvetica, sans-serif;
   --suf-font-size-base: 1rem;
-  --suf-line-height: 1.5;
+  --suf-font-size-h1: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  --suf-font-size-h2: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+  --suf-font-size-h3: 1.5rem;
+  --suf-font-size-h5: 1.0625rem;
+  --suf-line-height: 1.6;
 
   // Spacing scale
   --suf-space-xs: 0.25rem;
@@ -27,6 +58,10 @@
   --suf-space-md: 1rem;
   --suf-space-lg: 2rem;
   --suf-space-xl: 4rem;
+
+  // Layout
+  --suf-container: 1400px;
+  --suf-measure: 68ch;
 
   // Other
   --suf-radius: 4px;

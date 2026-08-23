@@ -1,0 +1,55 @@
+@use '../mixins' as m;
+
+// sections/suf-main-page.liquid, plus .rte — the merchant-authored HTML that
+// comes out of Shopify's rich text editor. Scoped under .suf-body so it cannot
+// reach legacy templates, which have their own .rte rules in dt-framework.css.
+
+.suf-page {
+  padding-block: var(--suf-space-lg);
+
+  @include m.from(m.$bp-md) {
+    padding-block: var(--suf-space-xl);
+  }
+
+  &__title {
+    margin-block-end: var(--suf-space-lg);
+  }
+
+  &__content {
+    max-width: var(--suf-measure);
+  }
+}
+
+.suf-body .rte {
+  > :last-child {
+    margin-block-end: 0;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: var(--suf-space-lg);
+  }
+
+  li {
+    margin-block-end: var(--suf-space-xs);
+  }
+
+  blockquote {
+    margin-inline: 0;
+    padding-inline-start: var(--suf-space-md);
+    border-inline-start: 3px solid var(--suf-color-accent);
+    color: var(--suf-color-text-muted);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: var(--suf-space-sm);
+    border-bottom: 1px solid var(--suf-color-border);
+    text-align: start;
+  }
+}

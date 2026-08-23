@@ -41,7 +41,11 @@ $fa: '.fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"]';
   border-radius: 2px;
   background: #ff6a00;
   color: #fff;
-  font: 700 10px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font:
+    700 10px/1.6 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
   letter-spacing: 0.02em;
   white-space: nowrap;
   vertical-align: middle;
@@ -56,7 +60,7 @@ $fa: '.fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"]';
 // ---------------------------------------------------------------------------
 
 // \f111 -- circle, used as a list bullet
-div[class*="sidebar"] .sidebar.list_style .filter-panel li::before,
+div[class*='sidebar'] .sidebar.list_style .filter-panel li::before,
 #accordian ul ul li::before,
 .home-product-carousel .grouped-content .additional-block ul.menu-links li a::before {
   font-family: inherit !important;
@@ -72,8 +76,16 @@ div[class*="sidebar"] .sidebar.list_style .filter-panel li::before,
 }
 
 // \f005 -- star, used for testimonial attribution
-.home-testimonial-block .dt-sc-testimonial-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author::before,
-.home-advanced-testimonial .advanced-testimonials-section .dt-sc-testimonial .dt-sc-testimonial-content .dt-sc-author::before {
+.home-testimonial-block
+  .dt-sc-testimonial-section
+  .dt-sc-testimonial
+  .dt-sc-testimonial-content
+  .dt-sc-author::before,
+.home-advanced-testimonial
+  .advanced-testimonials-section
+  .dt-sc-testimonial
+  .dt-sc-testimonial-content
+  .dt-sc-author::before {
   font-family: inherit !important;
   content: '\2605' !important; // black star
 }

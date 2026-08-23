@@ -3,9 +3,16 @@
 //
 // Uses @use, not @import: Dart Sass has deprecated @import.
 // Load order matters — tokens first so components can reference them.
+//
+// NOTE: this stylesheet is loaded by BOTH layouts. On theme.liquid it sits on
+// top of the legacy framework, so anything unscoped here restyles ~30 inherited
+// templates. Base and page rules are therefore scoped under `.suf-body`, a
+// class only layout/suf.liquid sets.
 
 @use 'tokens';
 @use 'mixins';
 
-@use 'components/example';
+@use 'components/suf-base';
+@use 'components/suf-page';
+@use 'components/suf-footer';
 @use 'components/fontawesome-retire';

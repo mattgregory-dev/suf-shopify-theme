@@ -1,0 +1,174 @@
+{% comment %}
+  Rebuilt footer for layout/suf.liquid.
+
+  A reimplementation, not a port: sections/footer.liquid is 1,071 lines and
+  carries 30+ colour settings that exist because the legacy theme had no design
+  tokens. Colour here comes from --suf-* custom properties in
+  frontend/styles/components/_suf-footer.scss, so the settings are content only.
+
+  Content parity with the live footer is deliberate — same four columns, same
+  links, same partner logos — so a page on this layout does not look like a
+  different site while pages are cut over one at a time.
+
+  Social links are read from the existing theme settings (settings.social_*_link)
+  rather than re-entered, so there is one place to change them and the legacy
+  footer stays in sync.
+{% endcomment %}
+
+<footer class="suf-footer" role="contentinfo">
+  <div class="suf-footer__inner">
+    {%- for block in section.blocks -%}
+      <div class="suf-footer__col suf-footer__col--{{ block.type }}" {{ block.shopify_attributes }}>
+        {%- case block.type -%}
+
+          {%- when 'about' -%}
+            {%- if block.settings.logo != blank -%}
+              <a class="suf-footer__logo" href="{{ routes.root_url }}">
+                {{ block.settings.logo
+                   | image_url: width: 480
+                   | image_tag:
+                     loading: 'lazy',
+                     alt: shop.name,
+                     class: 'suf-footer__logo-img',
+                     widths: '240, 360, 480',
+                     sizes: '(min-width: 768px) 240px, 60vw' }}
+              </a>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="suf-footer__about">{{ block.settings.text }}</p>
+            {%- endif -%}
+            {%- if section.settings.show_social -%}
+              {% render 'suf-social-links' %}
+            {%- endif -%}
+
+          {%- when 'menu' -%}
+            {%- if block.settings.title != blank -%}
+              <h2 class="suf-footer__title">{{ block.settings.title }}</h2>
+            {%- endif -%}
+            {%- assign menu = linklists[block.settings.menu] -%}
+            {%- if menu.links.size > 0 -%}
+              <ul class="suf-footer__list">
+                {%- for link in menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+          {%- when 'richtext' -%}
+            {%- if block.settings.title != blank -%}
+              <h2 class="suf-footer__title">{{ block.settings.title }}</h2>
+            {%- endif -%}
+            <div class="suf-footer__rte rte">{{ block.settings.text }}</div>
+
+          {%- when 'html' -%}
+            {%- if block.settings.title != blank -%}
+              <h2 class="suf-footer__title">{{ block.settings.title }}</h2>
+            {%- endif -%}
+            <div class="suf-footer__html">{{ block.settings.html }}</div>
+
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="suf-footer__bar">
+    <div class="suf-footer__bar-inner">
+      <p class="suf-footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
+        {%- if section.settings.copyright_text != blank %} · {{ section.settings.copyright_text }}{% endif -%}
+      </p>
+
+      {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+        {% comment %}
+          Native Shopify payment SVGs. No asset files, no icon font, and the
+          list follows whatever the merchant has actually enabled.
+        {% endcomment %}
+        <ul class="suf-footer__payment" role="list">
+          {%- for type in shop.enabled_payment_types -%}
+            <li>{{ type | payment_type_svg_tag: class: 'suf-footer__payment-icon' }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer (SUF)",
+  "tag": "section",
+  "class": "suf-footer-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social links",
+      "info": "Reads the social URLs already set in Theme settings.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Extra copyright text",
+      "info": "Appended after the year and shop name."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "about",
+      "name": "Logo and about",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "logo", "label": "Logo" },
+        { "type": "textarea", "id": "text", "label": "About text" }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Heading", "default": "Service" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "richtext",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Heading" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "html",
+      "name": "Custom HTML",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Heading" },
+        {
+          "type": "html",
+          "id": "html",
+          "label": "HTML",
+          "info": "For app embeds such as the Klaviyo newsletter form."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer (SUF)",
+      "blocks": [
+        { "type": "about" },
+        { "type": "menu" },
+        { "type": "html" },
+        { "type": "html" }
+      ]
+    }
+  ]
+}
+{% endschema %}
