@@ -16,18 +16,19 @@
   WHAT THIS LAYOUT LOADS, AND WHY
   -------------------------------
   Net-new:  suf.css, suf.js.
-  Legacy:   jQuery, dt-framework.css, dt-custom.css — and only because
-            sections/suf-header.liquid still needs them. Each is fenced below
-            and annotated.
+  Legacy:   dt-framework.css and dt-custom.css, and only because
+            sections/suf-header.liquid is still styled by them. Both are fenced
+            below.
 
-            dT_main.js and dT_main_app.js went on 2026-08-23 with the Vue
-            predictive search they existed for: 148 KB replaced by
-            assets/suf-search.js against /search/suggest.json.
+            NO JAVASCRIPT from the legacy theme is loaded here any more.
+            jQuery, dT_main.js and dT_main_app.js all went on 2026-08-23, with
+            the header script rewritten as assets/suf-header.js and the Vue
+            predictive search as assets/suf-search.js.
 
-  NOT loaded, deliberately: dt-plugins.js (Swiper), dt-theme.js, handlebars,
-  select2 and its stylesheet, ajax-cart, lazysizes, swiper-bundle.min.css,
-  dT_main.js and dT_main_app.js. That is roughly 620 KB that theme.liquid
-  loads and this layout does not.
+  NOT loaded, deliberately: jQuery, dt-plugins.js (Swiper), dt-theme.js,
+  handlebars, select2 and its stylesheet, ajax-cart, lazysizes,
+  swiper-bundle.min.css, dT_main.js and dT_main_app.js. That is roughly 712 KB
+  that theme.liquid loads on every page and this layout does not.
 
   Consequences, all intended:
 
@@ -99,16 +100,6 @@
     {% endcomment %}
     {% render 'suf-fonts', apply: true, family: "'Hanken Grotesk', Arial, Helvetica, sans-serif" %}
 
-    {% comment %}
-      ---- LEGACY, AND PROBABLY NO LONGER NEEDED.
-      Nothing on this layout is known to use jQuery any more. The header's
-      inline script became assets/suf-header.js, and the Vue predictive search
-      that dT_main.js carried became assets/suf-search.js. It is still loaded
-      only because removing it has not been verified in a browser yet — that
-      is step 6 of the checklist in docs/migration.md, and it is worth 91 KB.
-    {% endcomment %}
-    {% # theme-check-disable ParserBlockingScript %}
-    <script src="{{ 'jquery-3.5.1.min.js' | asset_url }}"></script>
     {% # theme-check-enable ParserBlockingScript %}
 
 
