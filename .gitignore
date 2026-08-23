@@ -6,3 +6,12 @@ node_modules/
 assets/suf.css
 assets/suf.css.map
 .sass-cache/
+
+# Assistant context files. Kept locally, deliberately not versioned: they are
+# tooling for whichever coding agent a developer happens to use, not part of
+# the theme. Nothing in the theme depends on them.
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.cursorrules
+.github/copilot-instructions.md
