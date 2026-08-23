@@ -80,6 +80,15 @@
     {{ 'suf.css' | asset_url | stylesheet_tag }}
 
     {% comment %}
+      Theme-editor values -> custom properties, after suf.css so they override
+      the fallbacks compiled into it. Two separate sets on purpose: the brand
+      palette for new components, and the inherited palette the forked header
+      still needs. See each snippet for why they cannot be one.
+    {% endcomment %}
+    {% render 'suf-tokens' %}
+    {% render 'suf-legacy-tokens' %}
+
+    {% comment %}
       Hanken Grotesk is applied on this layout only. theme.liquid stays on Arial
       until the legacy templates have been reviewed -- see docs/migration.md.
     {% endcomment %}

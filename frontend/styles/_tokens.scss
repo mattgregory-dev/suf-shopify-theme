@@ -1,48 +1,72 @@
-// Design tokens for net-new SUF code.
+// Design tokens.
 //
-// These are CSS custom properties, not Sass variables, on purpose: they are
-// readable at runtime, so they can be overridden per-section, per-template, or
-// from a Liquid `settings.*` value in an inline <style> block. A Sass variable
-// is compile-time only and cannot do that.
+// Three layers, and the separation is the point:
 //
-// Everything here is prefixed `--suf-` so it can never collide with the
-// inherited theme's styles.
+//   1. PALETTE   what a colour IS.        --suf-navy, --suf-red, ...
+//   2. SEMANTIC  what a colour is FOR.    --suf-color-link, --suf-cta-bg, ...
+//   3. LEGACY    what the forked header needs to keep looking like itself.
 //
-// Brand colours come from the retired custom.css; see docs/migration.md.
+// Components reference layer 2 only. Never write --suf-navy in a component:
+// if headings later stop being navy, one line here should change it, not
+// twenty selectors. Layer 1 is edited; layer 2 is designed; layer 3 is doomed.
+//
+// These are CSS custom properties rather than Sass variables on purpose: they
+// are readable at runtime, so Liquid can override them per theme setting. A
+// Sass variable is compile-time only and cannot.
 
 :root {
-  // Brand
-  --suf-brand-red: #c1121f;
-  --suf-brand-navy: #003049;
-  --suf-brand-blue: #0292db;
-  --suf-brand-blue-dark: #0477b1;
+  // ==========================================================================
+  // 1. PALETTE -- the brand colours
+  // ==========================================================================
+  // Overridden at runtime by snippets/suf-tokens.liquid, bound to the SUF
+  // colour pickers in the theme editor. The values here are the fallbacks.
+  //
+  // From the client brand guide, via the Claude Design canvas.
 
-  // Color
-  --suf-color-text: #1a1a1a;
+  --suf-navy: #003049; // Show Up Navy   -- headlines and bands (NOT body copy)
+  --suf-blue: #0292db; // Biology Blue   -- links, icons, stats
+  --suf-red: #c1121f; // Fitness Red    -- CTAs, underlines
+  --suf-red-dark: #780000; // deep red       -- CTA hover / pressed
+  --suf-grey: #dadada; // Universal Grey -- rules, dividers
+
+  --suf-white: #ffffff;
+
+  // ==========================================================================
+  // 2. SEMANTIC -- what components actually use
+  // ==========================================================================
+
+  // Surface and ink.
+  //
+  // Body copy is a neutral near-black, NOT navy. Navy is for headings, and
+  // setting long-form copy in it was never the design intent. The brand guide
+  // does not name an ink colour, so this is the deliberate neutral choice.
+  --suf-color-bg: var(--suf-white);
+  --suf-color-ink: #1a1a1a;
+  --suf-color-text: var(--suf-color-ink);
   --suf-color-text-muted: #6b6b6b;
-  --suf-color-bg: #ffffff;
-  --suf-color-accent: var(--suf-brand-red);
-  --suf-color-border: #e0e0e0;
-  --suf-color-link: var(--suf-color-text);
-  --suf-color-link-hover: var(--suf-brand-blue);
-  --suf-color-focus: var(--suf-brand-blue);
+  --suf-color-heading: var(--suf-navy);
+  --suf-color-border: var(--suf-grey);
 
-  // Footer. Matches the live footer: white body, dark red bottom bar.
-  --suf-footer-bg: #ffffff;
+  // Interactive.
+  --suf-color-link: var(--suf-blue);
+  --suf-color-link-hover: var(--suf-navy);
+  --suf-color-focus: var(--suf-blue);
+  --suf-color-accent: var(--suf-red);
+
+  // Calls to action.
+  --suf-cta-bg: var(--suf-red);
+  --suf-cta-bg-hover: var(--suf-red-dark);
+  --suf-cta-text: var(--suf-white);
+
+  // Footer.
+  --suf-footer-bg: var(--suf-white);
   --suf-footer-text: var(--suf-color-text);
   --suf-footer-link: var(--suf-color-text);
-  --suf-footer-link-hover: var(--suf-brand-blue);
-  --suf-footer-bar-bg: #a70500;
-  --suf-footer-bar-text: #ffffff;
+  --suf-footer-link-hover: var(--suf-blue);
+  --suf-footer-bar-bg: var(--suf-red-dark);
+  --suf-footer-bar-text: var(--suf-white);
 
-  // Typography.
-  //
-  // Hanken Grotesk, self-hosted, 400 and 700. One family: headings differ by
-  // font-weight, not by a separate face -- the Indivisible setup used two
-  // families ("Regular" and "Bold"), which is what let a broken bold file hide.
-  //
-  // These tokens only bite where .suf-body exists, i.e. on layout/suf.liquid.
-  // Legacy pages are unaffected until theme.liquid's applying rules are flipped.
+  // Typography. Families are declared in snippets/suf-fonts.liquid.
   --suf-font-body: 'Hanken Grotesk', Arial, Helvetica, sans-serif;
   --suf-font-heading: 'Hanken Grotesk', Arial, Helvetica, sans-serif;
   --suf-font-size-base: 1rem;
@@ -52,18 +76,53 @@
   --suf-font-size-h5: 1.0625rem;
   --suf-line-height: 1.6;
 
-  // Spacing scale
+  // Spacing scale.
   --suf-space-xs: 0.25rem;
   --suf-space-sm: 0.5rem;
   --suf-space-md: 1rem;
   --suf-space-lg: 2rem;
   --suf-space-xl: 4rem;
 
-  // Layout
+  // Layout.
   --suf-container: 1400px;
   --suf-measure: 68ch;
 
-  // Other
+  // Other.
   --suf-radius: 4px;
   --suf-transition: 150ms ease;
+
+  // ==========================================================================
+  // 3. LEGACY BRIDGE -- for sections/suf-header.liquid ONLY
+  // ==========================================================================
+  // The forked header is inherited markup, so it keeps the inherited palette
+  // until it is rebuilt. These are what its rules used to read as dt-framework
+  // --DT* properties, renamed so they cannot be mistaken for design tokens.
+  //
+  // Overridden at runtime by snippets/suf-legacy-tokens.liquid, bound to the
+  // OLD pickers (Theme settings > Appearance), so the forked header and the
+  // legacy templates stay in step with each other.
+  //
+  // DO NOT reference these from new components. The entire block is deleted in
+  // one commit when the header is rebuilt.
+
+  --suf-legacy-primary: #c1121f;
+  --suf-legacy-secondary: #282828;
+  --suf-legacy-heading: #c1121f;
+  --suf-legacy-body-bg: #ffffff;
+  --suf-legacy-border: #e9e9e9;
+  --suf-legacy-overlay: rgb(247 243 242 / 50%);
+
+  --suf-legacy-button-bg: #000000;
+  --suf-legacy-button-text: #ffffff;
+  --suf-legacy-button-bg-hover: #d8000c;
+  --suf-legacy-button-text-hover: #ffffff;
+
+  --suf-legacy-shadow: #bbbbbb;
+  --suf-legacy-shadow-light: #e9e9e9;
+
+  --suf-legacy-container: 1520px;
+  --suf-legacy-font-size-base: 1.125rem;
+  --suf-legacy-font-size-h6: 1.125rem;
+  --suf-legacy-radius: 5px;
+  --suf-legacy-transition: all 0.3s linear;
 }

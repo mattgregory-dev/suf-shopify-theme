@@ -1,0 +1,28 @@
+{% comment %}
+  The brand palette -> --suf-* tokens.
+
+  Five colours, from the client brand guide. These are the only colour values
+  anyone edits; everything else in frontend/styles/_tokens.scss is derived from
+  them semantically (--suf-color-link, --suf-cta-bg and so on), so a component
+  never names a colour, only a role.
+
+  Edited at: Theme settings > SUF Brand Palette.
+
+  Deliberately separate from the legacy Appearance pickers. Those describe the
+  inherited theme, where "Primary Color" is red. In this palette navy is
+  primary and red is an accent, so one stored value could not serve both --
+  sharing them would have baked a lie into the token names.
+
+  Rendered after suf.css so it overrides the compiled fallbacks. Every value has
+  a `default:` so a blank setting cannot emit an empty custom property, which
+  would be invalid at computed-value time and unset the declaration.
+{% endcomment %}
+<style>
+  :root {
+    --suf-navy: {{ settings.suf_color_navy | default: '#003049' }};
+    --suf-blue: {{ settings.suf_color_blue | default: '#0292db' }};
+    --suf-red: {{ settings.suf_color_red | default: '#c1121f' }};
+    --suf-red-dark: {{ settings.suf_color_red_dark | default: '#780000' }};
+    --suf-grey: {{ settings.suf_color_grey | default: '#dadada' }};
+  }
+</style>
