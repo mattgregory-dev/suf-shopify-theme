@@ -122,6 +122,52 @@ an accurate permanent label, not scaffolding.
 prefix is the only grouping mechanism available there. It costs nothing in the
 theme editor, which lists sections by their `{% schema %}` `name`, not filename.
 
+### The prefix means "ours to change", not "we wrote it"
+
+A `suf-` file is one this project is free to modify. That is **not** the same as
+one this project authored, and the difference matters legally, not just
+stylistically.
+
+**Files forked verbatim from the inherited theme keep the prefix but are still
+vendor code.** Each carries a banner comment naming its original. Current list:
+
+| File | Forked from | Status |
+|---|---|---|
+| `sections/suf-header.liquid` | `sections/header.liquid` | verbatim; being reduced, see [migration.md](migration.md#reducing-the-forked-header) |
+
+**If you fork another one, add the banner and add it to that table.**
+
+#### Why this is written down
+
+This theme is a purchased ThemeForest item. Its licence permits using it on the
+store; it does not permit redistributing the source, and a derivative does not
+reset that. 195 of the 222 tracked files here are vendor code.
+
+The repo is therefore **private, and must stay private**. The plan is to extract
+the net-new work into a separate public repo at the end of the rebuild, as a
+case study. When that happens the `suf` prefix is the extraction manifest —
+which is precisely why a forked file wearing the prefix is a trap: it would
+carry vendor source into a public repo under a filename that looks like ours.
+Forks are excluded from extraction until they have been genuinely rewritten.
+
+Do not `git init` a public repo from this history either. Every commit contains
+the full theme, so deleting files later publishes them regardless. Extraction
+means a fresh repository.
+
+#### Third-party licences to honour
+
+| Asset | Licence | Obligation |
+|---|---|---|
+| jQuery, select2, handlebars, lazysizes, swiper | MIT | keep the licence headers in the minified files; ship a `NOTICE` if extracted |
+| `hanken-grotesk-*.woff2` | SIL OFL 1.1 | licence text ships as [`OFL.txt`](../OFL.txt) in the repo root |
+
+`OFL.txt` is the canonical file from the upstream project, copyright line
+included. It lives at the repo root rather than in `assets/`: Shopify restricts
+which file types `assets/` accepts, and a rejected file breaks `theme push`.
+The repo is the distribution unit, which is where self-hosted fonts normally
+carry their licence. Keep it if the net-new code is ever extracted — the
+obligation travels with the font files.
+
 ### Inherited prefixes worth recognising
 
 | Prefix | Means |
