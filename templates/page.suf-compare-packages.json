@@ -1,0 +1,14 @@
+{
+  "layout": "suf",
+  "sections": {
+    "main": {
+      "type": "suf-main-page",
+      "settings": {
+        "show_title": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

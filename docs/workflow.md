@@ -28,12 +28,36 @@ but bare `bash -c` does not — that mode reads neither file.
 |---|---|
 | `npm run dev` | `sass --watch` → `assets/suf.css` |
 | `npm run css:build` | One-off compressed build |
-| `npm run deploy` | `css:build` then `shopify theme push` |
+| `npm run preview` | `css:build` then push to the **Sporto - Redesign** theme (#000000000000) |
 | `npm run lint` | Theme Check |
 | `npm run format` | Prettier — **scoped to `frontend/` + `suf.js` only** |
 | `shopify theme dev` | Local server. Hot-reloads CSS and sections by default. |
 
 Normal loop is two terminals: `npm run dev` alongside `shopify theme dev`.
+
+### Sharing a preview with the client
+
+`shopify theme dev` creates a *development* theme: tied to your CLI session and
+cleaned up automatically, so it is not something to share. To show someone the
+work, push to a real unpublished theme and share its preview from admin:
+
+```
+npm run preview        # builds CSS, pushes to Sporto - Redesign (#000000000000)
+```
+
+Then Online Store → Themes → that theme → ⋯ → Preview, and use the share option
+in the preview bar. The viewer needs no admin access, and `?view=` URLs work
+because a preview is real Shopify rather than a sandbox.
+
+**`npm run deploy` was deliberately removed.** It ran `shopify theme push`
+with no `--theme`, which prompts with a list that includes the LIVE theme. One
+wrong keystroke would overwrite two years of production work. Every push script
+here names its target explicitly; keep it that way.
+
+Pushing sends `config/settings_data.json`, so the seeded suf-header and
+suf-footer settings travel with it and the preview matches local. It also
+*overwrites* that theme's settings, so never aim a push at a theme whose
+settings matter.
 
 `shopify theme dev` already provides hot reload for CSS and sections — it
 defaults to `--live-reload hot-reload`. That is not a reason to add a bundler.

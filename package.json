@@ -4,11 +4,11 @@
     "dev": "npm run css:watch",
     "css:watch": "sass --watch frontend/styles/main.scss:assets/suf.css --style=expanded",
     "css:build": "sass frontend/styles/main.scss:assets/suf.css --style=compressed --no-source-map",
+    "preview": "npm run css:build && shopify theme push --theme 000000000000",
     "lint": "shopify theme check",
     "lint:json": "shopify theme check --output json",
     "format": "prettier --write frontend assets/suf.js",
-    "format:check": "prettier --check frontend assets/suf.js",
-    "deploy": "npm run css:build && shopify theme push"
+    "format:check": "prettier --check frontend assets/suf.js"
   },
   "devDependencies": {
     "@shopify/prettier-plugin-liquid": "^1.11.0",
