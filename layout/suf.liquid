@@ -16,19 +16,20 @@
   WHAT THIS LAYOUT LOADS, AND WHY
   -------------------------------
   Net-new:  suf.css, suf.js.
-  Legacy:   dt-framework.css and dt-custom.css, and only because
-            sections/suf-header.liquid is still styled by them. Both are fenced
-            below.
+  Legacy:   NONE. As of 2026-08-23 this layout loads no inherited CSS and no
+            inherited JavaScript. Everything it serves is suf.css and suf.js.
 
-            NO JAVASCRIPT from the legacy theme is loaded here any more.
-            jQuery, dT_main.js and dT_main_app.js all went on 2026-08-23, with
-            the header script rewritten as assets/suf-header.js and the Vue
-            predictive search as assets/suf-search.js.
+            The last to go were dt-framework.css and dt-custom.css. By then
+            they were supplying a reset rather than component styles, so
+            frontend/styles/components/_suf-base.scss carries a small
+            compatibility block standing in for the parts the forked header's
+            markup depends on. That block is deleted with the header.
 
-  NOT loaded, deliberately: jQuery, dt-plugins.js (Swiper), dt-theme.js,
-  handlebars, select2 and its stylesheet, ajax-cart, lazysizes,
-  swiper-bundle.min.css, dT_main.js and dT_main_app.js. That is roughly 712 KB
-  that theme.liquid loads on every page and this layout does not.
+  NOT loaded, deliberately: jQuery, dt-framework.css, dt-custom.css,
+  dt-plugins.js (Swiper), dt-theme.js, handlebars, select2 and its stylesheet,
+  ajax-cart, lazysizes, swiper-bundle.min.css, dT_main.js and dT_main_app.js.
+  That is roughly 850 KB that theme.liquid loads on every page and this layout
+  does not.
 
   Consequences, all intended:
 
@@ -72,17 +73,7 @@
     {{ 'hanken-grotesk-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
     {{ 'hanken-grotesk-700.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
-    {% comment %}
-      ---- LEGACY, FOR THE HEADER ONLY. See the note at the top of this file.
-      Both stylesheets are Liquid-templated CSS rendered against merchant
-      settings, so neither can be compiled into suf.css. They come off the
-      moment the forked header stops depending on them.
-    {% endcomment %}
-    {{ 'dt-framework.css' | asset_url | stylesheet_tag }}
-    {{ 'dt-custom.css' | asset_url | stylesheet_tag }}
-    {% comment %} ---- end legacy CSS {% endcomment %}
 
-    {% comment %} Loaded last so it wins the cascade against dt-framework. {% endcomment %}
     {{ 'suf.css' | asset_url | stylesheet_tag }}
 
     {% comment %}

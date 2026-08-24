@@ -71,6 +71,17 @@
   video {
     max-width: 100%;
     height: auto;
+    vertical-align: middle;
+  }
+
+  // Form controls do not inherit type from their ancestor by default.
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    margin: 0;
+    color: inherit;
   }
 
   // A visible focus ring is the only keyboard affordance on a layout with no
@@ -114,5 +125,95 @@
 
   @include m.from(m.$bp-md) {
     padding-inline: var(--suf-space-lg);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// LEGACY BASE COMPATIBILITY
+//
+// dt-framework.css and dt-custom.css were dropped from layout/suf.liquid on
+// 2026-08-23. By then they were not supplying component styles: an audit of the
+// rendered page found only 53 of their 1,014 selectors could match it, and 44
+// of those were bare element selectors. What they were supplying is the RESET
+// that the forked header's CSS was written on top of.
+//
+// These rules stand in for the ones the inherited markup actually depends on.
+// Every one exists solely for sections/suf-header.liquid. DELETE THIS WHOLE
+// BLOCK when the header is rebuilt -- nothing else needs it.
+//
+// Deliberately NOT carried over: overflow-x hidden on html and body, which the
+// legacy reset set. That is the classic way to silently break position sticky
+// further down a page, and nothing here was found to need it.
+// ---------------------------------------------------------------------------
+
+.suf-body {
+  // The most load-bearing one. The legacy reset declared a text-decoration of
+  // none, so without this every link in the inherited header renders
+  // underlined.
+  a {
+    text-decoration: none;
+  }
+
+  // Prose is the exception: underlined links in body copy are an accessibility
+  // win, and the legacy theme re-added them the same way.
+  .rte a {
+    text-decoration: underline;
+  }
+
+  // Submenu panels and the sticky header position against their section.
+  section {
+    position: relative;
+  }
+
+  // Shopify wraps every section in this. The legacy rule floated it; block
+  // layout stacks full-width the same way without needing a clearfix.
+  .shopify-section {
+    display: block;
+    width: 100%;
+  }
+
+  .container-fluid {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .container-fluid.spacing_enabled > .row {
+    margin-inline: var(--suf-legacy-container-spacing);
+  }
+
+  .container {
+    width: var(--suf-legacy-container);
+    max-width: 100%;
+    margin-inline: auto;
+    padding-inline: calc(var(--suf-legacy-gutter) / 2);
+  }
+
+  // The inherited nav markup assumes the global list-style none that the
+  // legacy reset applied. Scoped to the chrome rather than global, so lists in
+  // page content keep their markers.
+  header ul,
+  .mobile-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  // Flex utilities. .site-header__links carries .dt-sc-flex, and the nav
+  // carries .dt-sc-flex-space-between; both were defined in dt-framework, so
+  // without them the header icons stack vertically instead of sitting in a row.
+  .dt-sc-flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .dt-sc-flex-space-between {
+    justify-content: space-between;
+  }
+
+  // The hamburger's label. It is the button's accessible name -- the button has
+  // no aria-label -- so it is hidden visually rather than removed, the same way
+  // the header icon labels are handled. Production shows the icon alone.
+  .menu-trigger > span {
+    @include m.visually-hidden;
   }
 }
