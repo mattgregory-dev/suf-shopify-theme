@@ -161,7 +161,17 @@
   }
 
   // Submenu panels and the sticky header position against their section.
-  section {
+  //
+  // Scoped to the header, and that scoping matters. Unscoped, this matched
+  // Shopify's cookie banner -- injected as <section id="shopify-pc__banner">
+  // at the top of <body> -- and overrode its fixed positioning, dropping it
+  // into normal flow at the top of the page. Any bare element selector in this
+  // block can collide with markup that Shopify or an app injects at runtime,
+  // which no audit of the served HTML will ever show.
+  //
+  // The sticky clone is inserted as a sibling of the real header section, so
+  // it is still inside <header> and still matched.
+  header section {
     position: relative;
   }
 
