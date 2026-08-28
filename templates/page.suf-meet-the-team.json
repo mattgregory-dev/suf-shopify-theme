@@ -22,7 +22,8 @@
             "photo_alt": "Chris Hitchko, founder of Show Up Fitness",
             "bio": "Teaching trainers since 2008, with a decade in the classroom before building Show Up Fitness. Kinesiology degree, author, and the voice behind the YouTube channel that has helped thousands pass their exams. Still leads the Monday mentorship calls himself.",
             "link": "/pages/suf-about",
-            "cue": "Read the Founder's Story"
+            "cue": "Read the Founder's Story",
+            "photo": "shopify://shop_images/instructor-01.webp"
           }
         },
         "jorge": {
@@ -31,7 +32,8 @@
             "name": "Jorge",
             "role": "Instructor",
             "photo_alt": "Jorge, Show Up Fitness instructor",
-            "bio": "Bio to come."
+            "bio": "Bio to come.",
+            "photo": "shopify://shop_images/instructor-03.webp"
           }
         },
         "josh": {
@@ -40,7 +42,8 @@
             "name": "Josh",
             "role": "Instructor",
             "photo_alt": "Josh, Show Up Fitness instructor",
-            "bio": "Bio to come."
+            "bio": "Bio to come.",
+            "photo": "shopify://shop_images/instructor-02.webp"
           }
         },
         "meagan": {
@@ -49,7 +52,8 @@
             "name": "Meagan",
             "role": "Instructor",
             "photo_alt": "Meagan, Show Up Fitness instructor",
-            "bio": "Bio to come."
+            "bio": "Bio to come.",
+            "photo": "shopify://shop_images/instructor-04.webp"
           }
         }
       },
