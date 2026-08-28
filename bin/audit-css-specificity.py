@@ -27,10 +27,15 @@ Exits non-zero when it finds a likely bug, so it can gate a commit if wanted.
 
 READING THE OUTPUT
 ------------------
-LIKELY BUGS are a component rule losing to a scoped BASE rule. Nobody writes
-`.suf-body p` intending to override a component, so these are almost always
-real. Fix by nesting the component under its block (preferred), or by excluding
-it from the base rule with :not(:where(...)).
+LIKELY BUGS are either of two things:
+
+  - a component rule losing to a scoped BASE rule. Nobody writes `.suf-body p`
+    intending to override a component.
+  - a --modifier tying with the component it modifies and losing on source
+    order. Nobody writes a modifier expecting the base to win.
+
+Fix by nesting the component under its block, by doubling the modifier's class
+(`.x.x--mod`), or by excluding it from the base rule with :not(:where(...)).
 
 EXPECTED is a component rule losing to a MORE SPECIFIC COMPONENT rule -- a
 modifier doing its job. Listed only with -v.
@@ -65,6 +70,7 @@ PAGES = [
     "suf-home",
     "suf-compare-packages",
     "suf-seminars",
+    "suf-cpt",
 ]
 
 # Shorthands must expand, or a rule that never names `margin-left` still
@@ -226,7 +232,7 @@ def main():
             one = one.strip()
             if "suf-" not in one or "::" in one or ":hover" in one or ":focus" in one:
                 continue
-            rules.append((one, specificity(one), props, compounds(one)))
+            rules.append((one, specificity(one), props, compounds(one), len(rules)))
 
     nodes = []
     for page in PAGES:
@@ -239,12 +245,33 @@ def main():
     seen = set()
     suspect, expected = [], []
     for node in nodes:
-        if not any(c.startswith("suf-") for c in node["classes"]):
+        # Examine anything INSIDE one of our components, not only elements that
+        # carry a suf- class themselves. A bare <h3> inside .suf-listcard is
+        # exactly where element selectors collide, and skipping it made the
+        # audit blind to the commonest form of this bug.
+        own_class = any(c.startswith("suf-") for c in node["classes"])
+        inside = any(
+            c.startswith("suf-") and c != "suf-body"
+            for anc in node["ancestors"]
+            for c in anc["classes"]
+        )
+        if not own_class and not inside:
             continue
         hits = [r for r in rules if matches(r[3], node)]
-        for sel_a, spec_a, props_a, _ in hits:
-            for sel_b, spec_b, props_b, _ in hits:
-                if sel_a == sel_b or spec_b <= spec_a:
+        for sel_a, spec_a, props_a, _, idx_a in hits:
+            for sel_b, spec_b, props_b, _, idx_b in hits:
+                if sel_a == sel_b:
+                    continue
+                # A tie is decided by source order, and a MODIFIER that ties
+                # with the component it modifies and loses is always a bug --
+                # nobody writes a --modifier expecting the base to win.
+                tie_loss = (
+                    spec_b == spec_a
+                    and idx_b > idx_a
+                    and '--' in sel_a
+                    and '--' not in sel_b
+                )
+                if not tie_loss and spec_b <= spec_a:
                     continue
                 # Only a real conflict when the values actually differ. Both
                 # rules setting `text-decoration: none` changes nothing, and
@@ -263,14 +290,22 @@ def main():
                     continue
                 seen.add(key)
                 own = " ".join(sorted(c for c in node["classes"] if c.startswith("suf-")))
+                if not own:
+                    # Unclassed: name the nearest component so the finding is
+                    # locatable.
+                    for anc in reversed(node["ancestors"]):
+                        parent = [c for c in anc["classes"] if c.startswith("suf-") and c != "suf-body"]
+                        if parent:
+                            own = "(in ." + sorted(parent)[0] + ")"
+                            break
                 entry = (node["tag"], own, sel_a, spec_a, sel_b, spec_b, shared)
-                if is_base(sel_b) and not is_base(sel_a):
+                if tie_loss or (is_base(sel_b) and not is_base(sel_a)):
                     suspect.append(entry)
                 else:
                     expected.append(entry)
 
     print("=" * 74)
-    print("LIKELY BUGS -- a component rule losing to a scoped BASE rule")
+    print("LIKELY BUGS -- losing to a base rule, or to your own component")
     print("=" * 74 + "\n")
     if suspect:
         show(suspect)
