@@ -1,0 +1,324 @@
+// Shared component vocabulary.
+//
+// Ported from the Claude Design mockup (~/projects/suf/mockups, section 3 of
+// css/styles.css). Everything here is used by two or more pages; anything used
+// by exactly one page belongs in that page's own partial, not this file.
+//
+// The mockup names these classes bare -- .btn, .section, .link. They are
+// prefixed here because suf.css is loaded by layout/theme.liquid as well, where
+// a bare .section or .link would restyle ~30 inherited templates. See
+// docs/architecture.md, "Naming: the suf prefix marks new work".
+
+@use '../mixins' as m;
+
+// ---------------------------------------------------------------------------
+// CONTAINER
+//
+// The design is drawn against 1200px with 40px gutters. On narrow viewports the
+// gutter drops to --suf-space-3 (16-24px); 40px of padding on a 360px phone
+// leaves 280px of usable width, which is not enough for the card grids.
+// ---------------------------------------------------------------------------
+
+.suf-wrap {
+  width: 100%;
+  max-width: var(--suf-container);
+  margin-inline: auto;
+  padding-inline: var(--suf-space-3);
+
+  @include m.from(m.$bp-md) {
+    padding-inline: var(--suf-container-padding);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// SECTION RHYTHM
+//
+// Each section pads HALF the gap it needs, top and bottom, so two neighbours
+// together make the ~100px desktop gap. Do NOT add margins between sections as
+// well: they will not collapse against this padding, and the rhythm doubles.
+// ---------------------------------------------------------------------------
+
+.suf-section {
+  padding-block: var(--suf-space-section);
+}
+
+// In-page anchor jumps land under the sticky header without this.
+.suf-section[id],
+.suf-anchor-target {
+  scroll-margin-top: 80px;
+}
+
+.suf-section__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--suf-space-3);
+  margin-bottom: var(--suf-space-5);
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--suf-color-border-subtle);
+
+  h2 {
+    margin: 0;
+    font-size: var(--suf-font-size-h2);
+    line-height: 1.12;
+  }
+}
+
+// The aside is supporting copy, so it may not exist. margin-left:auto on the
+// aside itself (rather than space-between on the parent) keeps the heading
+// hard left when it is the only child.
+.suf-section__aside {
+  margin-left: auto;
+  max-width: 34ch;
+  color: var(--suf-color-text-muted);
+  font-size: var(--suf-font-size-small);
+  text-align: right;
+  text-wrap: balance;
+}
+
+// Drop the head's own rule when the section below opens with one of its own,
+// which would otherwise read as a double line.
+.suf-section__head--flush {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+// ---------------------------------------------------------------------------
+// EYEBROW
+//
+// Red slash + navy caps. One of the design's four rationed accents -- the
+// stated failure mode is overusing them, so do not reach for it on every
+// section.
+// ---------------------------------------------------------------------------
+
+.suf-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--suf-space-2);
+  margin-bottom: var(--suf-space-3);
+  color: var(--suf-color-heading);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+
+  &::before {
+    content: '';
+    flex-shrink: 0;
+    width: 14px;
+    height: 13px;
+    background: var(--suf-color-accent);
+    clip-path: polygon(0 100%, 62% 0, 100% 0, 38% 100%);
+  }
+}
+
+.suf-eyebrow--on-dark {
+  color: var(--suf-color-ink-on-dark);
+}
+
+// ---------------------------------------------------------------------------
+// BUTTONS
+//
+// Square corners, uppercase. --primary is the red fill and means ACTION: at
+// most one per section. --ghost is the navy outline.
+//
+// Hover is a 2px lift onto a hard offset shadow; the colour never changes,
+// which is what keeps the red reading as "action" rather than "hovered".
+// ---------------------------------------------------------------------------
+
+.suf-btnrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--suf-space-2);
+}
+
+.suf-btn {
+  display: inline-block;
+  padding: 16px 32px;
+  border: 2px solid transparent;
+  font-size: var(--suf-font-size-small);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--suf-transition),
+    box-shadow var(--suf-transition),
+    background-color var(--suf-transition),
+    border-color var(--suf-transition);
+
+  &:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+  }
+
+  // The lift is decorative. Users who ask for less motion still get the
+  // shadow, so the affordance survives.
+  @media (prefers-reduced-motion: reduce) {
+    transition: box-shadow var(--suf-transition);
+
+    &:hover,
+    &:focus-visible {
+      transform: none;
+    }
+  }
+}
+
+.suf-btn--primary {
+  background: var(--suf-cta-bg);
+  border-color: var(--suf-cta-bg);
+  color: var(--suf-cta-text);
+
+  &:hover,
+  &:focus-visible {
+    // Deliberately unchanged from the resting state -- see the note above.
+    background: var(--suf-cta-bg);
+    border-color: var(--suf-cta-bg);
+    color: var(--suf-cta-text);
+    transform: translate(-2px, -2px);
+    // Dark red reads on light and dark surfaces alike, so this needs no
+    // per-surface override.
+    box-shadow: 4px 4px 0 var(--suf-red-dark);
+  }
+}
+
+.suf-btn--ghost {
+  background: transparent;
+  border-color: var(--suf-navy);
+  color: var(--suf-navy);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-navy);
+    border-color: var(--suf-blue-light);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--suf-blue-light);
+  }
+}
+
+// Ghost on a dark band. The resting border is a muted navy tint rather than
+// white: a white outline competes with the headline above it.
+.suf-btn--ghost.suf-btn--on-dark {
+  border-color: #4a6d80;
+  color: var(--suf-white);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-white);
+    border-color: var(--suf-blue-light);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// TEXT LINK
+//
+// Blue with a 2px underline, red on hover. Distinct from a prose link: this is
+// a standalone call to action, so it is uppercase and carries its own rule.
+// ---------------------------------------------------------------------------
+
+.suf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--suf-color-link);
+  color: var(--suf-color-link);
+  font-size: var(--suf-font-size-small);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-color-accent);
+    border-color: var(--suf-color-accent);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// FAQ ACCORDION
+//
+// Native <details>/<summary>: open/close, keyboard support and the
+// accessibility tree all come for free, and it still works if JS fails.
+// ---------------------------------------------------------------------------
+
+.suf-faq {
+  max-width: 840px;
+  margin-inline: auto;
+
+  details {
+    border-bottom: 1px solid var(--suf-color-border-subtle);
+  }
+
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--suf-space-3);
+    padding: 18px 0;
+    color: var(--suf-color-heading);
+    font-size: 16.5px;
+    font-weight: 800;
+    cursor: pointer;
+
+    // Both are needed: the pseudo-element covers WebKit, list-style the rest.
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // A rotated + becomes an x. Purely decorative -- the open/closed state is
+    // already exposed by <details> itself.
+    &::after {
+      content: '+';
+      flex-shrink: 0;
+      color: var(--suf-color-link);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 0.8;
+      transform-origin: center;
+      transition: transform var(--suf-transition);
+    }
+  }
+
+  details[open] summary::after {
+    transform: rotate(45deg);
+    color: var(--suf-color-accent);
+  }
+}
+
+.suf-faq__answer {
+  max-width: 72ch;
+  padding: 0 0 22px;
+  color: var(--suf-color-text);
+  font-size: 15px;
+  line-height: var(--suf-line-height);
+}
+
+// ---------------------------------------------------------------------------
+// UTILITIES
+// ---------------------------------------------------------------------------
+
+// Fills its box; the box does the cropping. Pair with object-position when the
+// subject is off-centre.
+.suf-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// Wrap every occurrence of "SUF-CPT" in this. The hyphenated mark must never
+// break across two lines.
+.suf-nb {
+  white-space: nowrap;
+}
+
+// Fine print under a button.
+.suf-btn-micro {
+  margin: var(--suf-space-2) 0 0;
+  color: var(--suf-color-text-muted);
+  font-size: 13.5px;
+}

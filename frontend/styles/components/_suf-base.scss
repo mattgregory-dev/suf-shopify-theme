@@ -26,6 +26,8 @@
     box-sizing: border-box;
   }
 
+  // 800, not 700: the design's headings are heavy, and the negative tracking
+  // is what stops them looking loose at display sizes.
   h1,
   h2,
   h3,
@@ -33,13 +35,16 @@
   h5,
   h6 {
     margin: 0 0 var(--suf-space-md);
+    color: var(--suf-color-heading);
     font-family: var(--suf-font-heading);
-    font-weight: 700;
-    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.018em;
+    line-height: var(--suf-line-height-heading);
   }
 
   h1 {
     font-size: var(--suf-font-size-h1);
+    line-height: var(--suf-line-height-tight);
   }
   h2 {
     font-size: var(--suf-font-size-h2);
@@ -66,9 +71,12 @@
     }
   }
 
+  // display:block on images removes the inline-descender gap under every one
+  // of them. vertical-align is then redundant but harmless for svg/video.
   img,
   svg,
   video {
+    display: block;
     max-width: 100%;
     height: auto;
     vertical-align: middle;

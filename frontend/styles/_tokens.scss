@@ -31,6 +31,20 @@
 
   --suf-white: #ffffff;
 
+  // Darker navies. The brand guide names one navy; the design uses three, for
+  // stacked dark surfaces that must read as distinct without a border.
+  //   navy         bands, dark sections
+  //   navy-deep    the nav bar
+  //   navy-deepest the copyright bar
+  --suf-navy-deep: #022338;
+  --suf-navy-deepest: #01192a;
+
+  // Lightened brand colours, for use ON navy only. The base blue and red both
+  // fail contrast against navy; these are the design's answers to that and are
+  // never correct on a light surface.
+  --suf-blue-light: #4db8ee;
+  --suf-red-light: #ff6b74;
+
   // ==========================================================================
   // 2. SEMANTIC -- what components actually use
   // ==========================================================================
@@ -40,18 +54,44 @@
   // Body copy is a neutral near-black, NOT navy. Navy is for headings, and
   // setting long-form copy in it was never the design intent. The brand guide
   // does not name an ink colour, so this is the deliberate neutral choice.
-  --suf-color-bg: var(--suf-white);
+  // The page is off-white, not white; cards and panels sit ON it in white.
+  // That difference is the design's only separation between a card and the
+  // page, so --suf-color-surface is not interchangeable with --suf-color-bg.
+  --suf-color-bg: #f7f9fa;
+  --suf-color-surface: var(--suf-white);
   --suf-color-ink: #1a1a1a;
   --suf-color-text: var(--suf-color-ink);
   --suf-color-text-muted: #6b6b6b;
   --suf-color-heading: var(--suf-navy);
   --suf-color-border: var(--suf-grey);
 
+  // Hairline rules. Both are blue-tinted rather than neutral grey, which is
+  // what keeps a 1px line from reading as dirt against the off-white page.
+  //   subtle  section heads, card edges, FAQ dividers -- the default rule
+  //   faint   dividers INSIDE an already-bordered box
+  --suf-color-border-subtle: #dde4e8;
+  --suf-color-border-faint: #eef2f4;
+
   // Interactive.
   --suf-color-link: var(--suf-blue);
-  --suf-color-link-hover: var(--suf-navy);
+  // Red, not navy: the design's rule is blue -> red, so hover reads as the
+  // same "action" signal the CTAs use.
+  --suf-color-link-hover: var(--suf-red);
   --suf-color-focus: var(--suf-blue);
   --suf-color-accent: var(--suf-red);
+
+  // ON DARK SURFACES.
+  //
+  // A full parallel set, because nothing above survives on navy. Components
+  // rendering inside a dark band switch to these wholesale rather than
+  // patching one property at a time.
+  --suf-color-heading-on-dark: var(--suf-white);
+  --suf-color-ink-on-dark: #f2f6f8;
+  --suf-color-text-on-dark: #c3d2da;
+  --suf-color-text-muted-on-dark: #8fa8b6;
+  --suf-color-link-on-dark: var(--suf-blue-light);
+  --suf-color-accent-on-dark: var(--suf-red-light);
+  --suf-color-border-on-dark: #12435c;
 
   // Calls to action.
   --suf-cta-bg: var(--suf-red);
@@ -69,22 +109,61 @@
   // Typography. Families are declared in snippets/suf-fonts.liquid.
   --suf-font-body: 'Hanken Grotesk', Arial, Helvetica, sans-serif;
   --suf-font-heading: 'Hanken Grotesk', Arial, Helvetica, sans-serif;
-  --suf-font-size-base: 1rem;
-  --suf-font-size-h1: clamp(2rem, 1.4rem + 2.4vw, 3rem);
-  --suf-font-size-h2: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
-  --suf-font-size-h3: 1.5rem;
+  --suf-font-size-base: clamp(15px, 1.1vw, 17px);
+  --suf-font-size-h1: var(--suf-font-size-display);
+  --suf-font-size-h2: clamp(30px, 3vw, 42px);
+  --suf-font-size-h3: clamp(21px, 1.9vw, 26px);
+  --suf-font-size-h4: 15px;
   --suf-font-size-h5: 1.0625rem;
-  --suf-line-height: 1.6;
+  --suf-font-size-small: 14px;
+  --suf-font-size-micro: 12px;
+
+  // Two display sizes above h1. --hero is the homepage photo hero and nothing
+  // else; --display is every interior page's dark band. Keeping them apart is
+  // what stops an interior page shouting as loudly as the homepage.
+  --suf-font-size-hero: clamp(52px, 6.2vw, 88px);
+  --suf-font-size-display: clamp(40px, 4.5vw, 60px);
+
+  --suf-line-height: 1.65;
+  --suf-line-height-tight: 1.08; // display and hero headlines
+  --suf-line-height-heading: 1.18; // h2 / h3
 
   // Spacing scale.
+  //
+  // TWO scales exist on purpose, and new work uses the numeric one.
+  //
+  // The t-shirt scale is fixed rem, and the forked header and footer are built
+  // on it. The numeric scale is the design's: every step is a clamp, so
+  // component padding shrinks with the viewport instead of stepping down at a
+  // breakpoint. That is what makes the layout hold together between
+  // breakpoints, and it cannot be retrofitted onto fixed rem values.
+  //
+  // The t-shirt scale is deleted with the header rebuild, not before.
   --suf-space-xs: 0.25rem;
   --suf-space-sm: 0.5rem;
   --suf-space-md: 1rem;
   --suf-space-lg: 2rem;
   --suf-space-xl: 4rem;
 
+  --suf-space-1: clamp(4px, 0.35vw, 6px);
+  --suf-space-2: clamp(8px, 0.7vw, 12px);
+  --suf-space-3: clamp(16px, 1.4vw, 24px);
+  --suf-space-4: clamp(24px, 2.2vw, 40px);
+  --suf-space-5: clamp(40px, 3.6vw, 64px);
+  --suf-space-6: clamp(64px, 5.5vw, 96px);
+  --suf-space-7: clamp(96px, 8vw, 144px);
+
+  // Section rhythm. Each section pads HALF the gap it needs, top and bottom,
+  // so two neighbours together produce the ~100px desktop gap. Do not add
+  // margins between sections as well -- they will not collapse against this.
+  --suf-space-section: clamp(32px, 3.5vw, 50px);
+
   // Layout.
-  --suf-container: 1400px;
+  //
+  // 1200px, not the 1400px this file used to carry: the design's grid, line
+  // lengths and image crops are all drawn against 1200 and look thin at 1400.
+  --suf-container: 1200px;
+  --suf-container-padding: 40px;
   --suf-measure: 68ch;
 
   // Other.
