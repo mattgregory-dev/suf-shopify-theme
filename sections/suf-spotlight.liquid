@@ -15,9 +15,10 @@
   with CSS order, so reading and tab order stay correct regardless of the
   visual arrangement. Below 1000px the image always follows the text.
 
-  RESOURCE BLOCKS are optional link cards rendered under the copy, inside the
-  text column -- a cited book, a report, a linked download. Each is a whole-card
-  <a> with no nested interactive content, so one anchor carries the whole card.
+  TWO BLOCK TYPES. `feature` renders the blue slash-bullet list between the
+  copy and the button. `resource` renders link cards under it -- a cited book, a
+  report, a download -- each a whole-card <a> with no nested interactive
+  content, so one anchor carries the whole card.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
@@ -51,6 +52,17 @@
           <div class="suf-spotlight__lead">{% render 'suf-nb', text: section.settings.body %}</div>
         {%- endif -%}
 
+        {%- assign features = section.blocks | where: 'type', 'feature' -%}
+        {%- if features.size > 0 -%}
+          <ul class="suf-whylist">
+            {%- for block in features -%}
+              {%- if block.settings.text != blank -%}
+                <li {{ block.shopify_attributes }}>{% render 'suf-nb', text: block.settings.text %}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
         {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
           <div class="suf-btnrow">
             <a
@@ -66,9 +78,10 @@
           <div class="suf-btn-micro">{% render 'suf-nb', text: section.settings.micro %}</div>
         {%- endif -%}
 
-        {%- if section.blocks.size > 0 -%}
+        {%- assign resources = section.blocks | where: 'type', 'resource' -%}
+        {%- if resources.size > 0 -%}
           <div class="suf-resources">
-            {%- for block in section.blocks -%}
+            {%- for block in resources -%}
               {%- liquid
                 assign has_link = false
                 if block.settings.url != blank
@@ -230,6 +243,18 @@
     }
   ],
   "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Feature",
+          "info": "Bold the first few words -- the list is scanned, not read."
+        }
+      ]
+    },
     {
       "type": "resource",
       "name": "Linked resource",
