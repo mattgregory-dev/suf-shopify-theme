@@ -116,29 +116,32 @@ succeeds and the wrong thing ships.
 Note `newline='\n'`. Writing from the Windows side without it produces CRLF,
 which shows up as a whole-file diff.
 
-## Trap: the Shopify CLI works for you but not for tooling
+## Resolved, and worth keeping resolved: one Node, no nvm
 
-**Symptom** — `SyntaxError: The requested module 'node:module' does not provide
-an export named 'enableCompileCache'`, from a CLI that works fine when typed by
-hand.
+There is exactly **one** Node on this machine: system `/usr/bin/node`, installed
+from the NodeSource apt repo. nvm was removed on 2026-08-27. Keep it that way.
 
-**Cause** — two different Node versions. `~/.bashrc` exits early for
-non-interactive shells (the standard `case $- in *i*` guard) and nvm is sourced
-*below* that guard. So:
+It used to be two. nvm supplied v22 and the system supplied v20, and which one
+you got depended on how the shell started — nvm is sourced *below* the
+interactive-only guard in `~/.bashrc`, so anything non-interactive fell through
+to v20. Shopify CLI 4.7 requires 22+, so the CLI worked when typed by hand and
+failed from tooling, git hooks, CI and editors, with a `SyntaxError` about
+`enableCompileCache` that says nothing about versions.
 
-| Shell | Node | CLI |
-|---|---|---|
-| your interactive terminal | nvm's v22 | works |
-| `bash -c` / `bash -lc` from tooling | system `/usr/bin/node` v20 | fails |
+The Shopify CLI was also installed twice, once under each Node. Now it is
+installed once, in `~/.npm-global`, with `npm config set prefix ~/.npm-global`
+so global installs land there without sudo.
 
-Shopify CLI 4.7 requires Node 22+.
+**If you reinstall nvm, you reintroduce the bug.** Should you ever genuinely
+need two Node versions, set `nvm alias default` AND source nvm above the
+interactivity guard, so both shell modes agree.
 
-**Fix, for a one-off** — call nvm's binary by full path, or source nvm first.
-**Fix, properly** — make Node 22 the system default so both shells agree, e.g.
-`nvm alias default 22` plus a symlink on the system PATH.
+To upgrade Node, edit the apt source rather than reaching for a version manager:
 
-This is also why [workflow.md](workflow.md) says to use `bash -lc`: that gets
-`~/.profile` for the `npm-global` PATH entry. It does **not** get you nvm's node.
+```
+sudo sed -i 's/node_22\.x/node_NN.x/' /etc/apt/sources.list.d/nodesource.list
+sudo apt-get update && sudo apt-get install -y nodejs
+```
 
 ## Trap: a discard deletes the compiled CSS, and the watcher does not notice
 

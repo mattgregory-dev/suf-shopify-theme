@@ -22,10 +22,11 @@ ways that look like environment problems.
 behind a `case` guard so it is not added twice. Note this means `bash -lc` works
 but bare `bash -c` does not — that mode reads neither file.
 
-**`bash -lc` gets you the PATH, but not nvm's node.** nvm is sourced below the
-interactive-only guard in `~/.bashrc`, so any non-interactive shell falls back to
-the system Node 20 and the Shopify CLI fails on it. See
-[wsl-tooling.md](wsl-tooling.md#trap-the-shopify-cli-works-for-you-but-not-for-tooling).
+`bash -lc` is still the right invocation, but only for the PATH entry. Node
+itself is now the same v22 in every shell mode — one system install, nvm removed
+— so a bare `bash -c` calling `~/.npm-global/bin/shopify` by full path works
+too. Do not reinstall nvm; see
+[wsl-tooling.md](wsl-tooling.md#resolved-and-worth-keeping-resolved-one-node-no-nvm).
 
 Every other way this boundary breaks — and there are several, none of which look
 like quoting errors — is catalogued in [wsl-tooling.md](wsl-tooling.md).
