@@ -1,14 +1,222 @@
 {
   "layout": "suf",
   "sections": {
-    "main": {
-      "type": "suf-main-page",
+    "band": {
+      "type": "suf-page-band",
       "settings": {
-        "show_title": true
+        "eyebrow": "Compare Packages",
+        "heading": "Every Package, Side by Side",
+        "subhead": "Two ways in. Start with where you are.",
+        "tier_3": true,
+        "overlap": false,
+        "button_label": "New to Personal Training? Start Here",
+        "button_url": "#new-trainers",
+        "button2_label": "Already Certified? Level Up Here",
+        "button2_url": "#continuing-ed"
+      }
+    },
+    "new": {
+      "type": "suf-compare",
+      "blocks": {
+        "p1": {
+          "type": "plan",
+          "settings": {
+            "name": "SUF-CPT Certification",
+            "desc": "Get certified on your budget, at your pace.",
+            "price": "$XXX",
+            "button_label": "Buy Now",
+            "button_url": "/products/show-up-fitness-level-1-coach",
+            "button_style": "primary",
+            "micro": "Straight to secure checkout"
+          }
+        },
+        "p2": {
+          "type": "plan",
+          "settings": {
+            "name": "SUF-CPT + Seminar Bundle",
+            "desc": "Certified, plus two days hands-on.",
+            "price": "$XXX",
+            "was": "$X,XXX bought separately",
+            "featured": true,
+            "flag": "Most Popular",
+            "button_label": "Buy Now",
+            "button_url": "/products/show-up-fitness-qualified-personal-trainer-package",
+            "button_style": "primary",
+            "micro": "Straight to secure checkout"
+          }
+        },
+        "p3": {
+          "type": "plan",
+          "settings": {
+            "name": "Qualified Trainer Package",
+            "desc": "Everything we teach. New career, one decision.",
+            "price": "$X,XXX",
+            "was": "$X,XXX+ bought separately",
+            "button_label": "Buy Now",
+            "button_url": "/products/show-up-fitness-qualified-personal-trainer-package",
+            "button_style": "primary",
+            "micro": "Straight to secure checkout"
+          }
+        },
+        "r1": {
+          "type": "row",
+          "settings": {
+            "label": "SUF-CPT Certification (Level 1)",
+            "value_1": "yes",
+            "value_2": "yes",
+            "value_3": "yes"
+          }
+        },
+        "r2": {
+          "type": "row",
+          "settings": {
+            "label": "Study materials + live exam",
+            "value_1": "yes",
+            "value_2": "yes",
+            "value_3": "yes"
+          }
+        },
+        "r3": {
+          "type": "row",
+          "settings": {
+            "label": "SUF Library + weekly live calls",
+            "value_1": "3 months",
+            "value_2": "6 months",
+            "value_3": "<b>Lifetime</b>"
+          }
+        },
+        "r4": {
+          "type": "row",
+          "settings": {
+            "label": "Weekend Seminar",
+            "value_2": "1 — your choice",
+            "value_3": "All 3 — Upper, Lower, Nutrition"
+          }
+        },
+        "r5": {
+          "type": "row",
+          "settings": {
+            "label": "CEUs earned (continuing education credits)",
+            "value_2": "1.1",
+            "value_3": "7.3"
+          }
+        },
+        "r6": {
+          "type": "row",
+          "settings": {
+            "label": "Level 2 Certifications (Soft Tissue + Nutrition)",
+            "value_3": "Both"
+          }
+        },
+        "r7": {
+          "type": "row",
+          "settings": {
+            "label": "Mentorship with Chris",
+            "value_3": "<b>Weekly with Chris</b>"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "settings": {
+        "anchor": "new-trainers",
+        "heading": "Become a Trainer",
+        "aside": "One certification. Three ways to get it. Every package includes the full SUF-CPT.",
+        "note": "<p>Seminars are held at Life Time Fitness locations nationwide — you pick the city and date that work for you. Travel and lodging are not included.</p>"
+      }
+    },
+    "ce": {
+      "type": "suf-compare",
+      "blocks": {
+        "p1": {
+          "type": "plan",
+          "settings": {
+            "name": "Any One",
+            "price": "$XXX",
+            "button_label": "Choose Yours",
+            "button_url": "/pages/suf-continuing-education",
+            "button_style": "ghost",
+            "micro": "Pick your certification or seminar"
+          }
+        },
+        "p2": {
+          "type": "plan",
+          "settings": {
+            "name": "Continuing Education Bundle",
+            "desc": "Any two — your pick.",
+            "price": "$XXX",
+            "was": "$X,XXX bought separately",
+            "button_label": "Buy Now",
+            "button_url": "/products/show-up-fitness-qualified-personal-trainer-package",
+            "button_style": "primary",
+            "micro": "Straight to secure checkout — pick your two at checkout"
+          }
+        },
+        "r1": {
+          "type": "row",
+          "settings": {
+            "label": "Your pick of: Soft Tissue Mobilization Certification, Nutrition Coach Certification, or a Weekend Seminar",
+            "value_1": "1",
+            "value_2": "2"
+          }
+        },
+        "r2": {
+          "type": "row",
+          "settings": {
+            "label": "CEUs earned (continuing education credits)",
+            "value_1": "1.1–2.0",
+            "value_2": "3.1–4.0"
+          }
+        },
+        "r3": {
+          "type": "row",
+          "settings": {
+            "label": "SUF Library + weekly live calls",
+            "value_1": "3 months",
+            "value_2": "3–6 months"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "settings": {
+        "anchor": "continuing-ed",
+        "heading": "Already Certified",
+        "aside": "Certified through NASM, ACE, ISSA — or with us? Level up from here.",
+        "note": "<p>Want the full path anyway? The <b>Qualified Trainer Package</b> includes all three certifications, all three seminars — Upper Body, Lower Body, and Nutrition — and lifetime library access. <a href=\"#new-trainers\">See it above →</a></p>"
+      }
+    },
+    "cta": {
+      "type": "suf-cta",
+      "settings": {
+        "heading": "Still Deciding?",
+        "subhead": "Tell us where you are and what you want to add. A real person answers — no pressure, no scripts.",
+        "button_label": "Send Us a Message",
+        "button_url": "/pages/suf-contact",
+        "link_label": "Or start with the SUF-CPT →",
+        "link_url": "/pages/suf-cpt"
       }
     }
   },
   "order": [
-    "main"
+    "band",
+    "new",
+    "ce",
+    "cta"
   ]
 }

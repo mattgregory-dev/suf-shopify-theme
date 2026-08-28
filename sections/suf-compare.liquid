@@ -1,0 +1,236 @@
+{% comment %}
+  Package comparison table.
+
+  A REAL <table>, with <th scope="col"> on the plans and <th scope="row"> on
+  the feature names. That is what lets a screen reader announce a cell as
+  "SUF-CPT + Seminar Bundle, CEUs earned, 1.1" rather than reading out a bare
+  "1.1" with no idea which plan or which feature it belongs to. The mockup's
+  markup is presentational -- all <td> and a header row of <th> with no scope --
+  and that difference is the whole reason to build it as a table at all.
+
+  THE SCROLL CONTAINER IS FOCUSABLE. It scrolls horizontally on narrow screens,
+  and a scrollable region that cannot be reached by keyboard is unreachable
+  content. tabindex="0" plus role="region" and a label make it a stop in the
+  tab order that responds to arrow keys, with a visible focus ring saying so.
+
+  VALUES. Each feature row holds one value per plan column:
+      blank    -> "not included" (an em dash, plus hidden text)
+      yes      -> the slash tick, plus hidden "Included"
+      anything -> printed as written ("3 months", "1.1", "<b>Lifetime</b>")
+  The two marks are aria-hidden; the meaning is in the hidden text beside them.
+
+  NOT PORTED: the mockup's column-hover JavaScript, which tinted a whole column
+  on mouseover. It is a hover-only affordance, so keyboard and touch users
+  never get it, and the featured column is already marked permanently. A script
+  that helps only mouse users scan is not worth the script.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign plans = section.blocks | where: 'type', 'plan'
+  assign rows = section.blocks | where: 'type', 'row'
+  assign anchor = section.settings.anchor | handle
+  assign table_class = 'suf-ctable'
+  if plans.size < 3
+    assign table_class = table_class | append: ' suf-ctable--narrow'
+  endif
+-%}
+
+<div class="suf-section" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head">
+        <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{% render 'suf-nb', text: section.settings.aside %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div
+      class="suf-ctable-wrap"
+      role="region"
+      aria-label="{{ section.settings.heading | default: 'Package comparison' | strip_html | escape }}"
+      tabindex="0"
+    >
+      <table class="{{ table_class }}">
+        <caption class="suf-visually-hidden">
+          {{ section.settings.heading | default: 'Package comparison' | strip_html }}
+        </caption>
+
+        <thead>
+          <tr>
+            <td class="suf-ctable__corner"></td>
+            {%- for plan in plans -%}
+              <th
+                scope="col"
+                class="suf-ctable__plan{% if plan.settings.featured %} suf-ctable__plan--featured{% endif %}"
+                {{ plan.shopify_attributes }}
+              >
+                {%- if plan.settings.featured and plan.settings.flag != blank -%}
+                  <span class="suf-ctable__flag">{{ plan.settings.flag | escape }}</span>
+                {%- endif -%}
+                <span class="suf-ctable__name">{% render 'suf-nb', text: plan.settings.name %}</span>
+                {%- if plan.settings.desc != blank -%}
+                  <span class="suf-ctable__desc">{% render 'suf-nb', text: plan.settings.desc %}</span>
+                {%- endif -%}
+                {%- if plan.settings.price != blank -%}
+                  <span class="suf-ctable__price">{{ plan.settings.price | escape }}</span>
+                {%- endif -%}
+                {%- if plan.settings.was != blank -%}
+                  <span class="suf-ctable__was">{{ plan.settings.was | escape }}</span>
+                {%- endif -%}
+              </th>
+            {%- endfor -%}
+          </tr>
+        </thead>
+
+        <tbody>
+          {%- for row in rows -%}
+            <tr>
+              <th scope="row" class="suf-ctable__feature">
+                {%- render 'suf-nb', text: row.settings.label -%}
+              </th>
+              {%- for plan in plans -%}
+                {%- liquid
+                  case forloop.index
+                    when 1
+                      assign value = row.settings.value_1
+                    when 2
+                      assign value = row.settings.value_2
+                    else
+                      assign value = row.settings.value_3
+                  endcase
+                  assign flag = value | downcase | strip
+                -%}
+                <td {% if plan.settings.featured %}class="suf-ctable__cell--featured"{% endif %}>
+                  {%- if value == blank -%}
+                    <span class="suf-ctable__no" aria-hidden="true">&mdash;</span>
+                    <span class="suf-visually-hidden">Not included</span>
+                  {%- elsif flag == 'yes' -%}
+                    <span class="suf-ctable__yes" aria-hidden="true"></span>
+                    <span class="suf-visually-hidden">Included</span>
+                  {%- else -%}
+                    {%- render 'suf-nb', text: value -%}
+                  {%- endif -%}
+                </td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+
+          <tr>
+            <td></td>
+            {%- for plan in plans -%}
+              <td class="suf-ctable__cta{% if plan.settings.featured %} suf-ctable__cell--featured{% endif %}">
+                {%- if plan.settings.button_label != blank and plan.settings.button_url != blank -%}
+                  <a
+                    class="suf-btn suf-btn--{{ plan.settings.button_style | default: 'primary' }}"
+                    href="{{ plan.settings.button_url }}"
+                  >
+                    {{- plan.settings.button_label | escape -}}
+                  </a>
+                {%- endif -%}
+                {%- if plan.settings.micro != blank -%}
+                  <p class="suf-btn-micro">{{ plan.settings.micro | escape }}</p>
+                {%- endif -%}
+              </td>
+            {%- endfor -%}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {%- if section.settings.note != blank -%}
+      <div class="suf-tnote">{% render 'suf-nb', text: section.settings.note %}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Comparison table (SUF)",
+  "tag": "section",
+  "max_blocks": 16,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Section heading" },
+    { "type": "inline_richtext", "id": "aside", "label": "Supporting note" },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "info": "Lets a button elsewhere link here, e.g. \"new-trainers\"."
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Note under the table",
+      "info": "Centred fine print, e.g. what the price does not cover."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Plan (column)",
+      "settings": [
+        { "type": "inline_richtext", "id": "name", "label": "Name" },
+        { "type": "inline_richtext", "id": "desc", "label": "One-line description" },
+        { "type": "text", "id": "price", "label": "Price" },
+        {
+          "type": "text",
+          "id": "was",
+          "label": "Price comparison",
+          "info": "e.g. \"$X,XXX bought separately\"."
+        },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured column",
+          "info": "Navy, outlined top to bottom. Use on ONE column -- two recommendations is none.",
+          "default": false
+        },
+        { "type": "text", "id": "flag", "label": "Flag text", "default": "Most Popular" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Buy Now" },
+        { "type": "url", "id": "button_url", "label": "Button link" },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            { "value": "primary", "label": "Filled red" },
+            { "value": "ghost", "label": "Outline" }
+          ],
+          "default": "primary"
+        },
+        { "type": "text", "id": "micro", "label": "Fine print under the button" }
+      ]
+    },
+    {
+      "type": "row",
+      "name": "Feature (row)",
+      "settings": [
+        { "type": "inline_richtext", "id": "label", "label": "Feature" },
+        {
+          "type": "inline_richtext",
+          "id": "value_1",
+          "label": "Column 1",
+          "info": "Leave blank for \"not included\". Type yes for a tick. Anything else prints as written."
+        },
+        { "type": "inline_richtext", "id": "value_2", "label": "Column 2" },
+        { "type": "inline_richtext", "id": "value_3", "label": "Column 3" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparison table (SUF)",
+      "blocks": [
+        { "type": "plan" },
+        { "type": "plan" },
+        { "type": "row" },
+        { "type": "row" }
+      ]
+    }
+  ]
+}
+{% endschema %}
