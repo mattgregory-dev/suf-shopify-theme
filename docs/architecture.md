@@ -190,6 +190,30 @@ Components rendering as `<a>`, `<button>` or `<p>` are where this lives. That
 is where the buttons, the standalone links and every eyebrow, subhead and role
 line are.
 
+#### It is not only the base layer
+
+The rule is broader than "scoped base rules beat components". **Any selector
+mixing a class with an element out-specifies a plain class** — including one
+written inside a component, against that component's own children:
+
+```scss
+.suf-gcard {
+  > p { font-size: 15px; }        // (0,1,1)
+}
+.suf-gcard__price { font-size: clamp(36px, 3.2vw, 52px); }   // (0,1,0) -- loses
+```
+
+That shipped. `.suf-gcard > p` was meant as "the body copy", but `__price`,
+`__meta` and `__soldout` are all `<p>` and all direct children, so the generic
+rule flattened three siblings it was never aimed at. The child combinator does
+not help: the price *is* a direct child.
+
+**Give the thing a class instead of reaching for its element.** A component that
+names every child explicitly cannot collide with itself.
+
+The audit above catches these too, as long as step 2 compares each rendered
+element against *every* rule that matches it rather than only the base ones.
+
 ## Accessibility baseline
 
 Applied to all new and forked work from 2026-08-23. Not chasing a specific

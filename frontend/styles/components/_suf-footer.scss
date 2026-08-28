@@ -1,5 +1,15 @@
 @use '../mixins' as m;
 
+// SPECIFICITY: several children below are written `& &__x`, not `&__x`.
+//
+// `&__x` CONCATENATES -- it compiles to `.suf-footer__x`, a single class at
+// (0,1,0), which loses to the scoped base rules. `.suf-body h2` was overriding
+// the title's font-size with full heading size, and `.suf-body p` / `ul` were
+// reinstating margins these rules explicitly set to 0.
+//
+// `& &__x` compiles to `.suf-footer .suf-footer__x` at (0,2,0), which wins.
+// See architecture.md, "The trap that scoping creates".
+
 // sections/suf-footer.liquid
 //
 // Colour lives here, not in section settings. The legacy footer exposes 30+
@@ -38,14 +48,14 @@
     }
   }
 
-  &__title {
+  & &__title {
     margin-block-end: var(--suf-space-md);
     font-size: var(--suf-font-size-h5);
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
-  &__logo-img {
+  & &__logo-img {
     max-width: 240px;
   }
 
@@ -54,7 +64,7 @@
     color: var(--suf-color-text-muted);
   }
 
-  &__list {
+  & &__list {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -104,12 +114,12 @@
     padding-block: var(--suf-space-md);
   }
 
-  &__copyright {
+  & &__copyright {
     margin: 0;
     font-size: 0.875rem;
   }
 
-  &__payment {
+  & &__payment {
     display: flex;
     flex-wrap: wrap;
     gap: var(--suf-space-sm);

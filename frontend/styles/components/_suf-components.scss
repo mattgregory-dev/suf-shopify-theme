@@ -66,7 +66,11 @@
 // The aside is supporting copy, so it may not exist. margin-left:auto on the
 // aside itself (rather than space-between on the parent) keeps the heading
 // hard left when it is the only child.
-.suf-section__aside {
+//
+// Nested for specificity: it renders as a <p>, and `.suf-body p` is (0,1,1)
+// with a `margin` shorthand that includes margin-left -- so unnested, the auto
+// was discarded and the aside sat left instead of right.
+.suf-section__head .suf-section__aside {
   margin-left: auto;
   max-width: 34ch;
   color: var(--suf-color-text-muted);
@@ -317,10 +321,22 @@
   object-fit: cover;
 }
 
+// Available to markup, not just to Sass. Same rules as the m.visually-hidden
+// mixin -- content stays in the accessibility tree but off screen.
+.suf-visually-hidden {
+  @include m.visually-hidden;
+}
+
 // Wrap every occurrence of "SUF-CPT" in this. The hyphenated mark must never
 // break across two lines.
+//
+// font-weight: inherit is load-bearing. snippets/suf-fonts.liquid applies
+// `font-weight: 400` to a list of elements that includes a bare `span`, so a
+// span inside a heading renders at 400 rather than the heading's 800. This
+// wrapper exists only to stop a line break; it must never change weight.
 .suf-nb {
   white-space: nowrap;
+  font-weight: inherit;
 }
 
 // Fine print under a button. Scoped to .suf-body only to out-specify the
