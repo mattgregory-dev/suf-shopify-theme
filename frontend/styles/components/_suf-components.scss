@@ -323,7 +323,11 @@
 
 // Available to markup, not just to Sass. Same rules as the m.visually-hidden
 // mixin -- content stays in the accessibility tree but off screen.
-.suf-visually-hidden {
+//
+// Scoped to .suf-body so its `margin: -1px` survives. The base `.suf-body p`
+// margin rule is (0,1,1) and was overriding it, which breaks the technique:
+// the negative margin is what collapses the 1px box.
+.suf-body .suf-visually-hidden {
   @include m.visually-hidden;
 }
 

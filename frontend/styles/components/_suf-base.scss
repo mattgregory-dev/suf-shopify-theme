@@ -62,12 +62,17 @@
   // Prose links only.
   //
   // `.suf-body a` is (0,1,1) and a component class like .suf-btn--primary is
-  // (0,1,0), so without this exclusion the base rule WINS and repaints every
+  // (0,1,0), so without an exclusion the base rule WINS and repaints every
   // button and standalone link blue. That is a real bug that shipped once.
   //
-  // Add any future component that renders as an <a> and sets its own colour to
-  // this list.
-  a:not(.suf-btn):not(.suf-link):not(.suf-tcard) {
+  // The exclusions are wrapped in :where(), which contributes ZERO specificity.
+  // Written as a chain of bare :not() this rule climbed to (0,4,1) -- one class
+  // per exclusion -- and started beating rules it had no business beating, such
+  // as the footer's own link colour at (0,1,1). :where() keeps it at (0,1,1)
+  // however long the list grows.
+  //
+  // Add any future component that renders as an <a> and sets its own colour.
+  a:not(:where(.suf-btn, .suf-link, .suf-tcard, .suf-resource, .suf-social__link)) {
     color: var(--suf-color-link);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;
@@ -108,7 +113,9 @@
     margin: 0;
   }
 
-  button:not(.suf-btn),
+  // :where() again -- as a bare :not() this was (0,2,1) and beat the search
+  // buttons' own colour at (0,2,0). Wrapped, it stays (0,1,1).
+  button:not(:where(.suf-btn)),
   input,
   select,
   textarea {
