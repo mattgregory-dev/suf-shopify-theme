@@ -1,0 +1,69 @@
+{% comment %}
+  Stat bar. One block per figure.
+
+  Sits ON TOP of the hero's bottom edge -- the design's "something overlaps the
+  band's bottom edge" rule in its tier-1 form. It relies on the hero's deep
+  bottom padding for clearance, so it belongs directly after a Hero section and
+  nowhere else.
+
+  A figure may be a short WORD instead of a number ("Preferred"). That gets a
+  smaller size, bottom-aligned to the same box, so it sits on the numbers'
+  baseline rather than floating above it.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-statwrap">
+  <div class="suf-wrap">
+    <div class="suf-statbar">
+      {%- for block in section.blocks -%}
+        <div class="suf-stat" {{ block.shopify_attributes }}>
+          {%- if block.settings.figure != blank -%}
+            <p class="suf-stat__num{% if block.settings.is_word %} suf-stat__num--text{% endif %}">
+              {{- block.settings.figure | escape -}}
+            </p>
+          {%- endif -%}
+          {%- if block.settings.label != blank -%}
+            <p class="suf-stat__label">{% render 'suf-nb', text: block.settings.label %}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stat bar (SUF)",
+  "tag": "section",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "figure",
+          "label": "Figure",
+          "info": "e.g. \"$XXX/hr\", \"40%\", \"$X\"."
+        },
+        {
+          "type": "checkbox",
+          "id": "is_word",
+          "label": "This is a word, not a number",
+          "info": "Drops it a size and sits it on the numbers' baseline.",
+          "default": false
+        },
+        { "type": "text", "id": "label", "label": "Label" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stat bar (SUF)",
+      "blocks": [{ "type": "stat" }, { "type": "stat" }, { "type": "stat" }, { "type": "stat" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,418 @@
+// Homepage-only sections: paths, packages, proof band.
+
+// ---------------------------------------------------------------------------
+// PATHS -- numbered ledger rows
+//
+// A whole row is one link. The "Start Here" cue is a <span>, not a nested
+// anchor, so each row carries exactly one tab stop and one accessible name.
+// ---------------------------------------------------------------------------
+
+.suf-paths {
+  border-top: 1px solid var(--suf-color-border-subtle);
+}
+
+.suf-rowpath {
+  display: grid;
+  // number | title | description | cue
+  grid-template-columns: 110px 240px 1fr auto;
+  gap: var(--suf-space-4);
+  align-items: center;
+  padding: 30px 18px;
+  border-bottom: 1px solid var(--suf-color-border-subtle);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  // Declared at zero width so the hover only animates the size, not the colour.
+  box-shadow: inset 0 0 0 0 var(--suf-red);
+  transition:
+    background-color var(--suf-transition),
+    box-shadow var(--suf-transition);
+
+  &:hover,
+  &:focus-visible {
+    position: relative;
+    z-index: 1;
+    background: var(--suf-color-surface);
+    box-shadow:
+      inset 4px 0 0 0 var(--suf-red),
+      0 14px 30px rgb(0 32 54 / 12%);
+
+    .suf-rowpath__n {
+      color: var(--suf-red);
+    }
+
+    .suf-rowpath__cue {
+      color: var(--suf-color-accent);
+      border-color: var(--suf-color-accent);
+    }
+
+    .suf-rowpath__arrow {
+      transform: translateX(5px);
+    }
+  }
+
+  // 900px: four columns cannot hold a 52ch description and a number this size.
+  // Below it the row becomes a stack, and the number leads.
+  @media (max-width: 900px) {
+    grid-template-columns: auto 1fr;
+    gap: var(--suf-space-3);
+    align-items: start;
+
+    .suf-rowpath__body {
+      grid-column: 2;
+    }
+
+    .suf-rowpath__cue {
+      grid-column: 2;
+    }
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 21px;
+  }
+}
+
+.suf-rowpath .suf-rowpath__desc {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--suf-color-text);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.suf-rowpath__n {
+  color: #c6d2da;
+  font-size: clamp(36px, 3vw, 52px);
+  font-weight: 800;
+  // Tabular figures keep 01/02/03/04 the same width, so the titles line up.
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: color var(--suf-transition);
+}
+
+.suf-rowpath__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--suf-color-link);
+  color: var(--suf-color-link);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color var(--suf-transition),
+    border-color var(--suf-transition);
+}
+
+.suf-rowpath__arrow {
+  display: inline-block;
+  transition: transform var(--suf-transition);
+}
+
+// ---------------------------------------------------------------------------
+// PACKAGES -- 3-up, navy centre card
+// ---------------------------------------------------------------------------
+
+.suf-pkgrow {
+  display: grid;
+  // The featured card is wider AND taller, so it reads as the recommendation
+  // before anyone has read a word of it.
+  grid-template-columns: 1fr 1.15fr 1fr;
+  align-items: center;
+
+  // 900px: three price cards side by side stop being comparable.
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-pkg {
+  position: relative;
+  padding: 40px 28px;
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    box-shadow var(--suf-transition),
+    border-color var(--suf-transition);
+
+  h3 {
+    margin: 0;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+  }
+
+  &:hover,
+  &:focus-visible {
+    z-index: 1;
+    border-color: var(--suf-blue-light);
+    box-shadow:
+      inset 0 0 0 1px var(--suf-blue-light),
+      0 14px 30px rgb(0 32 54 / 12%);
+  }
+}
+
+// Collapse the doubled border between adjacent cards.
+.suf-pkgrow .suf-pkg:first-child {
+  border-right: none;
+}
+
+.suf-pkgrow .suf-pkg:last-child {
+  border-left: none;
+}
+
+@media (max-width: 900px) {
+  .suf-pkgrow .suf-pkg:first-child,
+  .suf-pkgrow .suf-pkg:last-child {
+    border: 1px solid var(--suf-color-border-subtle);
+  }
+}
+
+.suf-pkg .suf-pkg__price {
+  margin: 14px 0 6px;
+  color: var(--suf-color-heading);
+  font-size: clamp(36px, 3.2vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.suf-pkg .suf-pkg__desc {
+  margin: 0 0 20px;
+  color: var(--suf-color-text-muted);
+  font-size: var(--suf-font-size-small);
+  line-height: 1.55;
+}
+
+.suf-pkg--featured {
+  z-index: 2;
+  padding: 56px 32px;
+  background: var(--suf-navy);
+  border-color: var(--suf-navy);
+  box-shadow: 0 24px 60px rgb(0 32 54 / 22%);
+
+  h3 {
+    color: var(--suf-color-heading-on-dark);
+  }
+
+  .suf-pkg__price {
+    color: var(--suf-blue-light);
+  }
+
+  .suf-pkg__desc {
+    color: var(--suf-color-text-on-dark);
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--suf-blue-light);
+    box-shadow:
+      inset 0 0 0 1px var(--suf-blue-light),
+      0 28px 70px rgb(0 32 54 / 32%);
+  }
+}
+
+// Straddles the card's top edge.
+.suf-pkg__flag {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  padding: 6px 16px;
+  background: var(--suf-red);
+  color: var(--suf-white);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.suf-body .suf-pkg-more {
+  margin: var(--suf-space-4) 0 0;
+  text-align: center;
+}
+
+// ---------------------------------------------------------------------------
+// PROOF BAND
+//
+// Full-bleed navy, roughly two thirds down the page. Carries its own rhythm
+// through margin-block, so it does NOT take .suf-section.
+// ---------------------------------------------------------------------------
+
+.suf-proof {
+  margin-block: var(--suf-space-section);
+  padding-block: var(--suf-space-6);
+  background: var(--suf-navy);
+  color: var(--suf-color-ink-on-dark);
+
+  .suf-eyebrow {
+    color: var(--suf-color-heading-on-dark);
+  }
+}
+
+.suf-proof__inner {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: var(--suf-space-6);
+  align-items: start;
+
+  @media (max-width: 1000px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// The featured quote, with the split red/blue rule above it -- one of the
+// design's four rationed accents.
+.suf-bigquote {
+  position: relative;
+  padding-top: 26px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 6px;
+    background: linear-gradient(90deg, var(--suf-red) 50%, var(--suf-blue) 50%);
+  }
+
+  blockquote {
+    margin: 0;
+  }
+
+  p {
+    margin: 0 0 var(--suf-space-3);
+    color: var(--suf-color-heading-on-dark);
+    font-size: clamp(24px, 2.5vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+}
+
+.suf-bigquote .suf-bigquote__who {
+  margin: 0;
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  b {
+    color: var(--suf-blue-light);
+  }
+}
+
+.suf-minis {
+  display: grid;
+  border-left: 1px solid var(--suf-color-border-on-dark);
+
+  // Stacked, a left rule reads as a stray line; a top rule reads as a divider.
+  @media (max-width: 1000px) {
+    border-left: none;
+    border-top: 1px solid var(--suf-color-border-on-dark);
+  }
+}
+
+.suf-mini {
+  padding: 22px 0 22px 26px;
+  border-bottom: 1px solid var(--suf-color-border-on-dark);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 1000px) {
+    padding-left: 0;
+  }
+
+  blockquote {
+    margin: 0;
+  }
+}
+
+.suf-mini .suf-mini__stars {
+  margin: 0 0 8px;
+  color: var(--suf-color-accent);
+  font-size: var(--suf-font-size-micro);
+  letter-spacing: 3px;
+}
+
+.suf-mini .suf-mini__quote {
+  margin: 0 0 8px;
+  color: var(--suf-color-text-on-dark);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.suf-mini .suf-mini__who {
+  margin: 0;
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------------------
+// GYM LOGO ROW
+//
+// Logos are single-colour SVGs tinted with a CSS mask. The mask URL comes from
+// an inline custom property set in Liquid, because suf.css is compiled and
+// cannot call asset_url.
+// ---------------------------------------------------------------------------
+
+.suf-gymline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--suf-space-5);
+  align-items: center;
+  margin-top: var(--suf-space-5);
+  padding-top: var(--suf-space-4);
+  border-top: 1px solid var(--suf-color-border-on-dark);
+}
+
+.suf-gymline__cap {
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.suf-gymline__logo {
+  display: inline-block;
+  width: var(--suf-logo-w);
+  height: var(--suf-logo-h);
+  background: #5b7d92;
+  mask: var(--suf-logo-mask) center / contain no-repeat;
+  -webkit-mask: var(--suf-logo-mask) center / contain no-repeat;
+}
+
+// A wordmark where no logo exists. Same muted tint, so it sits in the row as a
+// peer rather than as a caption.
+.suf-gymline__text {
+  color: #5b7d92;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  line-height: 1.3;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.suf-proof .suf-gymnote {
+  max-width: 56ch;
+  margin: var(--suf-space-3) 0 0;
+  color: var(--suf-color-heading-on-dark);
+  font-size: 17px;
+}

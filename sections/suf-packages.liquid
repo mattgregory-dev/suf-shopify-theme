@@ -1,0 +1,117 @@
+{% comment %}
+  Three package cards with a featured navy centre.
+
+  Whole-card links, so the inner cue is a <span> in every case -- including the
+  featured card, where it LOOKS like a button but is not one. A <button> or a
+  second <a> inside a card link would be a nested interactive control.
+
+  Prices are typed, not read from a product. These cards point at pages that
+  explain the packages rather than adding to cart, and one of them ("Qualified
+  Trainer Package") spans several products. Where a card should sell directly,
+  use suf-cert instead.
+
+  ONE card should be featured. Two featured cards is no recommendation at all.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-section">
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head">
+        <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{% render 'suf-nb', text: section.settings.aside %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="suf-pkgrow">
+      {%- for block in section.blocks -%}
+        <a
+          class="suf-pkg{% if block.settings.featured %} suf-pkg--featured{% endif %}"
+          href="{{ block.settings.url | default: '#' }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.featured and block.settings.flag != blank -%}
+            <span class="suf-pkg__flag">{{ block.settings.flag | escape }}</span>
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+            <h3>{% render 'suf-nb', text: block.settings.heading %}</h3>
+          {%- endif -%}
+
+          {%- if block.settings.price != blank -%}
+            <p class="suf-pkg__price">{{ block.settings.price | escape }}</p>
+          {%- endif -%}
+
+          {%- if block.settings.body != blank -%}
+            <p class="suf-pkg__desc">{% render 'suf-nb', text: block.settings.body %}</p>
+          {%- endif -%}
+
+          {%- if block.settings.cue != blank -%}
+            {%- if block.settings.featured -%}
+              <span class="suf-btn suf-btn--primary">{{ block.settings.cue | escape }}</span>
+            {%- else -%}
+              <span class="suf-tcard__cue">{{ block.settings.cue | escape }}</span>
+            {%- endif -%}
+          {%- endif -%}
+        </a>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.footnote != blank -%}
+      <div class="suf-pkg-more">{% render 'suf-nb', text: section.settings.footnote %}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Packages (SUF)",
+  "tag": "section",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Section heading" },
+    { "type": "text", "id": "aside", "label": "Supporting note" },
+    {
+      "type": "richtext",
+      "id": "footnote",
+      "label": "Footnote",
+      "info": "Centred line under the cards, e.g. a link to the full comparison."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "package",
+      "name": "Package",
+      "settings": [
+        { "type": "inline_richtext", "id": "heading", "label": "Name" },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "info": "Typed, not read from a product -- these cards link to pages, they do not add to cart."
+        },
+        { "type": "inline_richtext", "id": "body", "label": "Description" },
+        { "type": "text", "id": "cue", "label": "Link text", "default": "Learn More" },
+        { "type": "url", "id": "url", "label": "Link" },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured",
+          "info": "Navy, larger, with a flag. Use on ONE card only -- two recommendations is none.",
+          "default": false
+        },
+        { "type": "text", "id": "flag", "label": "Flag text", "default": "Most Popular" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Packages (SUF)",
+      "blocks": [{ "type": "package" }, { "type": "package" }, { "type": "package" }]
+    }
+  ]
+}
+{% endschema %}

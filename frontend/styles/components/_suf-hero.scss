@@ -1,0 +1,178 @@
+// Tier-1 hero and the stat bar that overlaps it. Homepage only.
+//
+// The hero is the design's ONE full-bleed photo moment above the fold. Tier 2
+// gets a navy band with an edge-bleeding photo (_suf-band.scss); tier 3 gets no
+// photo at all. Do not reach for this on an interior page.
+
+.suf-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 640px;
+  background: var(--suf-navy);
+  border-bottom: 4px solid var(--suf-red);
+}
+
+.suf-hero__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    // Faces sit above centre in most gym photography; centring the crop cuts
+    // heads off.
+    object-position: center 30%;
+  }
+
+  // A scrim, and the design's one sanctioned gradient. The rule is "contrast
+  // by edges, never fades" -- this is not decoration, it is what makes white
+  // text legible over an arbitrary photograph. It is heaviest on the left,
+  // where the copy sits, and clears the right so the image still reads.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgb(1 25 42 / 92%) 0%,
+      rgb(1 25 42 / 72%) 44%,
+      rgb(1 25 42 / 25%) 100%
+    );
+  }
+}
+
+.suf-hero .suf-wrap {
+  position: relative;
+  z-index: 2;
+  padding-top: 96px;
+  // Deeper than the top: the stat bar overlaps this edge and must not collide
+  // with the buttons.
+  padding-bottom: 120px;
+}
+
+.suf-hero {
+  h1 {
+    max-width: 13ch;
+    margin-bottom: var(--suf-space-3);
+    color: var(--suf-color-heading-on-dark);
+    font-size: var(--suf-font-size-hero);
+    line-height: 1.02;
+  }
+
+  // Exactly one blue phrase in the headline. A second stops it reading as
+  // emphasis and starts reading as decoration.
+  h1 em {
+    font-style: normal;
+    color: var(--suf-blue-light);
+  }
+
+  .suf-eyebrow {
+    color: var(--suf-color-heading-on-dark);
+  }
+
+  .suf-hero__subhead {
+    max-width: 46ch;
+    margin: 0 0 var(--suf-space-4);
+    color: var(--suf-color-text-on-dark);
+    font-size: clamp(16px, 1.3vw, 20px);
+  }
+
+  // 600px: the fluid clamp bottoms out at 52px, which still wraps the headline
+  // to five lines on a phone.
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 44px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// STAT BAR
+//
+// Overlaps the hero's bottom edge -- the design's "something overlaps the
+// band's bottom edge" rule, in its tier-1 form. Sits above the hero on z, and
+// the hero's deep bottom padding is what makes room for it.
+// ---------------------------------------------------------------------------
+
+.suf-statwrap {
+  position: relative;
+  z-index: 3;
+  margin-top: -40px;
+  margin-bottom: var(--suf-space-section);
+}
+
+.suf-statbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--suf-color-surface);
+  border-top: 3px solid var(--suf-blue);
+  box-shadow: 0 20px 50px rgb(0 32 54 / 14%);
+
+  // 820px: four columns of numbers stop being comparable at a glance, which is
+  // the only reason to put them in a row.
+  @media (max-width: 820px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-stat {
+  padding: 33px 14px;
+  border-right: 1px solid var(--suf-color-border-faint);
+  text-align: center;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  // Once wrapped, the vertical rule between columns becomes a horizontal one
+  // between rows.
+  @media (max-width: 820px) {
+    border-right: none;
+    border-bottom: 1px solid var(--suf-color-border-faint);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.suf-stat .suf-stat__num {
+  color: var(--suf-blue);
+  font-size: clamp(40px, 3.4vw, 55px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+// A short word instead of a figure. Smaller, and bottom-aligned to the same
+// baseline box so it sits level with the numbers beside it.
+//
+// These three are nested under .suf-stat: they render as <p>, and the base
+// `.suf-body p` margin rule would otherwise reinstate a bottom margin over
+// their own spacing.
+.suf-stat .suf-stat__num--text {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: clamp(40px, 3.4vw, 55px);
+  font-size: clamp(22px, 1.9vw, 30px);
+}
+
+.suf-stat .suf-stat__label {
+  max-width: 180px;
+  margin: 12px auto 0;
+  color: var(--suf-color-text-muted);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  text-wrap: balance;
+}

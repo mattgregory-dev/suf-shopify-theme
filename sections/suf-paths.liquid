@@ -1,0 +1,82 @@
+{% comment %}
+  Numbered ledger rows -- the "choose your path" wayfinding block.
+
+  Each ROW is one link. The "Start Here" cue is a <span>, not a nested anchor,
+  so a row is one tab stop with one accessible name. Two links per row would
+  double the tab stops and read the destination twice.
+
+  Numbers are generated from block order, not typed. A merchant reordering the
+  rows in the editor gets 01-04 renumbered automatically; typing them by hand
+  guarantees they eventually disagree with the order.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- assign anchor = section.settings.anchor | handle -%}
+
+<div class="suf-section" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head suf-section__head--flush">
+        <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{% render 'suf-nb', text: section.settings.aside %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="suf-paths">
+      {%- for block in section.blocks -%}
+        <a
+          class="suf-rowpath"
+          href="{{ block.settings.url | default: '#' }}"
+          {{ block.shopify_attributes }}
+        >
+          <span class="suf-rowpath__n">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+          <h3>{{ block.settings.heading | escape }}</h3>
+          <p class="suf-rowpath__desc">{% render 'suf-nb', text: block.settings.body %}</p>
+          <span class="suf-rowpath__cue">
+            {{- block.settings.cue | default: 'Start Here' | escape }}
+            <span class="suf-rowpath__arrow" aria-hidden="true">&rarr;</span>
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Paths (SUF)",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Section heading" },
+    { "type": "text", "id": "aside", "label": "Supporting note" },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "info": "Lets the hero link down to this section, e.g. \"paths\"."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "path",
+      "name": "Path",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "inline_richtext", "id": "body", "label": "Description" },
+        { "type": "text", "id": "cue", "label": "Link text", "default": "Start Here" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Paths (SUF)",
+      "blocks": [{ "type": "path" }, { "type": "path" }, { "type": "path" }, { "type": "path" }]
+    }
+  ]
+}
+{% endschema %}

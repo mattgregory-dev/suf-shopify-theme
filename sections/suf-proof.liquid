@@ -1,0 +1,186 @@
+{% comment %}
+  Dark proof band: one featured quote, a column of short ones, and the row of
+  gyms that hire graduates.
+
+  Full-bleed navy carrying its own rhythm through margin-block, so it does NOT
+  take .suf-section. It sits roughly two thirds down the page, between the
+  quiet sections -- the page rhythm is LOUD hero, quiet, dark band, quiet, dark
+  CTA.
+
+  GYM LOGOS are single-colour SVGs tinted with a CSS mask, and the mask URL is
+  set inline here because suf.css is compiled and cannot call asset_url.
+  Adding a logo means adding an asset AND a case below -- deliberate, since
+  these are third-party marks rather than merchant content.
+
+  Those marks belong to Life Time, Equinox and Genesis. Using them to say where
+  graduates work is nominative use, but it is a claim about real companies:
+  confirm SUF is comfortable publishing it before this ships.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-proof">
+  <div class="suf-wrap">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="suf-eyebrow">{% render 'suf-nb', text: section.settings.eyebrow %}</p>
+    {%- endif -%}
+
+    <div class="suf-proof__inner">
+      <div class="suf-bigquote">
+        {%- if section.settings.quote != blank -%}
+          <blockquote>
+            <p>{{ section.settings.quote | escape }}</p>
+          </blockquote>
+        {%- endif -%}
+        {%- if section.settings.quote_who != blank -%}
+          <p class="suf-bigquote__who">{% render 'suf-nb', text: section.settings.quote_who %}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="suf-minis">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'mini' -%}
+            <div class="suf-mini" {{ block.shopify_attributes }}>
+              {%- assign rating = block.settings.rating | plus: 0 -%}
+              {%- if rating > 0 -%}
+                <p class="suf-mini__stars" aria-hidden="true">
+                  {%- for i in (1..rating) -%}★{%- endfor -%}
+                </p>
+                <p class="suf-visually-hidden">Rated {{ rating }} out of 5</p>
+              {%- endif -%}
+              {%- if block.settings.quote != blank -%}
+                <blockquote>
+                  <p class="suf-mini__quote">{{ block.settings.quote | escape }}</p>
+                </blockquote>
+              {%- endif -%}
+              {%- if block.settings.who != blank -%}
+                <p class="suf-mini__who">{{ block.settings.who | escape }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- assign logo_blocks = section.blocks | where: 'type', 'logo' -%}
+    {%- assign badge_blocks = section.blocks | where: 'type', 'badge' -%}
+    {%- if logo_blocks.size > 0 or badge_blocks.size > 0 -%}
+      <div class="suf-gymline">
+        {%- if section.settings.gymline_label != blank -%}
+          <span class="suf-gymline__cap">{{ section.settings.gymline_label | escape }}</span>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'logo' -%}
+            {%- liquid
+              case block.settings.logo
+                when 'lifetime'
+                  assign file = 'suf-logo-lifetime.svg'
+                  assign w = '141px'
+                  assign h = '30px'
+                when 'equinox'
+                  assign file = 'suf-logo-equinox.svg'
+                  assign w = '172px'
+                  assign h = '26px'
+                when 'genesis'
+                  assign file = 'suf-logo-genesis.svg'
+                  assign w = '92px'
+                  assign h = '80px'
+                else
+                  assign file = blank
+              endcase
+            -%}
+            {%- if file != blank -%}
+              <span
+                class="suf-gymline__logo"
+                role="img"
+                aria-label="{{ block.settings.label | escape }}"
+                style="--suf-logo-mask: url({{ file | asset_url }}); --suf-logo-w: {{ w }}; --suf-logo-h: {{ h }}"
+              ></span>
+            {%- endif -%}
+          {%- elsif block.type == 'badge' -%}
+            <span class="suf-gymline__text" {{ block.shopify_attributes }}>
+              {{- block.settings.text | escape | newline_to_br -}}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.note != blank -%}
+      <p class="suf-gymnote">{% render 'suf-nb', text: section.settings.note %}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Proof band (SUF)",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "header", "content": "Featured quote" },
+    { "type": "textarea", "id": "quote", "label": "Quote" },
+    { "type": "inline_richtext", "id": "quote_who", "label": "Attribution" },
+    { "type": "header", "content": "Gym row" },
+    { "type": "text", "id": "gymline_label", "label": "Row label", "default": "Graduates work at" },
+    { "type": "inline_richtext", "id": "note", "label": "Note under the row" }
+  ],
+  "blocks": [
+    {
+      "type": "mini",
+      "name": "Short quote",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 0, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "who", "label": "Attribution" }
+      ]
+    },
+    {
+      "type": "logo",
+      "name": "Gym logo",
+      "settings": [
+        {
+          "type": "select",
+          "id": "logo",
+          "label": "Logo",
+          "info": "Adding another needs an SVG in assets/ and a case in the section -- these are third-party marks, not merchant images.",
+          "options": [
+            { "value": "lifetime", "label": "Life Time" },
+            { "value": "equinox", "label": "Equinox" },
+            { "value": "genesis", "label": "Genesis" }
+          ],
+          "default": "lifetime"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Accessible name",
+          "info": "Read aloud in place of the logo.",
+          "default": "Life Time Fitness"
+        }
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Text badge",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "info": "For a destination with no logo. Line breaks are preserved.",
+          "default": "Self\nEmployed"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Proof band (SUF)",
+      "blocks": [{ "type": "mini" }, { "type": "mini" }, { "type": "mini" }]
+    }
+  ]
+}
+{% endschema %}

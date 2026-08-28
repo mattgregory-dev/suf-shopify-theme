@@ -1,0 +1,98 @@
+{% comment %}
+  Tier-1 hero: full-bleed photo, scrim, display headline.
+
+  HOMEPAGE ONLY. Tier 2 is a navy band with an edge-bleeding photo (see
+  suf-page-band); tier 3 is a compact text band. The tier system is a design
+  decision, not a per-page preference -- one full-bleed photo hero on the site.
+
+  The photo loads EAGER with high fetchpriority. It is the largest contentful
+  paint by definition here, and lazy-loading it delays the metric it defines.
+
+  The scrim is a gradient, and the design's rule is "contrast by edges, never
+  fades". This is the sanctioned exception: it is not decoration, it is what
+  makes white text legible over an arbitrary photograph.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-hero">
+  {%- if section.settings.image != blank -%}
+    <div class="suf-hero__bg">
+      {{
+        section.settings.image
+        | image_url: width: 1800
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '600, 900, 1200, 1800',
+          sizes: '100vw',
+          alt: section.settings.image_alt
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="suf-wrap">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="suf-eyebrow">{% render 'suf-nb', text: section.settings.eyebrow %}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1>{% render 'suf-nb', text: section.settings.heading %}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subhead != blank -%}
+      <p class="suf-hero__subhead">{% render 'suf-nb', text: section.settings.subhead %}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank or section.settings.button2_label != blank -%}
+      <div class="suf-btnrow">
+        {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
+          <a class="suf-btn suf-btn--primary" href="{{ section.settings.button_url }}">
+            {%- render 'suf-nb', text: section.settings.button_label -%}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button2_label != blank and section.settings.button2_url != blank -%}
+          <a class="suf-btn suf-btn--ghost suf-btn--on-dark" href="{{ section.settings.button2_url }}">
+            {%- render 'suf-nb', text: section.settings.button2_label -%}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero (SUF)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Headline",
+      "info": "Italicise exactly ONE phrase -- it renders as the blue highlight. A second stops it reading as emphasis."
+    },
+    { "type": "inline_richtext", "id": "subhead", "label": "Subheading" },
+    { "type": "header", "content": "Photo" },
+    { "type": "image_picker", "id": "image", "label": "Background photo" },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photo alt text",
+      "info": "Describe what is happening, not just who is in frame."
+    },
+    { "type": "header", "content": "Buttons" },
+    { "type": "inline_richtext", "id": "button_label", "label": "Primary button" },
+    { "type": "url", "id": "button_url", "label": "Primary link" },
+    {
+      "type": "inline_richtext",
+      "id": "button2_label",
+      "label": "Second button",
+      "info": "Renders as the outline button. Never a second filled red one."
+    },
+    { "type": "url", "id": "button2_url", "label": "Second link" }
+  ],
+  "presets": [{ "name": "Hero (SUF)" }]
+}
+{% endschema %}
