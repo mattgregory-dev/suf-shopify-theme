@@ -1,0 +1,193 @@
+{% comment %}
+  Contact details + form, in one card that overlaps the band above.
+
+  THE FORM IS REAL. The mockup's is a dead <button type="button">; this uses
+  Shopify's {% form 'contact' %}, which posts to the store and emails the
+  address in Settings > Store details > Sender email. Nothing here needs an
+  app, and there is no JavaScript: on submit Shopify redirects back with
+  ?contact_posted=true, which is what drives the success message.
+
+  That redirect is also why the success note carries tabindex="-1" and is
+  focused on load -- after a full page reload a screen reader user would
+  otherwise be returned to the top of the document with no indication that
+  anything happened.
+
+  Contact details are blocks so a merchant can add or drop a line (hours, a
+  second location) without a developer.
+
+  ELEMENT. The root is a <div>: the schema's `"tag": "section"` already wraps
+  this in <section id="shopify-section-...">.
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-section'
+  if section.settings.overlap
+    assign classes = classes | append: ' suf-section--overlap-up'
+  endif
+-%}
+
+<div class="{{ classes }}">
+  <div class="suf-wrap">
+    <div class="suf-contact-card">
+      <div class="suf-contact-split">
+        <div class="suf-contact-info">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.label != blank and block.settings.value != blank -%}
+              <div class="suf-cblock" {{ block.shopify_attributes }}>
+                <h4>{{ block.settings.label | escape }}</h4>
+                <p>
+                  {%- liquid
+                    assign target = block.settings.link_value | default: block.settings.value
+                    assign tel = target | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '.'
+                  -%}
+                  {%- case block.settings.link_as -%}
+                    {%- when 'tel' -%}
+                      <a href="tel:{{ tel }}">{{ block.settings.value | escape }}</a>
+                    {%- when 'email' -%}
+                      <a href="mailto:{{ target | escape }}">{{ block.settings.value | escape }}</a>
+                    {%- else -%}
+                      {{ block.settings.value | escape | newline_to_br }}
+                  {%- endcase -%}
+                </p>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <div class="suf-contact-form">
+          {%- form 'contact', class: 'suf-cform' -%}
+            {%- if form.posted_successfully? -%}
+              <p class="suf-form-note suf-form-note--success" tabindex="-1" data-suf-form-success>
+                {{ section.settings.success_message | default: 'Thanks -- your message is on its way. We usually reply the same day.' }}
+              </p>
+            {%- endif -%}
+
+            {%- if form.errors -%}
+              <div class="suf-form-note suf-form-note--error" role="alert" tabindex="-1" data-suf-form-success>
+                <strong>That didn't send.</strong>
+                <ul>
+                  {%- for field in form.errors -%}
+                    <li>
+                      {%- if field == 'form' -%}
+                        {{ form.errors.messages[field] }}
+                      {%- else -%}
+                        {{ form.errors.translated_fields[field] | capitalize }}
+                        {{ form.errors.messages[field] }}
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+
+            <div class="suf-cform__row">
+              <div class="suf-field">
+                <label for="suf-cf-name">Name</label>
+                <input
+                  type="text"
+                  id="suf-cf-name"
+                  name="contact[name]"
+                  autocomplete="name"
+                  value="{{ form.name }}"
+                  required
+                >
+              </div>
+              <div class="suf-field">
+                <label for="suf-cf-email">Email</label>
+                <input
+                  type="email"
+                  id="suf-cf-email"
+                  name="contact[email]"
+                  autocomplete="email"
+                  value="{{ form.email }}"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="suf-field">
+              <label for="suf-cf-message">Message</label>
+              <textarea id="suf-cf-message" name="contact[body]" rows="6" required>{{ form.body }}</textarea>
+            </div>
+
+            <button type="submit" class="suf-btn suf-btn--primary">
+              {{- section.settings.submit_label | default: 'Send Message' | escape -}}
+            </button>
+          {%- endform -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact card (SUF)",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "overlap",
+      "label": "Overlap the band above",
+      "info": "Only turn this on when the section directly above is a Page band with its overlap setting on.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Send Message"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Message shown after sending",
+      "default": "Thanks -- your message is on its way. We usually reply the same day."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "detail",
+      "name": "Contact detail",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "info": "Phone, Email, Address, Hours."
+        },
+        {
+          "type": "textarea",
+          "id": "value",
+          "label": "Value",
+          "info": "Line breaks are preserved."
+        },
+        {
+          "type": "text",
+          "id": "link_value",
+          "label": "Link target (optional)",
+          "info": "Use when the link must differ from the visible text -- e.g. show \"(000) 000-0000\" but dial \"+1 000 000 0000\". Leave blank to derive it from the value."
+        },
+        {
+          "type": "select",
+          "id": "link_as",
+          "label": "Make this a link",
+          "options": [
+            { "value": "none", "label": "Plain text" },
+            { "value": "tel", "label": "Phone number" },
+            { "value": "email", "label": "Email address" }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact card (SUF)",
+      "blocks": [{ "type": "detail" }, { "type": "detail" }, { "type": "detail" }]
+    }
+  ]
+}
+{% endschema %}

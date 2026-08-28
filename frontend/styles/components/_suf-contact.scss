@@ -1,0 +1,180 @@
+// Contact page: the info + form card.
+//
+// Ported from the mockup, section 14. The card overlaps the band above it, so
+// it carries an elevation shadow -- the one place the design uses a soft edge,
+// because an overlapping card needs to read as lifted off the band.
+//
+// Children are nested for specificity: several are <p> and <a>, which the
+// scoped base rules would otherwise out-specify. See architecture.md,
+// "The trap that scoping creates".
+
+.suf-contact-card {
+  padding: var(--suf-space-5);
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+  box-shadow: 0 14px 30px rgb(0 32 54 / 12%);
+
+  @media (max-width: 900px) {
+    padding: var(--suf-space-4);
+  }
+}
+
+.suf-contact-split {
+  display: grid;
+  // Form gets the wider column: three fields need more room than three lines
+  // of contact detail.
+  grid-template-columns: 5fr 7fr;
+  gap: var(--suf-space-6);
+  align-items: start;
+
+  // 900px is where the two columns stop coexisting -- the form fields get too
+  // narrow to type into comfortably before the info column looks wrong.
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CONTACT DETAILS
+// ---------------------------------------------------------------------------
+
+.suf-cblock {
+  padding: 18px 0 22px;
+
+  // Rule between items only, never above the first or below the last.
+  & + & {
+    border-top: 1px solid var(--suf-color-border-subtle);
+  }
+
+  h4 {
+    margin-bottom: var(--suf-space-2);
+    color: var(--suf-color-text-muted);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0;
+    color: var(--suf-color-text);
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  a {
+    font-weight: 700;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// FORM
+// ---------------------------------------------------------------------------
+
+.suf-cform {
+  display: grid;
+  gap: 18px;
+
+  .suf-btn {
+    justify-self: start;
+  }
+}
+
+.suf-cform__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-field {
+  display: grid;
+  gap: 7px;
+
+  label {
+    color: var(--suf-color-heading);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    // 16px is a hard floor: iOS Safari zooms the viewport on focus for
+    // anything smaller, which is disorienting mid-form.
+    font: inherit;
+    font-size: 16px;
+    color: var(--suf-color-heading);
+    background: var(--suf-color-bg);
+    border: 1px solid #c9d5dc;
+    border-radius: 0;
+  }
+
+  textarea {
+    min-height: 150px;
+    resize: vertical;
+  }
+
+  // :focus, not :focus-visible -- a text field should show focus however it
+  // was reached, including by click. That differs from buttons deliberately.
+  input:focus,
+  textarea:focus {
+    outline: none;
+    background: var(--suf-color-surface);
+    border-color: var(--suf-color-focus);
+    box-shadow: 0 0 0 3px rgb(2 146 219 / 14%);
+  }
+
+  // The ring above is a box-shadow, and box-shadows are not rendered in forced
+  // colours mode -- so without this the focused field would have no visible
+  // indicator at all for those users.
+  @media (forced-colors: active) {
+    input:focus,
+    textarea:focus {
+      outline: 2px solid;
+      outline-offset: 1px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// FORM FEEDBACK
+//
+// No mockup equivalent: its form is a dead button. A real form needs both
+// states, so these are built from the design's existing vocabulary rather than
+// invented -- red accent for errors, blue for success.
+// ---------------------------------------------------------------------------
+
+.suf-form-note {
+  margin: 0 0 var(--suf-space-3);
+  padding: 14px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.suf-form-note--success {
+  border-left: 4px solid var(--suf-blue);
+  background: rgb(2 146 219 / 8%);
+  color: var(--suf-color-text);
+}
+
+.suf-form-note--error {
+  border-left: 4px solid var(--suf-red);
+  background: rgb(193 18 31 / 7%);
+  color: var(--suf-color-text);
+
+  ul {
+    margin: var(--suf-space-2) 0 0;
+    padding-left: 1.2em;
+  }
+
+  li {
+    margin: 0;
+  }
+}

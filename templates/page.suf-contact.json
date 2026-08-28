@@ -1,14 +1,57 @@
 {
   "layout": "suf",
   "sections": {
-    "main": {
-      "type": "suf-main-page",
+    "band": {
+      "type": "suf-page-band",
       "settings": {
-        "show_title": true
+        "eyebrow": "Contact",
+        "heading": "Get in Touch",
+        "subhead": "Questions about the SUF-CPT, seminars, or anything else? Call or send us a message. A real person reads every one, and we'll get back to you, usually the same day.",
+        "tier_3": true,
+        "overlap": true
+      }
+    },
+    "contact": {
+      "type": "suf-contact",
+      "blocks": {
+        "phone": {
+          "type": "detail",
+          "settings": {
+            "label": "Phone",
+            "value": "(000) 000-0000",
+            "link_as": "tel",
+            "link_value": "+1 000 000 0000"
+          }
+        },
+        "email": {
+          "type": "detail",
+          "settings": {
+            "label": "Email",
+            "value": "email@example.com",
+            "link_as": "email"
+          }
+        },
+        "address": {
+          "type": "detail",
+          "settings": {
+            "label": "Address",
+            "value": "123 Example Street Ste. 100\nExample City, CA 00000",
+            "link_as": "none"
+          }
+        }
+      },
+      "block_order": [
+        "phone",
+        "email",
+        "address"
+      ],
+      "settings": {
+        "overlap": true
       }
     }
   },
   "order": [
-    "main"
+    "band",
+    "contact"
   ]
 }
