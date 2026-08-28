@@ -1,0 +1,221 @@
+{% comment %}
+  A certification row: image, feature list, price, buy button.
+
+  One section for the mockup's .certrow AND .bundle -- the same shape, differing
+  only in surface, column ratio and crop. The bundle is this with `dark` on.
+
+  ORDER. Markup is always text-then-image; the visual swap is CSS `order`, so
+  reading and tab order stay correct. Below 1020px the image always follows the
+  text.
+
+  CHECKOUT. `go_to_checkout` posts a return_to of /checkout, so the buyer lands
+  on checkout rather than the cart. The mockup specifies this for these items
+  ("Straight to secure checkout") and it suits them: single high-value
+  purchases with nothing to cross-sell alongside. It is the wrong default for
+  small items on a page that sells two things -- see the study guides, which
+  deliberately go to cart.
+
+  FEATURES are blocks so the list can change without a developer. They are the
+  substance of the offer and they churn.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-cert'
+  if section.settings.dark
+    assign classes = classes | append: ' suf-cert--dark'
+  else
+    assign classes = 'suf-section ' | append: classes
+  endif
+
+  assign classes = classes | append: ' suf-cert--image-' | append: section.settings.image_side
+
+  if section.settings.frame != 'none'
+    assign classes = classes | append: ' suf-cert--frame-' | append: section.settings.frame
+  endif
+
+  assign product = section.settings.product
+  assign anchor = section.settings.anchor | handle
+-%}
+
+<div class="{{ classes }}" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+  <div class="suf-wrap">
+    <div class="suf-cert__inner">
+      <div class="suf-cert__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="suf-eyebrow{% if section.settings.dark %} suf-eyebrow--on-dark{% endif %}">
+            {%- render 'suf-nb', text: section.settings.eyebrow -%}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          {%- if section.settings.dark -%}
+            <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+          {%- else -%}
+            <h3>{% render 'suf-nb', text: section.settings.heading %}</h3>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if section.settings.body != blank -%}
+          <div class="suf-cert__lead">{% render 'suf-nb', text: section.settings.body %}</div>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <ul class="suf-whylist{% if section.settings.dark %} suf-whylist--on-dark{% endif %}">
+            {%- for block in section.blocks -%}
+              {%- if block.settings.text != blank -%}
+                <li {{ block.shopify_attributes }}>{% render 'suf-nb', text: block.settings.text %}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if product != blank -%}
+          <p class="suf-pricerow">
+            <span class="suf-pricerow__price">{{ product.price | money_without_trailing_zeros }}</span>
+            {%- if section.settings.compare_note != blank -%}
+              <span class="suf-pricerow__was">{{ section.settings.compare_note | escape }}</span>
+            {%- endif -%}
+          </p>
+
+          {%- if product.available -%}
+            {%- form 'product', product, class: 'suf-cert__form' -%}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              {%- if section.settings.go_to_checkout -%}
+                <input type="hidden" name="return_to" value="/checkout">
+              {%- endif -%}
+              <button type="submit" class="suf-btn suf-btn--primary" name="add">
+                {{- section.settings.button_label | default: 'Buy Now' | escape -}}
+              </button>
+            {%- endform -%}
+          {%- else -%}
+            <p class="suf-btn-micro">Currently unavailable.</p>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if section.settings.micro != blank -%}
+          <div class="suf-btn-micro">{% render 'suf-nb', text: section.settings.micro %}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.image != blank -%}
+        <div class="suf-cert__media">
+          {{
+            section.settings.image
+            | image_url: width: 900
+            | image_tag:
+              loading: 'lazy',
+              widths: '440, 600, 900',
+              sizes: '(min-width: 1021px) 40vw, 90vw',
+              alt: section.settings.image_alt
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.pointer != blank -%}
+      <div class="suf-cert__pointer">{% render 'suf-nb', text: section.settings.pointer %}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Certification row (SUF)",
+  "tag": "section",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "body", "label": "Lead paragraph" },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "info": "Lets a button elsewhere link to this row, e.g. \"bundle\" for #bundle."
+    },
+    { "type": "header", "content": "Product" },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Price and availability come from this. The row does not link to the product page -- it sells in place."
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Buy Now" },
+    {
+      "type": "checkbox",
+      "id": "go_to_checkout",
+      "label": "Go straight to checkout",
+      "info": "Skips the cart. Right for a single high-value purchase; wrong on a page that sells more than one thing, where it kills the second sale.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "compare_note",
+      "label": "Price comparison",
+      "info": "Sits beside the price, e.g. \"$X,XXX bought separately\"."
+    },
+    { "type": "richtext", "id": "micro", "label": "Fine print under the button" },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Image side",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "frame",
+      "label": "Offset frame",
+      "info": "Alternate red and blue down the page.",
+      "options": [
+        { "value": "red", "label": "Red" },
+        { "value": "blue", "label": "Blue" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "red"
+    },
+    { "type": "header", "content": "Surface" },
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark band",
+      "info": "Full-bleed navy, square crop, larger heading. Count the dark bands already on the page first.",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "pointer",
+      "label": "Closing note",
+      "info": "Centred line under the row, for a route out to a bigger package."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Feature",
+          "info": "Bold the first few words -- the list is scanned, not read."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Certification row (SUF)",
+      "blocks": [{ "type": "feature" }, { "type": "feature" }, { "type": "feature" }]
+    }
+  ]
+}
+{% endschema %}

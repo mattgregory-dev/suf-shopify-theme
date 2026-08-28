@@ -1,14 +1,319 @@
 {
   "layout": "suf",
   "sections": {
-    "main": {
-      "type": "suf-main-page",
+    "band": {
+      "type": "suf-page-band",
       "settings": {
-        "show_title": true
+        "eyebrow": "Continuing Education — Level 2",
+        "heading": "Certifications That Command <em>Higher Rates</em>",
+        "subhead": "Built for certified trainers — SUF, NASM, ACE, or ISSA. Two full Level 2 certifications, each with CEUs, that add real skills, new services, and a clear reason to charge more per session.",
+        "tier_3": false,
+        "overlap": false,
+        "button_label": "See the Certifications",
+        "button_url": "#certifications",
+        "button2_label": "See the Bundle — Save $XXX",
+        "button2_url": "#bundle",
+        "image": "shopify://shop_images/home-02.webp",
+        "image_alt": "Trainer demonstrating a resistance band lateral raise while a coach cues him"
+      }
+    },
+    "intro": {
+      "type": "suf-statement",
+      "settings": {
+        "heading": "Two Level 2 Certifications",
+        "body": "<p>Full certifications, not add-on courses. Each earns 2.0 CEUs and comes with its own curriculum, live calls, and materials in the SUF Library. Soft Tissue Mobilization and Nutrition Coaching — both below.</p>",
+        "dark": false
+      }
+    },
+    "stm": {
+      "type": "suf-cert",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>11 soft tissue mobilization techniques</b>"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>15 hours</b> of corrective exercise video"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Daily live calls</b> on pain management, assessments, and programming"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Live calls with a Doctor of Physical Therapy (DPT)</b> twice a month, plus 10+ hours of on-demand DPT content"
+          }
+        },
+        "f5": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Charge 25–50% more per hour</b> for pain-informed training"
+          }
+        },
+        "f6": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>2.0 Continuing Education Units</b> (CEUs)"
+          }
+        },
+        "f7": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Access to the entire SUF Library</b> — every course, every call — with 3 months of access included"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6",
+        "f7"
+      ],
+      "settings": {
+        "anchor": "certifications",
+        "eyebrow": "Soft Tissue Mobilization Certification",
+        "heading": "Help Clients Get Out of Pain — and Keep Them Longer",
+        "body": "<p>Most trainers lose clients when pain shows up, because they were never taught how to work with it. This certification teaches you 11 proven soft tissue techniques to assess pain, address movement restrictions, and keep clients progressing safely. It’s one of the most in-demand skills in high-end gym environments.</p>",
+        "product": "show-up-fitness-certification-soft-tissue-mobilization",
+        "button_label": "Buy Now",
+        "go_to_checkout": true,
+        "micro": "<p>Straight to secure checkout</p>",
+        "image": "shopify://shop_images/online-education.jpg",
+        "image_alt": "Coaches guiding a client through a hands-on assessment on a mat",
+        "image_side": "left",
+        "frame": "red",
+        "dark": false
+      }
+    },
+    "nutrition": {
+      "type": "suf-cert",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Evidence-based nutrition science</b>, taught by a Registered Dietitian"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Macro and TDEE calculations</b> — the math behind every client’s targets — plus behavior change and motivational interviewing"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Add a $XX,XXX+ revenue stream</b> on top of your training income"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>One live call every week with an RD</b>, plus 10+ hours of on-demand RD and psychology content"
+          }
+        },
+        "f5": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Vitality Blueprint:</b> one free comprehensive blood panel (a $XXX value) plus a practitioner platform for blood-work-informed coaching with your own clients"
+          }
+        },
+        "f6": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>2.0 Continuing Education Units</b> (CEUs)"
+          }
+        },
+        "f7": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Access to the entire SUF Library</b> — every course, every call — with 3 months of access included"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6",
+        "f7"
+      ],
+      "settings": {
+        "anchor": "nutrition",
+        "eyebrow": "Nutrition Coach Certification",
+        "heading": "Train Their Workouts. Coach Their Nutrition.",
+        "body": "<p>Clients don’t just want to move better — they want to look and feel better. This certification gives you the other half: evidence-based nutrition science, behavior change strategies, and the practical coaching tools to use them in real sessions. Led by a Registered Dietitian (RD), and built to turn nutrition into a second revenue stream.</p>",
+        "product": "suf-nutrition-course",
+        "button_label": "Buy Now",
+        "go_to_checkout": true,
+        "micro": "<p>Straight to secure checkout</p>",
+        "image": "shopify://shop_images/Nutrition_course_for_Certified_Personal_Trainers.png",
+        "image_alt": "Coach reviewing a nutrition plan with a client",
+        "image_side": "right",
+        "frame": "blue",
+        "dark": false
+      }
+    },
+    "bundle": {
+      "type": "suf-cert",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Any two:</b> Soft Tissue cert, Nutrition cert, or a weekend seminar"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>3.0–4.0 CEUs</b>, depending on your two"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>6 months of SUF Library access</b> with daily live calls"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "anchor": "bundle",
+        "eyebrow": "The Smart Buy",
+        "heading": "Continuing Education Bundle — Any Two for $XXX",
+        "body": "<p>Pick any two: the Soft Tissue Mobilization Certification, the Nutrition Coach Certification, or a weekend seminar at a Life Time Fitness near you. Bought separately, any two run $X,XXX — the bundle saves you $XXX. And your SUF Library access extends from 3 months to 6.</p>",
+        "product": "show-up-fitness-qualified-personal-trainer-package",
+        "button_label": "Buy Now",
+        "go_to_checkout": true,
+        "compare_note": "$X,XXX bought separately",
+        "micro": "<p>Straight to secure checkout — pick your two at checkout. Adding a seminar? <a href=\"/pages/suf-seminars\">Browse seminar cities</a></p>",
+        "image": "shopify://shop_images/photo-06.jpg",
+        "image_alt": "Trainers holding Become a Personal Trainer books in front of a Lifetime University sign",
+        "image_side": "right",
+        "frame": "red",
+        "dark": true,
+        "pointer": "<p>Want everything we teach — all three certifications and all three seminars, with lifetime library access? <a href=\"/pages/suf-compare-packages\">Compare every package, including the Qualified Trainer Package →</a></p>"
+      }
+    },
+    "skill": {
+      "type": "suf-skillcard",
+      "settings": {
+        "heading": "A Quick Skills Boost",
+        "image": "shopify://shop_images/weight-rack.webp",
+        "image_alt": "Close-up of a dumbbell rack in cool blue light",
+        "tag": "75-Minute Video",
+        "title": "Programming 101 for the General Population",
+        "meta": "Not a certification — a skills video",
+        "body": "<p>Certified but never really taught how to program? This 75-minute video covers the SUF fundamentals: core movement patterns, acute variables, and how to program for any client walking through the door — while adding in service and sales. Good on its own, and a 75-minute taste of how SUF teaches everything.</p>",
+        "product": "how-to-program-for-the-general-population-programming-101",
+        "button_label": "Add to Cart"
+      }
+    },
+    "quotes": {
+      "type": "suf-quotes",
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I’ve been a trainer at LA Fitness for almost two years. In 3 months I was able to relearn a lot of what I’d forgotten — the deeper shoulder and hip anatomy helped me step up my game and better help my clients.",
+            "who": "— Saular"
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I’m coaching nutrition on top of my regular training, and that second stream has been the difference between a good year and a great one.",
+            "who": "— Renee T."
+          }
+        },
+        "q3": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I have learned so much more than I ever expected in just 2 weeks. I am learning how to become the best coach possible for my clients — not just learning how to pass the test.",
+            "who": "— Kandy"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {
+        "heading": "What Trainers Are Saying",
+        "aside": "Certified trainers who came to SUF to go further.",
+        "columns": "three"
+      }
+    },
+    "faq": {
+      "type": "suf-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "open": true,
+            "question": "Do I have to take the SUF-CPT first?",
+            "answer": "<p>No. You can start with either Level 2 certification — Soft Tissue Mobilization or Nutrition Coaching — without taking the SUF-CPT first. And because Level 2 gives you access to the entire SUF Library, you get every course and every call, including all the Level 1 material, the moment you enroll.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "open": false,
+            "question": "Do you offer payment plans?",
+            "answer": "<p>Yes — you can pay over time with Affirm at checkout. A quick soft credit check (no impact to your score) shows the plans you qualify for.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2"
+      ],
+      "settings": {
+        "heading": "Common Questions"
+      }
+    },
+    "cta": {
+      "type": "suf-cta",
+      "settings": {
+        "heading": "Not Sure Where to Start?",
+        "subhead": "Tell us where you are in your career and what you want to add. A real person answers — no pressure, no scripts.",
+        "button_label": "Send Us a Message",
+        "button_url": "/pages/suf-contact",
+        "link_label": "Or compare every package side by side →",
+        "link_url": "/pages/suf-compare-packages"
       }
     }
   },
   "order": [
-    "main"
+    "band",
+    "intro",
+    "stm",
+    "nutrition",
+    "bundle",
+    "skill",
+    "quotes",
+    "faq",
+    "cta"
   ]
 }

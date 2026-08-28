@@ -1,0 +1,103 @@
+// Single horizontal product card, for an item that is not the page's main
+// offer. Wider and shorter than the vertical cards in _suf-study.scss, so it
+// reads as a footnote rather than a third column of equal weight.
+
+// Scoped: it renders as an <h2>, and `.suf-body h2` would override both the
+// margin and the line-height.
+.suf-body .suf-skillhead {
+  margin: 0 0 var(--suf-space-5);
+  font-size: var(--suf-font-size-h2);
+  line-height: 1.12;
+  text-align: center;
+}
+
+.suf-skillbox {
+  display: grid;
+  // Thumbnail narrower than the copy: it is identification, not the argument.
+  grid-template-columns: 5fr 7fr;
+  max-width: 920px;
+  margin-inline: auto;
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+
+  // 760px is where the copy column stops holding a readable measure beside the
+  // thumbnail.
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+  }
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: var(--suf-font-size-h3);
+  }
+}
+
+.suf-skillbox__thumb {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // Stacked, the thumbnail has no row to fill, so it needs its own ratio.
+  @media (max-width: 760px) {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+// Sits in the corner of the thumbnail. Deepest navy, because it has to hold
+// against whatever photo is behind it.
+.suf-skillbox__tag {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  padding: 7px 14px;
+  background: var(--suf-navy-deepest);
+  color: var(--suf-white);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.suf-skillbox__body {
+  padding: var(--suf-space-4);
+}
+
+.suf-skillbox .suf-skillbox__meta {
+  margin: 0 0 var(--suf-space-3);
+  color: var(--suf-color-text-muted);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.suf-skillbox .suf-skillbox__copy {
+  margin: 0 0 var(--suf-space-3);
+  color: var(--suf-color-text);
+  font-size: 15px;
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+}
+
+// A smaller price than a certification's: this is the cheap item on the page
+// and should not shout at the same volume.
+.suf-skillbox .suf-pricerow {
+  margin-bottom: var(--suf-space-3);
+
+  .suf-pricerow__price {
+    font-size: clamp(32px, 2.6vw, 42px);
+  }
+}

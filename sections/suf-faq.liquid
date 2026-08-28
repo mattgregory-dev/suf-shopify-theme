@@ -1,0 +1,73 @@
+{% comment %}
+  FAQ accordion. One block per question.
+
+  Native <details>/<summary>: open and close, keyboard support, find-in-page
+  and the accessibility tree all come free, and it still works with JS off.
+  There is deliberately no JavaScript here.
+
+  Only ONE question should be open by default -- an accordion that opens
+  everything is just a list, and the first answer is what tells a reader the
+  answers are worth expanding.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-section">
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-statement">
+        <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="suf-faq">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.question != blank -%}
+          <details {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}>
+            <summary>{{ block.settings.question | escape }}</summary>
+            <div class="suf-faq__answer">{% render 'suf-nb', text: block.settings.answer %}</div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ (SUF)",
+  "tag": "section",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Common Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "info": "Set this on the first question only.",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ (SUF)",
+      "blocks": [{ "type": "question" }, { "type": "question" }]
+    }
+  ]
+}
+{% endschema %}

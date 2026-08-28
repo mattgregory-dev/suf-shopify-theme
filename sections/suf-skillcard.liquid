@@ -1,0 +1,107 @@
+{% comment %}
+  A single horizontal product card: thumbnail with a corner tag, then copy,
+  price and add-to-cart.
+
+  Distinct from the vertical cards in suf-guides. This is for ONE item that is
+  not the page's main offer -- a skills video beside two certifications -- so it
+  is deliberately wider and shorter, and reads as a footnote rather than a third
+  column of equal weight.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- assign product = section.settings.product -%}
+
+<div class="suf-section">
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="suf-skillhead">{% render 'suf-nb', text: section.settings.heading %}</h2>
+    {%- endif -%}
+
+    <div class="suf-skillbox">
+      {%- if section.settings.image != blank -%}
+        <div class="suf-skillbox__thumb">
+          {{
+            section.settings.image
+            | image_url: width: 800
+            | image_tag:
+              loading: 'lazy',
+              widths: '400, 600, 800',
+              sizes: '(min-width: 761px) 40vw, 90vw',
+              alt: section.settings.image_alt
+          }}
+          {%- if section.settings.tag != blank -%}
+            <span class="suf-skillbox__tag">{{ section.settings.tag | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="suf-skillbox__body">
+        {%- if section.settings.title != blank -%}
+          <h3>{% render 'suf-nb', text: section.settings.title %}</h3>
+        {%- endif -%}
+
+        {%- if section.settings.meta != blank -%}
+          <p class="suf-skillbox__meta">{{ section.settings.meta | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.body != blank -%}
+          <div class="suf-skillbox__copy">{% render 'suf-nb', text: section.settings.body %}</div>
+        {%- endif -%}
+
+        {%- if product != blank -%}
+          <p class="suf-pricerow">
+            <span class="suf-pricerow__price">{{ product.price | money_without_trailing_zeros }}</span>
+          </p>
+
+          {%- if product.available -%}
+            {%- form 'product', product, class: 'suf-cert__form' -%}
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <button type="submit" class="suf-btn suf-btn--primary" name="add">
+                {{- section.settings.button_label | default: 'Add to Cart' | escape -}}
+              </button>
+            {%- endform -%}
+          {%- else -%}
+            <p class="suf-btn-micro">Currently unavailable.</p>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Skill card (SUF)",
+  "tag": "section",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Section heading" },
+    { "type": "header", "content": "Card" },
+    { "type": "image_picker", "id": "image", "label": "Thumbnail" },
+    { "type": "text", "id": "image_alt", "label": "Thumbnail alt text" },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Corner tag",
+      "info": "Short label over the thumbnail, e.g. \"75-Minute Video\"."
+    },
+    { "type": "inline_richtext", "id": "title", "label": "Title" },
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Meta line",
+      "info": "Small caps line, e.g. what this is NOT -- \"Not a certification\"."
+    },
+    { "type": "richtext", "id": "body", "label": "Description" },
+    { "type": "header", "content": "Product" },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Price and availability come from this."
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add to Cart" }
+  ],
+  "presets": [{ "name": "Skill card (SUF)" }]
+}
+{% endschema %}
