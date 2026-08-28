@@ -1,0 +1,329 @@
+// Seminars: list cards, event rows, the bundle strip, the quote spotlight.
+
+// ---------------------------------------------------------------------------
+// LIST CARDS
+//
+// One component for the mockup's .focuscard and .daycard. Both are a card with
+// a heading and a feature list; they differ in column count and in how the card
+// is labelled -- a blue top rule with a tagline, or a navy badge.
+// ---------------------------------------------------------------------------
+
+.suf-listcards {
+  display: grid;
+  gap: var(--suf-space-4);
+}
+
+.suf-listcards--three {
+  grid-template-columns: repeat(3, 1fr);
+
+  // 980px: three feature lists side by side stop being scannable before the
+  // cards themselves look cramped.
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+
+    .suf-listcard {
+      max-width: 560px;
+    }
+  }
+}
+
+.suf-listcards--two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 980px;
+  margin-inline: auto;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-listcard {
+  padding: var(--suf-space-4);
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: var(--suf-font-size-h3);
+  }
+
+  // The list is the card's whole substance, so it carries no bottom margin --
+  // the card's padding is the space.
+  .suf-whylist {
+    margin: 0;
+  }
+}
+
+// Labelled by a coloured top rule and a tagline.
+.suf-listcard--rule {
+  border-top: 3px solid var(--suf-blue);
+}
+
+.suf-listcard .suf-listcard__tagline {
+  margin: 0 0 var(--suf-space-3);
+  color: var(--suf-color-link);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+// Labelled by a badge instead. Heavier weight than the tagline: it is an
+// ordinal ("Day 1"), not a description.
+.suf-listcard__badge {
+  display: inline-block;
+  margin-bottom: var(--suf-space-3);
+  padding: 7px 14px;
+  background: var(--suf-navy);
+  color: var(--suf-white);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.suf-listcard--badge h3 {
+  margin-bottom: var(--suf-space-3);
+}
+
+// ---------------------------------------------------------------------------
+// EVENT ROWS
+//
+// The buy point. Whole row is one link; the cue is a <span>.
+// ---------------------------------------------------------------------------
+
+.suf-semlist {
+  max-width: 940px;
+  margin-inline: auto;
+  border-top: 1px solid var(--suf-color-border-subtle);
+}
+
+.suf-semrow {
+  display: grid;
+  // city | date | focus | price | cue
+  grid-template-columns: 1.1fr 1.2fr 1fr 80px auto;
+  gap: var(--suf-space-3);
+  align-items: center;
+  padding: 26px 18px;
+  border-bottom: 1px solid var(--suf-color-border-subtle);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--suf-transition),
+    box-shadow var(--suf-transition);
+
+  &:hover,
+  &:focus-visible {
+    position: relative;
+    z-index: 1;
+    background: var(--suf-color-surface);
+    box-shadow:
+      inset 4px 0 0 0 var(--suf-red),
+      0 14px 30px rgb(0 32 54 / 12%);
+
+    .suf-semrow__cue {
+      color: var(--suf-color-accent);
+      border-color: var(--suf-color-accent);
+    }
+
+    .suf-semrow__arrow {
+      transform: translateX(5px);
+    }
+  }
+
+  // 820px: five columns become a two-column stack -- details left, price and
+  // action right, so the buy affordance stays where a thumb expects it.
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto;
+    gap: 6px 16px;
+    padding: 20px 14px;
+
+    .suf-semrow__price {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .suf-semrow__cue {
+      grid-column: 2;
+      grid-row: 2 / 4;
+      align-self: center;
+      justify-self: end;
+    }
+  }
+}
+
+.suf-semrow__city {
+  color: var(--suf-color-heading);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.suf-semrow__date {
+  color: var(--suf-color-text);
+  font-size: 15px;
+}
+
+.suf-semrow__focus {
+  color: var(--suf-color-link);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.suf-semrow__price {
+  color: var(--suf-color-heading);
+  font-size: 18px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.suf-semrow__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--suf-color-link);
+  color: var(--suf-color-link);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition:
+    color var(--suf-transition),
+    border-color var(--suf-transition);
+}
+
+.suf-semrow__arrow {
+  display: inline-block;
+  transition: transform var(--suf-transition);
+}
+
+.suf-body .suf-semnote {
+  max-width: 70ch;
+  margin: var(--suf-space-3) auto 0;
+  color: var(--suf-color-text-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+// ---------------------------------------------------------------------------
+// STRIP -- a single contained offer
+// ---------------------------------------------------------------------------
+
+.suf-strip {
+  max-width: 820px;
+  margin-inline: auto;
+  padding: var(--suf-space-5) var(--suf-space-4);
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+  border-top: 3px solid var(--suf-red);
+  text-align: center;
+
+  h3 {
+    margin: 0 0 var(--suf-space-2);
+    font-size: clamp(24px, 2.2vw, 32px);
+    line-height: 1.15;
+  }
+
+  .suf-eyebrow {
+    justify-content: center;
+  }
+
+  .suf-btnrow {
+    justify-content: center;
+  }
+}
+
+.suf-strip .suf-strip__body {
+  max-width: 58ch;
+  margin: 0 auto var(--suf-space-4);
+  color: var(--suf-color-text);
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+
+  em {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--suf-color-link);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// QUOTE SPOTLIGHT -- dark band, quote beside a photo
+// ---------------------------------------------------------------------------
+
+.suf-qspot {
+  margin-block: var(--suf-space-section);
+  padding-block: var(--suf-space-6);
+  background: var(--suf-navy);
+  color: var(--suf-color-ink-on-dark);
+
+  .suf-eyebrow {
+    color: var(--suf-color-heading-on-dark);
+  }
+}
+
+.suf-qspot__inner {
+  display: grid;
+  grid-template-columns: 6fr 5fr;
+  gap: var(--suf-space-6);
+  align-items: center;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-qspot__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+
+  @media (max-width: 900px) {
+    max-width: 520px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// The outcome, as a badge. Its own surface rather than plain text, because it
+// is the claim the section is making and the quotes are the evidence for it.
+.suf-qspot .suf-qspot__result {
+  display: inline-block;
+  margin: var(--suf-space-3) 0;
+  padding: 9px 16px;
+  background: #0a3a55;
+  border: 1px solid var(--suf-color-border-on-dark);
+  color: var(--suf-blue-light);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.suf-qspot .suf-qspot__quote {
+  max-width: 56ch;
+  margin: 0 0 var(--suf-space-3);
+  color: var(--suf-color-text-on-dark);
+  font-size: 15.5px;
+  line-height: 1.65;
+}
+
+.suf-qspot .suf-qspot__who {
+  margin: 0;
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

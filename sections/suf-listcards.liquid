@@ -1,0 +1,108 @@
+{% comment %}
+  Cards, each holding a heading and a feature list.
+
+  One section for the mockup's .focuscard grid and .daycard grid -- both are a
+  card with a list, differing in column count and in how the card is labelled:
+  a blue top rule with a tagline, or a navy badge.
+
+  LIST ITEMS ARE ONE PER LINE IN A TEXTAREA, not one block each. Blocks are a
+  flat list in Shopify, so a block cannot contain blocks -- a bullet inside a
+  card is not expressible as a block at all. The textarea also spares a merchant
+  twenty add-block clicks to write two lists. Elsewhere (suf-cert) the features
+  ARE blocks, because there the list is the section rather than a card in it.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign cols = section.settings.columns | default: 'three'
+  assign style = section.settings.card_style | default: 'rule'
+-%}
+
+<div class="suf-section">
+  <div class="suf-wrap">
+    <div class="suf-listcards suf-listcards--{{ cols }}">
+      {%- for block in section.blocks -%}
+        <div class="suf-listcard suf-listcard--{{ style }}" {{ block.shopify_attributes }}>
+          {%- if style == 'badge' and block.settings.badge != blank -%}
+            <span class="suf-listcard__badge">{{ block.settings.badge | escape }}</span>
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+            <h3>{% render 'suf-nb', text: block.settings.heading %}</h3>
+          {%- endif -%}
+
+          {%- if style == 'rule' and block.settings.tagline != blank -%}
+            <p class="suf-listcard__tagline">{{ block.settings.tagline | escape }}</p>
+          {%- endif -%}
+
+          {%- assign lines = block.settings.items | strip | newline_to_br | split: '<br />' -%}
+          {%- if lines.size > 0 -%}
+            <ul class="suf-whylist">
+              {%- for line in lines -%}
+                {%- assign item = line | strip -%}
+                {%- if item != blank -%}
+                  <li>{% render 'suf-nb', text: item %}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "List cards (SUF)",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns",
+      "options": [
+        { "value": "three", "label": "Three" },
+        { "value": "two", "label": "Two (narrower, centred)" }
+      ],
+      "default": "three"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Card label",
+      "info": "A rule uses the tagline; a badge uses the badge text.",
+      "options": [
+        { "value": "rule", "label": "Blue top rule + tagline" },
+        { "value": "badge", "label": "Navy badge" }
+      ],
+      "default": "rule"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        { "type": "text", "id": "badge", "label": "Badge", "info": "Badge style only, e.g. \"Day 1\"." },
+        { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+        { "type": "text", "id": "tagline", "label": "Tagline", "info": "Rule style only." },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "List items",
+          "info": "One per line. Blank lines are ignored."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "List cards (SUF)",
+      "blocks": [{ "type": "card" }, { "type": "card" }, { "type": "card" }]
+    }
+  ]
+}
+{% endschema %}

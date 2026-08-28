@@ -64,6 +64,7 @@ PAGES = [
     "suf-continuing-education",
     "suf-home",
     "suf-compare-packages",
+    "suf-seminars",
 ]
 
 # Shorthands must expand, or a rule that never names `margin-left` still

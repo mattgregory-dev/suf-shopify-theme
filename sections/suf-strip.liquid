@@ -1,0 +1,65 @@
+{% comment %}
+  A single contained offer: centred card, red top rule, one action.
+
+  Deliberately NOT a full-bleed band. It is a cross-sell sitting between two
+  sections about something else, and a dark band here would read as a new
+  chapter rather than an aside.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-section">
+  <div class="suf-wrap">
+    <div class="suf-strip">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="suf-eyebrow">{% render 'suf-nb', text: section.settings.eyebrow %}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h3>{% render 'suf-nb', text: section.settings.heading %}</h3>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="suf-strip__body">{% render 'suf-nb', text: section.settings.body %}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
+        <div class="suf-btnrow">
+          <a class="suf-btn suf-btn--{{ section.settings.button_style }}" href="{{ section.settings.button_url }}">
+            {%- render 'suf-nb', text: section.settings.button_label -%}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Offer strip (SUF)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "info": "Italicise at most one phrase -- it renders as the blue highlight."
+    },
+    { "type": "inline_richtext", "id": "button_label", "label": "Button label" },
+    { "type": "url", "id": "button_url", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Filled red" },
+        { "value": "ghost", "label": "Outline" }
+      ],
+      "default": "primary"
+    }
+  ],
+  "presets": [{ "name": "Offer strip (SUF)" }]
+}
+{% endschema %}

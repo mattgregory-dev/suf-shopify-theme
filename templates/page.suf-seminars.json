@@ -1,14 +1,381 @@
 {
   "layout": "suf",
   "sections": {
-    "main": {
-      "type": "suf-main-page",
+    "band": {
+      "type": "suf-page-band",
       "settings": {
-        "show_title": true
+        "eyebrow": "Weekend Seminars — $XXX",
+        "heading": "Two Days Hands-On. <em>A Career’s Worth</em> of Confidence.",
+        "subhead": "A 2-day, 10-hour, hands-on seminar at Life Time Fitness locations across the country. New trainers sharpen the skills that get them hired. Certified trainers earn 1.1 CEUs and level up their assessments, programming, pain management, and sales.",
+        "tier_3": false,
+        "overlap": true,
+        "button_label": "Pick Your City & Date",
+        "button_url": "#upcoming",
+        "button2_label": "See the Schedule",
+        "button2_url": "#schedule",
+        "image": "shopify://shop_images/hero.webp",
+        "image_alt": "Coach kneeling and cueing a trainee doing a push-up on turf flooring while others watch"
+      }
+    },
+    "stats": {
+      "type": "suf-statbar",
+      "blocks": {
+        "b1": {
+          "type": "stat",
+          "settings": {
+            "figure": "2",
+            "label": "Days"
+          }
+        },
+        "b2": {
+          "type": "stat",
+          "settings": {
+            "figure": "10",
+            "label": "Hours hands-on"
+          }
+        },
+        "b3": {
+          "type": "stat",
+          "settings": {
+            "figure": "1.1",
+            "label": "CEUs earned"
+          }
+        },
+        "b4": {
+          "type": "stat",
+          "settings": {
+            "figure": "$XXX",
+            "label": "At Life Time locations nationwide"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ],
+      "settings": {}
+    },
+    "focusintro": {
+      "type": "suf-statement",
+      "settings": {
+        "heading": "Three Seminars. Three Focuses.",
+        "body": "<p>Every seminar runs the same engine — assess, program with the Core / Core / Accessory (CCA) system taught at Show Up Fitness, get hands-on reps, and practice the sales conversations that turn skill into income. Pick the focus your practice needs most.</p>",
+        "dark": false
+      }
+    },
+    "focus": {
+      "type": "suf-listcards",
+      "blocks": {
+        "b1": {
+          "type": "card",
+          "settings": {
+            "heading": "Upper Body Seminar",
+            "tagline": "Shoulder expertise. Better outcomes.",
+            "items": "Learn the 17 muscles — and 17 actions — of the shoulder\nShoulder screens, and when to refer out to a Doctor of Physical Therapy (DPT)\nSoft tissue techniques for clients in pain\nCorrective exercises and programming around pain"
+          }
+        },
+        "b2": {
+          "type": "card",
+          "settings": {
+            "heading": "Lower Body Seminar",
+            "tagline": "Stronger foundations. Pain-free movement.",
+            "items": "Learn the 14 muscles around the knee\nHip, knee, and ankle screens, and when to refer out to a DPT\nSoft tissue mobilizations for clients in pain\nCorrective exercises and programming around pain"
+          }
+        },
+        "b3": {
+          "type": "card",
+          "settings": {
+            "heading": "Nutrition Seminar",
+            "tagline": "Nutrition knowledge. Real client outcomes.",
+            "items": "Taught by a Registered Dietitian (RD)\nReal case examples and client plans\nMaster macro and Total Daily Energy Expenditure (TDEE) equations\nProgramming and assessment for athletes, including Hyrox"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {
+        "columns": "three",
+        "card_style": "rule"
+      }
+    },
+    "proof": {
+      "type": "suf-qspot",
+      "settings": {
+        "eyebrow": "Proof It Pays",
+        "headline": "After the seminar, I walked into Monday with a plan and the confidence to sell it.",
+        "result": "Generated $X,XXX in new business",
+        "quote": "Since the seminar I did in Atlanta this past weekend, I’ve already generated $X,XXX in new business. Between the sales call, seminar, and podcast, you’ve helped a lot with my presentation and how I interact with clients and prospects.",
+        "who": "— Seminar Attendee, Atlanta",
+        "image": "shopify://shop_images/photo-05.jpg",
+        "image_alt": "Show Up Fitness trainees flexing and posing together in a Life Time gym studio"
+      }
+    },
+    "upcomingintro": {
+      "type": "suf-statement",
+      "settings": {
+        "heading": "Upcoming Seminars",
+        "body": "<p>Every seminar is $XXX and held at a Life Time Fitness. Pick your city and date — travel and lodging are up to you, and most attendees make a weekend of it.</p>",
+        "dark": false
+      }
+    },
+    "upcoming": {
+      "type": "suf-semlist",
+      "blocks": {
+        "e1": {
+          "type": "event",
+          "settings": {
+            "city": "Miami Falls, FL",
+            "date": "July 24 & 25",
+            "focus": "Upper Body",
+            "price": "$XXX",
+            "cue": "Reserve"
+          }
+        },
+        "e2": {
+          "type": "event",
+          "settings": {
+            "city": "Franklin, TN",
+            "date": "August 14 & 15",
+            "price": "$XXX",
+            "cue": "Reserve"
+          }
+        },
+        "e3": {
+          "type": "event",
+          "settings": {
+            "city": "Tampa, FL",
+            "date": "September 25 & 26",
+            "cue": "Reserve",
+            "product": "weekend-seminar-tampa-fl-september-18-19",
+            "link_mode": "product"
+          }
+        }
+      },
+      "block_order": [
+        "e1",
+        "e2",
+        "e3"
+      ],
+      "settings": {
+        "anchor": "upcoming",
+        "note": "<p>New cities are added on a rolling basis — <a href=\"/pages/suf-contact\">get first access to new dates</a>.</p>"
+      }
+    },
+    "bundle": {
+      "type": "suf-strip",
+      "settings": {
+        "eyebrow": "Getting Certified Too?",
+        "heading": "The SUF-CPT + Seminar Bundle — $XXX",
+        "body": "<p>The seminar is $XXX on its own. The bundle gets you the full certification <em>and</em> your seminar seat for $XXX — the whole certification for $XXX more. Buy now, pick your city and date whenever you’re ready.</p>",
+        "button_label": "See the Bundle — $XXX",
+        "button_url": "/pages/suf-cpt",
+        "button_style": "primary"
+      }
+    },
+    "scheduleintro": {
+      "type": "suf-statement",
+      "settings": {
+        "eyebrow": "Unlock Your Potential",
+        "heading": "Seminar Schedule",
+        "dark": false
+      }
+    },
+    "schedule": {
+      "type": "suf-listcards",
+      "blocks": {
+        "d1": {
+          "type": "card",
+          "settings": {
+            "badge": "Day 1",
+            "heading": "Foundation & Growth",
+            "items": "Meet & greet\nWarm-up techniques\nHands-on training (part 1) — shadowing experienced trainers\nSales mastery and client acquisition\nSocial hour"
+          }
+        },
+        "d2": {
+          "type": "card",
+          "settings": {
+            "badge": "Day 2",
+            "heading": "Advanced Techniques & Networking",
+            "items": "Morning intro\nRole-playing for overcoming objections\nLunch break\nHands-on training (parts 2 & 3)\nBuilding your fitness brand\nClosing and networking"
+          }
+        }
+      },
+      "block_order": [
+        "d1",
+        "d2"
+      ],
+      "settings": {
+        "columns": "two",
+        "card_style": "badge"
+      }
+    },
+    "quotesintro": {
+      "type": "suf-statement",
+      "settings": {
+        "heading": "What Attendees Are Saying",
+        "dark": false
+      }
+    },
+    "quotes": {
+      "type": "suf-quotes",
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I showed up to the seminar in Miami and learned more in 2 days than the NASM bundle I’d already purchased. I met so many awesome people and gained the confidence to get hired at Crunch!",
+            "who": "— T"
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "If it wasn’t for Show Up Fitness, I would never have been hired at Lifetime and become a manager here. Highly recommend joining them!",
+            "who": "— Joe"
+          }
+        },
+        "q3": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "The hands-on learning experience is such a game changer! 1000% recommend if you are an aspiring trainer. Chris is doing something really special here with the fitness industry.",
+            "who": "— Marlene"
+          }
+        },
+        "q4": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "Thanks to Show Up Fitness, I’ve grown my Instagram and TikTok to over 5,000 followers, which drove a new stream of revenue I didn’t expect was possible.",
+            "who": "— Gabby"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ],
+      "settings": {
+        "columns": "two"
+      }
+    },
+    "faq": {
+      "type": "suf-faq",
+      "blocks": {
+        "f1": {
+          "type": "question",
+          "settings": {
+            "question": "How do I know if this seminar is right for me?",
+            "answer": "<p>Two kinds of people show up. New trainers building the hands-on skills that get them hired — most pair the seminar with their SUF-CPT. And certified trainers (SUF, NASM, ACE, or ISSA) earning 1.1 CEUs while leveling up their assessments, programming, and sales. If you train people, or you’re about to, it’s for you.</p>",
+            "open": true
+          }
+        },
+        "f2": {
+          "type": "question",
+          "settings": {
+            "question": "Does the seminar make me a certified trainer?",
+            "answer": "<p>No — certification comes from completing the <a href=\"/pages/suf-cpt\">SUF-CPT</a> coursework and passing the live exam. The seminar is the hands-on side: two days of real practice under real coaches. The SUF-CPT + Seminar Bundle gets you both for $XXX.</p>",
+            "open": false
+          }
+        },
+        "f3": {
+          "type": "question",
+          "settings": {
+            "question": "Do I travel to attend? Where are these held?",
+            "answer": "<p>Seminars are held at Life Time Fitness locations across the country, and new cities are added on a rolling basis. If there isn’t one near you, plan on travel — flights and lodging are on you, and most out-of-town attendees make a weekend of it. Pick the city and date that work for you.</p>",
+            "open": false
+          }
+        },
+        "f4": {
+          "type": "question",
+          "settings": {
+            "question": "What should I bring, and how do I prepare?",
+            "answer": "<p>A notebook and pen, comfortable clothing suitable for hands-on training, a water bottle, plus snacks and lunch. All educational materials are provided. Beyond that: come ready to participate — this is two days of doing, not watching.</p>",
+            "open": false
+          }
+        },
+        "f5": {
+          "type": "question",
+          "settings": {
+            "question": "Are meals provided?",
+            "answer": "<p>Meals aren’t provided, so bring your own snacks and lunch — the days are full and you’ll want the fuel.</p>",
+            "open": false
+          }
+        },
+        "f6": {
+          "type": "question",
+          "settings": {
+            "question": "What if I need to cancel my registration?",
+            "answer": "<p>Cancel up to two weeks before the event for a full refund. Inside two weeks, you’ll receive a credit good for any future Show Up Fitness event.</p>",
+            "open": false
+          }
+        },
+        "f7": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer payment plans?",
+            "answer": "<p>Yes — you can pay over time with Affirm at checkout. A quick soft credit check (no impact to your score) shows the plans you qualify for.</p>",
+            "open": false
+          }
+        },
+        "f8": {
+          "type": "question",
+          "settings": {
+            "question": "Who are the instructors?",
+            "answer": "<p>Seminars are led by Show Up Fitness founder Chris Hitchko alongside a team of seasoned professionals — certified instructors, DPTs, and working trainers from elite gyms. The lineup varies by city, and it’s always people who train clients for a living.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6",
+        "f7",
+        "f8"
+      ],
+      "settings": {
+        "heading": "Common Questions"
+      }
+    },
+    "cta": {
+      "type": "suf-cta",
+      "settings": {
+        "heading": "Ready to Get Hands-On?",
+        "subhead": "Learn from working professionals, train alongside other trainers, and walk into Monday with skills you can sell. Seats are limited at every location.",
+        "button_label": "Pick Your City & Date",
+        "button_url": "#upcoming",
+        "button2_label": "Send Us a Message",
+        "button2_url": "/pages/suf-contact",
+        "micro": "Two days that pay for themselves."
       }
     }
   },
   "order": [
-    "main"
+    "band",
+    "stats",
+    "focusintro",
+    "focus",
+    "proof",
+    "upcomingintro",
+    "upcoming",
+    "bundle",
+    "scheduleintro",
+    "schedule",
+    "quotesintro",
+    "quotes",
+    "faq",
+    "cta"
   ]
 }

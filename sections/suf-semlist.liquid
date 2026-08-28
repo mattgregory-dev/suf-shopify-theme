@@ -1,0 +1,145 @@
+{% comment %}
+  Upcoming events. One block per date -- the buy point of the seminars page.
+
+  Whole row is one link, cue is a <span>, same rule as the other row lists.
+
+  WHERE THE ROW GOES. A row is an <a>, and an <a> cannot contain the <form> that
+  a true "straight to checkout" needs, so there are two honest options:
+
+    product   the product page, where Shopify's own buy flow takes over
+    cart      /cart/{variant}:1 -- adds the seat and shows the cart
+
+  Neither lands the buyer directly on checkout. The mockup's note says "Each
+  Reserve goes straight to secure checkout for that event"; if that copy is
+  kept, this section needs rebuilding as one form per row with a submit styled
+  as the row, which costs the whole-row click target. Flagged rather than
+  quietly mismatched.
+
+  Price and availability come from the product. A sold-out date says so instead
+  of linking, because a seminar seat that has gone is the one thing a visitor
+  most needs told.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- assign anchor = section.settings.anchor | handle -%}
+
+<div class="suf-section" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+  <div class="suf-wrap">
+    <div class="suf-semlist">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign product = block.settings.product
+          assign target = block.settings.url
+          if target == blank and product != blank
+            if block.settings.link_mode == 'cart'
+              assign vid = product.selected_or_first_available_variant.id
+              assign target = '/cart/' | append: vid | append: ':1'
+            else
+              assign target = product.url
+            endif
+          endif
+          assign sold_out = false
+          if product != blank and product.available == false
+            assign sold_out = true
+          endif
+        -%}
+
+        {%- if sold_out -%}
+          <div class="suf-semrow" {{ block.shopify_attributes }}>
+        {%- else -%}
+          <a class="suf-semrow" href="{{ target | default: '#' }}" {{ block.shopify_attributes }}>
+        {%- endif -%}
+
+        <span class="suf-semrow__city">{{ block.settings.city | escape }}</span>
+        <span class="suf-semrow__date">{{ block.settings.date | escape }}</span>
+        <span class="suf-semrow__focus">{{ block.settings.focus | escape }}</span>
+        <span class="suf-semrow__price">
+          {%- if product != blank -%}
+            {{ product.price | money_without_trailing_zeros }}
+          {%- else -%}
+            {{ block.settings.price | escape }}
+          {%- endif -%}
+        </span>
+        {%- if sold_out -%}
+          <span class="suf-semrow__focus">Sold out</span>
+        {%- else -%}
+          <span class="suf-semrow__cue">
+            {{- block.settings.cue | default: 'Reserve' | escape }}
+            <span class="suf-semrow__arrow" aria-hidden="true">&rarr;</span>
+          </span>
+        {%- endif -%}
+
+        {%- if sold_out -%}</div>{%- else -%}</a>{%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.note != blank -%}
+      <div class="suf-semnote">{% render 'suf-nb', text: section.settings.note %}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Event list (SUF)",
+  "tag": "section",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "info": "Lets a button elsewhere link here, e.g. \"upcoming\"."
+    },
+    { "type": "richtext", "id": "note", "label": "Note under the list" }
+  ],
+  "blocks": [
+    {
+      "type": "event",
+      "name": "Event",
+      "settings": [
+        { "type": "text", "id": "city", "label": "City" },
+        { "type": "text", "id": "date", "label": "Date" },
+        {
+          "type": "text",
+          "id": "focus",
+          "label": "Focus",
+          "info": "e.g. \"Upper Body\". Leave blank if not announced yet."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Supplies the price, the link and sold-out state."
+        },
+        {
+          "type": "select",
+          "id": "link_mode",
+          "label": "Where Reserve goes",
+          "info": "Neither lands directly on checkout -- see the section comment.",
+          "options": [
+            { "value": "product", "label": "Product page" },
+            { "value": "cart", "label": "Add to cart, then cart" }
+          ],
+          "default": "product"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price fallback",
+          "info": "Only used when no product is selected."
+        },
+        { "type": "text", "id": "url", "label": "Link override" },
+        { "type": "text", "id": "cue", "label": "Link text", "default": "Reserve" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Event list (SUF)",
+      "blocks": [{ "type": "event" }, { "type": "event" }]
+    }
+  ]
+}
+{% endschema %}

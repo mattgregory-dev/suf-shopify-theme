@@ -1,0 +1,89 @@
+{% comment %}
+  Dark band: a headline quote, the outcome it produced, the longer quote behind
+  it, and a photo.
+
+  The structure is the argument. The short quote is the claim, the result badge
+  is the number, and the long quote is the evidence -- in that order, because a
+  reader who stops after the badge has still got the point.
+
+  Full-bleed navy carrying its own rhythm through margin-block, so it does NOT
+  take .suf-section. Count the dark bands on the page before adding it.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-qspot">
+  <div class="suf-wrap">
+    <div class="suf-qspot__inner">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="suf-eyebrow">{% render 'suf-nb', text: section.settings.eyebrow %}</p>
+        {%- endif -%}
+
+        {%- if section.settings.headline != blank -%}
+          <div class="suf-bigquote">
+            <blockquote>
+              <p>{{ section.settings.headline | escape }}</p>
+            </blockquote>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.result != blank -%}
+          <p class="suf-qspot__result">{{ section.settings.result | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.quote != blank -%}
+          <blockquote>
+            <p class="suf-qspot__quote">{{ section.settings.quote | escape }}</p>
+          </blockquote>
+        {%- endif -%}
+
+        {%- if section.settings.who != blank -%}
+          <p class="suf-qspot__who">{{ section.settings.who | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.image != blank -%}
+        <div class="suf-qspot__media">
+          {{
+            section.settings.image
+            | image_url: width: 1000
+            | image_tag:
+              loading: 'lazy',
+              widths: '520, 700, 1000',
+              sizes: '(min-width: 901px) 40vw, 90vw',
+              alt: section.settings.image_alt
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quote spotlight (SUF)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Headline quote",
+      "info": "Short. This is the claim; the long quote below is the evidence."
+    },
+    {
+      "type": "text",
+      "id": "result",
+      "label": "Result",
+      "info": "The outcome, as a badge, e.g. \"Generated $X,XXX in new business\"."
+    },
+    { "type": "textarea", "id": "quote", "label": "Full quote" },
+    { "type": "text", "id": "who", "label": "Attribution" },
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "image_alt", "label": "Photo alt text" }
+  ],
+  "presets": [{ "name": "Quote spotlight (SUF)" }]
+}
+{% endschema %}
