@@ -1,0 +1,208 @@
+{% comment %}
+  Product cards for the study guides page.
+
+  REAL COMMERCE. Each block picks a product and renders a working add-to-cart
+  form. The card carries no link at all, deliberately: it is a complete
+  purchase surface -- copy, price, variant and button -- so sending anyone to
+  the product page would only add a step. The product is still picked, because
+  price, variants and availability come from it.
+
+  The mockup's card is a whole-card <a> around a faux
+  <span class="btn">Add to Cart</span>. That could not survive either way: a
+  <form> cannot be nested inside an <a>.
+
+  Copy falls back to the product's own fields, so a card renders sensibly the
+  moment a product is picked and the overrides exist only for when the
+  marketing copy should differ from the catalogue.
+
+  VARIANTS. A product with one variant posts a hidden id. A product with
+  several renders a labelled <select name="id">, which is the whole variant
+  picker -- no JavaScript, because price is not per-variant on either of these
+  products. If a future product prices variants differently, this needs a
+  price-updating script; it does not have one.
+
+  A block with no product selected renders its copy without price or button,
+  so the page still builds while a product is being set up.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-section'
+  if section.settings.anchor != blank
+    assign classes = classes | append: ' suf-anchor-target'
+  endif
+-%}
+
+<div class="{{ classes }}" {% if section.settings.anchor != blank %}id="{{ section.settings.anchor | handle }}"{% endif %}>
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head">
+        <h2>{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{{ section.settings.aside | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="suf-guidegrid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign product = block.settings.product
+          assign heading = block.settings.heading | default: product.title
+          assign body = block.settings.body | default: product.description
+        -%}
+        <div class="suf-gcard" {{ block.shopify_attributes }}>
+          {%- if heading != blank -%}
+            <h3>{{ heading | escape }}</h3>
+          {%- endif -%}
+
+          {%- if block.settings.meta != blank -%}
+            <p class="suf-gcard__meta">{{ block.settings.meta | escape }}</p>
+          {%- endif -%}
+
+          {%- if body != blank -%}
+            <p class="suf-gcard__body">{{ body | strip_html | escape }}</p>
+          {%- endif -%}
+
+          {%- if product != blank -%}
+            <p class="suf-gcard__price">{{ product.price | money_without_trailing_zeros }}</p>
+
+            {%- if product.available -%}
+              {%- form 'product', product, class: 'suf-gcard__form' -%}
+                {%- if product.variants.size > 1 -%}
+                  <div class="suf-gcard__variants">
+                    <label for="suf-variant-{{ block.id }}">
+                      {{- block.settings.variant_label | default: 'Option' | escape -}}
+                    </label>
+                    <select id="suf-variant-{{ block.id }}" name="id">
+                      {%- for variant in product.variants -%}
+                        <option
+                          value="{{ variant.id }}"
+                          {% unless variant.available %}disabled{% endunless %}
+                        >
+                          {{- variant.title -}}
+                          {%- unless variant.available %} — sold out{% endunless -%}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                {%- else -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                {%- endif -%}
+
+                <button type="submit" class="suf-btn suf-btn--primary" name="add">
+                  {{- block.settings.button_label | default: 'Add to Cart' | escape -}}
+                </button>
+              {%- endform -%}
+            {%- else -%}
+              <p class="suf-gcard__soldout">Sold out</p>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if block.settings.micro != blank -%}
+            <p class="suf-btn-micro">{{ block.settings.micro | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.note != blank -%}
+      {%- comment -%}
+        A <div>, not a <p>: a richtext setting emits its own <p>, and nesting
+        one inside another is invalid -- the browser auto-closes the outer
+        element and the content escapes the styled wrapper entirely.
+      {%- endcomment -%}
+      <div class="suf-guidenote">{{ section.settings.note }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product cards (SUF)",
+  "tag": "section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading"
+    },
+    {
+      "type": "text",
+      "id": "aside",
+      "label": "Supporting note",
+      "info": "Sits right-aligned beside the heading."
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "info": "Lets a button elsewhere on the page link to this section, e.g. \"guides\" for #guides."
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Note under the cards",
+      "info": "Centred fine print, e.g. the refund policy."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Product card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Price, variants and availability come from this. The card does not link to the product page -- it sells in place. Leave empty to render copy only."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading override",
+          "info": "Defaults to the product title."
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta line",
+          "info": "Small caps line under the heading."
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body override",
+          "info": "Defaults to the product description."
+        },
+        {
+          "type": "text",
+          "id": "variant_label",
+          "label": "Variant picker label",
+          "info": "Only shown when the product has more than one variant.",
+          "default": "Option"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Add to Cart"
+        },
+        {
+          "type": "text",
+          "id": "micro",
+          "label": "Fine print under the button"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product cards (SUF)",
+      "blocks": [{ "type": "card" }, { "type": "card" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,161 @@
+{% comment %}
+  Two-column text/image split with an offset frame.
+
+  One section for what the mockup writes four times (.whyZ, .founder, .teaser,
+  .certrow). Image side, frame colour and crop are settings.
+
+  FRAME COLOUR ALTERNATES. Per the design notes the red and blue frames swap
+  down a page so two adjacent spotlights never share one. Nothing can enforce
+  that across sections, so check the page, not just this section.
+
+  The frame's SIDE is not configurable: it always sits on the inner edge,
+  facing the text, and CSS derives that from the image side.
+
+  ORDER. The markup is always text-then-image; putting the image first is done
+  with CSS order, so reading and tab order stay correct regardless of the
+  visual arrangement. Below 1000px the image always follows the text.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-section suf-spotlight'
+  if section.settings.image_side == 'left'
+    assign classes = classes | append: ' suf-spotlight--image-left'
+  endif
+  if section.settings.frame != 'none'
+    assign classes = classes | append: ' suf-spotlight--frame-' | append: section.settings.frame
+  endif
+  if section.settings.wide
+    assign classes = classes | append: ' suf-spotlight--wide'
+  endif
+-%}
+
+<div class="{{ classes }}">
+  <div class="suf-wrap">
+    <div class="suf-spotlight__inner">
+      <div class="suf-spotlight__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="suf-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.body != blank -%}
+          <div class="suf-spotlight__lead">{% render 'suf-nb', text: section.settings.body %}</div>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
+          <div class="suf-btnrow">
+            <a class="suf-btn suf-btn--primary" href="{{ section.settings.button_url }}">
+              {%- render 'suf-nb', text: section.settings.button_label -%}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.image != blank -%}
+        <div class="suf-spotlight__media">
+          {{
+            section.settings.image
+            | image_url: width: 900
+            | image_tag:
+              loading: 'lazy',
+              widths: '400, 600, 900',
+              sizes: '(min-width: 1001px) 40vw, 90vw',
+              alt: section.settings.image_alt
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Spotlight (SUF)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "info": "Describe what is happening in the photo, not just who is in it."
+    },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Image side",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "frame",
+      "label": "Offset frame",
+      "info": "Alternate red and blue down a page so two neighbouring spotlights never match.",
+      "options": [
+        { "value": "red", "label": "Red" },
+        { "value": "blue", "label": "Blue" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "red"
+    },
+    {
+      "type": "checkbox",
+      "id": "wide",
+      "label": "Landscape crop",
+      "info": "Use for a photo that does not crop well to a portrait 4:5.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spotlight (SUF)"
+    }
+  ]
+}
+{% endschema %}

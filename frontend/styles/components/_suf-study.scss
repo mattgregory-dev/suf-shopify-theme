@@ -1,0 +1,226 @@
+// Study guides: product cards + the guarantee callout.
+//
+// Ported from the mockup, section 11, with one structural change.
+//
+// The mockup makes each card a whole-card <a> containing a faux
+// <span class="btn">Add to Cart</span>. These are real products, so the button
+// is a real submit inside a real <form> -- and a <form> cannot live inside an
+// <a>. The card is therefore a plain container with no link of its own: the
+// add-to-cart button is the only action on it.
+//
+// The mockup's card-hover elevation is deliberately NOT ported with it. It
+// signalled "the whole card is the target", and the card is not a target at
+// all now -- it holds no link, only the add-to-cart button. A hover state on
+// it would promise a click it does not accept.
+
+.suf-guidegrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--suf-space-4);
+
+  // 900px is where two cards stop giving the body copy a readable measure.
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-gcard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--suf-space-5) var(--suf-space-4);
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+
+  h3 {
+    // The mockup's 6px reads tighter here because the base layer gives
+    // headings a 1.18 line-height the mockup did not have.
+    margin: 0 0 var(--suf-space-2);
+    font-size: var(--suf-font-size-h3);
+  }
+}
+
+// Body copy carries its own class rather than being matched as `.suf-gcard > p`.
+//
+// That selector is (0,1,1) and every other line in the card -- __meta, __price,
+// __soldout -- is a <p> at (0,1,0), so the "generic" rule silently won and
+// flattened all three. The child combinator does not help: the price IS a
+// direct child.
+//
+// The lesson generalises past the base layer: ANY rule mixing a class with an
+// element out-specifies a plain class, including one inside a component.
+//
+// All four card children are therefore `.suf-gcard .suf-gcard__x` (0,2,0), not
+// `.suf-gcard__x` (0,1,0). A bare class still loses to the base `.suf-body p`
+// margin -- which was silently discarding the price's `margin-top: auto`, the
+// thing that pins both cards' prices to the same line.
+.suf-gcard .suf-gcard__body {
+  margin: 0 0 var(--suf-space-4);
+  color: var(--suf-color-text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.suf-gcard .suf-gcard__meta {
+  margin: 0 0 var(--suf-space-3);
+  color: var(--suf-color-text-muted);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+// `margin-top: auto` pins the price to the bottom of the card, so two cards
+// with different body lengths still align their prices and buttons.
+.suf-gcard .suf-gcard__price {
+  margin: auto 0 var(--suf-space-3);
+  color: var(--suf-color-heading);
+  font-size: clamp(36px, 3.2vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.suf-gcard__form {
+  display: grid;
+  gap: var(--suf-space-2);
+  width: 100%;
+
+  // A grid container BLOCKIFIES its children: the button's `inline-block`
+  // computes to `block`, and justify-items defaults to stretch, so it would
+  // fill the column. This is not a specificity problem and no amount of
+  // display:inline-block on .suf-btn will fix it -- the button has to opt out
+  // of stretching instead.
+  .suf-btn {
+    justify-self: start;
+  }
+}
+
+.suf-gcard__variants {
+  display: grid;
+  gap: 7px;
+  max-width: 260px;
+
+  label {
+    color: var(--suf-color-heading);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    color: var(--suf-color-heading);
+    background: var(--suf-color-bg);
+    border: 1px solid var(--suf-color-input-border);
+    border-radius: 0;
+  }
+
+  select:focus {
+    outline: none;
+    background: var(--suf-color-surface);
+    border-color: var(--suf-color-focus);
+    box-shadow: 0 0 0 3px rgb(2 146 219 / 14%);
+  }
+
+  @media (forced-colors: active) {
+    select:focus {
+      outline: 2px solid;
+      outline-offset: 1px;
+    }
+  }
+}
+
+.suf-gcard .suf-gcard__soldout {
+  margin: 0;
+  color: var(--suf-color-text-muted);
+  font-size: var(--suf-font-size-small);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.suf-guidenote {
+  max-width: 62ch;
+  margin: var(--suf-space-4) auto 0;
+  color: var(--suf-color-text-muted);
+  font-size: var(--suf-font-size-small);
+  line-height: 1.6;
+  text-align: center;
+
+  // The richtext setting supplies these; they must not add the base bottom
+  // margin on top of the wrapper's own.
+  p {
+    margin: 0;
+  }
+
+  // Both tags, because the copy comes from a richtext setting and Shopify's
+  // editor may emit either. <strong> is the correct one for this content -- it
+  // is a refund-policy warning, which is importance, not styling -- but the
+  // rule must not depend on which one a merchant's editor produced.
+  b,
+  strong {
+    color: var(--suf-color-heading);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// GUARANTEE CALLOUT
+//
+// A CONTAINED navy box, not a full-bleed band. The design rations full-bleed
+// dark to the hero and the closing CTA; a third one would flatten the page's
+// rhythm. The heavy shadow is what lifts it off the page instead.
+// ---------------------------------------------------------------------------
+
+.suf-guarantee {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--suf-space-5);
+  align-items: center;
+  padding: var(--suf-space-5);
+  background: var(--suf-navy);
+  color: var(--suf-color-ink-on-dark);
+  box-shadow: 0 24px 60px rgb(0 32 54 / 22%);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+
+  h3 {
+    margin: 0 0 var(--suf-space-2);
+    color: var(--suf-color-heading-on-dark);
+    font-size: clamp(24px, 2.2vw, 32px);
+    line-height: 1.15;
+  }
+
+  p {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--suf-color-text-on-dark);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  em {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--suf-blue-light);
+  }
+
+  p a {
+    color: var(--suf-blue-light);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--suf-white);
+    }
+  }
+
+  p a em {
+    color: inherit;
+  }
+}

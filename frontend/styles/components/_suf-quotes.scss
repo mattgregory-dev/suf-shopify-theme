@@ -1,0 +1,80 @@
+// Testimonial card grid.
+//
+// A shared page pattern in the mockup (section 6), used by study guides,
+// continuing education and seminars. Defaults to 3-up; seminars overrides to
+// 2-up, which is a section setting here rather than a page-scoped rule.
+
+.suf-quotegrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--suf-space-4);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Two-up, centred and narrower -- otherwise two cards on a 1200px grid give
+// the quotes an uncomfortably long measure.
+.suf-quotegrid--two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 980px;
+  margin-inline: auto;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-qcard {
+  padding: var(--suf-space-4);
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+
+  p {
+    margin: 0 0 14px;
+    color: var(--suf-color-text);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  // Nested so it out-specifies the `p` rule above and the base `.suf-body p`.
+  .suf-qcard__who {
+    margin: 0;
+    color: var(--suf-color-text-muted-on-dark);
+    font-size: var(--suf-font-size-micro);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  // <blockquote> carries a large default margin in every browser.
+  .suf-qcard__quote {
+    margin: 0;
+
+    // The quotation marks are the design's, not the copy's -- so they cannot
+    // be forgotten, doubled, or typed as straight quotes. Generated content is
+    // not announced by most screen readers, which is correct here: a quote
+    // inside <blockquote> is already marked up as one.
+    //
+    // Literal characters, not C escapes -- a backslash escape did not
+    // survive being written through a shell heredoc and silently arrived as
+    // . See docs/wsl-tooling.md.
+    p::before {
+      content: '“';
+    }
+
+    p::after {
+      content: '”';
+    }
+  }
+
+  // The stars are decorative -- the rating is announced from visually hidden
+  // text in the markup, so this element is aria-hidden.
+  .suf-qcard__stars {
+    margin: 0 0 12px;
+    color: var(--suf-color-accent);
+    font-size: 17px;
+    letter-spacing: 3px;
+  }
+}

@@ -1,0 +1,127 @@
+{% comment %}
+  Testimonial card grid. One block per quote.
+
+  A shared page pattern -- study guides, continuing education and seminars all
+  use it. Seminars runs 2-up; that is the `columns` setting rather than a
+  page-scoped override.
+
+  RATINGS ARE NOT DECORATIVE STARS ALONE. The star glyphs are aria-hidden and
+  the rating is carried by visually hidden text, so a screen reader hears
+  "Rated 5 out of 5" instead of five black star characters read one at a time
+  -- or, depending on the voice, nothing at all.
+
+  SOURCING. The mockup notes these are real quotes from a public Reddit thread
+  and flags that SUF should confirm they are comfortable quoting usernames
+  before ship. That decision is content, not code, and lives in the block copy.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign grid = 'suf-quotegrid'
+  if section.settings.columns == 'two'
+    assign grid = grid | append: ' suf-quotegrid--two'
+  endif
+-%}
+
+<div class="suf-section">
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head">
+        <h2>{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{{ section.settings.aside | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="{{ grid }}">
+      {%- for block in section.blocks -%}
+        <div class="suf-qcard" {{ block.shopify_attributes }}>
+          {%- assign rating = block.settings.rating | plus: 0 -%}
+          {%- if rating > 0 -%}
+            <p class="suf-qcard__stars" aria-hidden="true">
+              {%- for i in (1..rating) -%}★{%- endfor -%}
+            </p>
+            <p class="suf-visually-hidden">Rated {{ rating }} out of 5</p>
+          {%- endif -%}
+
+          {%- if block.settings.quote != blank -%}
+            <blockquote class="suf-qcard__quote">
+              <p>{{ block.settings.quote | escape }}</p>
+            </blockquote>
+          {%- endif -%}
+
+          {%- if block.settings.who != blank -%}
+            <p class="suf-qcard__who">{{ block.settings.who | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonials (SUF)",
+  "tag": "section",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading"
+    },
+    {
+      "type": "text",
+      "id": "aside",
+      "label": "Supporting note"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns",
+      "options": [
+        { "value": "three", "label": "Three" },
+        { "value": "two", "label": "Two (narrower, centred)" }
+      ],
+      "default": "three"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Quote",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "info": "0 hides the stars."
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "info": "Quotation marks are added by the design -- do not type them."
+        },
+        {
+          "type": "text",
+          "id": "who",
+          "label": "Attribution"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials (SUF)",
+      "blocks": [{ "type": "quote" }, { "type": "quote" }, { "type": "quote" }]
+    }
+  ]
+}
+{% endschema %}

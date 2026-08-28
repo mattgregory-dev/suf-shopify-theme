@@ -1,14 +1,132 @@
 {
   "layout": "suf",
   "sections": {
-    "main": {
-      "type": "suf-main-page",
+    "band": {
+      "type": "suf-page-band",
       "settings": {
-        "show_title": true
+        "eyebrow": "Exam Prep · NASM / ACE / ISSA",
+        "heading": "Studying for NASM, ACE, or ISSA? Pass It <em>the First Time</em>.",
+        "subhead": "One guide covers all three exams. Written by trainers who teach this material for a living, and it's helped over 10,000 people pass.",
+        "tier_3": false,
+        "overlap": false,
+        "button_label": "See the Guides",
+        "button_url": "#guides"
+      }
+    },
+    "guides": {
+      "type": "suf-guides",
+      "blocks": {
+        "guide": {
+          "type": "card",
+          "settings": {
+            "product": "nasam-7th-edition-basic-guide-only-pro-guide-comes-with-subscription-zoom-calls",
+            "heading": "The Study Guide",
+            "meta": "Covers NASM, ACE & ISSA · 7th Edition · English or Spanish",
+            "body": "90+ pages of exactly what the exams test, and nothing they don't. High-level chapter overviews, example quiz questions, and a full practice test with the answer key in the back. Instant download — start studying tonight.",
+            "variant_label": "Language",
+            "button_label": "Add to Cart"
+          }
+        },
+        "quiz": {
+          "type": "card",
+          "settings": {
+            "product": "nasm-quiz-bundle-180-additional-questions",
+            "heading": "The NASM Quiz Bundle",
+            "meta": "180 extra practice questions · NASM only",
+            "body": "Six video quizzes, 30 questions each. After every quiz, a 20-minute video breakdown walks you through the answers so you understand the why, not just the what. Quiz links land in your inbox right after purchase.",
+            "button_label": "Add to Cart",
+            "micro": "The last thing to buy before test day."
+          }
+        }
+      },
+      "block_order": [
+        "guide",
+        "quiz"
+      ],
+      "settings": {
+        "heading": "Two Tools. One Passed Exam.",
+        "aside": "Start with the guide; add the quiz bundle when your test date gets close. Most students end up with both.",
+        "anchor": "guides",
+        "note": "<p><strong>Both are instant digital delivery, so all sales are final.</strong></p>"
+      }
+    },
+    "guarantee": {
+      "type": "suf-guarantee",
+      "settings": {
+        "heading": "The SUF-CPT Guarantee",
+        "body": "<p>Every SUF certification includes all of this NASM material — and a <a href=\"/pages/suf-cpt\"><em>guaranteed pass</em></a>. Your SUF cert is its own credential, and the NASM prep comes with it.</p>",
+        "button_label": "See the SUF-CPT",
+        "button_url": "/pages/suf-cpt"
+      }
+    },
+    "cta": {
+      "type": "suf-cta",
+      "settings": {
+        "heading": "Passing the Test Is Step One",
+        "subhead": "It happens all the time: someone passes their exam with the guide, then realizes the textbook never taught them to actually coach a client. That's what the SUF-CPT is for — hands-on reps, live coaching, and the skills that get you hired at the best gyms.",
+        "button_label": "See the SUF-CPT",
+        "button_url": "/pages/suf-cpt",
+        "micro": "The next step after your textbook cert."
+      }
+    },
+    "why": {
+      "type": "suf-spotlight",
+      "settings": {
+        "eyebrow": "Why These Guides Work",
+        "heading": "Built by People Who Teach This for a Living",
+        "body": "<p>Most study guides are written by people who read the textbook once. These were built by Show Up Fitness instructors, led by a founder who spent over a decade teaching trainers, and they focus on what the exams actually test instead of making you memorize all 700 pages. It's the same reason thousands of students find us on YouTube searching “how to pass NASM”: we make this material make sense.</p>",
+        "image": "shopify://shop_images/photo-02.jpg",
+        "image_alt": "Chris holding up an NASM textbook in front of the Where Great Trainers Are Made wall",
+        "image_side": "right",
+        "frame": "red"
+      }
+    },
+    "quotes": {
+      "type": "suf-quotes",
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "Their NASM study guide was literally all I used to study, and I passed the test the first time.",
+            "who": "— u/pksev6259"
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I used the study guide and passed NASM extremely easily. I felt very confident during the exam.",
+            "who": "— u/aarroy07"
+          }
+        },
+        "q3": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "With their study guide you can pass in just a few weeks.",
+            "who": "— u/Chemical-Abalone2807"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {
+        "heading": "What Students Are Saying",
+        "aside": "Real reviews from trainers who studied with the guide.",
+        "columns": "three"
       }
     }
   },
   "order": [
-    "main"
+    "band",
+    "guides",
+    "guarantee",
+    "why",
+    "quotes",
+    "cta"
   ]
 }

@@ -25,7 +25,8 @@
   <div class="suf-wrap">
     {%- if section.settings.heading != blank -%}
       <h2{% if section.settings.large_heading %} class="suf-cta__heading--large"{% endif %}>
-        {{- section.settings.heading | escape -}}
+        {%- assign h = section.settings.heading | escape -%}
+        {%- render 'suf-nb', text: h -%}
       </h2>
     {%- endif -%}
 
@@ -44,7 +45,8 @@
             aria-disabled="true"
           {% endif %}
         >
-          {{- section.settings.button_label | escape -}}
+          {%- assign bl = section.settings.button_label | escape -%}
+          {%- render 'suf-nb', text: bl -%}
         </a>
       </div>
     {%- endif -%}

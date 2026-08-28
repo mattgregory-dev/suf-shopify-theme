@@ -1,0 +1,68 @@
+{% comment %}
+  Contained navy callout with a single action.
+
+  Deliberately NOT a full-bleed band. The design rations full-bleed dark to the
+  page hero and the closing CTA; a third would flatten the page's rhythm. The
+  heavy shadow is what lifts this off the page instead.
+
+  The body is richtext so the copy can carry its own <em> and links -- both are
+  styled for the navy surface.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-section">
+  <div class="suf-wrap">
+    <div class="suf-guarantee">
+      <div>
+        {%- if section.settings.heading != blank -%}
+          <h3>{% render 'suf-nb', text: section.settings.heading %}</h3>
+        {%- endif -%}
+        {%- if section.settings.body != blank -%}
+          {% render 'suf-nb', text: section.settings.body %}
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
+        <a class="suf-btn suf-btn--primary" href="{{ section.settings.button_url }}">
+          {%- render 'suf-nb', text: section.settings.button_label -%}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Guarantee callout (SUF)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Any occurrence of SUF-CPT is automatically kept on one line."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Guarantee callout (SUF)"
+    }
+  ]
+}
+{% endschema %}
