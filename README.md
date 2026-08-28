@@ -53,6 +53,7 @@ legacy one that is still being reduced. Read
 | [docs/workflow.md](docs/workflow.md) | Environment setup, linting policy, formatting, commit conventions |
 | [docs/wsl-tooling.md](docs/wsl-tooling.md) | Traps when driving the WSL toolchain from Windows — read if a command fails in a way that makes no sense |
 | [docs/migration.md](docs/migration.md) | Production divergence, page cutover, in-flight rebuild state |
+| [docs/redesign-open-items.md](docs/redesign-open-items.md) | What is unfinished, what was decided and why, and the traps that recur — read before picking the redesign back up |
 
 **Read `docs/architecture.md` before changing anything.** The single most
 important constraint — that several stylesheets are Liquid-templated and cannot
