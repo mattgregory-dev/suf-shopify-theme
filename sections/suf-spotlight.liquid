@@ -15,6 +15,10 @@
   with CSS order, so reading and tab order stay correct regardless of the
   visual arrangement. Below 1000px the image always follows the text.
 
+  RESOURCE BLOCKS are optional link cards rendered under the copy, inside the
+  text column -- a cited book, a report, a linked download. Each is a whole-card
+  <a> with no nested interactive content, so one anchor carries the whole card.
+
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
 
@@ -49,9 +53,65 @@
 
         {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
           <div class="suf-btnrow">
-            <a class="suf-btn suf-btn--primary" href="{{ section.settings.button_url }}">
+            <a
+              class="suf-btn suf-btn--{{ section.settings.button_style }}"
+              href="{{ section.settings.button_url }}"
+            >
               {%- render 'suf-nb', text: section.settings.button_label -%}
             </a>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.micro != blank -%}
+          <div class="suf-btn-micro">{% render 'suf-nb', text: section.settings.micro %}</div>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <div class="suf-resources">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign has_link = false
+                if block.settings.url != blank
+                  assign has_link = true
+                endif
+              -%}
+              {%- if has_link -%}
+                <a class="suf-resource" href="{{ block.settings.url }}" target="_blank" rel="noopener" {{ block.shopify_attributes }}>
+              {%- else -%}
+                <div class="suf-resource" {{ block.shopify_attributes }}>
+              {%- endif -%}
+
+              {%- if block.settings.image != blank -%}
+                <div class="suf-resource__cover">
+                  {{
+                    block.settings.image
+                    | image_url: width: 300
+                    | image_tag: loading: 'lazy', widths: '150, 300', alt: block.settings.image_alt
+                  }}
+                </div>
+              {%- endif -%}
+
+              <div class="suf-resource__body">
+                {%- if block.settings.title != blank -%}
+                  <h4>{{ block.settings.title }}</h4>
+                {%- endif -%}
+                {%- if block.settings.meta != blank -%}
+                  <p class="suf-resource__meta">{{ block.settings.meta | escape }}</p>
+                {%- endif -%}
+                {%- assign rating = block.settings.rating | plus: 0 -%}
+                {%- if rating > 0 -%}
+                  <p class="suf-resource__stars">
+                    <span aria-hidden="true">{% for i in (1..rating) %}★{% endfor %}</span>
+                    <span class="suf-visually-hidden">Rated {{ rating }} out of 5</span>
+                    {%- if block.settings.rating_note != blank -%}
+                      <b>{{ block.settings.rating_note | escape }}</b>
+                    {%- endif -%}
+                  </p>
+                {%- endif -%}
+              </div>
+
+              {%- if has_link -%}</a>{%- else -%}</div>{%- endif -%}
+            {%- endfor -%}
           </div>
         {%- endif -%}
       </div>
@@ -150,6 +210,74 @@
       "type": "url",
       "id": "button_url",
       "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "info": "Use the outline unless this spotlight is the page's main action -- the design allows one filled red button per section.",
+      "options": [
+        { "value": "ghost", "label": "Outline" },
+        { "value": "primary", "label": "Filled red" }
+      ],
+      "default": "ghost"
+    },
+    {
+      "type": "richtext",
+      "id": "micro",
+      "label": "Fine print under the button",
+      "info": "Small muted line. May contain a link."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "resource",
+      "name": "Linked resource",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Cover image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Cover alt text"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "info": "Italicise a book or publication title with the editor's italic control."
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta line",
+          "info": "Author, year, publisher."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 0,
+          "info": "0 hides the stars."
+        },
+        {
+          "type": "text",
+          "id": "rating_note",
+          "label": "Note beside the rating"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link",
+          "info": "Opens in a new tab. Leave blank for a non-clickable card."
+        }
+      ]
     }
   ],
   "presets": [

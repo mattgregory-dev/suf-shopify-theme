@@ -1,0 +1,78 @@
+{% comment %}
+  A centred statement: eyebrow, heading, one paragraph of argument.
+
+  Covers the mockup's .centerintro (light) and .statement (navy). They differ
+  only in surface, so this is one section with a `dark` toggle.
+
+  RATION THE DARK VARIANT. It is a full-bleed band, and the design allows few
+  per page -- a tier-2 hero and the closing CTA are usually dark already. A
+  third flattens the page's rhythm rather than adding emphasis.
+
+  The dark variant supplies its own vertical rhythm through margin-block, so it
+  does NOT take .suf-section. A full-bleed band cannot pad itself from inside a
+  section wrapper without the background stopping short.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-statement'
+  if section.settings.dark
+    assign classes = classes | append: ' suf-statement--dark'
+  else
+    assign classes = 'suf-section ' | append: classes
+  endif
+-%}
+
+<div class="{{ classes }}">
+  <div class="suf-wrap">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="suf-eyebrow">{% render 'suf-nb', text: section.settings.eyebrow %}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <div class="suf-statement__body">{% render 'suf-nb', text: section.settings.body %}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Statement (SUF)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "info": "Italicise at most one phrase -- on the dark variant it renders as the highlight, and a second stops it reading as emphasis."
+    },
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark band",
+      "info": "Full-bleed navy. Count the dark bands already on the page before adding another.",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Statement (SUF)"
+    }
+  ]
+}
+{% endschema %}

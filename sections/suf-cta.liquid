@@ -9,10 +9,9 @@
   CTA headline in this design is a full sentence. `large_heading` is the
   exception, for a short line -- currently only the homepage.
 
-  ONE primary button. The design rations red to a single action per section,
-  and this section is entirely one action -- so the button is a single setting
-  rather than a block list, deliberately. The secondary link is a text link,
-  not a second button, for the same reason.
+  ONE PRIMARY button. The design rations red to one filled button per section.
+  A second action is available, but only as the outline (ghost) button or as a
+  text link -- never a second red one.
 
   ELEMENT. The root here is a <div>, not a <section>: the schema's
   `"tag": "section"` already makes Shopify wrap this in
@@ -34,20 +33,29 @@
       <p class="suf-cta__subhead">{{ section.settings.subhead }}</p>
     {%- endif -%}
 
-    {%- if section.settings.button_label != blank -%}
+    {%- if section.settings.button_label != blank or section.settings.button2_label != blank -%}
       <div class="suf-btnrow">
-        <a
-          class="suf-btn suf-btn--primary"
-          {% if section.settings.button_url != blank %}
-            href="{{ section.settings.button_url }}"
-          {% else %}
-            href="#"
-            aria-disabled="true"
-          {% endif %}
-        >
-          {%- assign bl = section.settings.button_label | escape -%}
-          {%- render 'suf-nb', text: bl -%}
-        </a>
+        {%- if section.settings.button_label != blank -%}
+          <a
+            class="suf-btn suf-btn--primary"
+            {% if section.settings.button_url != blank %}
+              href="{{ section.settings.button_url }}"
+            {% else %}
+              href="#"
+              aria-disabled="true"
+            {% endif %}
+          >
+            {%- assign bl = section.settings.button_label | escape -%}
+            {%- render 'suf-nb', text: bl -%}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.button2_label != blank and section.settings.button2_url != blank -%}
+          <a class="suf-btn suf-btn--ghost suf-btn--on-dark" href="{{ section.settings.button2_url }}">
+            {%- assign bl2 = section.settings.button2_label | escape -%}
+            {%- render 'suf-nb', text: bl2 -%}
+          </a>
+        {%- endif -%}
       </div>
     {%- endif -%}
 
@@ -98,6 +106,21 @@
     {
       "type": "url",
       "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "button2_label",
+      "label": "Button label",
+      "info": "Renders as the outline button. The design allows one filled red button per section, so this is never a second primary."
+    },
+    {
+      "type": "url",
+      "id": "button2_url",
       "label": "Button link"
     },
     {

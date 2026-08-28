@@ -1,14 +1,147 @@
 {
   "layout": "suf",
   "sections": {
-    "main": {
-      "type": "suf-main-page",
+    "band": {
+      "type": "suf-page-band",
       "settings": {
-        "show_title": true
+        "eyebrow": "About Show Up Fitness",
+        "heading": "We're Changing How Personal Trainers Are Made",
+        "subhead": "Most certifications hand you a textbook and wish you luck. Show Up Fitness was built on a different idea: you learn to train by training. Real reps with real clients, live coaching every week, and a standard high enough that the best gyms take notice.",
+        "tier_3": true,
+        "overlap": false
+      }
+    },
+    "founder": {
+      "type": "suf-spotlight",
+      "blocks": {
+        "book": {
+          "type": "resource",
+          "settings": {
+            "image": "shopify://shop_images/instructor-01.webp",
+            "image_alt": "How to Become a Successful Personal Trainer book cover",
+            "title": "<em>How to Become a Successful Personal Trainer</em>",
+            "meta": "Chris Hitchko · 2021",
+            "rating": 5,
+            "rating_note": "Highly rated by new trainers",
+            "url": "https://www.amazon.com/How-Become-Successful-Personal-Trainer/dp/B0DX1H19WN/"
+          }
+        }
+      },
+      "block_order": [
+        "book"
+      ],
+      "settings": {
+        "eyebrow": "Meet the Founder",
+        "heading": "He Wrote the Book on Training",
+        "body": "<p>Fitness was a part of Chris Hitchko's life from an early age, with his dad in the military. He earned a degree in kinesiology on a path toward physical therapy school, but started training clients instead. And by 2008, he'd moved into teaching trainers.</p><p>He taught for over a decade and kept seeing the same thing: students who knew the textbook cold and froze the moment a real client walked in. So he ran one of the largest surveys done in the field, interviewing trainers and managers at gyms like Equinox, Life Time, and Crunch. The problem was never knowledge — it was that no one had taught these trainers to do the actual job. He built Show Up Fitness to fix that: real practice, live coaching, and a certification you earn by doing, not just a passing score.</p><p>He's since certified over 10,000 trainers, and in 2021 he wrote the book on it, literally. <em>How to Become a Successful Personal Trainer</em> is highly rated among trainers who used it to break into the field.</p>",
+        "image": "shopify://shop_images/instructor-01.webp",
+        "image_alt": "Chris Hitchko, founder of Show Up Fitness",
+        "image_side": "left",
+        "frame": "blue"
+      }
+    },
+    "why_exist": {
+      "type": "suf-statement",
+      "settings": {
+        "eyebrow": "Why We Exist",
+        "heading": "A Multiple-Choice Test Doesn't Make a Trainer",
+        "body": "<p>Nobody becomes a hairstylist by reading about haircuts. But that's how the big certification companies make trainers: buy the bundle, read the textbook, pass a multiple-choice test, good luck out there. The result? <em>90% of new trainers quit within their first year.</em> Not because they don't care — because nobody ever had them coach a real person before day one.</p>",
+        "dark": true
+      }
+    },
+    "how": {
+      "type": "suf-spotlight",
+      "settings": {
+        "eyebrow": "How We Do It",
+        "heading": "A Map, Not Just a Certificate",
+        "body": "<p>Show Up Fitness gives you a path: earn your SUF-CPT, get hands-on at a weekend seminar, add a Level 2 certification, then get hands-on again. Over nine to twelve months you prove what you know and practice it on real people, at Life Time Fitness locations across the country. By the end you're not hoping you're ready. You know it.</p>",
+        "image": "shopify://shop_images/online-education.jpg",
+        "image_alt": "Coaches guiding a client through a hands-on assessment at a Life Time studio",
+        "image_side": "right",
+        "frame": "red",
+        "button_label": "See the SUF-CPT",
+        "button_url": "/pages/suf-cpt",
+        "button_style": "ghost",
+        "micro": "<p>Prefer to start hands-on? <a href=\"/pages/suf-seminars\">Browse seminar cities</a></p>"
+      }
+    },
+    "stories": {
+      "type": "suf-stories",
+      "blocks": {
+        "s1": {
+          "type": "story",
+          "settings": {
+            "figure": "$XXK+",
+            "figure_label": "A month · managing a high-end gym",
+            "heading": "The Manager in Sacramento",
+            "body": "<p>A trainer in his 40s started with a big-name certification and couldn't get hired at a single good gym. No experience, no confidence. He earned his SUF-CPT, walked straight into the high-end gyms, and today he manages one. A climb that usually takes seven to ten years took him two or three.</p>"
+          }
+        },
+        "s2": {
+          "type": "story",
+          "settings": {
+            "figure": "3 months",
+            "figure_label": "From SUF-CPT to hired at Equinox",
+            "heading": "The Equinox Hire",
+            "body": "<p>Another trainer earned her SUF-CPT and was hired at Equinox within three months. She's now making around $XXK a month at one of the best gyms in the country. The usual route? Years grinding at budget gyms, barely clearing $XK a month, hoping experience adds up.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2"
+      ],
+      "settings": {
+        "heading": "The Fast Track to a Profitable Career",
+        "aside": "A SUF-CPT gives trainers more than a textbook — here are two who built a career in a fraction of the usual time.",
+        "disclaimer": "Individual results vary. These stories reflect the experience of two trainers, not a typical or guaranteed outcome. What you earn as a trainer depends on your effort, your market, and the opportunities you pursue."
+      }
+    },
+    "headed": {
+      "type": "suf-statement",
+      "settings": {
+        "eyebrow": "Where We're Headed",
+        "heading": "Same Conversation as the Big Names. Better Product.",
+        "body": "<p>Show Up Fitness is working through the NCCA accreditation process step by step, and setting its sights on taking hands-on seminars international — the UK and Ireland are top of the list. The mission stays the same: keep raising the bar for what a certified trainer actually is.</p>",
+        "dark": false
+      }
+    },
+    "team_teaser": {
+      "type": "suf-spotlight",
+      "settings": {
+        "eyebrow": "The Team",
+        "heading": "Learn From Trainers Who Do the Work",
+        "body": "<p>Show Up Fitness instructors aren't academics. They're working trainers and coaches who train real clients, run real businesses, and teach from experience — not from a textbook they read once.</p>",
+        "image": "shopify://shop_images/photo-01.jpg",
+        "image_alt": "Show Up Fitness trainees posing together in a Life Time studio",
+        "image_side": "right",
+        "frame": "none",
+        "wide": true,
+        "button_label": "Meet the Team",
+        "button_url": "/pages/suf-meet-the-team",
+        "button_style": "ghost"
+      }
+    },
+    "cta": {
+      "type": "suf-cta",
+      "settings": {
+        "heading": "Your Turn to Show Up",
+        "subhead": "Whether you're starting from zero or already certified, there's a next step for you here.",
+        "button_label": "Start with the SUF-CPT",
+        "button_url": "/pages/suf-cpt",
+        "button2_label": "Already Certified? Level Up",
+        "button2_url": "/pages/suf-continuing-education"
       }
     }
   },
   "order": [
-    "main"
+    "band",
+    "founder",
+    "why_exist",
+    "how",
+    "stories",
+    "headed",
+    "team_teaser",
+    "cta"
   ]
 }
