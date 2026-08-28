@@ -51,17 +51,27 @@
 
   // Surface and ink.
   //
-  // Body copy is a neutral near-black, NOT navy. Navy is for headings, and
-  // setting long-form copy in it was never the design intent. The brand guide
-  // does not name an ink colour, so this is the deliberate neutral choice.
+  // Body copy is a desaturated navy, #33505f -- the mockup's value, adopted
+  // 2026-08-28 after seeing it in place.
+  //
+  // This REVERSES an earlier call to keep body copy a neutral near-black. The
+  // neutral was defensible in the abstract, but against the off-white surface
+  // and navy headings it read as a foreign colour rather than a quieter one.
+  //
+  // --suf-color-ink stays neutral and is now used only by the forked header.
+  // Keeping the two separate is the whole point of the semantic layer: this
+  // change was one line precisely because no component names a colour.
   // The page is off-white, not white; cards and panels sit ON it in white.
   // That difference is the design's only separation between a card and the
   // page, so --suf-color-surface is not interchangeable with --suf-color-bg.
   --suf-color-bg: #f7f9fa;
   --suf-color-surface: var(--suf-white);
   --suf-color-ink: #1a1a1a;
-  --suf-color-text: var(--suf-color-ink);
-  --suf-color-text-muted: #6b6b6b;
+  --suf-color-text: #33505f;
+  // Navy-tinted, not a neutral grey: it has to sit beside --suf-color-text
+  // without reading as a different family. A pure grey next to #33505f looks
+  // dirty rather than quiet.
+  --suf-color-text-muted: #5b7280;
   --suf-color-heading: var(--suf-navy);
   --suf-color-border: var(--suf-grey);
 
@@ -70,6 +80,10 @@
   //   subtle  section heads, card edges, FAQ dividers -- the default rule
   //   faint   dividers INSIDE an already-bordered box
   --suf-color-border-subtle: #dde4e8;
+
+  // Form controls sit on --suf-color-bg and need a stronger edge than a
+  // hairline rule to read as an affordance rather than a panel.
+  --suf-color-input-border: #c9d5dc;
   --suf-color-border-faint: #eef2f4;
 
   // Interactive.
