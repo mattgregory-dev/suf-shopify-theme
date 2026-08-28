@@ -9,6 +9,10 @@
   The homepage is tier 1 -- a full-bleed photo hero -- and is a different
   section entirely. Do not add a tier here for it.
 
+  A tier-2 band may carry a photo, which bleeds to the band's right edge. It is
+  loaded eagerly with high fetchpriority: on the pages that have one it is the
+  largest contentful paint, and lazy-loading it delays the metric it defines.
+
   BOTTOM EDGE. A band either carries a red base rule or has the next section
   overlap it, never both. Turning on `overlap` removes the rule here and
   requires the FOLLOWING section to carry .suf-section--overlap-up; the two
@@ -35,10 +39,14 @@
   if section.settings.overlap
     assign classes = classes | append: ' suf-band--backdrop'
   endif
+  if section.settings.image != blank and section.settings.tier_3 == false
+    assign classes = classes | append: ' suf-band--split'
+  endif
 -%}
 
 <div class="{{ classes }}">
   <div class="suf-wrap">
+    <div class="suf-band__text">
     {%- if section.settings.eyebrow != blank -%}
       <p class="suf-eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {%- endif -%}
@@ -51,24 +59,50 @@
       <p class="suf-band__subhead">{{ section.settings.subhead }}</p>
     {%- endif -%}
 
-    {%- if section.settings.button_label != blank -%}
+    {%- if section.settings.button_label != blank or section.settings.button2_label != blank -%}
       <div class="suf-btnrow">
-        <a
-          class="suf-btn suf-btn--primary"
-          {% if section.settings.button_url != blank %}
-            href="{{ section.settings.button_url }}"
-          {% else %}
-            href="#"
-            aria-disabled="true"
-          {% endif %}
-        >
-          {{- section.settings.button_label | escape -}}
-        </a>
+        {%- if section.settings.button_label != blank -%}
+          <a
+            class="suf-btn suf-btn--primary"
+            {% if section.settings.button_url != blank %}
+              href="{{ section.settings.button_url }}"
+            {% else %}
+              href="#"
+              aria-disabled="true"
+            {% endif %}
+          >
+            {%- assign bl = section.settings.button_label | escape -%}
+            {%- render 'suf-nb', text: bl -%}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.button2_label != blank and section.settings.button2_url != blank -%}
+          <a class="suf-btn suf-btn--ghost suf-btn--on-dark" href="{{ section.settings.button2_url }}">
+            {%- assign bl2 = section.settings.button2_label | escape -%}
+            {%- render 'suf-nb', text: bl2 -%}
+          </a>
+        {%- endif -%}
       </div>
     {%- endif -%}
 
     {%- if section.settings.micro != blank -%}
       <p class="suf-band__micro">{{ section.settings.micro | escape }}</p>
+    {%- endif -%}
+    </div>
+
+    {%- if section.settings.image != blank and section.settings.tier_3 == false -%}
+      <div class="suf-band__media">
+        {{
+          section.settings.image
+          | image_url: width: 1000
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            widths: '520, 700, 1000',
+            sizes: '(min-width: 901px) 45vw, 90vw',
+            alt: section.settings.image_alt
+        }}
+      </div>
     {%- endif -%}
   </div>
 </div>
@@ -125,9 +159,35 @@
     },
     {
       "type": "text",
+      "id": "button2_label",
+      "label": "Second button label",
+      "info": "Renders as the outline button. Never a second filled red one."
+    },
+    {
+      "type": "url",
+      "id": "button2_url",
+      "label": "Second button link"
+    },
+    {
+      "type": "text",
       "id": "micro",
       "label": "Fine print",
       "info": "Small muted line under the button."
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo",
+      "info": "Tier 2 only -- the photo bleeds to the band's right edge. Ignored on a compact band."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photo alt text"
     }
   ],
   "presets": [
