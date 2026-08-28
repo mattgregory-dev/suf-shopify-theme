@@ -2,7 +2,7 @@ node_modules/
 
 # Sass build artifacts. assets/suf.css is NOT committed -- it changes on every
 # style edit and the diff noise is not worth it. Consequence: a clean clone has
-# no compiled CSS, so build before pushing. Use `npm run deploy`, which does.
+# no compiled CSS, so build before pushing. Use `npm run preview`, which does.
 assets/suf.css
 assets/suf.css.map
 .sass-cache/

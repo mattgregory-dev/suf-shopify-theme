@@ -44,7 +44,7 @@ assets/suf.js            hand-written native ES module (NOT generated)
   `layout/theme.liquid` changes.
 - `assets/suf.css` is **gitignored, not committed** — it churns on every style
   edit. **Consequence: a clean clone has no compiled CSS.** Always build before
-  pushing; `npm run deploy` runs `css:build` then `shopify theme push`.
+  pushing; `npm run preview` runs `css:build` then pushes to Sporto - Redesign.
 
 Both files load from `layout/theme.liquid`, marked with `{% comment %}`.
 
