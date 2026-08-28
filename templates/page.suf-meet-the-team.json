@@ -1,14 +1,83 @@
 {
   "layout": "suf",
   "sections": {
-    "main": {
-      "type": "suf-main-page",
+    "band": {
+      "type": "suf-page-band",
       "settings": {
-        "show_title": true
+        "eyebrow": "Meet the Team",
+        "heading": "The People Behind the Certification",
+        "subhead": "Every Show Up Fitness instructor is a working coach who trains real clients and teaches from experience. When you join a live call or a weekend seminar, these are the people in the room with you.",
+        "tier_3": true,
+        "overlap": true
+      }
+    },
+    "team": {
+      "type": "suf-team",
+      "blocks": {
+        "chris": {
+          "type": "member",
+          "settings": {
+            "name": "Chris Hitchko",
+            "role": "Founder",
+            "photo_alt": "Chris Hitchko, founder of Show Up Fitness",
+            "bio": "Teaching trainers since 2008, with a decade in the classroom before building Show Up Fitness. Kinesiology degree, author, and the voice behind the YouTube channel that has helped thousands pass their exams. Still leads the Monday mentorship calls himself.",
+            "link": "/pages/suf-about",
+            "cue": "Read the Founder's Story"
+          }
+        },
+        "jorge": {
+          "type": "member",
+          "settings": {
+            "name": "Jorge",
+            "role": "Instructor",
+            "photo_alt": "Jorge, Show Up Fitness instructor",
+            "bio": "Bio to come."
+          }
+        },
+        "josh": {
+          "type": "member",
+          "settings": {
+            "name": "Josh",
+            "role": "Instructor",
+            "photo_alt": "Josh, Show Up Fitness instructor",
+            "bio": "Bio to come."
+          }
+        },
+        "meagan": {
+          "type": "member",
+          "settings": {
+            "name": "Meagan",
+            "role": "Instructor",
+            "photo_alt": "Meagan, Show Up Fitness instructor",
+            "bio": "Bio to come."
+          }
+        }
+      },
+      "block_order": [
+        "chris",
+        "jorge",
+        "josh",
+        "meagan"
+      ],
+      "settings": {
+        "overlap": true
+      }
+    },
+    "cta": {
+      "type": "suf-cta",
+      "settings": {
+        "heading": "Learn From Trainers Who Do the Work",
+        "subhead": "These are the coaches on your live calls, your seminar floor, and your final exam. Start training with them.",
+        "button_label": "Start with the SUF-CPT",
+        "button_url": "/pages/suf-cpt",
+        "link_label": "Or meet us in person at a weekend seminar",
+        "link_url": "/pages/suf-seminars"
       }
     }
   },
   "order": [
-    "main"
+    "band",
+    "team",
+    "cta"
   ]
 }

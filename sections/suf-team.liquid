@@ -1,0 +1,181 @@
+{% comment %}
+  Team member grid.
+
+  One block per member, because this is content that genuinely churns --
+  instructors join and leave, and that should not need a developer.
+
+  A member with a link becomes a whole-card <a>; without one it stays a <div>.
+  The "Read more" cue inside a linked card is a <span>, not a nested anchor:
+  one link per card keeps the tab order honest and the accessible name whole.
+
+  IMAGES. Blocks use image_picker, so Shopify serves the file from its CDN and
+  `image_url` sizes it. The mockup hard-codes ?v= CDN URLs; those are the same
+  files, but going through image_picker is what makes them swappable in the
+  editor and gives us srcset.
+
+  ELEMENT. The root here is a <div>, not a <section>: the schema's
+  `"tag": "section"` already makes Shopify wrap this in
+  <section id="shopify-section-...">, and a <section> of our own inside that
+  would nest two sectioning elements for one band. Same pattern as
+  suf-main-page (<article>) and suf-footer (<footer>).
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-section'
+  if section.settings.overlap
+    assign classes = classes | append: ' suf-section--overlap-up'
+  endif
+-%}
+
+<div class="{{ classes }}">
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head">
+        <h2>{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{{ section.settings.aside | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="suf-teamgrid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign has_link = false
+          if block.settings.link != blank and block.settings.cue != blank
+            assign has_link = true
+          endif
+        -%}
+
+        {%- if has_link -%}
+          <a class="suf-tcard" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
+        {%- else -%}
+          <div class="suf-tcard" {{ block.shopify_attributes }}>
+        {%- endif -%}
+
+        {%- if block.settings.photo != blank -%}
+          <div class="suf-tcard__photo">
+            {{
+              block.settings.photo
+              | image_url: width: 800
+              | image_tag:
+                loading: 'lazy',
+                widths: '300, 400, 600, 800',
+                sizes: '(min-width: 981px) 25vw, 40vw',
+                alt: block.settings.photo_alt
+            }}
+          </div>
+        {%- else -%}
+          <div class="suf-tcard__photo suf-tcard__photo--placeholder">
+            <span>{{ block.settings.name | default: 'Photo' | escape }}<br>photo to come</span>
+          </div>
+        {%- endif -%}
+
+        <div class="suf-tcard__body">
+          {%- if block.settings.name != blank -%}
+            <h3>{{ block.settings.name | escape }}</h3>
+          {%- endif -%}
+
+          {%- if block.settings.role != blank -%}
+            <p class="suf-tcard__role">{{ block.settings.role | escape }}</p>
+          {%- endif -%}
+
+          {%- if block.settings.bio != blank -%}
+            <p>{{ block.settings.bio }}</p>
+          {%- endif -%}
+
+          {%- if has_link -%}
+            <span class="suf-tcard__cue">{{ block.settings.cue | escape }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- if has_link -%}
+          </a>
+        {%- else -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Team grid (SUF)",
+  "tag": "section",
+  "max_blocks": 24,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "info": "Leave blank to show the grid with no heading."
+    },
+    {
+      "type": "text",
+      "id": "aside",
+      "label": "Supporting note",
+      "info": "Sits right-aligned beside the heading."
+    },
+    {
+      "type": "checkbox",
+      "id": "overlap",
+      "label": "Overlap the band above",
+      "info": "Only turn this on when the section directly above is a Page band with its overlap setting on.",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "member",
+      "name": "Team member",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Photo",
+          "info": "Portrait crop. Leave empty to show a labelled placeholder."
+        },
+        {
+          "type": "text",
+          "id": "photo_alt",
+          "label": "Photo alt text",
+          "info": "Describe the person, e.g. \"Jorge, Show Up Fitness instructor\"."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role"
+        },
+        {
+          "type": "textarea",
+          "id": "bio",
+          "label": "Bio"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "cue",
+          "label": "Link text",
+          "info": "Both this and the link are required for the card to become clickable."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Team grid (SUF)",
+      "blocks": [{ "type": "member" }, { "type": "member" }]
+    }
+  ]
+}
+{% endschema %}

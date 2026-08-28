@@ -1,0 +1,127 @@
+{% comment %}
+  Closing call-to-action band.
+
+  The mirror of suf-page-band: that one opens a page with a red rule beneath
+  it, this one closes a page with a red rule above it. Almost every interior
+  page ends with this.
+
+  HEADING SIZE. The default is the smaller of the two, because nearly every
+  CTA headline in this design is a full sentence. `large_heading` is the
+  exception, for a short line -- currently only the homepage.
+
+  ONE primary button. The design rations red to a single action per section,
+  and this section is entirely one action -- so the button is a single setting
+  rather than a block list, deliberately. The secondary link is a text link,
+  not a second button, for the same reason.
+
+  ELEMENT. The root here is a <div>, not a <section>: the schema's
+  `"tag": "section"` already makes Shopify wrap this in
+  <section id="shopify-section-...">, and a <section> of our own inside that
+  would nest two sectioning elements for one band. Same pattern as
+  suf-main-page (<article>) and suf-footer (<footer>).
+{% endcomment %}
+
+<div class="suf-cta">
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <h2{% if section.settings.large_heading %} class="suf-cta__heading--large"{% endif %}>
+        {{- section.settings.heading | escape -}}
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.subhead != blank -%}
+      <p class="suf-cta__subhead">{{ section.settings.subhead }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="suf-btnrow">
+        <a
+          class="suf-btn suf-btn--primary"
+          {% if section.settings.button_url != blank %}
+            href="{{ section.settings.button_url }}"
+          {% else %}
+            href="#"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.link_label != blank and section.settings.link_url != blank -%}
+      <a class="suf-link" href="{{ section.settings.link_url }}">
+        {{- section.settings.link_label | escape -}}
+      </a>
+    {%- endif -%}
+
+    {%- if section.settings.micro != blank -%}
+      <p class="suf-cta__micro">{{ section.settings.micro | escape }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CTA band (SUF)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ready to start?"
+    },
+    {
+      "type": "checkbox",
+      "id": "large_heading",
+      "label": "Large heading",
+      "info": "The default size suits a full-sentence headline. Turn this on only for a short, punchy line -- the homepage. A long headline at this size wraps to three lines.",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Primary action"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Secondary link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link text"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "micro",
+      "label": "Fine print"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA band (SUF)"
+    }
+  ]
+}
+{% endschema %}

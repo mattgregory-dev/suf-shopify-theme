@@ -1,0 +1,118 @@
+// Page band -- the dark opener on every interior page.
+//
+// Ported from the mockup, section 5. Two tiers, and which one a page gets is a
+// design decision recorded in the mockup's CLAUDE.md, not a free choice:
+//
+//   tier 2  .suf-band              sales pages. Display-size h1, optional photo.
+//   tier 3  .suf-band--compact     utility pages. h2-size h1, centred.
+//
+// The homepage is tier 1 (full-bleed photo hero) and is NOT this component.
+//
+// The band is full-bleed navy, so everything inside it uses the *-on-dark
+// tokens. Nothing here should reference a light-surface token.
+
+.suf-band {
+  padding-block: var(--suf-space-6);
+  background: var(--suf-navy);
+  color: var(--suf-color-ink-on-dark);
+  // The red base rule is the design's edge treatment: contrast by edges, never
+  // by fades. It is dropped only when something overlaps the band instead.
+  border-bottom: 4px solid var(--suf-red);
+
+  h1 {
+    max-width: 23ch;
+    margin: 0 0 var(--suf-space-3);
+    color: var(--suf-color-heading-on-dark);
+    font-size: var(--suf-font-size-display);
+    line-height: var(--suf-line-height-tight);
+    text-wrap: balance;
+  }
+
+  // Exactly one value phrase per tier-1/tier-2 headline gets the blue. More
+  // than one and it stops reading as emphasis.
+  h1 em {
+    font-style: normal;
+    color: var(--suf-blue-light);
+  }
+
+  .suf-eyebrow {
+    color: var(--suf-color-heading-on-dark);
+  }
+
+  .suf-btnrow {
+    margin-top: var(--suf-space-4);
+  }
+
+  // Nested, not top-level: these are <p> elements and .suf-body p is (0,1,1),
+  // which beats a bare .suf-band__subhead at (0,1,0) and reinstates a bottom
+  // margin the design does not want. See the note in _suf-cta.scss.
+  .suf-band__subhead {
+    max-width: 56ch;
+    margin: 0;
+    color: var(--suf-color-text-on-dark);
+    font-size: clamp(16px, 1.25vw, 19px);
+    line-height: 1.55;
+  }
+
+  .suf-band__micro {
+    margin: var(--suf-space-2) 0 0;
+    color: var(--suf-color-text-muted-on-dark);
+    font-size: 13px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// TIER 3 -- utility pages
+// ---------------------------------------------------------------------------
+
+.suf-band--compact {
+  padding-block: var(--suf-space-5);
+  text-align: center;
+
+  h1 {
+    margin-inline: auto;
+    font-size: var(--suf-font-size-h2);
+  }
+
+  // A tier-3 headline is a label, not a pitch, so it takes no blue highlight
+  // even if the copy contains an <em>.
+  h1 em {
+    color: inherit;
+  }
+
+  .suf-band__subhead {
+    margin-inline: auto;
+  }
+
+  .suf-eyebrow,
+  .suf-btnrow {
+    justify-content: center;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// OVERLAP
+//
+// The design's bottom-edge rule: where a page has content worth lifting, it
+// overlaps the band's bottom edge instead of the band carrying its red rule.
+//
+// The two classes are a matched pair and the 110px appears in both -- the band
+// pads for the overlap, the next section pulls up by the same amount. Change
+// one and you must change the other, which is why the value is a variable.
+// ---------------------------------------------------------------------------
+
+.suf-band--backdrop {
+  --suf-band-overlap: 110px;
+
+  padding-bottom: calc(var(--suf-space-5) + var(--suf-band-overlap));
+  border-bottom: none;
+}
+
+.suf-section--overlap-up {
+  --suf-band-overlap: 110px;
+
+  position: relative;
+  z-index: 2;
+  margin-top: calc(var(--suf-band-overlap) * -1);
+  padding-top: 0;
+}

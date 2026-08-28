@@ -1,0 +1,139 @@
+{% comment %}
+  The dark opener for an interior page on layout/suf.liquid.
+
+  Two tiers, per the redesign's header tier system:
+
+    tier 2  sales pages     display-size h1, left aligned
+    tier 3  utility pages   h2-size h1, centred  (tier_3 = true)
+
+  The homepage is tier 1 -- a full-bleed photo hero -- and is a different
+  section entirely. Do not add a tier here for it.
+
+  BOTTOM EDGE. A band either carries a red base rule or has the next section
+  overlap it, never both. Turning on `overlap` removes the rule here and
+  requires the FOLLOWING section to carry .suf-section--overlap-up; the two
+  pull against each other by the same 110px and are meaningless apart. Nothing
+  can enforce that from inside this section, hence this note.
+
+  The heading is a rich text field so an <em> can mark the one blue value
+  phrase. That highlight is suppressed on tier 3 by CSS, where the headline is
+  a label rather than a pitch.
+
+  ELEMENT. The root here is a <div>, not a <section>: the schema's
+  `"tag": "section"` already makes Shopify wrap this in
+  <section id="shopify-section-...">, and a <section> of our own inside that
+  would nest two sectioning elements for one band. Same pattern as
+  suf-main-page (<article>) and suf-footer (<footer>).
+{% endcomment %}
+
+{%- liquid
+  assign heading = section.settings.heading
+  assign classes = 'suf-band'
+  if section.settings.tier_3
+    assign classes = classes | append: ' suf-band--compact'
+  endif
+  if section.settings.overlap
+    assign classes = classes | append: ' suf-band--backdrop'
+  endif
+-%}
+
+<div class="{{ classes }}">
+  <div class="suf-wrap">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="suf-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    {%- if heading != blank -%}
+      <h1>{{ heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subhead != blank -%}
+      <p class="suf-band__subhead">{{ section.settings.subhead }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="suf-btnrow">
+        <a
+          class="suf-btn suf-btn--primary"
+          {% if section.settings.button_url != blank %}
+            href="{{ section.settings.button_url }}"
+          {% else %}
+            href="#"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.micro != blank -%}
+      <p class="suf-band__micro">{{ section.settings.micro | escape }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page band (SUF)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Short label above the heading. Rendered in caps with a red slash."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Page heading"
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Subheading"
+    },
+    {
+      "type": "checkbox",
+      "id": "tier_3",
+      "label": "Compact (utility page)",
+      "info": "Centred, smaller heading. Use for About, Team, Contact, Compare and the legal pages.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "overlap",
+      "label": "Let the next section overlap this band",
+      "info": "Removes the red base rule. The section below MUST have its overlap setting turned on too, or the layout will have a gap.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "micro",
+      "label": "Fine print",
+      "info": "Small muted line under the button."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page band (SUF)"
+    }
+  ]
+}
+{% endschema %}

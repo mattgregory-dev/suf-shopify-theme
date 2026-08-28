@@ -1,0 +1,161 @@
+// Team cards.
+//
+// Ported from the mockup, section 7. Used by the team page and, as a teaser,
+// by the about page.
+//
+// Breakpoints here are 980px and 600px, which are neither of the project's
+// Sass breakpoints. That is deliberate and is the mockup's stated policy:
+// break where the CONTENT breaks, not at canonical device widths. 980 is where
+// two cards side by side squeeze the bio into a column too narrow to read; 600
+// is where the photo and body can no longer sit side by side inside one card.
+// Using m.$bp-lg (1024) instead would break the grid while it still looked
+// fine, and m.$bp-md (768) would leave it broken for 200px.
+
+.suf-teamgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--suf-space-4);
+
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-tcard {
+  display: grid;
+  // The photo column is capped in fr but floored in px: below ~200px the crop
+  // stops reading as a portrait.
+  grid-template-columns: minmax(200px, 2fr) 3fr;
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// The whole card is the click target when a member has a linked story. The
+// inner cue is a span, not a nested <a> -- one anchor, no nesting.
+a.suf-tcard {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    border-color: #b9c6cd;
+
+    .suf-tcard__cue {
+      color: var(--suf-color-accent);
+      border-color: var(--suf-color-accent);
+    }
+  }
+}
+
+.suf-tcard__photo {
+  position: relative;
+  min-height: 280px;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // Once the card is a single column the photo has no row to fill, so it needs
+  // its own aspect ratio instead of a min-height.
+  @media (max-width: 980px) {
+    min-height: 0;
+
+    // A padding box rather than aspect-ratio: the image is absolutely
+    // positioned, so the element would otherwise have no height to ratio.
+    &::before {
+      content: '';
+      display: block;
+      padding-top: 125%;
+    }
+  }
+
+  // No separate 600px rule: the mockup restates the ratio there as
+  // aspect-ratio 4/5, which is the same 125% already set above.
+}
+
+.suf-tcard__body {
+  padding: var(--suf-space-4);
+
+  @media (max-width: 980px) {
+    align-self: center;
+  }
+
+  @media (max-width: 600px) {
+    padding: var(--suf-space-3);
+  }
+
+  h3 {
+    margin: 0 0 var(--suf-space-1);
+    color: var(--suf-color-heading);
+    font-size: var(--suf-font-size-h3);
+  }
+
+  p {
+    margin: 0;
+    color: var(--suf-color-text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+// Nested for specificity: it is a <p>, and .suf-body p would otherwise win.
+.suf-tcard {
+  .suf-tcard__role {
+    margin: 0 0 var(--suf-space-2);
+    color: var(--suf-color-link);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}
+
+// Looks like .suf-link but is a span inside the card anchor. It cannot reuse
+// that class: .suf-link is an <a> and this must not be focusable separately.
+.suf-tcard__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--suf-space-3);
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--suf-color-link);
+  color: var(--suf-color-link);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition:
+    color var(--suf-transition),
+    border-color var(--suf-transition);
+}
+
+// Placeholder for a member with no photo yet. Diagonal stripes plus a
+// monospace note, so an empty slot reads as deliberate rather than broken.
+.suf-tcard__photo--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--suf-color-border-faint) 0 12px,
+    #e4eaee 12px 24px
+  );
+
+  span {
+    padding: var(--suf-space-2);
+    color: var(--suf-color-text-muted);
+    font:
+      600 12px/1.4 ui-monospace,
+      monospace;
+    text-align: center;
+  }
+}

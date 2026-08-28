@@ -1,0 +1,66 @@
+// Closing call-to-action band.
+//
+// Ported from the mockup, section 4. Full-bleed navy, centred, the last thing
+// on almost every page. Mirrors .suf-band: that one opens a page with a red
+// rule below it, this one closes a page with a red rule above it.
+//
+// The __ children are NESTED rather than written as top-level classes. They
+// are <p> elements, and .suf-body p is (0,1,1) -- a bare .suf-cta__subhead is
+// (0,1,0) and loses to it, so its centring margin silently does nothing.
+// Nesting makes them (0,2,0), which wins. Same reason in _suf-band.scss and
+// _suf-team.scss.
+
+.suf-cta {
+  margin-top: var(--suf-space-section);
+  padding-block: var(--suf-space-6);
+  background: var(--suf-navy);
+  border-top: 4px solid var(--suf-red);
+  text-align: center;
+
+  // The DEFAULT is the smaller size. Nearly every CTA headline in the design
+  // is a full sentence, and at the large size those wrap to three lines and
+  // stop reading as one statement. The big size is the exception -- see
+  // --large below.
+  h2 {
+    margin-bottom: var(--suf-space-2);
+    color: var(--suf-color-heading-on-dark);
+    font-size: clamp(30px, 3.2vw, 44px);
+    line-height: 1.05;
+  }
+
+  .suf-cta__heading--large {
+    font-size: clamp(36px, 4vw, 60px);
+  }
+
+  .suf-cta__subhead {
+    max-width: 52ch;
+    margin: 0 auto var(--suf-space-4);
+    color: var(--suf-color-text-on-dark);
+    font-size: 17px;
+  }
+
+  .suf-cta__micro {
+    margin: 0;
+    color: var(--suf-color-text-muted-on-dark);
+    font-size: var(--suf-font-size-small);
+  }
+
+  // The band's own link sits on navy, so it takes the on-dark blue and
+  // resolves to white rather than red -- red on navy is the CTA button's
+  // colour, and the link must not compete with it.
+  .suf-link {
+    color: var(--suf-color-link-on-dark);
+    border-color: var(--suf-color-link-on-dark);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--suf-white);
+      border-color: var(--suf-white);
+    }
+  }
+
+  .suf-btnrow {
+    justify-content: center;
+    margin-bottom: var(--suf-space-3);
+  }
+}
