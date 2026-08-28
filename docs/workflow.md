@@ -22,6 +22,14 @@ ways that look like environment problems.
 behind a `case` guard so it is not added twice. Note this means `bash -lc` works
 but bare `bash -c` does not — that mode reads neither file.
 
+**`bash -lc` gets you the PATH, but not nvm's node.** nvm is sourced below the
+interactive-only guard in `~/.bashrc`, so any non-interactive shell falls back to
+the system Node 20 and the Shopify CLI fails on it. See
+[wsl-tooling.md](wsl-tooling.md#trap-the-shopify-cli-works-for-you-but-not-for-tooling).
+
+Every other way this boundary breaks — and there are several, none of which look
+like quoting errors — is catalogued in [wsl-tooling.md](wsl-tooling.md).
+
 ## Commands
 
 | Command | Does |
