@@ -59,6 +59,13 @@
     margin: 0 0 var(--suf-space-md);
   }
 
+  // Browsers give <blockquote> `margin: 1em 40px`. That indent is a browser
+  // default, not a design decision, and every quote component here supplies its
+  // own spacing -- so it is reset once rather than in each of them.
+  blockquote {
+    margin: 0;
+  }
+
   // Prose links only.
   //
   // `.suf-body a` is (0,1,1) and a component class like .suf-btn--primary is
