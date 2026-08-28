@@ -128,8 +128,19 @@ The anchor rule is prose-only, so it says so:
 a:not(.suf-btn):not(.suf-link):not(.suf-tcard) { ... }
 ```
 
-Keep that list current: a new component rendering as an `<a>` that sets its own
-colour must be added, or it inherits link blue.
+The form-control rule needs the same treatment, and this is the part that got
+missed the first time:
+
+```scss
+button:not(.suf-btn), input, select, textarea { color: inherit; }
+```
+
+**Check both element groups.** `.suf-btn` is used on `<a>` AND on `<button>`,
+so fixing only the anchor rule left submit buttons inheriting navy text on a
+red fill. The symptom appeared one page later, on the first form.
+
+Keep those lists current: a new component rendering as an `<a>` or a `<button>`
+that sets its own colour must be added, or it inherits.
 
 Where the component legitimately styles an element, **nest it under its block**
 so it reaches (0,2,0):
@@ -147,6 +158,37 @@ the top level.
 
 **Do not reach for `!important`.** It wins the fight and loses the file: the
 next override has nowhere to go.
+
+#### Shorthands make it worse
+
+`font: inherit` on the form-control rule was the most damaging instance,
+because a shorthand resets **every** longhand it covers — `font-size`,
+`font-weight`, `font-style`, `line-height` and `font-family` together. A button
+that set only `font-size` and `font-weight` lost both to a rule that never
+mentioned either. The same applies to `background`, `border`, `margin` and
+`padding`.
+
+When a base rule uses a shorthand, assume it collides with far more than it
+appears to.
+
+#### Auditing for it
+
+This trap recurred four times — anchors, then buttons, then the `font`
+shorthand on those same buttons, then the eyebrow's `<p>` margin — because each
+fix addressed only the instance in front of it. It is cheap to check
+exhaustively instead:
+
+1. List the scoped base rules and the properties each sets, expanding
+   shorthands to their longhands.
+2. From the rendered HTML, list which elements carry a `suf-` class — a
+   component only collides where it renders as an element the base rule
+   targets.
+3. Any component declaration at (0,1,0) that shares a property with a base rule
+   matching the same element is losing, whatever the cascade order.
+
+Components rendering as `<a>`, `<button>` or `<p>` are where this lives. That
+is where the buttons, the standalone links and every eyebrow, subhead and role
+line are.
 
 ## Accessibility baseline
 

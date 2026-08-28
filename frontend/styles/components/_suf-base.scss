@@ -90,13 +90,29 @@
     vertical-align: middle;
   }
 
-  // Form controls do not inherit type from their ancestor by default.
+  // Form controls do not inherit type or colour from their ancestor by
+  // default, so these put both back.
+  //
+  // .suf-btn is EXCLUDED from both, for the specificity reason in
+  // architecture.md: `.suf-body button` is (0,1,1) and beats .suf-btn at
+  // (0,1,0). `color: inherit` gave a primary button navy text on its red fill,
+  // and `font` -- a shorthand that resets size, weight, style, line-height and
+  // family together -- silently discarded the button's own 14px and 800.
+  //
+  // The button is a fully typed component, so it opts out here and declares
+  // font-family: inherit for itself.
   button,
   input,
   select,
   textarea {
-    font: inherit;
     margin: 0;
+  }
+
+  button:not(.suf-btn),
+  input,
+  select,
+  textarea {
+    font: inherit;
     color: inherit;
   }
 

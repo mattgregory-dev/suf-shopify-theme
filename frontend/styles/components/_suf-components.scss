@@ -90,7 +90,10 @@
 // section.
 // ---------------------------------------------------------------------------
 
-.suf-eyebrow {
+// Scoped to .suf-body so its margin-bottom out-specifies the base
+// `.suf-body p` margin rule -- the eyebrow renders as a <p>. Same reason as
+// .suf-btn-micro below; see architecture.md.
+.suf-body .suf-eyebrow {
   display: flex;
   align-items: center;
   gap: var(--suf-space-2);
@@ -111,7 +114,7 @@
   }
 }
 
-.suf-eyebrow--on-dark {
+.suf-body .suf-eyebrow--on-dark {
   color: var(--suf-color-ink-on-dark);
 }
 
@@ -136,6 +139,10 @@
   display: inline-block;
   padding: 16px 32px;
   border: 2px solid transparent;
+  // Declared here because .suf-btn opts out of the base `font: inherit` rule
+  // -- see the note in _suf-base.scss. Without it a <button> would fall back
+  // to the browser's default UI font.
+  font-family: inherit;
   font-size: var(--suf-font-size-small);
   font-weight: 800;
   letter-spacing: 0.06em;
