@@ -15,7 +15,7 @@
 
 <div class="suf-statwrap">
   <div class="suf-wrap">
-    <div class="suf-statbar">
+    <div class="suf-statbar{% if section.settings.comparison %} suf-statbar--compare{% endif %}">
       {%- for block in section.blocks -%}
         <div class="suf-stat" {{ block.shopify_attributes }}>
           {%- if block.settings.figure != blank -%}
@@ -28,6 +28,15 @@
           {%- endif -%}
         </div>
       {%- endfor -%}
+
+      {%- if section.settings.comparison -%}
+        {%- comment -%}
+          Decorative: the comparison is already stated in the figures and
+          labels, and "vs" read aloud between two numbers adds nothing.
+        {%- endcomment -%}
+        <span class="suf-statbar__op suf-statbar__op--vs" aria-hidden="true">vs</span>
+        <span class="suf-statbar__op suf-statbar__op--eq" aria-hidden="true">=</span>
+      {%- endif -%}
     </div>
   </div>
 </div>
@@ -37,6 +46,15 @@
   "name": "Stat bar (SUF)",
   "tag": "section",
   "max_blocks": 4,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "comparison",
+      "label": "Comparison row",
+      "info": "Three columns with vs and = badges on the dividers. Use with exactly three stats.",
+      "default": false
+    }
+  ],
   "blocks": [
     {
       "type": "stat",

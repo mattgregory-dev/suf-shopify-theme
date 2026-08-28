@@ -45,14 +45,36 @@
       </div>
     {%- endif -%}
 
-    <div class="suf-guidegrid">
+    <div class="suf-guidegrid{% if section.settings.narrow %} suf-guidegrid--narrow{% endif %}">
       {%- for block in section.blocks -%}
         {%- liquid
           assign product = block.settings.product
           assign heading = block.settings.heading | default: product.title
           assign body = block.settings.body | default: product.description
         -%}
-        <div class="suf-gcard" {{ block.shopify_attributes }}>
+        <div
+          class="suf-gcard{% if block.settings.image != blank %} suf-gcard--media{% endif %}{% if block.settings.featured %} suf-gcard--featured{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.featured and block.settings.flag != blank -%}
+            <span class="suf-gcard__flag">{{ block.settings.flag | escape }}</span>
+          {%- endif -%}
+
+          {%- if block.settings.image != blank -%}
+            <div class="suf-gcard__img">
+              {{
+                block.settings.image
+                | image_url: width: 1000
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '400, 700, 1000',
+                  sizes: '(min-width: 901px) 45vw, 90vw',
+                  alt: block.settings.image_alt
+              }}
+            </div>
+          {%- endif -%}
+
+          <div class="suf-gcard__inner">
           {%- if heading != blank -%}
             <h3>{{ heading | escape }}</h3>
           {%- endif -%}
@@ -91,6 +113,9 @@
                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
                 {%- endif -%}
 
+                {%- if block.settings.go_to_checkout -%}
+                  <input type="hidden" name="return_to" value="/checkout">
+                {%- endif -%}
                 <button type="submit" class="suf-btn suf-btn--primary" name="add">
                   {{- block.settings.button_label | default: 'Add to Cart' | escape -}}
                 </button>
@@ -103,6 +128,7 @@
           {%- if block.settings.micro != blank -%}
             <p class="suf-btn-micro">{{ block.settings.micro | escape }}</p>
           {%- endif -%}
+          </div>
         </div>
       {%- endfor -%}
     </div>
@@ -140,6 +166,13 @@
       "id": "anchor",
       "label": "Anchor id",
       "info": "Lets a button elsewhere on the page link to this section, e.g. \"guides\" for #guides."
+    },
+    {
+      "type": "checkbox",
+      "id": "narrow",
+      "label": "Cap the grid at 1000px",
+      "info": "For cards with images -- two of them look stretched across the full container.",
+      "default": false
     },
     {
       "type": "richtext",
@@ -194,7 +227,24 @@
           "type": "text",
           "id": "micro",
           "label": "Fine print under the button"
-        }
+        },
+        {
+          "type": "checkbox",
+          "id": "go_to_checkout",
+          "label": "Go straight to checkout",
+          "info": "Skips the cart. Right for a single high-value purchase; wrong on a page that sells more than one thing.",
+          "default": false
+        },
+        { "type": "image_picker", "id": "image", "label": "Card image" },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
+        {
+          "type": "checkbox",
+          "id": "featured",
+          "label": "Featured",
+          "info": "Navy card with a flag. Use on ONE card only.",
+          "default": false
+        },
+        { "type": "text", "id": "flag", "label": "Flag text", "default": "Most Popular" }
       ]
     }
   ],

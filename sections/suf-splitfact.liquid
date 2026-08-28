@@ -1,0 +1,290 @@
+{% comment %}
+  Two columns: an argument, and the evidence for it.
+
+  One section for the mockup's .darkspot AND .inner2 -- identical structure on
+  navy or on the page surface. The dark variant is full-bleed and supplies its
+  own rhythm, so it does not take .suf-section.
+
+  ORDER. The markup is always text-then-panel; putting the panel first is done
+  with CSS `order`, so reading and tab order stay correct. Below 1000px the
+  panel always follows the text.
+
+  THE PANEL IS A CHART, NOT AN IMAGE. Three shapes, chosen by `panel`:
+
+    figure  a big number, a caption, optional comparison rows, and optionally
+            a split bar. Covers "90% quit" and "$X renewal fees".
+    bars    labelled comparison bars. Covers "months to a full book".
+    image   a photograph or screenshot.
+
+  Charts are drawn with the design's own slanted geometry -- the same
+  parallelogram as the slash bullets -- rather than a borrowed chart style.
+
+  THE NUMBERS ARE TYPED, and the bar widths are typed separately. Nothing
+  computes one from the other, so a bar can disagree with its own label. Check
+  both when the copy changes.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-splitfact'
+  if section.settings.dark
+    assign classes = classes | append: ' suf-splitfact--dark'
+  else
+    assign classes = 'suf-section ' | append: classes
+  endif
+  if section.settings.image_side == 'left'
+    assign classes = classes | append: ' suf-splitfact--image-left'
+  endif
+  if section.settings.frame != 'none'
+    assign classes = classes | append: ' suf-splitfact--frame-' | append: section.settings.frame
+  endif
+  assign anchor = section.settings.anchor | handle
+  assign dark = section.settings.dark
+-%}
+
+<div class="{{ classes }}" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+  <div class="suf-wrap">
+    <div class="suf-splitfact__inner">
+      <div class="suf-splitfact__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="suf-eyebrow{% if dark %} suf-eyebrow--on-dark{% endif %}">
+            {%- render 'suf-nb', text: section.settings.eyebrow -%}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.result != blank -%}
+          <p class="suf-result">{% render 'suf-nb', text: section.settings.result %}</p>
+        {%- endif -%}
+
+        {%- if section.settings.body != blank -%}
+          <div class="suf-splitfact__body">{% render 'suf-nb', text: section.settings.body %}</div>
+        {%- endif -%}
+
+        {%- assign lines = section.settings.items | strip | newline_to_br | split: '<br />' -%}
+        {%- if lines.size > 0 -%}
+          <ul class="suf-whylist{% if dark %} suf-whylist--on-dark{% endif %}">
+            {%- for line in lines -%}
+              {%- assign item = line | strip -%}
+              {%- if item != blank -%}
+                <li>{% render 'suf-nb', text: item %}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
+          <div class="suf-btnrow">
+            <a
+              class="suf-btn suf-btn--{{ section.settings.button_style }}{% if dark and section.settings.button_style == 'ghost' %} suf-btn--on-dark{% endif %}"
+              href="{{ section.settings.button_url }}"
+            >
+              {%- render 'suf-nb', text: section.settings.button_label -%}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="suf-splitfact__media{% if section.settings.panel == 'image' and section.settings.frame != 'none' %} suf-splitfact__media--framed{% endif %}">
+        {%- case section.settings.panel -%}
+          {%- when 'figure' -%}
+            <div class="suf-factpanel{% if section.settings.jumbo %} suf-factpanel--jumbo{% endif %}">
+              {%- if section.settings.figure != blank -%}
+                <p class="suf-factpanel__big">{{ section.settings.figure | escape }}</p>
+              {%- endif -%}
+
+              {%- if section.settings.show_bar -%}
+                <div class="suf-quitbar" style="--suf-quit-pct: {{ section.settings.bar_pct }}%" aria-hidden="true">
+                  <span class="suf-quitbar__seg suf-quitbar__seg--muted"></span>
+                  <span class="suf-quitbar__seg suf-quitbar__seg--on"></span>
+                </div>
+              {%- endif -%}
+
+              {%- if section.settings.caption != blank -%}
+                <div class="suf-factpanel__cap{% if section.settings.caption_is_label %} suf-factpanel__cap--label{% endif %}">
+                  {%- render 'suf-nb', text: section.settings.caption -%}
+                </div>
+              {%- endif -%}
+
+              {%- assign rows = section.settings.rows | strip | newline_to_br | split: '<br />' -%}
+              {%- if rows.size > 0 -%}
+                <div class="suf-factpanel__rows">
+                  {%- for row in rows -%}
+                    {%- assign parts = row | strip | split: '|' -%}
+                    {%- if parts.size > 1 -%}
+                      <p class="suf-factpanel__row">
+                        <b>{% render 'suf-nb', text: parts[0] %}</b>
+                        <span>{% render 'suf-nb', text: parts[1] %}</span>
+                      </p>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+
+          {%- when 'bars' -%}
+            {%- assign bars = section.settings.rows | strip | newline_to_br | split: '<br />' -%}
+            <div class="suf-bars">
+              {%- for bar in bars -%}
+                {%- assign parts = bar | strip | split: '|' -%}
+                {%- if parts.size > 2 -%}
+                  {%- assign pct = parts[2] | strip -%}
+                  <div class="suf-bars__row{% if forloop.first %} suf-bars__row--highlight{% endif %}">
+                    <div class="suf-bars__top">
+                      <span class="suf-bars__label">{% render 'suf-nb', text: parts[0] %}</span>
+                      <span class="suf-bars__value">{{ parts[1] | strip }}</span>
+                    </div>
+                    <div class="suf-bars__bar" style="--suf-bar-pct: {{ pct }}%"></div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if section.settings.caption != blank -%}
+                <p class="suf-bars__cap">{% render 'suf-nb', text: section.settings.caption %}</p>
+              {%- endif -%}
+            </div>
+
+          {%- else -%}
+            {%- if section.settings.image != blank -%}
+              {{
+                section.settings.image
+                | image_url: width: 900
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '440, 700, 900',
+                  sizes: '(min-width: 1001px) 40vw, 90vw',
+                  alt: section.settings.image_alt
+              }}
+            {%- endif -%}
+        {%- endcase -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Split fact (SUF)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    {
+      "type": "inline_richtext",
+      "id": "result",
+      "label": "Result chip",
+      "info": "A verified outcome, shown under the heading, e.g. \"Sarah M. — hired at Equinox in 3 months\". Light surfaces only."
+    },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "body", "label": "Body" },
+    {
+      "type": "textarea",
+      "id": "items",
+      "label": "Feature list",
+      "info": "One per line. Optional."
+    },
+    { "type": "text", "id": "anchor", "label": "Anchor id" },
+    { "type": "header", "content": "Button" },
+    { "type": "inline_richtext", "id": "button_label", "label": "Label" },
+    { "type": "url", "id": "button_url", "label": "Link" },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Style",
+      "options": [
+        { "value": "ghost", "label": "Outline" },
+        { "value": "primary", "label": "Filled red" }
+      ],
+      "default": "ghost"
+    },
+    { "type": "header", "content": "Panel" },
+    {
+      "type": "select",
+      "id": "panel",
+      "label": "Panel type",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "figure", "label": "Big figure" },
+        { "value": "bars", "label": "Comparison bars" }
+      ],
+      "default": "image"
+    },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Panel side",
+      "info": "Right for a chart panel -- the argument reads first. Left is for a photo row.",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "frame",
+      "label": "Offset frame",
+      "info": "Image panels only. Alternate red and blue down the page.",
+      "options": [
+        { "value": "red", "label": "Red" },
+        { "value": "blue", "label": "Blue" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "red"
+    },
+    { "type": "text", "id": "figure", "label": "Figure", "info": "e.g. \"90%\" or \"$X\"." },
+    {
+      "type": "checkbox",
+      "id": "jumbo",
+      "label": "Oversized figure",
+      "info": "For a panel that is mostly the number.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bar",
+      "label": "Show the split bar",
+      "info": "Figure panels only.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "bar_pct",
+      "label": "Split point",
+      "min": 5,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "default": 90,
+      "info": "Set this to match the figure -- nothing computes one from the other."
+    },
+    { "type": "inline_richtext", "id": "caption", "label": "Caption" },
+    {
+      "type": "checkbox",
+      "id": "caption_is_label",
+      "label": "Caption is a label",
+      "info": "Caps and tracked, for a caption that names the figure rather than explaining it.",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "rows",
+      "label": "Rows",
+      "info": "Figure panels: one per line as label|value. Bars: label|value|percent."
+    },
+    { "type": "header", "content": "Surface" },
+    {
+      "type": "checkbox",
+      "id": "dark",
+      "label": "Dark band",
+      "info": "Full-bleed navy. Count the dark bands already on the page.",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "Split fact (SUF)" }]
+}
+{% endschema %}

@@ -1,0 +1,75 @@
+{% comment %}
+  Numbered steps, four across.
+
+  Like suf-paths, but these are not links -- a process has an order, and each
+  step is a description rather than a destination. The numbers are generated
+  from block order for the same reason: reordering in the editor renumbers them,
+  and typed numbers eventually disagree with the order they label.
+
+  The numbers are decorative in the accessibility tree sense -- the order is
+  already carried by an ordered list -- so this is an <ol> and the ghost numbers
+  are aria-hidden. A screen reader announces "list, 4 items, item 1" rather
+  than reading "zero one" aloud.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- assign anchor = section.settings.anchor | handle -%}
+
+<div class="suf-section" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head suf-section__head--flush">
+        <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{% render 'suf-nb', text: section.settings.aside %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <ol class="suf-steps">
+      {%- for block in section.blocks -%}
+        <li class="suf-step" {{ block.shopify_attributes }}>
+          <p class="suf-step__n" aria-hidden="true">
+            {{- forloop.index | prepend: '0' | slice: -2, 2 -}}
+          </p>
+          {%- if block.settings.heading != blank -%}
+            <h3>{% render 'suf-nb', text: block.settings.heading %}</h3>
+          {%- endif -%}
+          {%- if block.settings.body != blank -%}
+            <div class="suf-step__body">{% render 'suf-nb', text: block.settings.body %}</div>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Steps (SUF)",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Section heading" },
+    { "type": "text", "id": "aside", "label": "Supporting note" },
+    { "type": "text", "id": "anchor", "label": "Anchor id" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+        { "type": "richtext", "id": "body", "label": "Description" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Steps (SUF)",
+      "blocks": [{ "type": "step" }, { "type": "step" }, { "type": "step" }, { "type": "step" }]
+    }
+  ]
+}
+{% endschema %}

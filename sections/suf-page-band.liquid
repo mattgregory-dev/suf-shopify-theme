@@ -48,15 +48,15 @@
   <div class="suf-wrap">
     <div class="suf-band__text">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="suf-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <p class="suf-eyebrow">{% render 'suf-nb', text: section.settings.eyebrow %}</p>
     {%- endif -%}
 
     {%- if heading != blank -%}
-      <h1>{{ heading }}</h1>
+      <h1>{% render 'suf-nb', text: heading %}</h1>
     {%- endif -%}
 
     {%- if section.settings.subhead != blank -%}
-      <p class="suf-band__subhead">{{ section.settings.subhead }}</p>
+      <p class="suf-band__subhead">{% render 'suf-nb', text: section.settings.subhead %}</p>
     {%- endif -%}
 
     {%- if section.settings.button_label != blank or section.settings.button2_label != blank -%}
@@ -86,7 +86,7 @@
     {%- endif -%}
 
     {%- if section.settings.micro != blank -%}
-      <p class="suf-band__micro">{{ section.settings.micro | escape }}</p>
+      <p class="suf-band__micro">{% render 'suf-nb', text: section.settings.micro %}</p>
     {%- endif -%}
     </div>
 

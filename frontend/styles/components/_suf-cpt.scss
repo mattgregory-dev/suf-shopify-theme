@@ -1,0 +1,437 @@
+// SUF-CPT: split fact bands, the checklist, the steps row.
+
+// ---------------------------------------------------------------------------
+// SPLIT FACT
+//
+// Two columns: an argument on the left, the evidence for it on the right. One
+// component for the mockup's .darkspot AND .inner2 -- the same structure on
+// navy or on the page surface.
+//
+// The dark variant is full-bleed and carries its own rhythm, so it does NOT
+// take .suf-section. The light one does.
+// ---------------------------------------------------------------------------
+
+.suf-splitfact--dark {
+  margin-block: var(--suf-space-section);
+  padding-block: var(--suf-space-6);
+  background: var(--suf-navy);
+  color: var(--suf-color-ink-on-dark);
+}
+
+.suf-splitfact__inner {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: var(--suf-space-6);
+  align-items: center;
+
+  // 1000px: the fact panel stops being readable beside the argument.
+  @media (max-width: 1000px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-splitfact__text {
+  h2 {
+    margin-bottom: var(--suf-space-3);
+    font-size: clamp(30px, 3vw, 44px);
+    line-height: 1.12;
+  }
+
+  .suf-btnrow {
+    margin-top: var(--suf-space-4);
+  }
+}
+
+.suf-splitfact .suf-splitfact__body {
+  max-width: 56ch;
+  margin: 0 0 var(--suf-space-3);
+  color: var(--suf-color-text);
+
+  p {
+    margin: 0 0 var(--suf-space-3);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    color: var(--suf-color-heading);
+  }
+}
+
+.suf-splitfact--dark {
+  .suf-eyebrow,
+  h2 {
+    color: var(--suf-color-heading-on-dark);
+  }
+
+  .suf-splitfact__body {
+    color: var(--suf-color-text-on-dark);
+
+    strong {
+      color: var(--suf-color-heading-on-dark);
+    }
+  }
+}
+
+// Image first, text second. Only the visual order changes -- the markup keeps
+// text before panel so reading and tab order stay correct.
+.suf-splitfact--image-left {
+  .suf-splitfact__inner {
+    grid-template-columns: 5fr 7fr;
+
+    @media (max-width: 1000px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .suf-splitfact__media {
+    order: -1;
+
+    // Below the breakpoint the image follows the text either way -- a lone
+    // image above a heading reads as orphaned.
+    @media (max-width: 1000px) {
+      order: 0;
+    }
+  }
+}
+
+.suf-splitfact__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+// Offset frame, same device and same rule as the spotlight: it sits on the
+// INNER edge, facing the text, and the side is derived from the image side so
+// the two cannot disagree.
+.suf-splitfact__media--framed {
+  position: relative;
+
+  img {
+    position: relative;
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    bottom: -14px;
+    left: -14px;
+    width: 60%;
+    height: 60%;
+    border: 3px solid var(--suf-frame-color, transparent);
+  }
+}
+
+.suf-splitfact--image-left .suf-splitfact__media--framed::after {
+  left: auto;
+  right: -14px;
+}
+
+.suf-splitfact--frame-red {
+  --suf-frame-color: var(--suf-red);
+}
+
+.suf-splitfact--frame-blue {
+  --suf-frame-color: var(--suf-blue);
+}
+
+// ---------------------------------------------------------------------------
+// FACT PANEL -- a big figure, a caption, optional comparison rows
+// ---------------------------------------------------------------------------
+
+.suf-factpanel {
+  padding: var(--suf-space-5);
+  border: 1px solid var(--suf-color-border-subtle);
+  background: var(--suf-color-surface);
+  text-align: center;
+
+  @media (max-width: 1000px) {
+    max-width: 440px;
+  }
+}
+
+.suf-splitfact--dark .suf-factpanel {
+  background: transparent;
+  border-color: var(--suf-color-border-on-dark);
+}
+
+.suf-factpanel__big {
+  color: var(--suf-blue);
+  font-size: clamp(64px, 6vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.suf-splitfact--dark .suf-factpanel__big {
+  color: var(--suf-blue-light);
+}
+
+// A larger figure when the panel carries nothing but the number.
+.suf-factpanel--jumbo .suf-factpanel__big {
+  font-size: clamp(80px, 7.5vw, 120px);
+}
+
+.suf-factpanel .suf-factpanel__cap {
+  max-width: 30ch;
+  margin: 12px auto 0;
+  color: var(--suf-color-text-muted);
+  font-size: 13px;
+  line-height: 1.55;
+
+  b {
+    color: var(--suf-color-heading);
+  }
+}
+
+.suf-splitfact--dark .suf-factpanel__cap {
+  color: var(--suf-color-text-muted-on-dark);
+
+  b {
+    color: var(--suf-color-heading-on-dark);
+  }
+}
+
+// A caption that labels the figure rather than explaining it: caps, tracked.
+.suf-factpanel__cap--label {
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+// The split bar. Slanted seam and slanted right edge -- the same parallelogram
+// as the slash bullets, so the chart is drawn in the design's own geometry
+// rather than a borrowed chart style.
+.suf-quitbar {
+  position: relative;
+  height: 64px;
+  margin: var(--suf-space-4) 0 var(--suf-space-3);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
+}
+
+.suf-quitbar__seg {
+  position: absolute;
+  inset: 0;
+}
+
+.suf-quitbar__seg--muted {
+  background: #2c4a5e;
+  clip-path: polygon(
+    0 0,
+    var(--suf-quit-pct, 90%) 0,
+    calc(var(--suf-quit-pct, 90%) - 18px) 100%,
+    0 100%
+  );
+}
+
+.suf-quitbar__seg--on {
+  background: var(--suf-blue-light);
+  clip-path: polygon(
+    var(--suf-quit-pct, 90%) 0,
+    100% 0,
+    100% 100%,
+    calc(var(--suf-quit-pct, 90%) - 18px) 100%
+  );
+}
+
+// Comparison rows under a figure.
+.suf-factpanel__rows {
+  margin-top: var(--suf-space-4);
+  border-top: 1px solid var(--suf-color-border-subtle);
+}
+
+.suf-factpanel__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--suf-space-3);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--suf-color-border-faint);
+  color: var(--suf-color-text);
+  font-size: var(--suf-font-size-small);
+
+  b {
+    color: var(--suf-color-heading);
+  }
+
+  // The row that is the point: the value that beats the others.
+  em {
+    color: var(--suf-color-link);
+    font-style: normal;
+    font-weight: 800;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// COMPARISON BARS
+// ---------------------------------------------------------------------------
+
+.suf-bars {
+  display: grid;
+  gap: 26px;
+}
+
+.suf-bars__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--suf-space-3);
+  margin-bottom: 8px;
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.suf-bars__value {
+  color: var(--suf-color-heading-on-dark);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+.suf-bars__bar {
+  height: 38px;
+  width: var(--suf-bar-pct, 100%);
+  background: #2c4a5e;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+}
+
+.suf-bars__row--highlight {
+  .suf-bars__bar {
+    background: var(--suf-blue);
+  }
+
+  .suf-bars__label {
+    color: var(--suf-blue-light);
+  }
+}
+
+.suf-bars .suf-bars__cap {
+  margin: 4px 0 0;
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: 13px;
+}
+
+// ---------------------------------------------------------------------------
+// RESULT CHIP -- a verified outcome above a headline
+// ---------------------------------------------------------------------------
+
+.suf-body .suf-result {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--suf-space-2);
+  margin-bottom: var(--suf-space-3);
+  padding: 9px 16px;
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+  color: var(--suf-color-heading);
+  font-size: 13px;
+  font-weight: 700;
+
+  &::before {
+    content: '';
+    flex-shrink: 0;
+    width: 12px;
+    height: 11px;
+    background: var(--suf-red);
+    clip-path: polygon(0 100%, 62% 0, 100% 0, 38% 100%);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CHECKLIST -- two columns of slash bullets
+// ---------------------------------------------------------------------------
+
+.suf-body .suf-checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 56px;
+  max-width: 960px;
+  margin-inline: auto;
+  padding: 0;
+  color: var(--suf-color-text);
+  font-size: 15.5px;
+  list-style: none;
+
+  // 700px: two columns of prose stop having a workable measure.
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  li {
+    position: relative;
+    padding-left: 30px;
+    line-height: 1.55;
+  }
+
+  li::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 13px;
+    height: 13px;
+    background: var(--suf-blue);
+    clip-path: polygon(0 100%, 62% 0, 100% 0, 38% 100%);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// STEPS -- ghost numbers, four across
+// ---------------------------------------------------------------------------
+
+// Scoped: it renders as an <ol>, and the base `.suf-body ol` margin would
+// otherwise reinstate a bottom margin over the zero set here.
+.suf-body .suf-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--suf-space-4);
+  // An <ol> for the semantics, but its own markers would sit beside the ghost
+  // numbers that ARE the design. The order still reaches assistive tech from
+  // the list itself.
+  padding: var(--suf-space-4) 0 0;
+  margin: 0;
+  list-style: none;
+  border-top: 1px solid var(--suf-color-border-subtle);
+
+  @media (max-width: 800px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-step {
+  h3 {
+    margin: 14px 0 8px;
+    font-size: 18px;
+  }
+}
+
+.suf-step .suf-step__n {
+  margin: 0;
+  color: #c6d2da;
+  font-size: clamp(40px, 3.4vw, 56px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.suf-step .suf-step__body {
+  margin: 0;
+  color: var(--suf-color-text);
+  font-size: 14.5px;
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+}

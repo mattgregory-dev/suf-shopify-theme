@@ -21,6 +21,13 @@
     font-size: var(--suf-font-size-h2);
     line-height: 1.12;
   }
+
+  // Used as a bare section heading, with no body under it, the gap below the
+  // h2 is dead space on top of the section's own padding. :last-child detects
+  // that without needing a setting -- there is nothing for it to space from.
+  h2:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .suf-statement__body {

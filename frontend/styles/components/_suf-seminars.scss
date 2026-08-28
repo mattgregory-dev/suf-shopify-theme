@@ -37,6 +37,54 @@
   }
 }
 
+.suf-listcards--four {
+  grid-template-columns: repeat(4, 1fr);
+
+  @media (max-width: 1060px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Labelled by a slash beside the heading rather than a rule or a badge, for a
+// card that is a single idea with no list under it.
+//
+// Written `.suf-listcard.suf-listcard--slash` (0,2,1), not the bare modifier
+// (0,1,1). `.suf-listcard h3` is ALSO (0,1,1), so a bare modifier ties with the
+// component it modifies and the winner is decided by source order -- which put
+// the h3 back at the shared heading size.
+.suf-listcard.suf-listcard--slash h3 {
+  position: relative;
+  margin-bottom: 10px;
+  padding-left: 26px;
+  font-size: 17px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 13px;
+    height: 13px;
+    background: var(--suf-blue);
+    clip-path: polygon(0 100%, 62% 0, 100% 0, 38% 100%);
+  }
+}
+
+.suf-listcard .suf-listcard__body {
+  margin: 0;
+  color: var(--suf-color-text);
+  font-size: 14.5px;
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+}
+
 .suf-listcard {
   padding: var(--suf-space-4);
   background: var(--suf-color-surface);

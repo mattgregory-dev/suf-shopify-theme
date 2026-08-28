@@ -27,8 +27,17 @@
 .suf-gcard {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: var(--suf-space-5) var(--suf-space-4);
+  // NOT align-items: flex-start. That was here so a button would not stretch,
+  // but it shrinks EVERY flex child to its content width -- including the
+  // image, which then stops short of the card edge and lets the card's own
+  // background show as a sliver down the right. The border hid it.
+  //
+  // The button alignment lives on .suf-gcard__inner now, which is where it
+  // belongs: it is about the content, not the card.
+  //
+  // No padding either -- that also moved to __inner, so an image can reach the
+  // card's edges.
+  position: relative;
   background: var(--suf-color-surface);
   border: 1px solid var(--suf-color-border-subtle);
 
@@ -223,4 +232,105 @@
   p a em {
     color: inherit;
   }
+}
+
+// ---------------------------------------------------------------------------
+// CARD IMAGE + FEATURED VARIANT
+//
+// Used by the SUF-CPT buy cards. The image is a wide crop at the top: it
+// identifies the product without competing with the price for height.
+// ---------------------------------------------------------------------------
+
+.suf-gcard__img {
+  aspect-ratio: 5 / 2;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// The padding moves here from the card, so an image can reach the card's edges.
+//
+// Named __inner, NOT __body: __body is the description paragraph, and giving
+// the wrapper the same class made every description a flex container with 40px
+// of padding. Two elements, one class -- the rule that wins is whichever is
+// more specific, and neither was written expecting the other.
+.suf-gcard__inner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: var(--suf-space-5) var(--suf-space-4);
+}
+
+// With an image, the card is taller and the price no longer needs to be pinned
+// to the bottom to line up with its neighbour -- the BUTTON does. Pinning both
+// leaves a void between the copy and the price, which is what the mockup avoids
+// by putting the price directly under the heading.
+.suf-gcard--media {
+  .suf-gcard__price {
+    margin-top: 0;
+  }
+
+  .suf-gcard__body {
+    margin-bottom: var(--suf-space-3);
+  }
+
+  .suf-gcard__form {
+    margin-top: auto;
+  }
+}
+
+.suf-gcard--featured {
+  background: var(--suf-navy);
+  border-color: var(--suf-navy);
+  box-shadow: 0 24px 60px rgb(0 32 54 / 22%);
+
+  h3 {
+    color: var(--suf-color-heading-on-dark);
+  }
+
+  .suf-gcard__price {
+    color: var(--suf-blue-light);
+  }
+
+  .suf-gcard__body,
+  .suf-gcard__meta {
+    color: var(--suf-color-text-on-dark);
+  }
+
+  .suf-gcard__inner {
+    color: var(--suf-color-text-on-dark);
+  }
+
+  .suf-btn-micro {
+    color: var(--suf-color-text-muted-on-dark);
+  }
+}
+
+.suf-gcard__flag {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  padding: 6px 16px;
+  background: var(--suf-red);
+  color: var(--suf-white);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+// Capped variant. Two cards carrying an image and a price look stretched at the
+// full 1200px container; the mockup pins them to 1000.
+.suf-guidegrid--narrow {
+  max-width: 1000px;
+  margin-inline: auto;
 }

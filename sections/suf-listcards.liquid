@@ -21,6 +21,15 @@
 
 <div class="suf-section">
   <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head">
+        <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- if section.settings.aside != blank -%}
+          <p class="suf-section__aside">{% render 'suf-nb', text: section.settings.aside %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
     <div class="suf-listcards suf-listcards--{{ cols }}">
       {%- for block in section.blocks -%}
         <div class="suf-listcard suf-listcard--{{ style }}" {{ block.shopify_attributes }}>
@@ -34,6 +43,10 @@
 
           {%- if style == 'rule' and block.settings.tagline != blank -%}
             <p class="suf-listcard__tagline">{{ block.settings.tagline | escape }}</p>
+          {%- endif -%}
+
+          {%- if block.settings.body != blank -%}
+            <div class="suf-listcard__body">{% render 'suf-nb', text: block.settings.body %}</div>
           {%- endif -%}
 
           {%- assign lines = block.settings.items | strip | newline_to_br | split: '<br />' -%}
@@ -60,12 +73,20 @@
   "max_blocks": 6,
   "settings": [
     {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Section heading",
+      "info": "Left aligned with a rule under it. Leave blank and pair with a Statement section above for a centred heading instead."
+    },
+    { "type": "text", "id": "aside", "label": "Supporting note" },
+    {
       "type": "select",
       "id": "columns",
       "label": "Columns",
       "options": [
         { "value": "three", "label": "Three" },
-        { "value": "two", "label": "Two (narrower, centred)" }
+        { "value": "two", "label": "Two (narrower, centred)" },
+        { "value": "four", "label": "Four" }
       ],
       "default": "three"
     },
@@ -76,7 +97,8 @@
       "info": "A rule uses the tagline; a badge uses the badge text.",
       "options": [
         { "value": "rule", "label": "Blue top rule + tagline" },
-        { "value": "badge", "label": "Navy badge" }
+        { "value": "badge", "label": "Navy badge" },
+        { "value": "slash", "label": "Slash beside the heading" }
       ],
       "default": "rule"
     }
@@ -89,6 +111,7 @@
         { "type": "text", "id": "badge", "label": "Badge", "info": "Badge style only, e.g. \"Day 1\"." },
         { "type": "inline_richtext", "id": "heading", "label": "Heading" },
         { "type": "text", "id": "tagline", "label": "Tagline", "info": "Rule style only." },
+        { "type": "richtext", "id": "body", "label": "Body" },
         {
           "type": "textarea",
           "id": "items",
