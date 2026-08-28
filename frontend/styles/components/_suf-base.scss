@@ -59,7 +59,15 @@
     margin: 0 0 var(--suf-space-md);
   }
 
-  a {
+  // Prose links only.
+  //
+  // `.suf-body a` is (0,1,1) and a component class like .suf-btn--primary is
+  // (0,1,0), so without this exclusion the base rule WINS and repaints every
+  // button and standalone link blue. That is a real bug that shipped once.
+  //
+  // Add any future component that renders as an <a> and sets its own colour to
+  // this list.
+  a:not(.suf-btn):not(.suf-link):not(.suf-tcard) {
     color: var(--suf-color-link);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;

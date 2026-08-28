@@ -96,6 +96,58 @@ additive rule exists to prevent. `suf.liquid` puts `class="suf-body"` on
 `.suf-body`, while component classes (`.suf-footer`, `.suf-social`) are safe
 unscoped because the prefix already makes them unique.
 
+### The trap that scoping creates: base rules out-specify components
+
+Scoping the base layer has a consequence that is easy to miss and produces
+bugs that look like anything but a specificity problem.
+
+A scoped base rule carries a class **and** an element:
+
+| Selector | Specificity | |
+|---|---|---|
+| `.suf-body a` | (0,1,1) | base |
+| `.suf-body p` | (0,1,1) | base |
+| `.suf-btn--primary` | (0,1,0) | component — **loses** |
+| `.suf-cta__subhead` | (0,1,0) | component — **loses** |
+
+So a component that sets `color` on an `<a>`, or `margin` on a `<p>`, is
+overridden by the base layer no matter where it sits in the cascade. This
+shipped once: primary buttons rendered with blue link text, and a centred CTA
+subhead sat left-aligned because its `margin: 0 auto` lost to `.suf-body p`'s
+`margin: 0 0 var(--suf-space-md)`.
+
+It is a nasty one to diagnose, because nothing is misspelled and the component
+rule is plainly present in DevTools — just struck through.
+
+**Two fixes, and which to use depends on what the component is.**
+
+Where the base rule should never have applied, exclude the component from it.
+The anchor rule is prose-only, so it says so:
+
+```scss
+a:not(.suf-btn):not(.suf-link):not(.suf-tcard) { ... }
+```
+
+Keep that list current: a new component rendering as an `<a>` that sets its own
+colour must be added, or it inherits link blue.
+
+Where the component legitimately styles an element, **nest it under its block**
+so it reaches (0,2,0):
+
+```scss
+.suf-cta {
+  .suf-cta__subhead { margin: 0 auto var(--suf-space-4); }
+}
+```
+
+Nesting is preferred for `__` children. It costs nothing, it reads as the
+ownership that already exists, and it is why `_suf-band.scss`, `_suf-cta.scss`
+and `_suf-team.scss` nest their `<p>` children rather than declaring them at
+the top level.
+
+**Do not reach for `!important`.** It wins the fight and loses the file: the
+next override has nowhere to go.
+
 ## Accessibility baseline
 
 Applied to all new and forked work from 2026-08-23. Not chasing a specific

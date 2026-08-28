@@ -316,8 +316,9 @@
   white-space: nowrap;
 }
 
-// Fine print under a button.
-.suf-btn-micro {
+// Fine print under a button. Scoped to .suf-body only to out-specify the
+// base `.suf-body p` margin rule -- see the note in _suf-cta.scss.
+.suf-body .suf-btn-micro {
   margin: var(--suf-space-2) 0 0;
   color: var(--suf-color-text-muted);
   font-size: 13.5px;
