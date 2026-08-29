@@ -98,10 +98,13 @@ unscoped because the prefix already makes them unique.
 
 ### The trap that scoping creates: base rules out-specify components
 
-Scoping the base layer has a consequence that is easy to miss and produces
-bugs that look like anything but a specificity problem.
+This produced roughly a dozen bugs before it was understood, and the fix is now
+structural — but the shape is worth knowing, because the same collision can
+still be written by hand inside a component (see "It is not only the base
+layer" below).
 
-A scoped base rule carries a class **and** an element:
+Scoping costs specificity. A scoped base rule carries a class **and** an
+element:
 
 | Selector | Specificity | |
 |---|---|---|
@@ -110,51 +113,46 @@ A scoped base rule carries a class **and** an element:
 | `.suf-btn--primary` | (0,1,0) | component — **loses** |
 | `.suf-cta__subhead` | (0,1,0) | component — **loses** |
 
-So a component that sets `color` on an `<a>`, or `margin` on a `<p>`, is
-overridden by the base layer no matter where it sits in the cascade. This
-shipped once: primary buttons rendered with blue link text, and a centred CTA
-subhead sat left-aligned because its `margin: 0 auto` lost to `.suf-body p`'s
-`margin: 0 0 var(--suf-space-md)`.
+So a component that set `color` on an `<a>`, or `margin` on a `<p>`, was
+overridden by the base layer no matter where it sat in the cascade. Primary
+buttons rendered with blue link text; a centred CTA subhead sat left-aligned
+because its `margin: 0 auto` lost to `.suf-body p`. Nothing was misspelled and
+the component rule was plainly present in DevTools — just struck through.
 
-It is a nasty one to diagnose, because nothing is misspelled and the component
-rule is plainly present in DevTools — just struck through.
-
-**Two fixes, and which to use depends on what the component is.**
-
-Where the base rule should never have applied, exclude the component from it.
-The anchor rule is prose-only, so it says so:
+**The fix: the base layer is wrapped in `:where()`.**
 
 ```scss
-a:not(.suf-btn):not(.suf-link):not(.suf-tcard) { ... }
-```
-
-The form-control rule needs the same treatment, and this is the part that got
-missed the first time:
-
-```scss
-button:not(.suf-btn), input, select, textarea { color: inherit; }
-```
-
-**Check both element groups.** `.suf-btn` is used on `<a>` AND on `<button>`,
-so fixing only the anchor rule left submit buttons inheriting navy text on a
-red fill. The symptom appeared one page later, on the first form.
-
-Keep those lists current: a new component rendering as an `<a>` or a `<button>`
-that sets its own colour must be added, or it inherits.
-
-Where the component legitimately styles an element, **nest it under its block**
-so it reaches (0,2,0):
-
-```scss
-.suf-cta {
-  .suf-cta__subhead { margin: 0 auto var(--suf-space-4); }
+:where(.suf-body) {
+  p, ul, ol { margin: 0 0 var(--suf-space-md); }
+  a { color: var(--suf-color-link); }
 }
 ```
 
-Nesting is preferred for `__` children. It costs nothing, it reads as the
-ownership that already exists, and it is why `_suf-band.scss`, `_suf-cta.scss`
-and `_suf-team.scss` nest their `<p>` children rather than declaring them at
-the top level.
+`:where()` contributes **zero** specificity, so those rules are (0,0,1). The
+scoping still applies — they match only inside `.suf-body`, so the ~30 legacy
+templates stay untouched — but the base layer now sits *under* the components
+instead of competing with them, which is what a base layer is for. A plain
+component class at (0,1,0) wins automatically.
+
+**What this removed.** The base file used to carry exclusion lists naming every
+component that renders as an `<a>` or a `<button>`:
+
+```scss
+a:not(:where(.suf-btn, .suf-link, .suf-tcard, .suf-resource, .suf-social__link))
+```
+
+That was one file being asked to remember what other files were doing. Every
+new link-like component had to be added to it or it silently inherited link
+blue — and it was forgotten twice. Those lists are gone. A component that
+declares its own colour beats the base without being announced anywhere.
+
+The corollary: a component that relies on the base for a property must now
+declare it. `.suf-btn` and `.suf-social__link` gained `color: inherit` when the
+lists were deleted, because that was what the exclusions had been buying them.
+
+**One block is deliberately NOT wrapped**: the LEGACY BASE COMPATIBILITY block
+at the bottom of `_suf-base.scss`. It props up the forked header's inherited
+markup and needs its weight. It goes when the header is rebuilt.
 
 **Do not reach for `!important`.** It wins the fight and loses the file: the
 next override has nowhere to go.
@@ -173,10 +171,11 @@ appears to.
 
 #### Auditing for it
 
-This trap recurred four times — anchors, then buttons, then the `font`
-shorthand on those same buttons, then the eyebrow's `<p>` margin — because each
-fix addressed only the instance in front of it. It is cheap to check
-exhaustively instead:
+This trap recurred at least a dozen times — anchors, then buttons, then the
+`font` shorthand on those same buttons, then the eyebrow's `<p>` margin —
+because each fix addressed only the instance in front of it. `:where()` closed
+the base-layer case; the in-component case below is still live, so the check is
+still worth running:
 
 1. List the scoped base rules and the properties each sets, expanding
    shorthands to their longhands.

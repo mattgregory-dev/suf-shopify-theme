@@ -162,3 +162,31 @@ Touching any `.scss` file also forces a rebuild.
 `assets/suf.css` exists before investigating anything else. A GUI client's
 "discard all changes" is the usual cause and leaves no reflog entry, so
 `git reflog` will show nothing and mislead you.
+
+## `sed -i` breaks the theme dev watcher
+
+**Symptom.** Two at once, and they do not look related:
+
+- Every page 500s with `sections/sedUErZ6x` in the error.
+- One section file stops updating in the browser no matter what you change in
+  it, while every other file uploads fine.
+
+**Cause.** `sed -i` does not edit in place. It writes a temp file *next to the
+original* and renames it over the top. `shopify theme dev` sees the temp file
+appear inside `sections/` and uploads it as a section — Shopify then tries to
+render a file with no schema and the whole storefront 500s. The rename also
+swaps the inode out from under the watcher, which goes on watching a file that
+no longer exists.
+
+**Fix.** Do not use `sed -i` anywhere under `sections/`, `snippets/`,
+`templates/`, `layout/` or `assets/`. Write with the editor tools, or read and
+rewrite with Python. `cat file > file` is not a workaround: it preserves the
+inode but does not wake a watcher that has already lost it.
+
+To recover once it has happened:
+
+1. Recreate the stray file (`printf '' > sections/sedUErZ6x`), wait for the
+   upload, then `rm` it — the watcher only sends a delete for a file it has
+   seen. That clears the 500.
+2. Restart `npm run dev` to fix the stuck file. Nothing short of a restart
+   reattaches the watcher.
