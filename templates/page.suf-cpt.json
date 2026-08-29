@@ -52,39 +52,19 @@
         "comparison": true
       }
     },
-    "elite": {
-      "type": "suf-splitfact",
-      "settings": {
-        "eyebrow": "Why Elite Gyms Choose SUF",
-        "result": "Sarah M. — hired at Equinox in 3 months",
-        "heading": "Preferred by Equinox & Life Time Fitness",
-        "body": "<p>When Equinox and Life Time were hiring, their managers chose SUF-CPTs over the textbook-certified trainers. Why? Because SUF-CPTs arrive with hands-on experience, proven sales systems, and the business acumen elite gyms demand. While others are still learning theory, you’ll be ready to deliver results from day one — making you the obvious choice for premium gym brands.</p>",
-        "button_label": "Get Certified Today",
-        "button_url": "#get-started",
-        "button_style": "ghost",
-        "panel": "image",
-        "image": "shopify://shop_images/photo-04.jpg",
-        "image_alt": "Trainees flexing together in an Equinox studio",
-        "dark": false,
-        "image_side": "left",
-        "frame": "blue"
-      }
-    },
     "problem": {
       "type": "suf-splitfact",
       "settings": {
         "eyebrow": "The Industry Problem",
         "heading": "90% of Trainers Quit. SUF-CPTs Thrive.",
         "body": "<p>The personal training industry has a 90% attrition rate within the first year — not because trainers lack knowledge, but because textbook certifications never teach them how to get clients, price their services, or build a business. The SUF-CPT fixes that. Every part of the program is built around real-world career success — the skills that actually keep you working.</p>",
-        "button_label": "See What’s Different",
-        "button_url": "#different",
-        "button_style": "ghost",
         "panel": "figure",
         "figure": "90%",
         "show_bar": true,
-        "bar_pct": 90,
+        "bar_lead": true,
+        "bar_pct": 10,
         "caption": "9 in 10 trainers are gone within year one. <b>The one who thrives learned the business.</b>",
-        "dark": true
+        "dark": false
       }
     },
     "diffgrid": {
@@ -108,7 +88,7 @@
           "type": "card",
           "settings": {
             "heading": "Business Acumen",
-            "body": "<p>Programming, pricing strategies, assessments — and how to build 2–3 revenue streams from day one.</p>"
+            "body": "<p>Programming, pricing strategies, assessments — and how to build 2–3 revenue streams from day one: 1-on-1 training, online coaching, and group programs.</p>"
           }
         },
         "d4": {
@@ -128,74 +108,71 @@
       "settings": {
         "columns": "four",
         "card_style": "slash",
-        "heading": "What Makes the SUF-CPT Different"
+        "heading": "What Makes the SUF-CPT Different",
+        "anchor": "different"
       }
     },
-    "getstartedhead": {
-      "type": "suf-statement",
+    "elite": {
+      "type": "suf-splitfact",
       "settings": {
-        "eyebrow": "Get Certified",
-        "heading": "One Certification. One Optional Add-On.",
-        "body": "<p>Add the hands-on weekend if you want it — most people do.</p>",
-        "dark": false
+        "eyebrow": "Why Elite Gyms Choose SUF",
+        "result": "Sarah M. — hired at Equinox in 3 months",
+        "heading": "Preferred by Equinox & Life Time Fitness",
+        "body": "<p>When Equinox and Life Time were hiring, their managers chose SUF-CPTs over the textbook-certified trainers. Why? Because SUF-CPTs arrive with hands-on experience, proven sales systems, and the business acumen elite gyms demand. While others are still learning theory, you’ll be ready to deliver results from day one — making you the obvious choice for premium gym brands.</p>",
+        "button_label": "Get Certified Today",
+        "button_url": "#get-started",
+        "button_style": "ghost",
+        "panel": "image",
+        "image": "shopify://shop_images/photo-04.jpg",
+        "image_alt": "Trainees flexing together in an Equinox studio",
+        "dark": false,
+        "image_side": "left",
+        "frame": "blue"
       }
     },
-    "buys": {
-      "type": "suf-guides",
+    "exam": {
+      "type": "suf-numstrip",
       "blocks": {
-        "u1": {
-          "type": "card",
+        "e1": {
+          "type": "number",
           "settings": {
-            "heading": "SUF-CPT Certification",
-            "meta": "Study at Your Own Pace",
-            "body": "The complete certification: full study materials, 3 months of SUF Library access with daily live calls, and your live exam in front of SUF coaches. Start today. Taught by real, working trainers.",
-            "product": "show-up-fitness-level-1-coach",
-            "button_label": "Buy Now",
-            "go_to_checkout": true,
-            "micro": "Straight to secure checkout",
-            "image": "shopify://shop_images/online-education.jpg",
-            "image_alt": "Show Up Fitness coaches guiding a client through an assessment in a studio"
+            "figure": "17",
+            "label": "muscles of the shoulder, named live"
           }
         },
-        "u2": {
-          "type": "card",
+        "e2": {
+          "type": "number",
           "settings": {
-            "heading": "SUF-CPT + Seminar Bundle",
-            "meta": "Certification + 2-Day Hands-On Weekend",
-            "body": "Everything in the certification, plus a weekend seminar at a Life Time Fitness near you — and your library access extends to 6 months. The seminar alone is $XXX. Buy now, pick your city and date whenever you’re ready.",
-            "product": "show-up-fitness-qualified-personal-trainer-package",
-            "button_label": "Buy Now",
-            "go_to_checkout": true,
-            "micro": "Straight to secure checkout",
-            "image": "shopify://shop_images/photo-06.jpg",
-            "image_alt": "Show Up Fitness seminar group inside a Life Time gym",
-            "featured": true,
-            "flag": "Most Popular"
+            "figure": "20",
+            "label": "muscles of the lower body"
+          }
+        },
+        "e3": {
+          "type": "number",
+          "settings": {
+            "figure": "8",
+            "label": "core movement patterns identified"
+          }
+        },
+        "e4": {
+          "type": "number",
+          "settings": {
+            "figure": "15",
+            "unit": "min",
+            "label": "to design a real program on the spot"
           }
         }
       },
       "block_order": [
-        "u1",
-        "u2"
+        "e1",
+        "e2",
+        "e3",
+        "e4"
       ],
       "settings": {
-        "anchor": "get-started",
-        "note": "<p>Want the Level 2 certifications and every seminar too? <a href=\"/pages/suf-compare-packages\">Compare every package side by side →</a></p>",
-        "narrow": true
-      }
-    },
-    "includedhead": {
-      "type": "suf-statement",
-      "settings": {
-        "eyebrow": "The SUF-CPT Program",
-        "heading": "What’s Included",
-        "dark": false
-      }
-    },
-    "included": {
-      "type": "suf-checklist",
-      "settings": {
-        "items": "All study materials required to pass the SUF-CPT Level 1 exam\n3 months of SUF Library access — the full video curriculum, on demand\nDaily live calls with working trainers — anatomy, programming, nutrition, and business skills\nMissed a call? Watch the replay on your own schedule\nYour live exam, scheduled when you’re ready, in front of SUF coaches\nResume help, mock interviews, and the SUF trainer network that gets members hired"
+        "eyebrow": "The Final Exam",
+        "heading": "No Multiple Choice. You, Live, In Front of Real Coaches.",
+        "sub": "Textbook certifications end with a multiple-choice test. The SUF-CPT ends with you proving you can do the job — that’s why elite gyms trust the credential."
       }
     },
     "library": {
@@ -203,25 +180,16 @@
       "settings": {
         "eyebrow": "Your Study Home Base",
         "heading": "Inside the SUF Library",
-        "body": "<p>Every SUF-CPT includes access to the SUF Library — your complete video curriculum and live calls, recorded and on demand. Inside you’ll find the full Level 1 SUF-CPT course, the live class schedule, a programming and exercise library, and replays of past calls. Study on your schedule, then show up live when you want real trainers answering your real questions. Add a Level 2 certification later and the entire library opens up — every course and every call, including all the Soft Tissue and Nutrition content.</p><p>Your certification includes 3 months of access. The Seminar Bundle extends it to 6. The Qualified Trainer Package extends it to <strong>lifetime</strong>.</p>",
+        "body": "<p>Every SUF-CPT includes the SUF Library — the full Level 1 course, daily live calls, a programming and exercise library, and replays of every past call. Study on your schedule, then show up live when you want real trainers answering your real questions.</p><p>Your certification includes 3 months of access. The Seminar Bundle extends it to 6. The Qualified Trainer Package extends it to <strong>lifetime</strong>.</p>",
         "panel": "image",
-        "dark": true
+        "image": "shopify://shop_images/uscreen-01.webp",
+        "image_alt": "The SUF Library shown across desktop, phone and watch",
+        "frame": "none",
+        "dark": false
       }
     },
-    "exam": {
-      "type": "suf-spotlight",
-      "settings": {
-        "eyebrow": "No Multiple Choice",
-        "heading": "A Live Exam, In Front of Real Coaches",
-        "body": "<p>Textbook certifications end with a multiple-choice test. The SUF-CPT ends with you, live, in front of Show Up Fitness coaches — naming 17 muscles of the shoulder, 20 muscles of the lower body, identifying the 8 core movement patterns, and designing a real program on the spot in 15 minutes. When you pass, it’s because you can actually do the job. That’s why elite gyms trust the credential.</p>",
-        "image": "shopify://shop_images/online-education.jpg",
-        "image_alt": "SUF coaches guiding a client through an assessment in a Life Time studio",
-        "image_side": "left",
-        "frame": "blue"
-      }
-    },
-    "quotes": {
-      "type": "suf-quotes",
+    "income": {
+      "type": "suf-splitfact",
       "blocks": {
         "t1": {
           "type": "quote",
@@ -263,39 +231,71 @@
         "t4"
       ],
       "settings": {
-        "columns": "two",
-        "heading": "What SUF-CPTs Are Saying"
-      }
-    },
-    "income": {
-      "type": "suf-splitfact",
-      "settings": {
         "eyebrow": "Speed to Income",
         "heading": "A Full Book of Clients, Months Sooner",
-        "body": "<p><strong>SUF-CPT: 2–3 months</strong> to a full book of business — 80 hours a month of training sessions. <strong>Textbook trainer: 6–18 months</strong>, still struggling to fill a schedule. The difference is everything textbook programs skip: client acquisition systems, sales conversations that convert, assessments that demonstrate immediate value, and programming that generates referrals.</p><p>And a full book is just the first stream. SUF-CPTs are taught to diversify from day one:</p>",
-        "items": "<b>1-on-1 training</b> — your foundation, at premium hourly rates\n<b>Online coaching</b> — scale your income with clients anywhere\n<b>Group programs</b> — train multiple clients at once",
+        "body": "<p><strong>SUF-CPT: 2–3 months</strong> to a full book of business — 80 hours a month of training sessions. <strong>Textbook trainer: 6–18 months</strong>, still struggling to fill a schedule. The difference is everything textbook programs skip: client acquisition systems, sales conversations that convert, assessments that demonstrate immediate value, and programming that generates referrals.</p>",
         "panel": "bars",
         "rows": "SUF-CPT|2–3 months|24\nTextbook trainer|6–18 months|100",
         "caption": "Time to a full book of clients — 80 hours/month of sessions",
+        "proof_heading": "What SUF-CPTs Are Saying",
         "dark": true
       }
     },
-    "lifetime": {
-      "type": "suf-splitfact",
+    "getstartedhead": {
+      "type": "suf-statement",
       "settings": {
-        "eyebrow": "Certified for Life",
-        "heading": "Pay Once. Stay Certified Forever.",
-        "body": "<p>NASM, ACE, and ISSA charge renewal fees every 2–3 years. Over a 20-year career, that adds up to thousands of dollars. The SUF-CPT certifies you for life. Pay once. No renewals. No mandatory continuing education purchases. Just a lifetime credential that opens doors at elite gyms and commands premium rates from day one.</p>",
-        "button_label": "Become Lifetime Certified",
-        "button_url": "#get-started",
-        "button_style": "ghost",
-        "panel": "figure",
-        "figure": "$X",
-        "jumbo": true,
-        "caption": "Renewal Fees — Ever",
-        "caption_is_label": true,
-        "rows": "NASM · ACE · ISSA|renew every 2–3 years\nSUF-CPT|<em>never</em>",
+        "eyebrow": "Get Certified",
+        "heading": "One Certification. One Optional Add-On.",
+        "body": "<p>Add the hands-on weekend if you want it — most people do.</p>",
         "dark": false
+      }
+    },
+    "buys": {
+      "type": "suf-guides",
+      "blocks": {
+        "u1": {
+          "type": "card",
+          "settings": {
+            "heading": "SUF-CPT Certification",
+            "meta": "Study at Your Own Pace",
+            "body": "The complete certification: full study materials, 3 months of SUF Library access with daily live calls (recorded if you miss one), and your live exam in front of SUF coaches — plus resume help, mock interviews, and the SUF trainer network that gets members hired.",
+            "product": "show-up-fitness-level-1-coach",
+            "button_label": "Buy Now",
+            "go_to_checkout": true,
+            "micro": "Straight to secure checkout",
+            "image": "shopify://shop_images/online-education.jpg",
+            "image_alt": "Show Up Fitness coaches guiding a client through an assessment in a studio"
+          }
+        },
+        "u2": {
+          "type": "card",
+          "settings": {
+            "heading": "SUF-CPT + Seminar Bundle",
+            "meta": "Certification + 2-Day Hands-On Weekend",
+            "body": "Everything in the certification, plus a weekend seminar at a Life Time Fitness near you — and your library access extends to 6 months. The seminar alone is $XXX. Buy now, pick your city and date whenever you’re ready.",
+            "product": "show-up-fitness-qualified-personal-trainer-package",
+            "button_label": "Buy Now",
+            "go_to_checkout": true,
+            "micro": "Straight to secure checkout",
+            "image": "shopify://shop_images/photo-06.jpg",
+            "image_alt": "Show Up Fitness seminar group inside a Life Time gym",
+            "featured": true,
+            "flag": "Most Popular"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2"
+      ],
+      "settings": {
+        "anchor": "get-started",
+        "narrow": true,
+        "strip_figure": "$X",
+        "strip_label": "Renewal Fees — Ever",
+        "strip_body": "<p><strong>Pay once. Stay certified forever.</strong> NASM, ACE, and ISSA charge renewal fees every 2–3 years — thousands of dollars over a career. The SUF-CPT certifies you for life: no renewals, no mandatory continuing-education purchases.</p>",
+        "strip_rows": "NASM · ACE · ISSA|renew every 2–3 years\nSUF-CPT|<em>never</em>",
+        "note": "<p>Want the Level 2 certifications and every seminar too? <a href=\"/pages/suf-compare-packages\">Compare every package side by side →</a></p>"
       }
     },
     "steps": {
@@ -318,15 +318,15 @@
         "p3": {
           "type": "step",
           "settings": {
-            "heading": "Test",
-            "body": "<p>When you’re ready, schedule your live exam in front of SUF coaches. No multiple choice — you demonstrate what you can actually do.</p>"
+            "heading": "Pass the Live Exam",
+            "body": "<p>When you’re ready, schedule your live exam in front of SUF coaches. Muscles, movement patterns, and a program built on the spot.</p>"
           }
         },
         "p4": {
           "type": "step",
           "settings": {
-            "heading": "Get Hired",
-            "body": "<p>Resume help, mock interviews, and the SUF trainer network that gets members hired at elite gyms — or set up to run your own book of clients.</p>"
+            "heading": "Get Hired — or Go Independent",
+            "body": "<p>Graduate with the skills, the network, and real interview prep. From there, charge premium rates at an elite gym, or build your own business and train on your own terms.</p>"
           }
         }
       },
@@ -347,40 +347,112 @@
         "f1": {
           "type": "question",
           "settings": {
-            "question": "Do I need any experience or prerequisites?",
-            "answer": "<p>No. The SUF-CPT starts at square one and builds from there. Most people come in either brand new to training or certified elsewhere and looking for the practical skills their textbook program skipped.</p>",
+            "question": "Will this help me pass NASM?",
+            "answer": "<p>Yes. The SUF-CPT comes with all of our exam-prep material, free — the study guide that covers NASM, ACE, and ISSA, plus our NASM practice-question bundle — and a guarantee you’ll pass. Your SUF-CPT is its own credential; the prep just comes along with it. So if you want NASM or another textbook cert on your resume too, buying the SUF-CPT is the surest way to get there.</p>",
             "open": true
           }
         },
         "f2": {
           "type": "question",
           "settings": {
-            "question": "How long does it take?",
-            "answer": "<p>At your own pace. Most people take two to three months alongside a job, working through the SUF Library and joining the live calls, then schedule the exam when they feel ready.</p>",
+            "question": "Is Show Up Fitness affiliated with NASM?",
+            "answer": "<p>No — no relationship at all. We publish study guides that help people pass textbook certifications like NASM, ACE, and ISSA, which is why some people assume a connection. The SUF-CPT is our own certification, built on a different philosophy: hands-on skill over multiple choice.</p>",
             "open": false
           }
         },
         "f3": {
           "type": "question",
           "settings": {
-            "question": "Is the SUF-CPT accredited?",
-            "answer": "<p>Show Up Fitness is working through the NCCA accreditation process. The credential is already recognised where it matters most — Life Time, Equinox, and other elite gyms hire SUF-CPTs directly.</p>",
+            "question": "How does the SUF-CPT compare to NASM, ACE, or ISSA?",
+            "answer": "<p>Textbook certifications teach anatomy and exercise science but skip the business and sales skills that determine whether a trainer builds a real career. The SUF-CPT teaches both — and at $XXX with no renewal fees, it costs less over a 5-year career than most textbook certifications when you factor in renewals.</p>",
             "open": false
           }
         },
         "f4": {
           "type": "question",
           "settings": {
-            "question": "What happens if I do not pass the exam?",
-            "answer": "<p>You retake it. The exam is a demonstration, not a gate — coaches tell you exactly what to work on, you go back to the material, and you come back when you are ready.</p>",
+            "question": "Is the SUF-CPT accredited?",
+            "answer": "<p>Not yet — Show Up Fitness has begun the NCCA accreditation process, which takes years and significant investment, and we’re seeing it through. Meanwhile, know this: no accreditation is legally required to work as a personal trainer — only liability insurance. What actually gets trainers hired is what they can do, and that’s why managers at Equinox and Life Time Fitness keep choosing SUF-CPTs. We’d rather earn trust with results while the paperwork catches up.</p>",
             "open": false
           }
         },
         "f5": {
           "type": "question",
           "settings": {
+            "question": "How long does it take to complete?",
+            "answer": "<p>Most students finish in about two months — comfortably inside your included 3-month library window. Study at your own pace.</p>",
+            "open": false
+          }
+        },
+        "f6": {
+          "type": "question",
+          "settings": {
+            "question": "What if I need more than 3 months?",
+            "answer": "<p>Your access window is 3 months. Most students who add a seminar go with the 6-month bundle for exactly this reason. Need longer? You can keep your SUF Library access going month-to-month right from your library — renew whenever you want more time with the live calls and new content.</p>",
+            "open": false
+          }
+        },
+        "f7": {
+          "type": "question",
+          "settings": {
+            "question": "What if I cannot make the live calls?",
+            "answer": "<p>Live calls are recorded and waiting in the SUF Library — watch on your laptop or in the app, on your schedule. Show up live when you can, catch the replays when you cannot.</p>",
+            "open": false
+          }
+        },
+        "f8": {
+          "type": "question",
+          "settings": {
+            "question": "What is required to pass?",
+            "answer": "<p>You will complete the coursework, then take your live exam in front of SUF coaches: name the 17 muscles of the shoulder and 20 muscles of the lower body, identify the 8 core movement patterns, and design a real program on the spot. If you can do that, you can train anyone.</p>",
+            "open": false
+          }
+        },
+        "f9": {
+          "type": "question",
+          "settings": {
+            "question": "Do I need a weekend seminar to get certified?",
+            "answer": "<p>No. Certification comes from completing the coursework and passing your live exam. The <a href=\"/pages/suf-seminars\">weekend seminar</a> adds two days of hands-on practice at a Life Time Fitness — it’s the most popular add-on because touching real clients under real coaches builds confidence fast, but it’s optional.</p>",
+            "open": false
+          }
+        },
+        "f10": {
+          "type": "question",
+          "settings": {
             "question": "Do you offer payment plans?",
             "answer": "<p>Yes — you can pay over time with Affirm at checkout. A quick soft credit check (no impact to your score) shows the plans you qualify for.</p>",
+            "open": false
+          }
+        },
+        "f11": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I work with the SUF-CPT?",
+            "answer": "<p>You can work at elite gyms such as Equinox and Life Time Fitness, other gyms around the country, or build your own book of clients and work on your own terms. All you legally need to train clients on your own is your skill set and liability insurance.</p>",
+            "open": false
+          }
+        },
+        "f12": {
+          "type": "question",
+          "settings": {
+            "question": "Do I need insurance to train clients?",
+            "answer": "<p>Yes — liability insurance is the one thing every working trainer needs, and it is the only legal requirement to train clients on your own. It is inexpensive, you can quote and buy online in minutes, and proof of coverage arrives the same day. Our partner <a href=\"https://insurefitness.com/partners/showupfitness/\">Insure Fitness Group</a> even has a dedicated Show Up Fitness page with a discounted rate for our graduates.</p>",
+            "open": false
+          }
+        },
+        "f13": {
+          "type": "question",
+          "settings": {
+            "question": "I already have a NASM or ACE cert. Is this still for me?",
+            "answer": "<p>Yes — and you have two good doors. Many students take the SUF-CPT to add the business and sales skills their first certification skipped. Others go straight to our <a href=\"/pages/suf-continuing-education\">Continuing Education track</a>: Level 2 certifications and seminars built for trainers who are already certified.</p>",
+            "open": false
+          }
+        },
+        "f14": {
+          "type": "question",
+          "settings": {
+            "question": "I passed my SUF-CPT. What is next?",
+            "answer": "<p>Add more ways to earn. Our <a href=\"/pages/suf-continuing-education\">Continuing Education track</a> has two Level 2 certifications — Soft Tissue Mobilization and Nutrition Coaching — plus weekend seminars. Each one adds a new service you can bill for, a fresh revenue stream on top of your training income, and each earns CEUs. Soft Tissue lets you charge more per session; Nutrition Coaching opens a second income stream many trainers run alongside their book.</p>",
             "open": false
           }
         }
@@ -390,7 +462,16 @@
         "f2",
         "f3",
         "f4",
-        "f5"
+        "f5",
+        "f6",
+        "f7",
+        "f8",
+        "f9",
+        "f10",
+        "f11",
+        "f12",
+        "f13",
+        "f14"
       ],
       "settings": {
         "heading": "Common Questions"
@@ -399,31 +480,28 @@
     "cta": {
       "type": "suf-cta",
       "settings": {
-        "heading": "Ready to Show Up?",
-        "large_heading": true,
-        "subhead": "The SUF-CPT is $XXX — lifetime certified, no renewals, and built to get you hired.",
-        "button_label": "Get Certified",
+        "heading": "Join the Elite Network of SUF-Certified Trainers",
+        "large_heading": false,
+        "subhead": "Stop settling for a certification that leaves you underpaid and without clients. The SUF-CPT gives you real experience, proven sales systems, and lifetime certification — at a price that pays for itself in your first month of work.",
+        "button_label": "Buy Now — Start Your SUF-CPT",
         "button_url": "#get-started",
-        "button2_label": "Talk to a Real Person",
-        "button2_url": "/pages/suf-contact"
+        "button2_label": "Send Us a Message",
+        "button2_url": "/pages/suf-contact",
+        "micro": "$XXX, one-time fee. Straight to secure checkout. Certified for life."
       }
     }
   },
   "order": [
     "band",
     "stats",
-    "elite",
     "problem",
     "diffgrid",
+    "elite",
+    "exam",
+    "library",
+    "income",
     "getstartedhead",
     "buys",
-    "includedhead",
-    "included",
-    "library",
-    "exam",
-    "quotes",
-    "income",
-    "lifetime",
     "steps",
     "faq",
     "cta"
