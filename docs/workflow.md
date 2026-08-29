@@ -39,6 +39,8 @@ like quoting errors — is catalogued in [wsl-tooling.md](wsl-tooling.md).
 | `npm run css:build` | One-off compressed build |
 | `npm run preview` | `css:build` then push to the **Sporto - Redesign** theme (#000000000000) |
 | `npm run lint` | Theme Check |
+| `npm run lint:css` | Stylelint over `frontend/styles` |
+| `npm run lint:css:fix` | Same, auto-fixing what it can |
 | `npm run format` | Prettier — **scoped to `frontend/` + `suf.js` only** |
 | `shopify theme dev` | Local server. Hot-reloads CSS and sections by default. |
 
@@ -72,6 +74,39 @@ settings matter.
 defaults to `--live-reload hot-reload`. That is not a reason to add a bundler.
 
 ## Linting
+
+Two linters, covering different things and deliberately not overlapping:
+Theme Check for Liquid and theme structure, Stylelint for the SCSS.
+
+### Stylelint
+
+`stylelint.config.cjs`, and **it extends no preset**. Every rule is named
+individually, and the file explains why each one is on or off -- read it before
+adding to it.
+
+`stylelint-config-standard-scss` would have reported ~150 problems on the day
+it was added, nearly all of them decisions this codebase has already made:
+bare hex values, legacy class names, nesting depth in the forked header. That
+is the same "output people learn to scroll past" failure the Theme Check policy
+below is written around. The rule of thumb: a rule earns its place by catching
+a MISTAKE, not a preference.
+
+Two rules are off for a specific reason rather than by omission.
+`no-descending-specificity` (87 warnings) answers the same question as
+`npm run audit:css` but from source order alone, with no idea which elements
+exist -- the audit answers it against the rendered DOM, and two tools
+disagreeing is worse than one. `no-duplicate-selectors` (12) fires on a
+deliberate pattern: re-opening a selector further down a file to keep each
+group of declarations beside the thing it modifies.
+
+It paid for itself on the first run, finding a dead pair of
+`transition-property` / `transition-duration` declarations in the mobile drawer
+that a `transition:` shorthand two lines below had always been resetting.
+
+**Unlike Theme Check, there is no inherited baseline.** `frontend/styles` is
+all net-new, so `npm run lint:css` should exit clean. Keep it that way.
+
+### Theme Check
 
 `.theme-check.yml` extends `theme-check:recommended`.
 
