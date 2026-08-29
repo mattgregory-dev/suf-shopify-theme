@@ -143,6 +143,11 @@
   display: inline-block;
   padding: 16px 32px;
   border: 2px solid transparent;
+  // The modifiers own the colour (--primary white, --ghost navy); this only
+  // stops a modifier-less button falling through to the base link colour.
+  // Stated here rather than as an exclusion in _suf-base.scss, so the rule
+  // lives with the component it describes.
+  color: inherit;
   // Declared here because .suf-btn opts out of the base `font: inherit` rule
   // -- see the note in _suf-base.scss. Without it a <button> would fall back
   // to the browser's default UI font.

@@ -55,6 +55,12 @@
     text-transform: uppercase;
   }
 
+  // Inherits the footer's text colour rather than the base link colour. Was
+  // previously achieved by excluding it in _suf-base.scss; said here instead.
+  .suf-social__link {
+    color: inherit;
+  }
+
   & &__logo-img {
     max-width: 240px;
   }
