@@ -67,11 +67,31 @@
     {% render 'social-meta-tags' %}
 
     {% comment %}
-      Both weights are used above the fold -- 400 for body, 700 for headings and
-      the header nav -- so both are preloaded. 27 KB for the pair.
+      TWO of the five faces, not all five. snippets/suf-fonts.liquid declares
+      400, 600, 700, 800 and 900; @font-face is lazy, so the other three cost
+      nothing until a page actually renders something at that weight.
+
+      Preloading is not lazy -- it fetches at high priority before the browser
+      knows whether anything needs the file -- so only what paints on first
+      load belongs here:
+
+        400  body copy.
+        800  every heading, and 51 of the 67 weight declarations in suf.css.
+
+      Deliberately NOT preloaded, and each verified rather than assumed:
+
+        600  mega-menu column headings and the mobile drawer's nav links.
+             Both render only after a menu is opened.
+        700  8 uses, all below the fold -- the result chip, a dark-band <em>,
+             table cells, contact, seminars.
+        900  2 uses, on two pages.
+
+      Preloading those three cost ~41 KB of contended bandwidth on every page
+      and earned Chrome's "preloaded but not used within a few seconds"
+      warning on most of them. 27 KB for the pair that is genuinely needed.
     {% endcomment %}
     {{ 'hanken-grotesk-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
-    {{ 'hanken-grotesk-700.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'hanken-grotesk-800.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
 
     {{ 'suf.css' | asset_url | stylesheet_tag }}
@@ -88,8 +108,15 @@
     {% comment %}
       Hanken Grotesk is applied on this layout only. theme.liquid stays on Arial
       until the legacy templates have been reviewed -- see docs/migration.md.
+
+      set_weights: false because this layout supplies its own weights from
+      suf.css. The snippet's `h1, h2, ...` rule is (0,0,1); the suf base layer
+      is `:where(.suf-body) h1`, which is ALSO (0,0,1) since :where() adds
+      nothing -- and this renders after suf.css, so the tie went to the
+      snippet and held every heading at 700 while the stylesheet asked for
+      800. The family rules keep their !important; those still do real work.
     {% endcomment %}
-    {% render 'suf-fonts', apply: true, family: "'Hanken Grotesk', Arial, Helvetica, sans-serif" %}
+    {% render 'suf-fonts', apply: true, set_weights: false, family: "'Hanken Grotesk', Arial, Helvetica, sans-serif" %}
 
     {% # theme-check-enable ParserBlockingScript %}
 

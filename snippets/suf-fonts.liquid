@@ -26,10 +26,46 @@
   No browser can parse them, and the substitution is lossy, so they cannot be
   repaired. The site rendered in Arial for years as a result.
 
-  Hanken Grotesk replaces it: OFL-licensed, self-hosted, 400 and 700, woff2,
-  latin subset, 27 KB for the pair. Self-hosted rather than linked from
-  Google's CDN -- two fewer origins on the critical path, and Google Fonts
+  Hanken Grotesk replaces it: OFL-licensed, self-hosted, 400/600/700/800/900,
+  woff2, latin subset, ~68 KB for the five. Self-hosted rather than linked
+  from Google's CDN -- two fewer origins on the critical path, and Google Fonts
   sends visitor IPs to Google. See docs/migration.md.
+
+  ---------------------------------------------------------------------------
+  WHY 800 IS A REAL FACE
+  ---------------------------------------------------------------------------
+  The design asks for font-weight 800 in ~50 places -- every heading, figure,
+  eyebrow and label. With only a 700 face declared, a browser has two bad
+  options and takes both depending on the engine: render 700 and ignore the
+  difference, or synthesise a faux-bold by smearing the 700 outlines. Neither
+  is the typeface's own 800, and the smeared version is visibly worse at
+  display sizes, which is exactly where this design uses it.
+
+  ---------------------------------------------------------------------------
+  DECLARING A FACE IS FREE; PRELOADING ONE IS NOT
+  ---------------------------------------------------------------------------
+  All five faces are declared here unconditionally. @font-face is lazy: the
+  browser downloads a file only when something on the page actually computes
+  to that family AND weight, so declaring a weight no page uses costs five
+  lines of CSS and zero bytes.
+
+  `preload_tag` in the layout is the opposite -- it fetches at high priority
+  before the browser knows whether anything needs it. Only the weights that
+  paint on first load belong there. See layout/suf.liquid for which two, and
+  why the other three are deliberately left to load on demand.
+
+  ---------------------------------------------------------------------------
+  set_weights
+  ---------------------------------------------------------------------------
+  The applying rules set a font-weight as well as a family, to normalise the
+  legacy templates. That is wrong for layout/suf.liquid: `h1, h2, ...` is
+  (0,0,1), the suf base layer is `:where(.suf-body) h1` which is ALSO (0,0,1)
+  because :where() contributes nothing, and this snippet renders AFTER
+  suf.css -- so the tie went to whichever came last, and every suf heading was
+  rendering at 700 while the stylesheet asked for 800.
+
+  Pass `set_weights: false` on a layout that supplies its own weights. The
+  family rules keep their !important; those are still doing real work.
 
   Both files were verified before being committed: signature wOF2, declared
   length equal to actual byte length, zero U+FFFD sequences. Do that check on
@@ -39,6 +75,7 @@
   licence text to travel with the font, so keep them together.
 {% endcomment %}
 {%- assign family = family | default: 'Arial, Helvetica, sans-serif' -%}
+{%- if set_weights == nil -%}{%- assign set_weights = true -%}{%- endif -%}
 <style>
   @font-face {
     font-family: 'Hanken Grotesk';
@@ -50,21 +87,49 @@
 
   @font-face {
     font-family: 'Hanken Grotesk';
+    src: url("{{ 'hanken-grotesk-600.woff2' | asset_url }}") format('woff2');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  @font-face {
+    font-family: 'Hanken Grotesk';
     src: url("{{ 'hanken-grotesk-700.woff2' | asset_url }}") format('woff2');
     font-display: swap;
     font-style: normal;
     font-weight: 700;
   }
 
+  @font-face {
+    font-family: 'Hanken Grotesk';
+    src: url("{{ 'hanken-grotesk-800.woff2' | asset_url }}") format('woff2');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  @font-face {
+    font-family: 'Hanken Grotesk';
+    src: url("{{ 'hanken-grotesk-900.woff2' | asset_url }}") format('woff2');
+    font-display: swap;
+    font-style: normal;
+    font-weight: 900;
+  }
+
   {%- if apply -%}
     p, blockquote, li, a, body, footer, aside, nav, section, article, div, span,
     input, button, textarea, label {
       font-family: {{ family }} !important;
+      {%- if set_weights %}
       font-weight: 400;
+      {%- endif %}
     }
     h1, h2, h3, h4, h5, h6, strong, b, th {
       font-family: {{ family }} !important;
+      {%- if set_weights %}
       font-weight: 700;
+      {%- endif %}
     }
   {%- endif -%}
 </style>
