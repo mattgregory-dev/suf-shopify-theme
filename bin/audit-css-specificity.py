@@ -154,7 +154,12 @@ def compounds(selector):
 
 def is_base(selector):
     """A scoped base rule: .suf-body plus bare elements, no component class."""
-    body = re.sub(r":not\([^)]*\)|:where\([^)]*\)", "", selector)
+    # The base layer is written `:where(.suf-body) p` so it carries no
+    # specificity. Normalise that back before testing, or every base rule
+    # reads as a component and every real finding lands under EXPECTED --
+    # the tool goes quiet while the bugs continue.
+    normalised = selector.replace(":where(.suf-body)", ".suf-body")
+    body = re.sub(r":not\([^)]*\)|:where\([^)]*\)", "", normalised)
     return body.startswith(".suf-body") and not re.search(r"\.suf-(?!body\b)", body)
 
 

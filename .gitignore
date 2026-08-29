@@ -7,6 +7,9 @@ assets/suf.css
 assets/suf.css.map
 .sass-cache/
 
+# Python bytecode, from running bin/ scripts.
+__pycache__/
+
 # Assistant context files. Kept locally, deliberately not versioned: they are
 # tooling for whichever coding agent a developer happens to use, not part of
 # the theme. Nothing in the theme depends on them.
