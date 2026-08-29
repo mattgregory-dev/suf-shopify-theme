@@ -23,7 +23,7 @@
 <div class="suf-cta">
   <div class="suf-wrap">
     {%- if section.settings.heading != blank -%}
-      <h2{% if section.settings.large_heading %} class="suf-cta__heading--large"{% endif %}>
+      <h2 class="suf-cta__heading{% if section.settings.large_heading %} suf-cta__heading--large{% endif %}">
         {%- assign h = section.settings.heading | escape -%}
         {%- render 'suf-nb', text: h -%}
       </h2>

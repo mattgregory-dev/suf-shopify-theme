@@ -21,7 +21,12 @@
   // is a full sentence, and at the large size those wrap to three lines and
   // stop reading as one statement. The big size is the exception -- see
   // --large below.
-  h2 {
+  //
+  // Named rather than reached for as `h2`: an element selector inside a
+  // component collides with any other element of that tag the component ever
+  // grows, and the modifier below then has to out-specify it. See
+  // architecture.md, "It is not only the base layer".
+  .suf-cta__heading {
     margin-bottom: var(--suf-space-2);
     color: var(--suf-color-heading-on-dark);
     font-size: clamp(30px, 3.2vw, 44px);
