@@ -221,6 +221,12 @@
   text-transform: uppercase;
 }
 
+// Muted, not the link blue: this is the absence of a focus, and colouring it
+// like the real ones makes three rows look equally decided.
+.suf-semrow__focus--tba {
+  color: var(--suf-color-text-muted);
+}
+
 .suf-semrow__price {
   color: var(--suf-color-heading);
   font-size: 18px;
@@ -373,5 +379,126 @@
   font-size: var(--suf-font-size-micro);
   font-weight: 800;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------------------
+// AGENDA LEDGER
+//
+// One run of numbered sessions with day dividers between them, replacing the
+// two day cards. Rendered as a <dl>, so the rules below have to undo the
+// browser's default dd indent and the base layer's list margins.
+// ---------------------------------------------------------------------------
+
+// Scoped: it is a <dl> and the base `:where(.suf-body) p, ul, ol` rules do not
+// reach it, but the browser's own dl margin does.
+.suf-body .suf-agenda {
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--suf-color-border-subtle);
+}
+
+.suf-agenda__day {
+  display: flex;
+  align-items: center;
+  gap: var(--suf-space-3);
+  padding: 28px 18px 16px;
+  border-bottom: 1px solid var(--suf-color-border-subtle);
+}
+
+.suf-agenda__badge {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  background: var(--suf-navy);
+  color: var(--suf-color-heading-on-dark);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+// A <dt>, not an <h3>. The mockup uses a heading, but a day divider inside a
+// list of sessions is a label for the rows under it rather than a new section
+// of the page -- and adding two more headings here would sit them between the
+// section's own h2 and nothing else, which reads as structure that is not
+// there.
+.suf-agenda__dayname {
+  color: var(--suf-color-heading);
+  font-family: var(--suf-font-heading);
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+}
+
+.suf-agenda__row {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: var(--suf-space-3);
+  align-items: center;
+  // margin-inline-start: 0 undoes the browser's 40px dd indent, which would
+  // otherwise push the whole ledger off the section's left edge.
+  margin: 0;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--suf-color-border-subtle);
+}
+
+.suf-agenda__n {
+  color: #c6d2da;
+  font-size: 26px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.suf-agenda__text {
+  color: var(--suf-color-text);
+  font-size: 15.5px;
+  line-height: 1.5;
+}
+
+// ---------------------------------------------------------------------------
+// QUOTE SPOTLIGHT -- proof row
+//
+// Same device as .suf-splitfact__proof on SUF-CPT: testimonials folded into
+// the bottom of the dark band rather than following it as a second navy
+// section. The cards reuse .suf-qcard.
+// ---------------------------------------------------------------------------
+
+.suf-qspot__proof {
+  margin-top: var(--suf-space-5);
+  padding-top: var(--suf-space-4);
+  border-top: 1px solid var(--suf-color-border-on-dark);
+
+  .suf-qcard {
+    background: #0a3a55;
+    border-color: var(--suf-color-border-on-dark);
+  }
+
+  // `.suf-qcard__quote p`, not `.suf-qcard p`: the blanket version also
+  // matches the star row, which is a <p>, and would repaint the stars as body
+  // text. That shipped once on the SUF-CPT band.
+  .suf-qcard__quote p {
+    color: var(--suf-color-text-on-dark);
+  }
+
+  .suf-qcard .suf-qcard__who {
+    color: var(--suf-color-text-muted-on-dark);
+  }
+
+  // The grid is already inside a .suf-wrap, so the two-up variant must not
+  // narrow itself a second time.
+  .suf-quotegrid--two {
+    max-width: none;
+  }
+}
+
+.suf-qspot .suf-qspot__prooflabel {
+  margin: 0 0 var(--suf-space-4);
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }

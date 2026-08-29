@@ -53,7 +53,17 @@
 
         <span class="suf-semrow__city">{{ block.settings.city | escape }}</span>
         <span class="suf-semrow__date">{{ block.settings.date | escape }}</span>
-        <span class="suf-semrow__focus">{{ block.settings.focus | escape }}</span>
+        {%- comment -%}
+          Cities are announced before their focus is decided, so an empty
+          setting is a normal state rather than a missing one. Left bare it
+          rendered as a blank cell in the middle of the row, which reads as
+          broken rather than as pending.
+        {%- endcomment -%}
+        {%- if block.settings.focus != blank -%}
+          <span class="suf-semrow__focus">{{ block.settings.focus | escape }}</span>
+        {%- else -%}
+          <span class="suf-semrow__focus suf-semrow__focus--tba">Focus TBA</span>
+        {%- endif -%}
         <span class="suf-semrow__price">
           {%- if product != blank -%}
             {{ product.price | money_without_trailing_zeros }}

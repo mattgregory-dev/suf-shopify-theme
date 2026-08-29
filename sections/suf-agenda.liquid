@@ -1,0 +1,107 @@
+{% comment %}
+  A numbered agenda ledger. The mockup's .agledger.
+
+  It replaced the day cards. Two cards, each holding its own bulleted list, made
+  the schedule read as two parallel options; a single ledger reads as one run of
+  events in order, which is what a two-day seminar actually is.
+
+  THE NUMBERING IS CONTINUOUS across the whole ledger -- 01 to 11, not 01 to 05
+  then 01 to 06 -- so it counts sessions rather than restarting per day. That is
+  why the numbers are rendered from a running counter here rather than from an
+  <ol>: the day headers sit between items and would either take a number of
+  their own or break the sequence.
+
+  Blocks are flat in Shopify, so a day cannot contain its items. Order is the
+  only thing binding an item to the day above it. Reordering a Day block in the
+  editor moves the divider, not the items -- move the items too.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this. The
+  ledger inside is a <dl>: each day is a term and its sessions are its
+  descriptions, which is the closest native pairing for "heading with a list of
+  things under it" that survives being flattened into one element.
+{% endcomment %}
+
+{%- liquid
+  assign classes = 'suf-section'
+  if section.settings.anchor != blank
+    assign classes = classes | append: ' suf-anchor-target'
+  endif
+-%}
+
+<div class="{{ classes }}" {% if section.settings.anchor != blank %}id="{{ section.settings.anchor | handle }}"{% endif %}>
+  <div class="suf-wrap">
+    <dl class="suf-agenda">
+      {%- assign n = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'day' -%}
+            <dt class="suf-agenda__day" {{ block.shopify_attributes }}>
+              {%- if block.settings.badge != blank -%}
+                <span class="suf-agenda__badge">{{ block.settings.badge | escape }}</span>
+              {%- endif -%}
+              {%- if block.settings.heading != blank -%}
+                <span class="suf-agenda__dayname">
+                  {%- render 'suf-nb', text: block.settings.heading -%}
+                </span>
+              {%- endif -%}
+            </dt>
+
+          {%- when 'item' -%}
+            {%- assign n = n | plus: 1 -%}
+            <dd class="suf-agenda__row" {{ block.shopify_attributes }}>
+              {%- comment -%}
+                Decorative: the sequence is already carried by the list order,
+                and "zero one" read before every line is noise.
+              {%- endcomment -%}
+              <span class="suf-agenda__n" aria-hidden="true">
+                {{- n | prepend: '0' | slice: -2, 2 -}}
+              </span>
+              <span class="suf-agenda__text">
+                {%- assign text = block.settings.text | escape -%}
+                {%- render 'suf-nb', text: text -%}
+              </span>
+            </dd>
+        {%- endcase -%}
+      {%- endfor -%}
+    </dl>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Agenda ledger (SUF)",
+  "tag": "section",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anchor id" }
+  ],
+  "blocks": [
+    {
+      "type": "day",
+      "name": "Day divider",
+      "settings": [
+        { "type": "text", "id": "badge", "label": "Badge", "info": "e.g. \"Day 1\"." },
+        { "type": "inline_richtext", "id": "heading", "label": "Heading" }
+      ]
+    },
+    {
+      "type": "item",
+      "name": "Session",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Session",
+          "info": "Numbered automatically, counting on from the session above -- the count does not restart on a new day."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Agenda ledger (SUF)",
+      "blocks": [{ "type": "day" }, { "type": "item" }, { "type": "item" }]
+    }
+  ]
+}
+{% endschema %}
