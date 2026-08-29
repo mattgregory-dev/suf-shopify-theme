@@ -139,8 +139,26 @@
   gap: var(--suf-space-2);
 }
 
+// Cards that lift their own button.
+//
+// The mockup gets this free -- its cards are one big <a>, so the button
+// inherits the hover. Ours cannot always be: a buy card holds a real <form>,
+// and a <form> cannot live inside an <a>. So the relationship is stated here.
+//
+// ONE definition, interpolated into every rule that needs it, because it is
+// used in three places -- the primary hover, the ghost hover, and the
+// reduced-motion guard that switches the lift off. Listed separately in each,
+// they drift, and the one that gets forgotten is the guard.
+//
+// .suf-pkg--featured also takes :focus-visible: that card IS a link, so a
+// keyboard user reaches it and should see the same thing a mouse user does.
+// .suf-gcard is not focusable -- it holds no link, only its own button.
+$card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured:focus-visible &';
+
 .suf-btn {
   display: inline-block;
+  // For the focus ring below, which is an absolutely positioned child.
+  position: relative;
   padding: 16px 32px;
   border: 2px solid transparent;
   // The modifiers own the colour (--primary white, --ghost navy); this only
@@ -169,13 +187,68 @@
     box-shadow: none;
   }
 
+  // THE FOCUS RING.
+  //
+  // A pseudo-element, not an outline and not a box-shadow, because it has to
+  // do two things at once that neither can:
+  //
+  //   1. Sit OFF the button, with a visible gap. An outline does this with
+  //      outline-offset; a box-shadow cannot -- it can only paint a solid
+  //      rect behind the button, so any "gap" would have to be filled with
+  //      the surface colour, which differs per band.
+  //   2. Be ASYMMETRIC. Every button here shifts up-left 2px on focus and
+  //      throws a hard shadow 4px down-right, so a uniform ring clips the
+  //      bottom-right corner of the shape the user actually sees. An outline
+  //      is the same on all four sides by definition.
+  //
+  // Hence: 5px of gap on the top and left, and 4px past the 4px shadow on the
+  // right and bottom -- 7px and 10px once the ring's own 2px is included.
+  //
+  // ONE colour for every button, primary and ghost, on light bands and dark:
+  // --suf-color-focus. A focus ring is a system affordance, not decoration --
+  // a keyboard user learns its colour once and should then recognise it
+  // anywhere on the site, so it does not vary per component.
+  //
+  // It clears 3:1 against both surfaces it lands on -- roughly 3.2:1 on the
+  // page background and 3.9:1 on the navy bands -- which is the threshold for
+  // a non-text UI indicator.
+  //
+  // --suf-focus-ring stays as the hook: a future button on a surface where the
+  // blue genuinely disappears can set it without restating the geometry.
+  &:focus-visible {
+    outline: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -7px -10px -10px -7px;
+      border: 2px solid var(--suf-focus-ring, var(--suf-color-focus));
+      pointer-events: none;
+    }
+  }
+
+  // Forced-colors modes drop borders on pseudo-elements and honour outline, so
+  // the ring above would simply vanish for the users who most need it. A real
+  // outline goes back, offset to clear the same shadow.
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline: 2px solid;
+      outline-offset: 7px;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
   // The lift is decorative. Users who ask for less motion still get the
   // shadow, so the affordance survives.
   @media (prefers-reduced-motion: reduce) {
     transition: box-shadow var(--suf-transition);
 
     &:hover,
-    &:focus-visible {
+    &:focus-visible,
+    #{$card-hover} {
       transform: none;
     }
   }
@@ -186,8 +259,19 @@
   border-color: var(--suf-cta-bg);
   color: var(--suf-cta-text);
 
+  // `.suf-gcard:hover &` is the product card reaching in to lift its own
+  // button. The mockup gets this free -- its card is one big <a>, so the
+  // button inherits the hover. Ours cannot be: the card holds a real <form>,
+  // and a <form> cannot live inside an <a>. So the relationship is stated
+  // here instead.
+  //
+  // It belongs on the button rather than in _suf-study.scss so there is ONE
+  // copy of the lift. Duplicated, the two drift and only one of them gets the
+  // reduced-motion guard -- which is what happened to the base rule below
+  // before this selector was added to it as well.
   &:hover,
-  &:focus-visible {
+  &:focus-visible,
+  #{$card-hover} {
     // Deliberately unchanged from the resting state -- see the note above.
     background: var(--suf-cta-bg);
     border-color: var(--suf-cta-bg);
@@ -205,7 +289,8 @@
   color: var(--suf-navy);
 
   &:hover,
-  &:focus-visible {
+  &:focus-visible,
+  #{$card-hover} {
     color: var(--suf-navy);
     border-color: var(--suf-blue-light);
     transform: translate(-2px, -2px);
