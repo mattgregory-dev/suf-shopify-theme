@@ -10,8 +10,24 @@
 // is deliberate — suf.css is also loaded by theme.liquid, and an unscoped
 // reset there would restyle all ~30 legacy templates. Scoping is what keeps
 // this file additive.
+//
+// WHY :where(). Scoping costs specificity: `.suf-body p` is a class AND an
+// element, (0,1,1), while a plain component class is (0,1,0) -- so the base
+// layer BEAT every component that styled a <p>, an <a>, a <button> or a
+// heading, regardless of source order. That produced roughly a dozen bugs
+// before it was understood: blue text on red buttons, footer headings at
+// heading size, a price that would not pin, margins that silently came back.
+//
+// :where() contributes ZERO specificity, so these rules become (0,0,x). The
+// scoping still applies -- they match only inside .suf-body, so legacy
+// templates stay untouched -- but the base layer now sits UNDER the components
+// instead of competing with them, which is what a base layer is for.
+//
+// The legacy-compatibility block at the bottom of this file is deliberately
+// NOT wrapped: it props up the forked header's inherited markup and needs its
+// weight.
 
-.suf-body {
+:where(.suf-body) {
   margin: 0;
   background: var(--suf-color-bg);
   color: var(--suf-color-text);
@@ -66,20 +82,13 @@
     margin: 0;
   }
 
-  // Prose links only.
+  // The default link colour, and nothing more.
   //
-  // `.suf-body a` is (0,1,1) and a component class like .suf-btn--primary is
-  // (0,1,0), so without an exclusion the base rule WINS and repaints every
-  // button and standalone link blue. That is a real bug that shipped once.
-  //
-  // The exclusions are wrapped in :where(), which contributes ZERO specificity.
-  // Written as a chain of bare :not() this rule climbed to (0,4,1) -- one class
-  // per exclusion -- and started beating rules it had no business beating, such
-  // as the footer's own link colour at (0,1,1). :where() keeps it at (0,1,1)
-  // however long the list grows.
-  //
-  // Add any future component that renders as an <a> and sets its own colour.
-  a:not(:where(.suf-btn, .suf-link, .suf-tcard, .suf-resource, .suf-social__link)) {
+  // This used to carry a :not(:where(...)) list naming every component that
+  // renders as an <a> -- a standing obligation to remember, in this file, what
+  // other files were doing. At (0,0,1) it is unnecessary: any component that
+  // sets its own colour beats it automatically.
+  a {
     color: var(--suf-color-link);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;
@@ -105,29 +114,15 @@
   // Form controls do not inherit type or colour from their ancestor by
   // default, so these put both back.
   //
-  // .suf-btn is EXCLUDED from both, for the specificity reason in
-  // architecture.md: `.suf-body button` is (0,1,1) and beats .suf-btn at
-  // (0,1,0). `color: inherit` gave a primary button navy text on its red fill,
-  // and `font` -- a shorthand that resets size, weight, style, line-height and
-  // family together -- silently discarded the button's own 14px and 800.
-  //
-  // The button is a fully typed component, so it opts out here and declares
-  // font-family: inherit for itself.
+  // No exclusion needed at (0,0,1): .suf-btn declares its own font and colour
+  // and wins on its own.
   button,
-  input,
-  select,
-  textarea {
-    margin: 0;
-  }
-
-  // :where() again -- as a bare :not() this was (0,2,1) and beat the search
-  // buttons' own colour at (0,2,0). Wrapped, it stays (0,1,1).
-  button:not(:where(.suf-btn)),
   input,
   select,
   textarea {
     font: inherit;
     color: inherit;
+    margin: 0;
   }
 
   // A visible focus ring is the only keyboard affordance on a layout with no
