@@ -112,117 +112,9 @@
         "quote": "Since the seminar I did in Atlanta this past weekend, I’ve already generated $X,XXX in new business. Between the sales call, seminar, and podcast, you’ve helped a lot with my presentation and how I interact with clients and prospects.",
         "who": "— Seminar Attendee, Atlanta",
         "image": "shopify://shop_images/photo-05.jpg",
-        "image_alt": "Show Up Fitness trainees flexing and posing together in a Life Time gym studio"
-      }
-    },
-    "upcomingintro": {
-      "type": "suf-statement",
-      "settings": {
-        "heading": "Upcoming Seminars",
-        "body": "<p>Every seminar is $XXX and held at a Life Time Fitness. Pick your city and date — travel and lodging are up to you, and most attendees make a weekend of it.</p>",
-        "dark": false
-      }
-    },
-    "upcoming": {
-      "type": "suf-semlist",
-      "blocks": {
-        "e1": {
-          "type": "event",
-          "settings": {
-            "city": "Miami Falls, FL",
-            "date": "July 24 & 25",
-            "focus": "Upper Body",
-            "price": "$XXX",
-            "cue": "Reserve"
-          }
-        },
-        "e2": {
-          "type": "event",
-          "settings": {
-            "city": "Franklin, TN",
-            "date": "August 14 & 15",
-            "price": "$XXX",
-            "cue": "Reserve"
-          }
-        },
-        "e3": {
-          "type": "event",
-          "settings": {
-            "city": "Tampa, FL",
-            "date": "September 25 & 26",
-            "cue": "Reserve",
-            "product": "weekend-seminar-tampa-fl-september-18-19",
-            "link_mode": "product"
-          }
-        }
+        "image_alt": "Show Up Fitness trainees flexing and posing together in a Life Time gym studio",
+        "proof_heading": "What Attendees Are Saying"
       },
-      "block_order": [
-        "e1",
-        "e2",
-        "e3"
-      ],
-      "settings": {
-        "anchor": "upcoming",
-        "note": "<p>New cities are added on a rolling basis — <a href=\"/pages/suf-contact\">get first access to new dates</a>.</p>"
-      }
-    },
-    "bundle": {
-      "type": "suf-strip",
-      "settings": {
-        "eyebrow": "Getting Certified Too?",
-        "heading": "The SUF-CPT + Seminar Bundle — $XXX",
-        "body": "<p>The seminar is $XXX on its own. The bundle gets you the full certification <em>and</em> your seminar seat for $XXX — the whole certification for $XXX more. Buy now, pick your city and date whenever you’re ready.</p>",
-        "button_label": "See the Bundle — $XXX",
-        "button_url": "/pages/suf-cpt",
-        "button_style": "primary"
-      }
-    },
-    "scheduleintro": {
-      "type": "suf-statement",
-      "settings": {
-        "eyebrow": "Unlock Your Potential",
-        "heading": "Seminar Schedule",
-        "dark": false
-      }
-    },
-    "schedule": {
-      "type": "suf-listcards",
-      "blocks": {
-        "d1": {
-          "type": "card",
-          "settings": {
-            "badge": "Day 1",
-            "heading": "Foundation & Growth",
-            "items": "Meet & greet\nWarm-up techniques\nHands-on training (part 1) — shadowing experienced trainers\nSales mastery and client acquisition\nSocial hour"
-          }
-        },
-        "d2": {
-          "type": "card",
-          "settings": {
-            "badge": "Day 2",
-            "heading": "Advanced Techniques & Networking",
-            "items": "Morning intro\nRole-playing for overcoming objections\nLunch break\nHands-on training (parts 2 & 3)\nBuilding your fitness brand\nClosing and networking"
-          }
-        }
-      },
-      "block_order": [
-        "d1",
-        "d2"
-      ],
-      "settings": {
-        "columns": "two",
-        "card_style": "badge"
-      }
-    },
-    "quotesintro": {
-      "type": "suf-statement",
-      "settings": {
-        "heading": "What Attendees Are Saying",
-        "dark": false
-      }
-    },
-    "quotes": {
-      "type": "suf-quotes",
       "blocks": {
         "q1": {
           "type": "quote",
@@ -262,9 +154,179 @@
         "q2",
         "q3",
         "q4"
+      ]
+    },
+    "upcomingintro": {
+      "type": "suf-statement",
+      "settings": {
+        "heading": "Upcoming Seminars",
+        "body": "<p>Every seminar is $XXX and held at a Life Time Fitness. Pick your city and date — travel and lodging are up to you, and most attendees make a weekend of it.</p>",
+        "dark": false
+      }
+    },
+    "upcoming": {
+      "type": "suf-semlist",
+      "blocks": {
+        "e1": {
+          "type": "event",
+          "settings": {
+            "city": "Miami Falls, FL",
+            "date": "July 24 & 25",
+            "focus": "Upper Body",
+            "price": "$XXX",
+            "cue": "Reserve"
+          }
+        },
+        "e2": {
+          "type": "event",
+          "settings": {
+            "city": "Franklin, TN",
+            "date": "August 14 & 15",
+            "price": "$XXX",
+            "cue": "Reserve"
+          }
+        },
+        "e3": {
+          "type": "event",
+          "settings": {
+            "city": "Tampa, FL",
+            "date": "September 25 & 26",
+            "cue": "Reserve",
+            "product": "weekend-seminar-tampa-fl-september-25-26",
+            "link_mode": "product"
+          }
+        }
+      },
+      "block_order": [
+        "e1",
+        "e2",
+        "e3"
       ],
       "settings": {
-        "columns": "two"
+        "anchor": "upcoming",
+        "note": "<p>New cities are added on a rolling basis — <a href=\"/pages/suf-contact\">get first access to new dates</a>.</p>"
+      }
+    },
+    "bundle": {
+      "type": "suf-strip",
+      "settings": {
+        "eyebrow": "Getting Certified Too?",
+        "heading": "The SUF-CPT + Seminar Bundle — $XXX",
+        "body": "<p>The seminar is $XXX on its own. The bundle gets you the full certification <em>and</em> your seminar seat for $XXX — the whole certification for $XXX more. Buy now, pick your city and date whenever you’re ready.</p>",
+        "button_label": "See the Bundle — $XXX",
+        "button_url": "/pages/suf-cpt",
+        "button_style": "primary"
+      }
+    },
+    "scheduleintro": {
+      "type": "suf-statement",
+      "settings": {
+        "eyebrow": "Unlock Your Potential",
+        "heading": "Seminar Schedule",
+        "dark": false
+      }
+    },
+    "schedule": {
+      "type": "suf-agenda",
+      "blocks": {
+        "a1": {
+          "type": "day",
+          "settings": {
+            "badge": "Day 1",
+            "heading": "Foundation & Growth"
+          }
+        },
+        "a2": {
+          "type": "item",
+          "settings": {
+            "text": "Meet & greet"
+          }
+        },
+        "a3": {
+          "type": "item",
+          "settings": {
+            "text": "Warm-up techniques"
+          }
+        },
+        "a4": {
+          "type": "item",
+          "settings": {
+            "text": "Hands-on training (part 1) — shadowing experienced trainers"
+          }
+        },
+        "a5": {
+          "type": "item",
+          "settings": {
+            "text": "Sales mastery and client acquisition"
+          }
+        },
+        "a6": {
+          "type": "item",
+          "settings": {
+            "text": "Social hour"
+          }
+        },
+        "a7": {
+          "type": "day",
+          "settings": {
+            "badge": "Day 2",
+            "heading": "Advanced Techniques & Networking"
+          }
+        },
+        "a8": {
+          "type": "item",
+          "settings": {
+            "text": "Morning intro"
+          }
+        },
+        "a9": {
+          "type": "item",
+          "settings": {
+            "text": "Role-playing for overcoming objections"
+          }
+        },
+        "a10": {
+          "type": "item",
+          "settings": {
+            "text": "Lunch break"
+          }
+        },
+        "a11": {
+          "type": "item",
+          "settings": {
+            "text": "Hands-on training (parts 2 & 3)"
+          }
+        },
+        "a12": {
+          "type": "item",
+          "settings": {
+            "text": "Building your fitness brand"
+          }
+        },
+        "a13": {
+          "type": "item",
+          "settings": {
+            "text": "Closing and networking"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3",
+        "a4",
+        "a5",
+        "a6",
+        "a7",
+        "a8",
+        "a9",
+        "a10",
+        "a11",
+        "a12",
+        "a13"
+      ],
+      "settings": {
+        "anchor": "schedule"
       }
     },
     "faq": {
@@ -367,14 +429,12 @@
     "stats",
     "focusintro",
     "focus",
+    "scheduleintro",
+    "schedule",
     "proof",
     "upcomingintro",
     "upcoming",
     "bundle",
-    "scheduleintro",
-    "schedule",
-    "quotesintro",
-    "quotes",
     "faq",
     "cta"
   ]
