@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run css:watch",
-    "css:watch": "sass --watch frontend/styles/main.scss:assets/suf.css --style=expanded",
+    "css:watch": "sass --watch frontend/styles/main.scss:assets/suf.css --style=expanded --embed-sources",
     "css:build": "sass frontend/styles/main.scss:assets/suf.css --style=compressed --no-source-map",
     "preview": "npm run css:build && shopify theme push --theme 000000000000",
     "lint": "shopify theme check",
