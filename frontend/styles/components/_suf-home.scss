@@ -115,7 +115,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// PACKAGES -- 3-up, navy centre card
+// PACKAGES -- 3-up, blue-bordered centre card
 // ---------------------------------------------------------------------------
 
 .suf-pkgrow {
@@ -168,10 +168,50 @@
   border-left: none;
 }
 
+// The hover ring has to drop the same side the border does.
+//
+// `inset 0 0 0 1px` rings all four edges, so on the outer cards the seam side
+// -- which has no border -- still drew a 1px blue line, while every other edge
+// showed 2px (1px border plus 1px ring). Half-width blue on one edge only.
+//
+// Three directional insets instead of one spread, omitting the seam. Matching
+// the width rather than hiding it would be worse: the seam already carries the
+// featured card's 2px blue border, so a second blue edge against it reads as a
+// 4px double rule that appears from nowhere on hover.
+.suf-pkgrow .suf-pkg:first-child:hover,
+.suf-pkgrow .suf-pkg:first-child:focus-visible {
+  box-shadow:
+    inset 1px 0 0 var(--suf-blue-light),
+    inset 0 1px 0 var(--suf-blue-light),
+    inset 0 -1px 0 var(--suf-blue-light),
+    0 14px 30px rgb(0 32 54 / 12%);
+}
+
+.suf-pkgrow .suf-pkg:last-child:hover,
+.suf-pkgrow .suf-pkg:last-child:focus-visible {
+  box-shadow:
+    inset -1px 0 0 var(--suf-blue-light),
+    inset 0 1px 0 var(--suf-blue-light),
+    inset 0 -1px 0 var(--suf-blue-light),
+    0 14px 30px rgb(0 32 54 / 12%);
+}
+
+// Stacked, there are no seams: the borders come back, so the full ring does
+// too. Without this the outer cards would keep a three-sided ring in a layout
+// where all four sides are visible.
 @media (max-width: 900px) {
   .suf-pkgrow .suf-pkg:first-child,
   .suf-pkgrow .suf-pkg:last-child {
     border: 1px solid var(--suf-color-border-subtle);
+  }
+
+  .suf-pkgrow .suf-pkg:first-child:hover,
+  .suf-pkgrow .suf-pkg:first-child:focus-visible,
+  .suf-pkgrow .suf-pkg:last-child:hover,
+  .suf-pkgrow .suf-pkg:last-child:focus-visible {
+    box-shadow:
+      inset 0 0 0 1px var(--suf-blue-light),
+      0 14px 30px rgb(0 32 54 / 12%);
   }
 }
 
@@ -191,25 +231,32 @@
   line-height: 1.55;
 }
 
+// Matched to the SUF-CPT buy card: no longer a navy slab, but a white card
+// marked out by a blue border, a resting elevation and the extra padding.
+//
+// The border is 2px against the plain cards' 1px, which is deliberate -- the
+// extra weight IS part of the signal, so it is a real border rather than the
+// inset shadow used for the hover ring. Its neighbours already drop their
+// inner borders, so this is the only edge at each seam and nothing doubles.
+//
+// The mockup still shows this one navy. It is the buy card that was updated,
+// and this follows it so the two featured cards on the site do not disagree.
 .suf-pkg--featured {
   z-index: 2;
   padding: 56px 32px;
-  background: var(--suf-navy);
-  border-color: var(--suf-navy);
+  border: 2px solid var(--suf-blue);
   box-shadow: 0 24px 60px rgb(0 32 54 / 22%);
 
-  h3 {
-    color: var(--suf-color-heading-on-dark);
-  }
-
+  // The heading and description are dropped: with a white surface they take
+  // the same colours as every other card, which is the point of the change.
   .suf-pkg__price {
-    color: var(--suf-blue-light);
+    color: var(--suf-blue);
   }
 
-  .suf-pkg__desc {
-    color: var(--suf-color-text-on-dark);
-  }
-
+  // Ties with .suf-pkg:hover at (0,2,0) and wins on source order, this block
+  // being later in the file. It has to: the resting shadow here is already
+  // deeper than the plain card's hover shadow, so without a stronger one the
+  // hover would read as no change at all.
   &:hover,
   &:focus-visible {
     border-color: var(--suf-blue-light);

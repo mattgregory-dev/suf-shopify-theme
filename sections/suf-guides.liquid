@@ -86,6 +86,15 @@
             <h3>{{ heading | escape }}</h3>
           {%- endif -%}
 
+          {%- comment -%}
+            The price sits directly under the heading, above the meta line:
+            it is the second thing anyone reads on a buy card, and below the
+            body copy it was arriving after the decision had been made.
+          {%- endcomment -%}
+          {%- if product != blank -%}
+            <p class="suf-gcard__price">{{ product.price | money_without_trailing_zeros }}</p>
+          {%- endif -%}
+
           {%- if block.settings.meta != blank -%}
             <p class="suf-gcard__meta">{{ block.settings.meta | escape }}</p>
           {%- endif -%}
@@ -95,8 +104,6 @@
           {%- endif -%}
 
           {%- if product != blank -%}
-            <p class="suf-gcard__price">{{ product.price | money_without_trailing_zeros }}</p>
-
             {%- if product.available -%}
               {%- form 'product', product, class: 'suf-gcard__form' -%}
                 {%- if product.variants.size > 1 -%}

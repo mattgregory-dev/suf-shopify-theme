@@ -8,10 +8,18 @@
 // <a>. The card is therefore a plain container with no link of its own: the
 // add-to-cart button is the only action on it.
 //
-// The mockup's card-hover elevation is deliberately NOT ported with it. It
-// signalled "the whole card is the target", and the card is not a target at
-// all now -- it holds no link, only the add-to-cart button. A hover state on
-// it would promise a click it does not accept.
+// The mockup's card-hover elevation IS ported, but the original objection had
+// to be answered first. That objection stands on its own: the mockup's hover
+// signalled "the whole card is the target", and this card is not a target --
+// it holds no link, only the add-to-cart button. A card that lights up and
+// then ignores the click is promising something it does not accept.
+//
+// What answers it is that the card's hover also lifts the BUTTON, exactly as
+// the mockup's does. The highlight therefore points at the one thing that is
+// clickable rather than implying the whole card is. That rule lives on
+// .suf-btn--primary in _suf-components.scss, so there is one copy of the lift
+// and one reduced-motion guard over it. Remove the button lift and this hover
+// should go with it.
 
 .suf-guidegrid {
   display: grid;
@@ -47,6 +55,21 @@
     margin: 0 0 var(--suf-space-2);
     font-size: var(--suf-font-size-h3);
   }
+
+  transition:
+    border-color var(--suf-transition),
+    box-shadow var(--suf-transition);
+
+  // Inset ring PLUS border-color. The border is 1px and the inset shadow sits
+  // directly inside it, so the two read as one crisp edge -- and because a
+  // shadow takes no space, the card does not change size and nudge the grid.
+  // A 2px border on hover would.
+  &:hover {
+    border-color: var(--suf-blue-light);
+    box-shadow:
+      inset 0 0 0 1px var(--suf-blue-light),
+      0 14px 30px rgb(0 32 54 / 12%);
+  }
 }
 
 // Body copy carries its own class rather than being matched as `.suf-gcard > p`.
@@ -72,17 +95,19 @@
 
 .suf-gcard .suf-gcard__meta {
   margin: 0 0 var(--suf-space-3);
-  color: var(--suf-color-text-muted);
+  color: var(--suf-blue);
   font-size: 12.5px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-// `margin-top: auto` pins the price to the bottom of the card, so two cards
-// with different body lengths still align their prices and buttons.
+// No `margin-top: auto` here. The price sits directly under the heading now,
+// so the element that has to be pinned to the bottom is the FORM -- see
+// .suf-gcard__form. Pinning the price as well would push the meta line and the
+// body copy below it.
 .suf-gcard .suf-gcard__price {
-  margin: auto 0 var(--suf-space-3);
+  margin: 0 0 var(--suf-space-2);
   color: var(--suf-color-heading);
   font-size: clamp(36px, 3.2vw, 52px);
   font-weight: 800;
@@ -94,6 +119,9 @@
   display: grid;
   gap: var(--suf-space-2);
   width: 100%;
+  // Pinned to the bottom of the flex column, so two cards with different body
+  // lengths still line their buttons up.
+  margin-top: auto;
 
   // A grid container BLOCKIFIES its children: the button's `inline-block`
   // computes to `block`, and justify-items defaults to stretch, so it would
@@ -264,51 +292,44 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  padding: var(--suf-space-5) var(--suf-space-4);
+  padding: var(--suf-space-4);
 }
 
-// With an image, the card is taller and the price no longer needs to be pinned
-// to the bottom to line up with its neighbour -- the BUTTON does. Pinning both
-// leaves a void between the copy and the price, which is what the mockup avoids
-// by putting the price directly under the heading.
+// The image makes the card taller, so the body copy no longer needs the larger
+// gap that separates it from a bottom-pinned button on a short card.
 .suf-gcard--media {
-  .suf-gcard__price {
-    margin-top: 0;
-  }
-
   .suf-gcard__body {
     margin-bottom: var(--suf-space-3);
   }
-
-  .suf-gcard__form {
-    margin-top: auto;
-  }
 }
 
+// The featured card, per the updated mockup: it is no longer a navy slab but
+// a white card marked out by a blue border and a resting elevation.
+//
+// The border is 2px against the plain card's 1px, so the featured card is 1px
+// larger on every side. That is deliberate and it is why the border is not
+// simulated with an inset shadow the way the hover ring is -- here the extra
+// weight IS the signal.
 .suf-gcard--featured {
-  background: var(--suf-navy);
-  border-color: var(--suf-navy);
+  border: 2px solid var(--suf-blue);
   box-shadow: 0 24px 60px rgb(0 32 54 / 22%);
 
-  h3 {
-    color: var(--suf-color-heading-on-dark);
-  }
-
+  // NO scale(1.03). The mockup has one; it is deliberately not ported. The
+  // border, the blue and the elevation already mark this card out, and scaling
+  // it makes both cards' type render at different sizes for the same content.
   .suf-gcard__price {
-    color: var(--suf-blue-light);
+    color: var(--suf-blue);
   }
 
-  .suf-gcard__body,
-  .suf-gcard__meta {
-    color: var(--suf-color-text-on-dark);
-  }
-
-  .suf-gcard__inner {
-    color: var(--suf-color-text-on-dark);
-  }
-
-  .suf-btn-micro {
-    color: var(--suf-color-text-muted-on-dark);
+  // Ties with .suf-gcard:hover at (0,2,0) and wins on source order, this block
+  // being later in the file. It has to: the resting shadow here is already
+  // deeper than the plain card's hover shadow, so without a stronger one the
+  // hover would read as no change at all.
+  &:hover {
+    border-color: var(--suf-blue-light);
+    box-shadow:
+      inset 0 0 0 1px var(--suf-blue-light),
+      0 28px 70px rgb(0 32 54 / 32%);
   }
 }
 

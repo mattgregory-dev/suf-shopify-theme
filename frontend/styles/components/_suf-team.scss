@@ -43,11 +43,6 @@ a.suf-tcard {
   &:hover,
   &:focus-visible {
     border-color: #b9c6cd;
-
-    .suf-tcard__cue {
-      color: var(--suf-color-accent);
-      border-color: var(--suf-color-accent);
-    }
   }
 }
 
@@ -119,6 +114,17 @@ a.suf-tcard {
   }
 }
 
+// Cards that turn their own cue red on hover.
+//
+// ONE definition, for the same reason as $card-hover in _suf-components.scss:
+// the cue is shared by the team cards and the homepage package cards, and a
+// second copy of "blue becomes red" in _suf-home.scss would drift from this
+// one the first time the colour changed.
+//
+// Both card types are <a>, so both take :focus-visible as well -- a keyboard
+// user reaches the card directly and should see what a mouse user sees.
+$cue-hover: 'a.suf-tcard:hover &, a.suf-tcard:focus-visible &, .suf-pkg:hover &, .suf-pkg:focus-visible &';
+
 // Looks like .suf-link but is a span inside the card anchor. It cannot reuse
 // that class: .suf-link is an <a> and this must not be focusable separately.
 .suf-tcard__cue {
@@ -136,6 +142,11 @@ a.suf-tcard {
   transition:
     color var(--suf-transition),
     border-color var(--suf-transition);
+
+  #{$cue-hover} {
+    color: var(--suf-color-accent);
+    border-color: var(--suf-color-accent);
+  }
 }
 
 // Placeholder for a member with no photo yet. Diagonal stripes plus a
