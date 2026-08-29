@@ -509,12 +509,23 @@
     border-color: var(--suf-color-border-on-dark);
   }
 
-  .suf-qcard p {
+  // `.suf-qcard__quote p`, NOT `.suf-qcard p`. The blanket version matched the
+  // star row too -- it is a <p> inside the card -- and at (0,3,1) it beat
+  // .suf-qcard .suf-qcard__stars (0,2,0), so the red stars came out as body
+  // text on this band and nowhere else. Naming the quote wrapper means the
+  // rule cannot reach a sibling it was never aimed at.
+  .suf-qcard__quote p {
     color: var(--suf-color-text-on-dark);
   }
 
   .suf-qcard .suf-qcard__who {
     color: var(--suf-color-text-muted-on-dark);
+  }
+
+  // Brand red, the same as on every other surface. Stars are a brand mark
+  // here, not body copy being tuned for contrast.
+  .suf-qcard .suf-qcard__stars {
+    color: var(--suf-color-accent);
   }
 }
 
