@@ -23,6 +23,12 @@
   computes one from the other, so a bar can disagree with its own label. Check
   both when the copy changes.
 
+  PROOF BLOCKS. Optional testimonial cards rendered UNDER the two columns,
+  inside the same band. They are blocks on this section rather than a separate
+  Testimonials section on purpose: on a dark band the quotes are part of the
+  same argument, and two adjacent full-bleed navy sections would have to be
+  made to abut by hand.
+
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
 
@@ -98,7 +104,11 @@
               {%- endif -%}
 
               {%- if section.settings.show_bar -%}
-                <div class="suf-quitbar" style="--suf-quit-pct: {{ section.settings.bar_pct }}%" aria-hidden="true">
+                <div
+                  class="suf-quitbar{% if section.settings.bar_lead %} suf-quitbar--lead{% endif %}"
+                  style="--suf-quit-pct: {{ section.settings.bar_pct }}%"
+                  aria-hidden="true"
+                >
                   <span class="suf-quitbar__seg suf-quitbar__seg--muted"></span>
                   <span class="suf-quitbar__seg suf-quitbar__seg--on"></span>
                 </div>
@@ -158,10 +168,65 @@
                   sizes: '(min-width: 1001px) 40vw, 90vw',
                   alt: section.settings.image_alt
               }}
+            {%- else -%}
+              {%- comment -%}
+                No image picked yet. The panel is half the layout, so leaving
+                it empty collapses the grid and the section reads as broken
+                rather than unfinished. Striped and labelled, the same device
+                as a team member with no photo, so it is obvious on sight that
+                an asset is outstanding.
+
+                aria-hidden: it is a stand-in for content, not content.
+              {%- endcomment -%}
+              <div class="suf-phbox" aria-hidden="true">
+                <span>
+                  {{- section.settings.image_alt | default: 'Image' | escape -}}
+                  <br>image to come
+                </span>
+              </div>
             {%- endif -%}
         {%- endcase -%}
       </div>
     </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="suf-splitfact__proof">
+        {%- if section.settings.proof_heading != blank -%}
+          {%- comment -%}
+            Escaped BEFORE suf-nb: these are plain text/textarea settings, and
+            suf-nb inserts markup, so escaping after it would escape its own
+            spans back into visible text.
+          {%- endcomment -%}
+          {%- assign proof_heading = section.settings.proof_heading | escape -%}
+          <p class="suf-splitfact__prooflabel">{% render 'suf-nb', text: proof_heading %}</p>
+        {%- endif -%}
+
+        <div class="suf-quotegrid suf-quotegrid--two">
+          {%- for block in section.blocks -%}
+            <div class="suf-qcard" {{ block.shopify_attributes }}>
+              {%- assign rating = block.settings.rating | plus: 0 -%}
+              {%- if rating > 0 -%}
+                <p class="suf-qcard__stars" aria-hidden="true">
+                  {%- for i in (1..rating) -%}★{%- endfor -%}
+                </p>
+                <p class="suf-visually-hidden">Rated {{ rating }} out of 5</p>
+              {%- endif -%}
+
+              {%- if block.settings.quote != blank -%}
+                {%- assign quote = block.settings.quote | escape -%}
+                <blockquote class="suf-qcard__quote">
+                  <p>{% render 'suf-nb', text: quote %}</p>
+                </blockquote>
+              {%- endif -%}
+
+              {%- if block.settings.who != blank -%}
+                <p class="suf-qcard__who">{{ block.settings.who | escape }}</p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
   </div>
 </div>
 
@@ -262,6 +327,13 @@
       "default": 90,
       "info": "Set this to match the figure -- nothing computes one from the other."
     },
+    {
+      "type": "checkbox",
+      "id": "bar_lead",
+      "label": "Highlight leads the bar",
+      "info": "Puts the blue segment on the LEFT, so the minority who succeed read first. Set the split point to the small share (10, not 90).",
+      "default": false
+    },
     { "type": "inline_richtext", "id": "caption", "label": "Caption" },
     {
       "type": "checkbox",
@@ -283,6 +355,38 @@
       "label": "Dark band",
       "info": "Full-bleed navy. Count the dark bands already on the page.",
       "default": false
+    },
+    { "type": "header", "content": "Proof" },
+    {
+      "type": "text",
+      "id": "proof_heading",
+      "label": "Testimonial label",
+      "info": "Shown above the quotes. Add Quote blocks to fill the row."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Quote",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "info": "0 hides the stars."
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "info": "Quotation marks are added by the design -- do not type them."
+        },
+        { "type": "text", "id": "who", "label": "Attribution" }
+      ]
     }
   ],
   "presets": [{ "name": "Split fact (SUF)" }]

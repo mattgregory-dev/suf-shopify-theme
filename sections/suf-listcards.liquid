@@ -19,7 +19,7 @@
   assign style = section.settings.card_style | default: 'rule'
 -%}
 
-<div class="suf-section">
+<div class="suf-section" {% if section.settings.anchor != blank %}id="{{ section.settings.anchor | handle }}"{% endif %}>
   <div class="suf-wrap">
     {%- if section.settings.heading != blank -%}
       <div class="suf-section__head">
@@ -72,6 +72,7 @@
   "tag": "section",
   "max_blocks": 6,
   "settings": [
+    { "type": "text", "id": "anchor", "label": "Anchor id" },
     {
       "type": "inline_richtext",
       "id": "heading",

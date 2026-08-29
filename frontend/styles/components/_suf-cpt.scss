@@ -218,8 +218,11 @@
   inset: 0;
 }
 
+// The muted segment defaults to the LIGHT-surface grey. The dark band
+// overrides it below. That direction round rather than the reverse: navy on
+// white is not "slightly wrong", it reads as a second highlight.
 .suf-quitbar__seg--muted {
-  background: #2c4a5e;
+  background: #c6d2da;
   clip-path: polygon(
     0 0,
     var(--suf-quit-pct, 90%) 0,
@@ -229,13 +232,51 @@
 }
 
 .suf-quitbar__seg--on {
-  background: var(--suf-blue-light);
+  background: var(--suf-blue);
   clip-path: polygon(
     var(--suf-quit-pct, 90%) 0,
     100% 0,
     100% 100%,
     calc(var(--suf-quit-pct, 90%) - 18px) 100%
   );
+}
+
+// Both segments step up a shade on navy: the mid blue loses contrast against
+// it, and the light grey reads as white.
+.suf-splitfact--dark {
+  .suf-quitbar__seg--muted {
+    background: #2c4a5e;
+  }
+
+  .suf-quitbar__seg--on {
+    background: var(--suf-blue-light);
+  }
+}
+
+// Highlight leads. The blue segment takes the LEFT of the bar and the muted
+// share trails off to the right, so the eye reads the minority who succeed
+// first. Same split point, mirrored -- set it to the small share (10, not 90).
+//
+// The slant stays leaning the same way in both, because it is the design's
+// geometry rather than a direction of travel.
+.suf-quitbar--lead {
+  .suf-quitbar__seg--on {
+    clip-path: polygon(
+      0 0,
+      var(--suf-quit-pct, 10%) 0,
+      calc(var(--suf-quit-pct, 10%) - 18px) 100%,
+      0 100%
+    );
+  }
+
+  .suf-quitbar__seg--muted {
+    clip-path: polygon(
+      var(--suf-quit-pct, 10%) 0,
+      100% 0,
+      100% 100%,
+      calc(var(--suf-quit-pct, 10%) - 18px) 100%
+    );
+  }
 }
 
 // Comparison rows under a figure.
@@ -433,5 +474,252 @@
 
   p {
     margin: 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PROOF -- testimonials folded into the bottom of a split fact band
+//
+// The quotes reuse .suf-qcard from the Testimonials section rather than
+// growing a second card: same content, same markup, and a divergence here
+// would be invisible until the two appeared on one page.
+// ---------------------------------------------------------------------------
+
+.suf-splitfact__proof {
+  margin-top: var(--suf-space-5);
+  padding-top: var(--suf-space-4);
+  border-top: 1px solid var(--suf-color-border-on-dark);
+}
+
+.suf-splitfact .suf-splitfact__prooflabel {
+  margin: 0 0 var(--suf-space-4);
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: var(--suf-font-size-micro);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+// The cards sit on the band, not on the page, so they take the raised navy
+// rather than white. Scoped to the dark band: on a light one they are already
+// correct.
+.suf-splitfact--dark .suf-splitfact__proof {
+  .suf-qcard {
+    background: #0a3a55;
+    border-color: var(--suf-color-border-on-dark);
+  }
+
+  .suf-qcard p {
+    color: var(--suf-color-text-on-dark);
+  }
+
+  .suf-qcard .suf-qcard__who {
+    color: var(--suf-color-text-muted-on-dark);
+  }
+}
+
+// The grid inside the band is already inside a .suf-wrap, so the two-up
+// variant must not narrow itself a second time.
+.suf-splitfact__proof .suf-quotegrid--two {
+  max-width: none;
+}
+
+// ---------------------------------------------------------------------------
+// CENTRED HEAD -- eyebrow, headline and one supporting line, all centred
+//
+// Distinct from .suf-section__head, which is a left-aligned rule with an
+// optional aside. This one introduces something that follows it directly, so
+// it carries no rule of its own.
+// ---------------------------------------------------------------------------
+
+.suf-centerhead {
+  margin-bottom: var(--suf-space-5);
+  text-align: center;
+
+  .suf-eyebrow {
+    justify-content: center;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: var(--suf-font-size-h2);
+    line-height: 1.12;
+  }
+}
+
+.suf-centerhead .suf-centerhead__sub {
+  max-width: 52ch;
+  margin: 12px auto 0;
+  color: var(--suf-color-text-muted);
+  font-size: 16px;
+}
+
+// ---------------------------------------------------------------------------
+// NUMBER STRIP -- four figures in one bordered band
+//
+// The heavier top border is what makes it read as a single object rather than
+// four cards; the internal dividers are faint for the same reason.
+// ---------------------------------------------------------------------------
+
+.suf-numstrip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+  border-top: 3px solid var(--suf-color-text-muted-on-dark);
+
+  // 820px: four figures stop fitting their labels on one or two lines.
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suf-numstrip__cell {
+  padding: 30px 20px;
+  border-right: 1px solid var(--suf-color-border-faint);
+  text-align: center;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  // Once the cells wrap, a right border is a divider in the wrong axis.
+  @media (max-width: 820px) {
+    border-right: none;
+    border-bottom: 1px solid var(--suf-color-border-faint);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.suf-numstrip .suf-numstrip__num {
+  margin: 0;
+  color: var(--suf-blue);
+  font-size: clamp(36px, 3vw, 50px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+// Relative to the figure, so it tracks the clamp instead of needing its own.
+//
+// The gap and the letter-spacing reset are the unit's alone: the figure is
+// tracked tight at -0.03em, which is right for "15" and wrong for a word set
+// against it. This element only ever wraps the unit, so nothing else moves.
+.suf-numstrip__unit {
+  padding-left: 5px;
+  font-size: 0.42em;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.suf-numstrip .suf-numstrip__label {
+  margin: 8px 0 0;
+  color: var(--suf-color-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+// ---------------------------------------------------------------------------
+// LIFE BAR -- a figure, an argument and two rows, in one line under the cards
+//
+// The horizontal form is the point: as a full section this was a whole
+// "Certified for Life" band, and the number was doing all the work.
+// ---------------------------------------------------------------------------
+
+.suf-lifebar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--suf-space-5);
+  max-width: 1000px;
+  margin: var(--suf-space-3) auto 0;
+  padding: var(--suf-space-4);
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+
+  // 900px: three columns in one line stop fitting. Stacked, the figure loses
+  // its column and is left-aligned with the copy under it.
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: var(--suf-space-3);
+  }
+}
+
+.suf-lifebar__figure {
+  text-align: center;
+
+  @media (max-width: 900px) {
+    text-align: left;
+  }
+}
+
+.suf-lifebar .suf-lifebar__big {
+  margin: 0;
+  color: var(--suf-blue);
+  font-size: clamp(44px, 4vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.suf-lifebar .suf-lifebar__cap {
+  margin: 6px 0 0;
+  color: var(--suf-color-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.suf-lifebar__body {
+  max-width: 52ch;
+  color: var(--suf-color-text);
+  font-size: 15px;
+  line-height: 1.6;
+
+  // The richtext setting supplies its own paragraphs.
+  p {
+    margin: 0;
+  }
+
+  b,
+  strong {
+    color: var(--suf-color-heading);
+  }
+}
+
+.suf-lifebar__rows {
+  min-width: 230px;
+}
+
+.suf-lifebar .suf-lifebar__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--suf-space-3);
+  margin: 0;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--suf-color-border-faint);
+  color: var(--suf-color-text);
+  font-size: 13.5px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  b {
+    color: var(--suf-color-heading);
+  }
+
+  em {
+    color: var(--suf-color-link);
+    font-style: normal;
+    font-weight: 800;
   }
 }

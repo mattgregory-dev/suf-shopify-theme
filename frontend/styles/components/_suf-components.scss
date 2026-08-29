@@ -442,3 +442,46 @@
   color: var(--suf-color-text-muted);
   font-size: 13.5px;
 }
+
+// ---------------------------------------------------------------------------
+// PLACEHOLDER BOX
+//
+// Stands in for an image that has not been supplied yet. Diagonal stripes and
+// a monospace note, so an empty slot reads as deliberate rather than broken --
+// and so nobody ships it by accident thinking it is a design element.
+//
+// The team card has its own copy of this shape (.suf-tcard__photo--placeholder)
+// because it must also carry the card's aspect ratio and border. If a third
+// use appears, collapse them.
+// ---------------------------------------------------------------------------
+
+.suf-phbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--suf-color-border-faint) 0 12px,
+    #e4eaee 12px 24px
+  );
+  text-align: center;
+
+  span {
+    max-width: 32ch;
+    padding: var(--suf-space-3);
+    color: var(--suf-color-text-muted);
+    font:
+      600 12px/1.5 ui-monospace,
+      monospace;
+  }
+}
+
+// On navy the light stripes read as a hole punched in the band.
+.suf-splitfact--dark .suf-phbox {
+  background: repeating-linear-gradient(45deg, #0a3a55 0 12px, #0d4160 12px 24px);
+
+  span {
+    color: var(--suf-color-text-muted-on-dark);
+  }
+}

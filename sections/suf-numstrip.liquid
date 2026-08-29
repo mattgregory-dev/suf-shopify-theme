@@ -1,0 +1,101 @@
+{% comment %}
+  A dense row of numbers under a centred heading. The mockup's .exambar.
+
+  NOT the same thing as Stat bar (SUF). That one is a tier-1 hero device: it
+  overlaps the band above it and depends on that band's bottom padding. This
+  one is an ordinary in-page section that stands on its own, and it carries its
+  own heading rather than borrowing a Statement section above it -- two
+  sections would stack two lots of section padding between the heading and the
+  numbers it introduces.
+
+  IT REPLACED A PARAGRAPH. On the SUF-CPT page the live exam used to be prose
+  inside a spotlight. The numbers were always the argument; the prose was
+  carrying them. The head keeps the claim and the strip carries the evidence.
+
+  THE UNIT IS A SEPARATE FIELD so it can be set smaller than the figure
+  ("15min", not "15 min"). Typing it into the figure gives you both at 50px.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-section" {% if section.settings.anchor != blank %}id="{{ section.settings.anchor | handle }}"{% endif %}>
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank -%}
+      <div class="suf-centerhead">
+        {%- if section.settings.eyebrow != blank -%}
+          {%- assign eyebrow = section.settings.eyebrow | escape -%}
+          <p class="suf-eyebrow">{% render 'suf-nb', text: eyebrow %}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.sub != blank -%}
+          <p class="suf-centerhead__sub">{% render 'suf-nb', text: section.settings.sub %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="suf-numstrip">
+      {%- for block in section.blocks -%}
+        <div class="suf-numstrip__cell" {{ block.shopify_attributes }}>
+          {%- if block.settings.figure != blank -%}
+            <p class="suf-numstrip__num">
+              {{- block.settings.figure | escape -}}
+              {%- if block.settings.unit != blank -%}
+                <span class="suf-numstrip__unit">{{ block.settings.unit | escape }}</span>
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+
+          {%- if block.settings.label != blank -%}
+            {%- assign label = block.settings.label | escape -%}
+            <p class="suf-numstrip__label">{% render 'suf-nb', text: label %}</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Number strip (SUF)",
+  "tag": "section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading" },
+    { "type": "inline_richtext", "id": "sub", "label": "Supporting line" },
+    { "type": "text", "id": "anchor", "label": "Anchor id" }
+  ],
+  "blocks": [
+    {
+      "type": "number",
+      "name": "Number",
+      "settings": [
+        { "type": "text", "id": "figure", "label": "Figure", "info": "e.g. \"17\", \"15\"." },
+        {
+          "type": "text",
+          "id": "unit",
+          "label": "Unit",
+          "info": "Optional, set smaller than the figure. e.g. \"min\"."
+        },
+        { "type": "text", "id": "label", "label": "Label" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Number strip (SUF)",
+      "blocks": [
+        { "type": "number" },
+        { "type": "number" },
+        { "type": "number" },
+        { "type": "number" }
+      ]
+    }
+  ]
+}
+{% endschema %}
