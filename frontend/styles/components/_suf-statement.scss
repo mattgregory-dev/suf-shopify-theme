@@ -39,9 +39,13 @@
 //
 // Written as a modifier rather than detected with :has(+ .suf-faq), so the
 // intent is stated in the markup that has it and any other section can reuse
-// it. Matches .suf-section__head's own bottom margin.
+// it.
+//
+// One step tighter than .suf-section__head's --suf-space-5: that head carries
+// a rule under it, which needs room either side to read as a divider. This one
+// is bare type, and at space-5 the heading floated away from its own list.
 .suf-statement--head {
-  margin-bottom: var(--suf-space-5);
+  margin-bottom: var(--suf-space-4);
 }
 
 .suf-statement__body {
