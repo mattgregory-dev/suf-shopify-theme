@@ -59,81 +59,79 @@
 // ---------------------------------------------------------------------------
 // GLOBAL TYPE ON LEGACY PAGES
 //
-// FIRST IN THIS FILE, deliberately. Everything below is more specific and
-// therefore wins -- the blog's own h2 size, the app blocks' h3. Move this
-// block down and it starts overriding them on a specificity tie.
+// Production's whole type scale, applied globally there and confined here to
+// the templates that render through theme.liquid.
 //
 // `body:not(.suf-body)` is the INVERSE of the scoping every other partial
-// uses, and it is the only correct scope for a rule production applies
-// globally. A bare `h2 { font-size: 50px !important }` would land on every
-// suf page as well, and `!important` means it would beat the entire clamp
-// scale in _tokens.scss -- every section heading on the new pages, fixed at
-// 50px, at every width. Excluding .suf-body confines it to the ~30 templates
-// that render through theme.liquid, which is where production's value came
-// from and the only place it belongs.
+// uses, and it is the only correct scope for a rule production applies to bare
+// elements. These all carry !important, so unscoped they would beat the entire
+// clamp scale in _tokens.scss -- every heading and paragraph on the new pages
+// pinned to a fixed pixel size at every width.
 //
-// This is the pattern for any other global rule from that file. h1 and h3-h6
-// have equivalents in production and are not ported yet; if they are needed,
-// they belong here, in this form.
+// FIRST IN THIS FILE, deliberately. Everything below is more specific and
+// therefore wins on a tie: the blog's own h2 at 38px, the app blocks' h2 at
+// 35px on small screens. Move this block down and it starts overriding them.
+//
+// ONE SPECIFICITY CAVEAT. Production writes these as bare `h2`, `p` and so on
+// -- (0,0,1) -- and relies on custom.css loading last. Scoping raises them to
+// (0,1,1), and suf.css also loads last, so these now win a few contests
+// against dt-framework that production loses. If a legacy page shows type that
+// production does not, this is the first place to look.
+//
+// The `:not(.tw ...)` exclusions are dropped throughout. `.tw` marked an
+// abandoned Tailwind experiment and the class appears nowhere in this theme,
+// so all nine of them had nothing left to exclude.
+//
+// NOT PORTED from the same block: `font-family: Indivisible-Bold` -- the four
+// font files were destroyed by a UTF-8 round trip and no browser can parse
+// them, so production has rendered Arial for years (see
+// snippets/suf-fonts.liquid). Its companion `font-weight: 600` and
+// `line-height: 1.4em` are also held back: they were drawn against
+// Indivisible's metrics, and applying them to Arial changes the rhythm rather
+// than restoring it.
 // ---------------------------------------------------------------------------
 
-body:not(.suf-body) h2 {
-  font-size: 50px !important;
-}
+body:not(.suf-body) {
+  h1 {
+    font-size: 48px !important;
+  }
 
-// ---------------------------------------------------------------------------
-// UIKIT APP BLOCKS
-//
-// The `uk-*` classes are UIkit, loaded by the app that renders these blocks --
-// not theme CSS and not ours. `.ecb-block` is the app's own outer wrapper, and
-// it is on every one of them: .ecb-block > .container-inner > .uk-card >
-// .uk-card-body > .description > p.
-//
-// Production sets this size GLOBALLY:
-//
-//     p:not(.tw p), li:not(.tw li) { font-size: 19px; cursor: auto; }
-//
-// That is deliberately not ported. A site-wide body size would land on every
-// suf page as well and fight the type scale in _tokens.scss, and it would win
-// -- (0,0,1) against a base layer that is also (0,0,1) but declared earlier.
-// The app blocks are the only markup that actually needs it, so it is scoped
-// to them.
-//
-// The `:not(.tw ...)` exclusion is dropped. `.tw` marked off an abandoned
-// Tailwind experiment; the class appears nowhere in this theme, so the
-// exclusion had nothing left to exclude even before the rule was scoped. The
-// same `:not(.tw ...)` appears on nine rules in production's file and is dead
-// weight on all of them.
-//
-// `cursor: auto` is production's, and it is not cosmetic -- dt-framework sets
-// a pointer cursor on this text, which makes body copy look clickable.
-.ecb-block {
+  h2 {
+    font-size: 50px !important;
+  }
+
+  h3 {
+    font-size: 34px !important;
+
+    // Production's own step. h3 is the level the UIkit app blocks emit, and
+    // at 34px their longer card titles run to four lines on a phone.
+    @media (max-width: 600px) {
+      font-size: 30px !important;
+    }
+  }
+
+  h4 {
+    font-size: 24px !important;
+  }
+
+  h5 {
+    font-size: 20px !important;
+  }
+
+  h6 {
+    font-size: 19px !important;
+  }
+
+  // Body copy. `cursor: auto` is production's and is not cosmetic --
+  // dt-framework sets a pointer cursor on this text, which makes it look
+  // clickable.
+  //
+  // These two carry no !important in production and none here, so a component
+  // rule still beats them.
   p,
   li {
     cursor: auto;
     font-size: 19px;
-  }
-
-  // The heading above that body copy. Production sizes h1-h6 globally in the
-  // same block as the p/li rule; only h3 is ported, because h3 is the only
-  // level these app blocks emit -- every card renders <h3 class="uk-h3">.
-  //
-  // The 600px step is production's too and comes with it: at 34px the longer
-  // card titles ("Transform Your Fitness Journey from Anywhere: Remote
-  // Training") run to four lines on a phone.
-  //
-  // NOT ported from that block: `font-family: 'Indivisible-Bold' !important`.
-  // That is the old brand face, and it would override Hanken Grotesk wherever
-  // these blocks appear.
-  //
-  // !important is required. UIkit's own .uk-h3 sets a size, and it is loaded
-  // by the app rather than by us, so source order is not ours to control.
-  h3 {
-    font-size: 34px !important;
-
-    @media (max-width: 600px) {
-      font-size: 30px !important;
-    }
   }
 }
 
@@ -451,6 +449,101 @@ body:not(.suf-body) h2 {
   display: none;
 }
 
+// PRODUCT PAGE -- the buy column above the tabs.
+//
+// NOT FROM production's custom.css. These two are corrections written against
+// this theme, so there is no live-site rule to compare them with.
+
+// The labels beside each control -- "Price:", "Quantity:" -- are <h6
+// class="product-label">, and the theme gives them a min-width so the controls
+// line up in a column. That column does not exist at this width, so the label
+// just holds a gap open beside itself.
+//
+// .product-template-content is the section wrapper in
+// sections/main-product-template.liquid; the bare .product-label catches the
+// same labels in the quickview and card templates, which reuse the class
+// without that wrapper.
+.product-template-content .product-label,
+.product-label,
+.product-template-content label {
+  min-width: unset !important;
+}
+
+// The price sits in a <ul> that keeps the browser's list indent even with the
+// markers gone, so the current price starts hard against the label. The
+// compare-at price below it is a separate <li> and stays where it is.
+.price-list .product-price-current .money {
+  padding-left: 26px;
+}
+
+// HEADINGS IN THE DESCRIPTION ARE ON THEIR OWN SCALE.
+//
+// The global type rules at the top of this file set h2 to 50px and h3 to 34px
+// -- production's values, drawn for a full-width page heading. The tab panel
+// is body copy in a 1200px column, and at those sizes a subheading inside a
+// paragraph run reads as a new page starting.
+//
+// 19px for h3 is measured off the product page as it was built, which used a
+// different scale from the rest of the site. 26px for h2 sits a step above it
+// on roughly the same ratio the design uses elsewhere.
+//
+// SCOPED UNDER body:not(.suf-body), and it has to be. The global rule is
+// (0,1,2) -- `body` and `h3` are two elements, and :not() contributes the
+// specificity of its argument, .suf-body. A bare `.product-tab h3` is (0,1,1)
+// and loses to it, !important on both sides or not. Any per-surface override
+// of the global type block needs to carry the same prefix.
+body:not(.suf-body) .product-tab {
+  h2 {
+    font-size: 26px !important;
+    line-height: 1.25 !important;
+  }
+
+  h3 {
+    font-size: 19px !important;
+    line-height: 1.35 !important;
+  }
+}
+
+// Links in the description read as links.
+//
+// The tab panel is merchant-authored rich text, and dt-framework gives its
+// anchors the body colour -- so a link inside the copy is distinguishable only
+// by an underline the theme also removes. Scoped to .product-tab so it reaches
+// the description and nothing else on the page.
+//
+// Red on hover, matching the base link treatment on the new pages: the design's
+// rule is blue to red.
+.product-tab a {
+  color: var(--suf-blue) !important;
+  // Underlined, the old-fashioned way. This is prose, not chrome: inside a
+  // paragraph a link distinguished by colour alone is easy to miss, and it
+  // fails outright for anyone who cannot separate the two colours.
+  text-decoration: underline !important;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-color-accent) !important;
+  }
+}
+
+// THE PRODUCT PAGE'S TAB BAR IS HIDDEN ENTIRELY.
+//
+// With Reviews gone above, one tab is left -- "Product Description" -- and a
+// tab strip with a single tab is a control that cannot do anything. It reads
+// as a heading pretending to be an interface.
+//
+// Scoped to .product-tab, NOT a bare .dt-sc-tabs. The same class is used by
+// sections/home-product-tab.liquid, where the tabs are real and switch between
+// several product sets. Hiding them there would break that section.
+//
+// The bar only, not the panel: #tab-description carries an inline
+// `style="display:block"` from the section, so the copy stays visible without
+// the bar's JS ever running. The .tablinks rules above are now inert here and
+// still serve the homepage.
+.product-tab .dt-sc-tabs {
+  display: none;
+}
+
 .dt-sc-tabs-content {
   border: 1px solid #c0c0c0;
   border-radius: 20px;
@@ -585,14 +678,42 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 // CART AND CART DRAWER
 // ---------------------------------------------------------------------------
 
+// The shipping calculator on the cart page is hidden.
+//
+// A country select, a province select, a postcode field and a "Calculate
+// shipping" button, for a store selling certifications, seminar places and
+// digital course access. Nothing it can estimate applies, and it sits directly
+// under the checkout button where it competes for the same attention.
+//
+// Hidden rather than removed from the template: the markup is the theme's, and
+// deleting it means editing templates/cart.json, which is the vendor's file
+// and the rollback for the redesign.
+//
+// NOT FROM production's custom.css -- production leaves it visible.
+#shipping-calculator {
+  display: none;
+}
+
+// The close tab. It sits half outside the drawer's left edge, so its right
+// corners are squared to butt against the panel.
+//
+// NO BORDER. It carries .dt-sc-btn, which brings dt-framework's generic
+// `border: 1px solid var(--DT_Button_border_Color)` -- black at rest, and
+// --DT_Button_hover_border_Color, #D8000C, on hover. Two problems from one
+// declaration: a red outline appears the moment the pointer lands on it, and
+// the 1px on the right edge holds the tab a pixel off the panel it is meant
+// to be flush against.
 #CartDrawer .close-icon {
   background-color: #858585;
+  border: none !important;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   transition-duration: 0.1s !important;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: var(--suf-blue);
+    border: none !important;
   }
 }
 
@@ -612,6 +733,13 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 #CartContainer .ajaxcart__footer.row a.dt-sc-btn {
   padding: 0 !important;
   background-color: #fff !important;
+  // dt-framework gives .dt-sc-btn / .text-link a pill: a border and a large
+  // radius. Production's rule zeroes the padding and the background but not
+  // those two, so the link sits inside an empty rounded outline. Clearing
+  // them is the difference between "styled as a link" and "a button with its
+  // fill removed".
+  border: none !important;
+  border-radius: 0 !important;
   color: rgb(2 154 231) !important;
   text-transform: unset !important;
 }
@@ -624,7 +752,108 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 #your-shopping-cart .btn_actions input {
   padding: 10px 20px 8px !important;
   background-color: #898989 !important;
+  // Same omission as the note link above: production repaints the fill and
+  // leaves dt-framework's border, so a black outline traces the grey pill.
+  border-color: transparent !important;
   font-size: 16px !important;
+}
+
+// Buy actions hover in the brand blue.
+//
+// Three of them, in three different markups, so a rule for one reaches none of
+// the others:
+//
+//   cart page     .cart_btn input[name="checkout"]     templates/cart.json
+//   cart drawer   button.cart__checkout.dt-sc-btn      snippets/ajax-cart-template
+//   product page  button.dT_AddToCart.dt-sc-btn        sections/main-product-template
+//
+// THE BLUE HAS TO BE SET EXPLICITLY. dt-framework paints every button
+// --DT_Button_BG_Hover_Color on hover, and on this store that setting is
+// #D8000C -- a red. Deleting this rule does not restore the blue; it produces
+// the theme's red, which is a shade off our own and reads as a different
+// brand next to it.
+//
+// --suf-blue, the brand blue, not --suf-blue-light: that lighter tint is
+// documented as for use ON navy only, and as a button fill under white text it
+// falls well below readable contrast.
+.cart_btn input[name='checkout'],
+.cart_btn .dt-sc-btn,
+.cart__checkout,
+.dT_AddToCart {
+  &:hover,
+  &:focus {
+    background-color: var(--suf-blue) !important;
+    border-color: var(--suf-blue) !important;
+    color: var(--suf-white) !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// CART DRAWER
+//
+// Different markup from the cart page -- .ajaxcart__*, inside #CartDrawer --
+// so none of the cart-page rules above reach it.
+// ---------------------------------------------------------------------------
+
+// Product title, matching the cart page: the link colour, lightening on hover
+// rather than going red like a prose link.
+#CartDrawer .ajaxcart__product-name {
+  color: var(--suf-blue) !important;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-blue-light) !important;
+  }
+}
+
+// Quantity steppers hover in the brand blue, on ALL THREE surfaces.
+//
+// Three sets of markup for the same control, so one selector does not cover
+// it:
+//
+//   cart page      input.qtyminus1 / input.qtyplus1      .qty-box-set
+//   cart drawer    button.ajaxcart__qty-adjust           .ajaxcart__qty
+//   product page   button.btn-number                     .product-item-caption-qty
+//
+// They inherit dt-framework's generic button hover, so the fill goes to
+// --DT_Button_BG_Hover_Color (#D8000C) and the border to
+// --DT_Button_hover_border_Color (also #D8000C). Red is the design's action
+// colour and belongs to buying, not to nudging a number up and down.
+//
+// If a fourth stepper turns up, add it here rather than writing a second rule.
+.qty-box-set .qtyminus1,
+.qty-box-set .qtyplus1,
+#CartDrawer .ajaxcart__qty-adjust,
+.product-item-caption-qty .btn-number {
+  &:hover,
+  &:focus {
+    background-color: var(--suf-blue) !important;
+    border-color: var(--suf-blue) !important;
+    color: var(--suf-white) !important;
+  }
+}
+
+// Thumbnail corners.
+//
+// dt-framework rounds EVERY linked image site-wide: `a img { border-radius:
+// 20px }`. That is drawn for a product card a few hundred pixels wide; on the
+// drawer's 60px thumbnail the same 20px eats a third of the image and reads as
+// a circle.
+#CartDrawer .ajaxcart__product-image img {
+  border-radius: 10px !important;
+}
+
+// Product title. A link to the product, and the only link in the row -- it
+// takes the link colour rather than the body colour dt-framework gives it,
+// and lightens on hover rather than going red like a prose link.
+.cart_table .cart-title a,
+.cart_table .cart-title .product-name {
+  color: var(--suf-blue) !important;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-blue-light) !important;
+  }
 }
 
 // Shopify's own accelerated-checkout custom properties. They are not ours to
@@ -713,4 +942,256 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 .dt-sc-blog-item h3.dt-sc-blog-title a:hover,
 .dt-sc-blog-item .dt-sc-btn:hover {
   color: var(--suf-blue) !important;
+}
+
+// ---------------------------------------------------------------------------
+// BLOG, PART TWO
+//
+// Production keeps a second block of blog rules ~550 lines below the first,
+// under no heading and between the Klaviyo form and a ::selection rule. The
+// original port took the "Blog pages" section and missed these; they are the
+// same surface and belong with it.
+// ---------------------------------------------------------------------------
+
+// The card heading on an index page. The <span> is the theme's own wrapper
+// around the title text, so the size has to be set on it rather than on the h3.
+.dt-sc-blog-description h3 {
+  line-height: 1.1em !important;
+}
+
+.dt-sc-blog-description h3 span {
+  font-size: 27px !important;
+  font-weight: 600 !important;
+}
+
+// The card description column is capped for a multi-column index; on one
+// column it just wastes the width.
+@media (max-width: 800px) {
+  .dt-sc-blog-description {
+    max-width: 100% !important;
+  }
+}
+
+// Article body lists. dt-framework strips list markers and indents globally,
+// which is right for its own nav and card lists and wrong for merchant-written
+// article copy, where a bulleted list has to look like one. Same correction as
+// .product-tab ul above.
+.dt-sc-blog-single ol,
+.dt-sc-blog-single ul {
+  margin-left: 24px !important;
+}
+
+.dt-sc-blog-single ol li,
+.dt-sc-blog-single ul li {
+  list-style: unset !important;
+}
+
+.dt-sc-blog-single h3 {
+  line-height: 1.4em !important;
+}
+
+// A quote inside an article. The rule is the only thing marking it, since
+// _suf-base.scss resets the browser's blockquote indent and that reset reaches
+// here too.
+.dt-sc-blog-single blockquote {
+  border-left: 3px solid #afafaf;
+}
+
+// The comment form. Centred, with the submit button centred rather than
+// floated, and the field hints in flow instead of absolutely positioned.
+#dt-sc-comments .comment-form p {
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+#dt-sc-comments .comment-form button.btn {
+  float: none !important;
+  margin: 0 auto !important;
+}
+
+#dt-sc-comments .comment-form > p small {
+  position: relative !important;
+}
+
+// Post comment hovers blue, like every other action on the site.
+//
+// It carries the theme's bare .btn, so it takes dt-framework's generic hover:
+// --DT_Button_BG_Hover_Color and --DT_Button_hover_border_Color, both #D8000C.
+// Same correction as the buy actions and the quantity steppers above -- the
+// store's button setting is a red we do not use.
+#dt-sc-comments .comment-form button.btn {
+  &:hover,
+  &:focus {
+    background-color: var(--suf-blue) !important;
+    border-color: var(--suf-blue) !important;
+    color: var(--suf-white) !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PAGINATION
+//
+// Blog index and collection pages.
+// ---------------------------------------------------------------------------
+
+// THE ARROWS, WITHOUT FONTAWESOME.
+//
+// The markup is `<span class="fa fa-angle-left">` -- an icon with no text.
+// FontAwesome is retired, and _fontawesome-retire.scss is in audit mode, so
+// every .fa element renders an orange marker showing its own class name. That
+// is correct behaviour for finding icons; it is not something to ship, and
+// these two are the only .fa usages on a page a customer paginates.
+//
+// The audit marker is the ::after, so this overrides ::after rather than
+// restoring ::before -- the retire partial sets `content: none !important` on
+// ::before and there is no reason to fight it.
+//
+// A character, not an SVG: these are chevrons, and U+2039 / U+203A are exactly
+// that. It does not have to be the same glyph FontAwesome drew, only the same
+// meaning at the same size.
+//
+// This does NOT count as replacing the icon. The audit marker is suppressed
+// here only; the other 69 usages still announce themselves. See
+// docs/redesign-open-items.md.
+.pagination-default .fa-angle-left::after,
+.pagination-default .fa-angle-right::after {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  font-size: 22px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.pagination-default .fa-angle-left::after {
+  content: '\2039';
+}
+
+.pagination-default .fa-angle-right::after {
+  content: '\203a';
+}
+
+// ACTIVE AND HOVER IN BLUE.
+//
+// dt-framework paints all three states from the same pair it uses on buttons
+// -- --DT_Button_BG_Hover_Color and --DT_Button_hover_border_Color, both
+// #D8000C -- so the current page and any hovered page both come out red.
+//
+// The disabled arrow is a <span> with no anchor, so it never matches :hover
+// and stays in its resting black.
+.pagination-default li a:hover,
+.pagination-default li a:focus,
+.pagination-default a.active,
+.pagination-default .active span {
+  background-color: var(--suf-blue) !important;
+  border-color: var(--suf-blue) !important;
+  color: var(--suf-white) !important;
+}
+
+// ---------------------------------------------------------------------------
+// BACK TO TOP
+//
+// snippets/scroll-to-top.liquid, on the legacy templates. The suf layout has
+// its own .suf-totop and does not use this one.
+//
+// Rebuilt to match .suf-totop rather than ported: the two are the same control
+// on the same site and should not disagree. The values are copied from
+// _suf-base.scss deliberately -- this styles inherited markup we do not own,
+// and pulling it into the new theme would mean adopting the legacy DOM with
+// it. If .suf-totop changes, change this too.
+//
+// DISPLAY IS NOT SET HERE. dt-theme.js toggles `style="display:block"` and
+// `display:none` inline as the page scrolls, and an inline style beats any
+// rule. So the arrow is centred with line-height rather than flexbox, which
+// works whatever display value the script writes.
+// ---------------------------------------------------------------------------
+
+#to-top {
+  position: fixed;
+  z-index: 40;
+  inset-block-end: 28px;
+  inset-inline-end: 24px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--suf-cta-bg) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--suf-color-ink-on-dark) !important;
+  font-size: 18px;
+  line-height: 40px;
+  text-align: center;
+  transition:
+    transform var(--suf-transition),
+    box-shadow var(--suf-transition);
+
+  // The theme's generic button hover would repaint this #D8000C -- a red one
+  // shade off our own. The fill holds; the lift and the hard shadow carry the
+  // hover, exactly as on .suf-totop.
+  &:hover,
+  &:focus-visible {
+    background: var(--suf-cta-bg) !important;
+    color: var(--suf-color-ink-on-dark) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--suf-red-dark);
+  }
+
+  &:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+  }
+
+  // The asymmetric focus ring from .suf-btn: 5px of gap top and left, 4px past
+  // the 4px shadow right and bottom. A uniform outline clips the corner of the
+  // lifted-plus-shadow shape the user actually sees.
+  &:focus-visible {
+    outline: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -7px -10px -10px -7px;
+      border: 2px solid var(--suf-color-focus);
+      pointer-events: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline: 2px solid;
+      outline-offset: 7px;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  // The lift is decorative; the shadow is the affordance.
+  @media (prefers-reduced-motion: reduce) {
+    &:hover,
+    &:focus-visible,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// The arrow. The markup is `<i class="fa fa-long-arrow-up">`, so without
+// FontAwesome it renders the audit marker. Same substitution as the pagination
+// chevrons: a character, not an SVG.
+//
+// U+2191 rather than the commented-out inline SVG sitting in the snippet --
+// that svg is 512px of path data for an arrow the font already has.
+#to-top .fa::after {
+  content: '\2191';
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0;
+  line-height: inherit;
 }
