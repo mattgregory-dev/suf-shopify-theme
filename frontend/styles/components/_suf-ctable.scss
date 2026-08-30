@@ -55,18 +55,52 @@
   }
 }
 
-// The empty top-left cell. Borderless so the header row reads as floating
-// plan cards rather than a grid with a blank square in it.
-.suf-ctable__corner {
-  width: 27%;
-  background: transparent;
-  border: none;
+// The empty top-left cell.
+//
+// NESTED, so the selector is (0,2,0). Written bare it is (0,1,0) and LOSES to
+// `.suf-ctable th, .suf-ctable td` at (0,1,1) -- whose `border` shorthand sets
+// all four border-*-style longhands. That is why every attempt to clear a
+// border on this cell from a bare .suf-ctable__corner did nothing: the
+// declaration never applied.
+//
+// `hidden`, not `none`: in a collapsed table the edge is shared with the cell
+// below, and only `hidden` wins that resolution. `none` loses to any real
+// border.
+//
+// Bottom only, deliberately. All four edges would also strip the first plan
+// cell's left border and the first feature row's top border, because a hidden
+// edge is hidden for both cells sharing it.
+.suf-ctable {
+  .suf-ctable__corner {
+    width: 27%;
+    background: transparent;
+    border-bottom-style: hidden;
+  }
 }
 
+// SPECIFICITY, and it bites every cell class in this file.
+//
+// `.suf-ctable th, .suf-ctable td` is (0,1,1) -- a class AND an element -- and
+// it sets padding, vertical-align, text-align, color and font-size. A bare
+// `.suf-ctable__plan` is (0,1,0) and LOSES to it, so any of those properties
+// written there is silently discarded. Everything a cell class needs to
+// override the shared cell rule therefore lives in a nested block below.
+//
+// What stays out here is what does NOT collide: `background` is not in the
+// shared rule, and it must stay at (0,1,0) so .suf-ctable__plan--featured can
+// still beat it. Raising this whole block once already painted the featured
+// column white.
 .suf-ctable__plan {
-  padding: 26px 22px 24px;
   background: var(--suf-color-surface);
+}
+
+.suf-ctable .suf-ctable__plan {
+  padding: 26px 22px 24px;
   vertical-align: top;
+  // The header row is borderless along the bottom, so the plans read as cards
+  // sitting above the grid rather than as its first row. `hidden` rather than
+  // `none`: in a collapsed table only `hidden` wins a shared edge.
+  border-bottom-style: hidden;
 }
 
 .suf-ctable__name {
@@ -108,7 +142,10 @@
 
 // Row headers are the feature names. Left-aligned and heavier, because they
 // are the thing being compared rather than a value.
-.suf-ctable__feature {
+// Nested: color, font-size and text-align are all in the shared `th, td` rule
+// at (0,1,1), so left-alignment never took and the feature names rendered
+// centred like the values.
+.suf-ctable .suf-ctable__feature {
   color: var(--suf-color-heading);
   font-size: 14.5px;
   font-weight: 700;
@@ -118,14 +155,25 @@
 // ---------------------------------------------------------------------------
 // FEATURED COLUMN
 //
-// Navy, and outlined top to bottom so it reads as one continuous column rather
-// than a stack of highlighted cells.
+// Navy header cell only. The mockup also outlines the column top to bottom in
+// 2px navy, and that is deliberately NOT ported.
+//
+// The outline never read as one continuous column, and border-collapse is
+// why. Collapse does not draw both borders at a shared edge, it picks one,
+// and the WIDEST wins. So the 2px navy beat the 1px cell rule on every edge
+// it touched -- including the bottom of the header row, which then rendered
+// 2px navy for the width of one column and 1px grey either side of it. It
+// read as a broken double border rather than as emphasis, with a matching
+// stub under the last cell.
+//
+// Removing it also reads better: the navy panel and the flag are emphasis
+// enough, and a heavy rule around a column inside an already-ruled table is
+// one grid too many.
 // ---------------------------------------------------------------------------
 
 .suf-ctable__plan--featured {
   position: relative;
   background: var(--suf-navy);
-  border: 2px solid var(--suf-navy);
 
   .suf-ctable__name {
     color: var(--suf-color-heading-on-dark);
@@ -142,15 +190,6 @@
   .suf-ctable__was {
     color: var(--suf-color-text-muted-on-dark);
   }
-}
-
-.suf-ctable__cell--featured {
-  border-right: 2px solid var(--suf-navy);
-  border-left: 2px solid var(--suf-navy);
-}
-
-tr:last-child .suf-ctable__cell--featured {
-  border-bottom: 2px solid var(--suf-navy);
 }
 
 .suf-ctable__flag {
@@ -193,7 +232,11 @@ tr:last-child .suf-ctable__cell--featured {
 // ACTION ROW
 // ---------------------------------------------------------------------------
 
-.suf-ctable__cta {
+// Nested: padding and vertical-align are both in the shared `th, td` rule.
+// vertical-align is the one that shows -- the cells were left at `middle`, so
+// a one-line note under one button and a two-line note under another put the
+// buttons themselves at different heights.
+.suf-ctable .suf-ctable__cta {
   padding: 24px 18px 26px;
   vertical-align: top;
 

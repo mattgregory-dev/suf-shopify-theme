@@ -104,7 +104,7 @@
                   endcase
                   assign flag = value | downcase | strip
                 -%}
-                <td {% if plan.settings.featured %}class="suf-ctable__cell--featured"{% endif %}>
+                <td>
                   {%- if value == blank -%}
                     <span class="suf-ctable__no" aria-hidden="true">&mdash;</span>
                     <span class="suf-visually-hidden">Not included</span>
@@ -122,7 +122,7 @@
           <tr>
             <td></td>
             {%- for plan in plans -%}
-              <td class="suf-ctable__cta{% if plan.settings.featured %} suf-ctable__cell--featured{% endif %}">
+              <td class="suf-ctable__cta">
                 {%- if plan.settings.button_label != blank and plan.settings.button_url != blank -%}
                   <a
                     class="suf-btn suf-btn--{{ plan.settings.button_style | default: 'primary' }}"
