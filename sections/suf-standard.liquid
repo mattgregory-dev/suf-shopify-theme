@@ -1,0 +1,129 @@
+{% comment %}
+  Credibility band: a claim, the argument for it, and the logos that back it.
+
+  It replaced two sections on About -- the success-story dollar figures and the
+  "Where We're Headed" vision block. About sells the company's reputation, not
+  individual paychecks; earnings figures belong on the pages that sell a
+  certification. The one durable point from the vision block, NCCA
+  accreditation, is folded into the lead here.
+
+  NCCA WORDING IS NOT OURS TO SETTLE. The copy says the process is in progress,
+  with no timeline and no promised outcome, which is the defensible form. It
+  still needs clearing by Chris or legal before it ships. See
+  docs/redesign-open-items.md.
+
+  THE LOGO ROW is snippets/suf-gymline.liquid, shared with the homepage proof
+  band. Same blocks, same case statement; only the surface differs.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+<div class="suf-section suf-standard" {% if section.settings.anchor != blank %}id="{{ section.settings.anchor | handle }}"{% endif %}>
+  <div class="suf-wrap">
+    {%- if section.settings.heading != blank -%}
+      <div class="suf-section__head">
+        <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
+        {%- comment -%}
+          Escaped BEFORE suf-nb: these are plain `text` settings and suf-nb
+          inserts markup, so escaping afterwards would escape its own spans
+          back into visible text.
+        {%- endcomment -%}
+        {%- if section.settings.aside != blank -%}
+          {%- assign aside = section.settings.aside | escape -%}
+          <p class="suf-section__aside">{% render 'suf-nb', text: aside %}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.lead != blank -%}
+      {%- comment -%}
+        A <div>, not a <p>: a richtext setting emits its own <p>, and nesting
+        one inside another is invalid -- the browser auto-closes the outer
+        element and the content escapes the styled wrapper.
+      {%- endcomment -%}
+      <div class="suf-standard__lead">{% render 'suf-nb', text: section.settings.lead %}</div>
+    {%- endif -%}
+
+    {%- render 'suf-gymline', blocks: section.blocks, label: section.settings.gymline_label -%}
+
+    {%- if section.settings.note != blank -%}
+      {%- assign note = section.settings.note | escape -%}
+      <p class="suf-gymnote suf-gymnote--light">{% render 'suf-nb', text: note %}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Credibility band (SUF)",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Section heading" },
+    {
+      "type": "text",
+      "id": "aside",
+      "label": "Supporting note",
+      "info": "Sits right-aligned beside the heading."
+    },
+    { "type": "richtext", "id": "lead", "label": "Lead paragraph" },
+    { "type": "text", "id": "anchor", "label": "Anchor id" },
+    { "type": "header", "content": "Logo row" },
+    {
+      "type": "text",
+      "id": "gymline_label",
+      "label": "Row label",
+      "info": "e.g. \"Our graduates train at\"."
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note under the row"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Gym logo",
+      "settings": [
+        {
+          "type": "select",
+          "id": "logo",
+          "label": "Gym",
+          "info": "Adding a gym needs an SVG asset and a case in snippets/suf-gymline.liquid.",
+          "options": [
+            { "value": "lifetime", "label": "Life Time" },
+            { "value": "equinox", "label": "Equinox" },
+            { "value": "genesis", "label": "Genesis" }
+          ],
+          "default": "lifetime"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Accessible name",
+          "info": "Read aloud in place of the logo."
+        }
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Text badge",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "info": "For a destination with no logo. Line breaks are preserved."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Credibility band (SUF)",
+      "blocks": [{ "type": "logo" }, { "type": "logo" }, { "type": "badge" }]
+    }
+  ]
+}
+{% endschema %}

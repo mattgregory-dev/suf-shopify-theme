@@ -512,3 +512,55 @@
   color: var(--suf-color-heading-on-dark);
   font-size: 17px;
 }
+
+// ---------------------------------------------------------------------------
+// CREDIBILITY BAND -- the About page's light-surface use of the logo row
+//
+// The logos themselves need no override: they are masked in #5b7d92, a mid
+// slate that carries on navy and on white alike. Only the rule, the caption
+// and the note change, which is the whole reason the row is a mask rather than
+// three separate image files.
+// ---------------------------------------------------------------------------
+
+.suf-standard {
+  .suf-gymline {
+    padding-top: var(--suf-space-5);
+    border-top-color: var(--suf-color-border-subtle);
+  }
+
+  .suf-gymline__cap {
+    color: var(--suf-color-text-muted);
+  }
+}
+
+// Nested for specificity: it renders as a <div> holding richtext paragraphs,
+// and the base layer would otherwise leave the last one a bottom margin on top
+// of the gymline's own top margin.
+.suf-standard .suf-standard__lead {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--suf-color-text);
+  font-size: clamp(18px, 1.5vw, 21px);
+  line-height: 1.6;
+
+  p {
+    margin: 0 0 var(--suf-space-3);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// The head sits closer to the lead here than the shared rule allows: the two
+// are one argument rather than a heading introducing a list.
+.suf-standard .suf-section__head {
+  margin-bottom: var(--suf-space-4);
+}
+
+.suf-standard .suf-gymnote--light {
+  max-width: 64ch;
+  margin: var(--suf-space-3) 0 0;
+  color: var(--suf-color-text);
+  font-size: 15px;
+}
