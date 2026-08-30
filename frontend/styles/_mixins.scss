@@ -31,3 +31,37 @@ $bp-xl: 1280px;
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+// Curly quotation marks around a testimonial, supplied by the design rather
+// than typed into the copy -- so they cannot be forgotten, doubled, or typed
+// as straight quotes.
+//
+// ONE definition, because three surfaces use it: .suf-bigquote,
+// .suf-qcard__quote and .suf-mini__quote. Three copies of a glyph and its
+// spacing drift, and the drift is exactly what is hard to see.
+//
+// THE SPACING IS ASYMMETRIC AND PER-SURFACE, both deliberately.
+//
+// Asymmetric: the closing mark sits tight against the last word, and only the
+// opening mark takes space. A gap on the closing side reads as a stray
+// character rather than punctuation.
+//
+// Per-surface: the value does NOT scale with the type. Smaller text needs MORE
+// em space, not the same amount -- the glyph's own sidebearing shrinks below
+// perception at 14.5px while the visual join between mark and letter stays
+// just as tight. So the mini quotes take 0.2em and the 36px display quote
+// takes 0.1em, and a single shared constant would be wrong on both.
+//
+// Literal characters, not C escapes -- a backslash escape did not survive
+// being written through a shell heredoc once. See docs/wsl-tooling.md.
+@mixin quote-marks($lead: 0.2em) {
+  &::before {
+    content: '“';
+    margin-inline-end: $lead;
+  }
+
+  &::after {
+    content: '”';
+    margin-inline-start: 0;
+  }
+}

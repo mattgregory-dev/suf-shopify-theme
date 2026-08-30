@@ -1,3 +1,5 @@
+@use '../mixins' as m;
+
 // Homepage-only sections: paths, packages, proof band.
 
 // ---------------------------------------------------------------------------
@@ -382,6 +384,13 @@
     letter-spacing: -0.01em;
     line-height: 1.3;
   }
+
+  // Scoped to `blockquote p`, NOT `p`. The attribution is also a <p> inside
+  // .suf-bigquote, and the unscoped version wrapped the attributor's name in
+  // quotation marks too.
+  blockquote p {
+    @include m.quote-marks(0.1em);
+  }
 }
 
 .suf-bigquote .suf-bigquote__who {
@@ -437,6 +446,8 @@
   color: var(--suf-color-text-on-dark);
   font-size: 14.5px;
   line-height: 1.55;
+
+  @include m.quote-marks(0.2em);
 }
 
 .suf-mini .suf-mini__who {

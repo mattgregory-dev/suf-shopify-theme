@@ -1,3 +1,5 @@
+@use '../mixins' as m;
+
 // Testimonial card grid.
 //
 // A shared page pattern in the mockup (section 6), used by study guides,
@@ -52,20 +54,8 @@
   .suf-qcard__quote {
     margin: 0;
 
-    // The quotation marks are the design's, not the copy's -- so they cannot
-    // be forgotten, doubled, or typed as straight quotes. Generated content is
-    // not announced by most screen readers, which is correct here: a quote
-    // inside <blockquote> is already marked up as one.
-    //
-    // Literal characters, not C escapes -- a backslash escape did not
-    // survive being written through a shell heredoc and silently arrived as
-    // . See docs/wsl-tooling.md.
-    p::before {
-      content: '“';
-    }
-
-    p::after {
-      content: '”';
+    p {
+      @include m.quote-marks(-0.1em);
     }
   }
 
