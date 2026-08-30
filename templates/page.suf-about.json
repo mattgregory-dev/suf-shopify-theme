@@ -65,47 +65,6 @@
         "micro": "<p>Prefer to start hands-on? <a href=\"/pages/suf-seminars\">Browse seminar cities</a></p>"
       }
     },
-    "stories": {
-      "type": "suf-stories",
-      "blocks": {
-        "s1": {
-          "type": "story",
-          "settings": {
-            "figure": "$XXK+",
-            "figure_label": "A month · managing a high-end gym",
-            "heading": "The Manager in Sacramento",
-            "body": "<p>A trainer in his 40s started with a big-name certification and couldn't get hired at a single good gym. No experience, no confidence. He earned his SUF-CPT, walked straight into the high-end gyms, and today he manages one. A climb that usually takes seven to ten years took him two or three.</p>"
-          }
-        },
-        "s2": {
-          "type": "story",
-          "settings": {
-            "figure": "3 months",
-            "figure_label": "From SUF-CPT to hired at Equinox",
-            "heading": "The Equinox Hire",
-            "body": "<p>Another trainer earned her SUF-CPT and was hired at Equinox within three months. She's now making around $XXK a month at one of the best gyms in the country. The usual route? Years grinding at budget gyms, barely clearing $XK a month, hoping experience adds up.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "s1",
-        "s2"
-      ],
-      "settings": {
-        "heading": "The Fast Track to a Profitable Career",
-        "aside": "A SUF-CPT gives trainers more than a textbook — here are two who built a career in a fraction of the usual time.",
-        "disclaimer": "Individual results vary. These stories reflect the experience of two trainers, not a typical or guaranteed outcome. What you earn as a trainer depends on your effort, your market, and the opportunities you pursue."
-      }
-    },
-    "headed": {
-      "type": "suf-statement",
-      "settings": {
-        "eyebrow": "Where We're Headed",
-        "heading": "Same Conversation as the Big Names. Better Product.",
-        "body": "<p>Show Up Fitness is working through the NCCA accreditation process step by step, and setting its sights on taking hands-on seminars international — the UK and Ireland are top of the list. The mission stays the same: keep raising the bar for what a certified trainer actually is.</p>",
-        "dark": false
-      }
-    },
     "team_teaser": {
       "type": "suf-spotlight",
       "settings": {
@@ -132,6 +91,51 @@
         "button2_label": "Already Certified? Level Up",
         "button2_url": "/pages/suf-continuing-education"
       }
+    },
+    "standard": {
+      "type": "suf-standard",
+      "blocks": {
+        "l1": {
+          "type": "logo",
+          "settings": {
+            "logo": "lifetime",
+            "label": "Life Time Fitness"
+          }
+        },
+        "l2": {
+          "type": "logo",
+          "settings": {
+            "logo": "equinox",
+            "label": "Equinox"
+          }
+        },
+        "l3": {
+          "type": "logo",
+          "settings": {
+            "logo": "genesis",
+            "label": "Genesis Sports Clubs"
+          }
+        },
+        "b1": {
+          "type": "badge",
+          "settings": {
+            "text": "Self\nEmployed"
+          }
+        }
+      },
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "b1"
+      ],
+      "settings": {
+        "heading": "A Standard the Best Gyms Recognize",
+        "aside": "The real test of a certification isn’t the exam — it’s whether the best gyms in the country will hire the trainer who holds it.",
+        "lead": "<p>Because a SUF-CPT is earned by coaching real people under live supervision, our graduates walk into an interview able to do the job on day one. Hiring managers at the top gyms have learned what the credential means — and they seek out the trainers who carry it. Show Up Fitness is also working through NCCA accreditation, the same independent standard the largest certifications answer to.</p>",
+        "gymline_label": "Our graduates train at",
+        "note": "Our graduates get hired at the best gyms in the country — or work for themselves with a full book of clients."
+      }
     }
   },
   "order": [
@@ -139,8 +143,7 @@
     "founder",
     "why_exist",
     "how",
-    "stories",
-    "headed",
+    "standard",
     "team_teaser",
     "cta"
   ]
