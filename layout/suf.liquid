@@ -132,6 +132,23 @@
     <a class="suf-skip-link" href="#suf-main">Skip to content</a>
 
     {% comment %}
+      The back-to-top link's target. A real element rather than href="#",
+      which scrolls the viewport but leaves keyboard focus at the bottom of
+      the page -- the next Tab then resumes in the footer, which is the
+      opposite of what the control promises. tabindex="-1" makes it focusable
+      by the fragment jump without putting it in the tab order.
+    {% endcomment %}
+    <span id="suf-top" tabindex="-1"></span>
+
+    {% comment %}
+      The reveal threshold, as an element. assets/suf-totop.js watches it with
+      an IntersectionObserver: while it is in view the page is inside the first
+      800px and the button stays hidden. Its height is the threshold, so the
+      distance is set once in CSS rather than duplicated in JS.
+    {% endcomment %}
+    <span class="suf-totop__sentinel" aria-hidden="true"></span>
+
+    {% comment %}
       ---- LEGACY SCAFFOLDING, FOR THE HEADER ONLY.
       The header's inline JS targets these two elements by class and fills the
       first one with the mobile menu. They are empty markup, not behaviour, but
@@ -148,6 +165,20 @@
     </main>
 
     {% section 'suf-footer' %}
+
+    {% comment %}
+      Back to top. Always visible, as in the mockup -- the legacy snippet
+      revealed it on scroll with jQuery, which this layout does not load. If it
+      should be revealed rather than persistent, that is a few lines in suf.js,
+      not a reason to keep the old snippet.
+
+      Styled provisionally: it takes the CTA colour so it moves with the rest
+      of the chrome when the header and footer are rebuilt.
+    {% endcomment %}
+    <a class="suf-totop" href="#suf-top">
+      <span class="suf-totop__arrow" aria-hidden="true">&uarr;</span>
+      <span class="suf-visually-hidden">Back to top</span>
+    </a>
 
 
     {% comment %} Net-new SUF scripts. Native ES module; type=module implies defer. {% endcomment %}

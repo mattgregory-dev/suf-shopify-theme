@@ -14,5 +14,6 @@
 import "./suf-header.js";
 import "./suf-search.js";
 import "./suf-form.js";
+import "./suf-totop.js";
 
 console.debug("[suf] loaded");

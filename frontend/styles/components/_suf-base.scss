@@ -27,6 +27,24 @@
 // NOT wrapped: it props up the forked header's inherited markup and needs its
 // weight.
 
+// Smooth scrolling for in-page anchors -- the back-to-top link, the hero
+// buttons that jump to #bundle and #upcoming. This replaces the legacy
+// jQuery's 900ms animated scrollTop, and does it better: a native scroll
+// leaves the browser's own focus handling alone, so the fragment target still
+// receives focus and the next Tab continues from there.
+//
+// SCOPED WITH :has() rather than a bare `html`. suf.css is loaded by
+// theme.liquid too, and a bare rule would change scrolling on all ~30 legacy
+// templates -- exactly the kind of reach this file exists to avoid. The
+// property has to sit on the root element: unlike overflow, scroll-behavior
+// does not propagate from <body> to the viewport, so scoping it under
+// .suf-body directly would do nothing at all.
+@media (prefers-reduced-motion: no-preference) {
+  html:has(> body.suf-body) {
+    scroll-behavior: smooth;
+  }
+}
+
 :where(.suf-body) {
   margin: 0;
   background: var(--suf-color-bg);
@@ -153,6 +171,139 @@
   &:focus {
     inset-block-start: var(--suf-space-md);
   }
+}
+
+// Back to top.
+//
+// Provisional styling. It matches the mockup's .to-top -- a 40px red square,
+// fixed bottom-right -- and takes the CTA tokens rather than a literal red so
+// it moves with the rest of the chrome in the header/footer rebuild.
+//
+// Hidden until the page has scrolled past the sentinel below, which
+// assets/suf-totop.js watches. Hidden is the resting state, so the button
+// never flashes on a first paint that happens before the module runs.
+// The reveal threshold, expressed as a height. 800px matches the legacy
+// jQuery, which showed #to-top past a scrollTop of 800.
+//
+// Absolutely positioned and 1px wide so it takes no space and cannot widen the
+// page. It is inside <body>, which is not positioned, so it resolves against
+// the initial containing block -- the top of the document, which is what the
+// threshold is measured from.
+.suf-body .suf-totop__sentinel {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 1px;
+  height: 800px;
+  pointer-events: none;
+}
+
+.suf-body .suf-totop {
+  position: fixed;
+  z-index: 40;
+  inset-block-end: 28px;
+  inset-inline-end: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--suf-cta-bg);
+  color: var(--suf-color-ink-on-dark);
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none;
+
+  // visibility, not opacity alone: an opacity-0 link is still clickable and
+  // still in the tab order, so a keyboard user would tab into an invisible
+  // control at the top of every page. Hidden is the RESTING state, so the
+  // button cannot flash on a paint that lands before the module runs.
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    transform var(--suf-transition),
+    box-shadow var(--suf-transition),
+    background-color var(--suf-transition),
+    opacity var(--suf-transition),
+    visibility var(--suf-transition);
+
+  &.is-visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  // The .suf-btn--primary treatment: lift up-left, hard shadow down-right.
+  //
+  // Restated rather than sharing the class. .suf-btn owns padding, font size,
+  // tracking and uppercasing, none of which apply to a 40px square holding one
+  // glyph, so wearing the class would mean unsetting more than it sets.
+  //
+  // The background does NOT change on hover, exactly as on --primary: the
+  // shadow is --suf-red-dark, so darkening the face to the same red would
+  // paint the shadow onto its own colour and the effect would vanish.
+  &:hover,
+  &:focus-visible {
+    background: var(--suf-cta-bg);
+    color: var(--suf-color-ink-on-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--suf-red-dark);
+  }
+
+  // Pressed: back to the resting position with the shadow gone, so the button
+  // reads as pushed down into the page.
+  &:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+  }
+
+  // Same asymmetric ring as .suf-btn, and for the same reason -- a uniform
+  // outline clips the bottom-right corner of the lifted-plus-shadow shape the
+  // user actually sees. See the long note on .suf-btn in _suf-components.scss.
+  &:focus-visible {
+    outline: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -7px -10px -10px -7px;
+      border: 2px solid var(--suf-focus-ring, var(--suf-color-focus));
+      pointer-events: none;
+    }
+  }
+
+  // Forced-colors modes drop borders on pseudo-elements but honour outline.
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline: 2px solid;
+      outline-offset: 7px;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  // The lift is decorative; the shadow is the affordance, so it survives. The
+  // opacity fade stays too -- a cross-fade is not motion, and cutting it would
+  // make the button pop into existence mid-scroll.
+  @media (prefers-reduced-motion: reduce) {
+    transition:
+      box-shadow var(--suf-transition),
+      opacity var(--suf-transition),
+      visibility var(--suf-transition);
+
+    &:hover,
+    &:focus-visible,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// The fragment jump lands focus on #suf-top. It is an empty inline element, so
+// a focus ring on it is a stray dash in the top-left corner of the page.
+#suf-top:focus {
+  outline: none;
 }
 
 // Shared content container.
