@@ -211,6 +211,20 @@
   justify-items: start;
 }
 
+// The note under the buy button.
+//
+// Capped well short of the text column: it is a caption on the button, not
+// another paragraph of the pitch, and at full column width the bundle's note
+// ran nearly as wide as the lead above it and stopped reading as an aside.
+//
+// text-wrap: balance because at this width it wraps to two or three lines and
+// the last one would otherwise carry a single word. Set here rather than
+// inherited -- the base balance rule covers headings only.
+.suf-cert .suf-btn-micro {
+  max-width: 370px;
+  text-wrap: balance;
+}
+
 // Pairs with .suf-qspot--flush-bottom -- see the note in _suf-seminars.scss.
 //
 // The seam is a border rather than nothing at all: two identical navy blocks
