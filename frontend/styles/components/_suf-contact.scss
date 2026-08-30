@@ -1,3 +1,5 @@
+@use '../mixins' as m;
+
 // Contact page: the info + form card.
 //
 // Ported from the mockup, section 14. The card overlaps the band above it, so
@@ -29,8 +31,13 @@
 
   // 900px is where the two columns stop coexisting -- the form fields get too
   // narrow to type into comfortably before the info column looks wrong.
+  //
+  // The gap tightens with the stack: --suf-space-6 is sized to hold two
+  // columns apart across the card, and as vertical space between the address
+  // and the form heading below it that is far more than the two need.
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+    gap: var(--suf-space-4);
   }
 }
 
@@ -70,6 +77,22 @@
 // ---------------------------------------------------------------------------
 // FORM
 // ---------------------------------------------------------------------------
+
+// Heading above the form. Visible only once the columns stack -- see the note
+// in sections/suf-contact.liquid.
+//
+// Visually hidden above the breakpoint rather than display:none, so it stays
+// in the accessibility tree at every width. Applied with `from` so the
+// mobile-visible state is the plain one and needs no properties unset.
+.suf-contact-form__head {
+  margin: 0 0 var(--suf-space-3);
+  font-size: var(--suf-font-size-h3);
+  line-height: 1.15;
+
+  @include m.from(901px) {
+    @include m.visually-hidden;
+  }
+}
 
 .suf-cform {
   display: grid;

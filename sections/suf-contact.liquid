@@ -55,6 +55,24 @@
         </div>
 
         <div class="suf-contact-form">
+          {%- comment -%}
+            Always rendered, visible only once the columns stack.
+
+            Side by side, the form needs no label: it sits beside the contact
+            details and is obviously the other half of the pair. Stacked, the
+            first field arrives straight after the address with nothing to say
+            a form has started.
+
+            It is not hidden with display:none above the breakpoint but
+            visually hidden, so it stays in the accessibility tree at every
+            width -- a heading before a form is worth more to someone
+            navigating by headings than it is to someone who can see the
+            layout.
+          {%- endcomment -%}
+          {%- if section.settings.form_heading != blank -%}
+            <h2 class="suf-contact-form__head">{{ section.settings.form_heading | escape }}</h2>
+          {%- endif -%}
+
           {%- form 'contact', class: 'suf-cform' -%}
             {%- if form.posted_successfully? -%}
               <p class="suf-form-note suf-form-note--success" tabindex="-1" data-suf-form-success>
@@ -132,6 +150,13 @@
       "label": "Overlap the band above",
       "info": "Only turn this on when the section directly above is a Page band with its overlap setting on.",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Heading above the form",
+      "info": "Shown once the columns stack; read by screen readers at every width.",
+      "default": "Send a Message"
     },
     {
       "type": "text",
