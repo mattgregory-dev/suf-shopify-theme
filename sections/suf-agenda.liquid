@@ -64,6 +64,21 @@
         {%- endcase -%}
       {%- endfor -%}
     </dl>
+
+    {%- comment -%}
+      Optional closing action. The agenda answers "what happens at a seminar";
+      the obvious next question is "which one", and the event list is the only
+      answer to it. Centred under the ledger rather than in a .suf-btnrow so it
+      reads as the end of this section rather than as a row of choices.
+    {%- endcomment -%}
+    {%- if section.settings.button_label != blank and section.settings.button_url != blank -%}
+      <div class="suf-agenda__action">
+        <a class="suf-btn suf-btn--primary" href="{{ section.settings.button_url }}">
+          {%- assign bl = section.settings.button_label | escape -%}
+          {%- render 'suf-nb', text: bl -%}
+        </a>
+      </div>
+    {%- endif -%}
   </div>
 </div>
 
@@ -73,7 +88,15 @@
   "tag": "section",
   "max_blocks": 30,
   "settings": [
-    { "type": "text", "id": "anchor", "label": "Anchor id" }
+    { "type": "text", "id": "anchor", "label": "Anchor id" },
+    { "type": "header", "content": "Closing action" },
+    { "type": "text", "id": "button_label", "label": "Button label" },
+    {
+      "type": "text",
+      "id": "button_url",
+      "label": "Button link",
+      "info": "Both fields are needed; the button is hidden unless each has a value."
+    }
   ],
   "blocks": [
     {

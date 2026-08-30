@@ -479,6 +479,14 @@
   line-height: 1.5;
 }
 
+// Centred on the ledger's own 900px measure, not the container's, so the
+// button sits under the middle of the list rather than the middle of the page.
+.suf-agenda__action {
+  max-width: 900px;
+  margin: var(--suf-space-5) auto 0;
+  text-align: center;
+}
+
 // ---------------------------------------------------------------------------
 // QUOTE SPOTLIGHT -- proof row
 //

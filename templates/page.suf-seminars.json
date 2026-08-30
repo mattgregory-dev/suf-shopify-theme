@@ -333,7 +333,9 @@
         "a13"
       ],
       "settings": {
-        "anchor": "schedule"
+        "anchor": "schedule",
+        "button_label": "Pick Your City & Date",
+        "button_url": "#upcoming"
       }
     },
     "faq": {
