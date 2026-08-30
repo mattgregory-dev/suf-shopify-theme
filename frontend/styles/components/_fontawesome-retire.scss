@@ -34,7 +34,19 @@ $fa: '.fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"]';
 // AUDIT MODE -- on while icons are being replaced with SVGs. Renders a labelled
 // orange marker in place of each icon so missing ones identify themselves.
 // Delete this block when the sweep is done.
-#{$fa}::after {
+//
+// THE PSEUDO-ELEMENT IS APPENDED TO EVERY SELECTOR, not interpolated onto the
+// list. `#{$fa}::after` compiles to
+//
+//     .fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"]::after
+//
+// where ::after binds to the LAST item only -- so the other five painted the
+// orange background on the ICON ELEMENT itself rather than on a marker beside
+// it. Invisible most of the time, because the marker sat on top of it, but
+// impossible to override from a ::after rule and impossible to see why.
+$fa-after: '.fa::after, .fas::after, .far::after, .fab::after, [class^="fa-"]::after, [class*=" fa-"]::after';
+
+#{$fa-after} {
   content: attr(class);
   display: inline-block;
   padding: 0 0.35em;
