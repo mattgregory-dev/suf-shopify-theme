@@ -341,7 +341,7 @@
           "settings": {
             "question": "How do I know if this seminar is right for me?",
             "answer": "<p>Two kinds of people show up. New trainers building the hands-on skills that get them hired — most pair the seminar with their SUF-CPT. And certified trainers (SUF, NASM, ACE, or ISSA) earning 1.1 CEUs while leveling up their assessments, programming, and sales. If you train people, or you’re about to, it’s for you.</p>",
-            "open": true
+            "open": false
           }
         },
         "f2": {

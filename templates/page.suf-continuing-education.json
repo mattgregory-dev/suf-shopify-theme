@@ -225,7 +225,7 @@
         "q1": {
           "type": "question",
           "settings": {
-            "open": true,
+            "open": false,
             "question": "Do I have to take the SUF-CPT first?",
             "answer": "<p>No. You can start with either Level 2 certification — Soft Tissue Mobilization or Nutrition Coaching — without taking the SUF-CPT first. And because Level 2 gives you access to the entire SUF Library, you get every course and every call, including all the Level 1 material, the moment you enroll.</p>"
           }

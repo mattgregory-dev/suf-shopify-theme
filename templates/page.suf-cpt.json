@@ -349,7 +349,7 @@
           "settings": {
             "question": "Will this help me pass NASM?",
             "answer": "<p>Yes. The SUF-CPT comes with all of our exam-prep material, free — the study guide that covers NASM, ACE, and ISSA, plus our NASM practice-question bundle — and a guarantee you’ll pass. Your SUF-CPT is its own credential; the prep just comes along with it. So if you want NASM or another textbook cert on your resume too, buying the SUF-CPT is the surest way to get there.</p>",
-            "open": true
+            "open": false
           }
         },
         "f2": {

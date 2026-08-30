@@ -30,6 +30,20 @@
   }
 }
 
+// Used as a heading INSIDE another section, not as a section of its own.
+//
+// The :last-child rule above is right for a standalone statement: what follows
+// is the next section, and that section's own top padding is the gap. It is
+// wrong here, because what follows is a sibling in the SAME section with no
+// padding between them -- the FAQ accordion sat flush against its heading.
+//
+// Written as a modifier rather than detected with :has(+ .suf-faq), so the
+// intent is stated in the markup that has it and any other section can reuse
+// it. Matches .suf-section__head's own bottom margin.
+.suf-statement--head {
+  margin-bottom: var(--suf-space-5);
+}
+
 .suf-statement__body {
   max-width: 64ch;
   margin: 0 auto;

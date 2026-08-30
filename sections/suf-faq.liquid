@@ -5,9 +5,17 @@
   and the accessibility tree all come free, and it still works with JS off.
   There is deliberately no JavaScript here.
 
-  Only ONE question should be open by default -- an accordion that opens
-  everything is just a list, and the first answer is what tells a reader the
-  answers are worth expanding.
+  EVERY QUESTION IS CLOSED BY DEFAULT. The `open` setting stays, but nothing
+  ships with it set.
+
+  This reverses an earlier call to open the first one as a sample answer. A
+  single expanded answer pushes the rest of the questions down the page --
+  worst on a phone, where one long answer can be most of a screen -- so the
+  reader sees fewer of the questions they came to scan. The scannable list is
+  worth more than the demonstration.
+
+  If one is ever opened again, open exactly one: an accordion with everything
+  expanded is just a list.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
@@ -15,7 +23,14 @@
 <div class="suf-section">
   <div class="suf-wrap">
     {%- if section.settings.heading != blank -%}
-      <div class="suf-statement">
+      {%- comment -%}
+        --head because this .suf-statement is a heading INSIDE a section
+        rather than a section of its own. A standalone statement gets its
+        space from the section padding below it and so zeroes its own bottom
+        margin; here the accordion follows in the same section and there is no
+        padding between the two.
+      {%- endcomment -%}
+      <div class="suf-statement suf-statement--head">
         <h2>{% render 'suf-nb', text: section.settings.heading %}</h2>
       </div>
     {%- endif -%}
@@ -57,7 +72,7 @@
           "type": "checkbox",
           "id": "open",
           "label": "Open by default",
-          "info": "Set this on the first question only.",
+          "info": "Leave off. If used, set it on one question only.",
           "default": false
         }
       ]
