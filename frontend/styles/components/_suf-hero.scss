@@ -139,6 +139,10 @@
 
   @media (max-width: 820px) {
     grid-template-columns: 1fr;
+    // Equal rows, so the badges below can be placed on the dividers by
+    // percentage. Left to content the three rows differ by however many lines
+    // each label wraps to, and the thirds stop landing on the rules.
+    grid-auto-rows: 1fr;
   }
 }
 
@@ -160,19 +164,30 @@
   text-transform: uppercase;
   transform: translate(-50%, -50%);
 
-  // Stacked, a badge floating on a horizontal divider has nothing to sit on.
-  @media (max-width: 820px) {
-    display: none;
-  }
+  // Stacked, the badges move from the vertical rules to the horizontal ones.
+  // Both coordinates are set per modifier below -- `left` cannot be centred
+  // here, because --vs and --eq set their own at the SAME specificity later in
+  // the file and would win.
 }
 
 .suf-statbar__op--vs {
   left: 33.333%;
+
+  // On the first horizontal divider, centred across the column.
+  @media (max-width: 820px) {
+    top: 33.333%;
+    left: 50%;
+  }
 }
 
 .suf-statbar__op--eq {
   left: 66.666%;
   font-size: 18px;
+
+  @media (max-width: 820px) {
+    top: 66.666%;
+    left: 50%;
+  }
 }
 
 .suf-stat {

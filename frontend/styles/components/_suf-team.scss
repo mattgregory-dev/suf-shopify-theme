@@ -14,7 +14,7 @@
 .suf-teamgrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--suf-space-4);
+  gap: var(--suf-space-3);
 
   @media (max-width: 980px) {
     grid-template-columns: 1fr;

@@ -14,7 +14,7 @@
 .suf-quotegrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--suf-space-4);
+  gap: var(--suf-space-3);
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
