@@ -42,9 +42,8 @@
         "s4": {
           "type": "stat",
           "settings": {
-            "figure": "Preferred",
-            "is_word": true,
-            "label": "by Life Time & Equinox"
+            "figure": "15+ yrs",
+            "label": "Training trainers since 2008"
           }
         }
       },
@@ -65,7 +64,9 @@
             "heading": "Become a Trainer",
             "body": "Start with the SUF-CPT — the certification built for real-world success.",
             "cue": "Start Here",
-            "url": "/pages/suf-cpt"
+            "url": "/pages/suf-cpt",
+            "image": "shopify://shop_images/home-02.webp",
+            "image_alt": "Coach demonstrating a resistance band exercise to a trainee"
           }
         },
         "p2": {
@@ -74,7 +75,9 @@
             "heading": "Go Further",
             "body": "Already certified? Add Level 2 certifications and earn more per session.",
             "cue": "Continuing Ed",
-            "url": "/pages/suf-continuing-education"
+            "url": "/pages/suf-continuing-education",
+            "image": "shopify://shop_images/exercise-01.webp",
+            "image_alt": "Two trainers doing bicep curls together"
           }
         },
         "p3": {
@@ -83,7 +86,9 @@
             "heading": "Learn Hands-On",
             "body": "Join a 2-day weekend seminar at a Life Time Fitness near you.",
             "cue": "Find a Seminar",
-            "url": "/pages/suf-seminars"
+            "url": "/pages/suf-seminars",
+            "image": "shopify://shop_images/Best_Certified_Personal_Trainer_Seminars.webp",
+            "image_alt": "Group of trainees at a Show Up Fitness seminar"
           }
         },
         "p4": {
@@ -92,7 +97,9 @@
             "heading": "Pass Your Exam",
             "body": "Study guides for NASM, ACE, and ISSA — clear, practical, free of filler.",
             "cue": "Get the Guides",
-            "url": "/pages/suf-study-guides"
+            "url": "/pages/suf-study-guides",
+            "image": "shopify://shop_images/photo-02.jpg",
+            "image_alt": "Chris holding an NASM personal training textbook"
           }
         }
       },
@@ -298,10 +305,10 @@
   "order": [
     "hero",
     "stats",
-    "paths",
-    "packages",
-    "proof",
     "why",
+    "paths",
+    "proof",
+    "packages",
     "founder",
     "cta"
   ]
