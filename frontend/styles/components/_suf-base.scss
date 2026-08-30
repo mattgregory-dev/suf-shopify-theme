@@ -74,6 +74,21 @@
     font-weight: 800;
     letter-spacing: -0.018em;
     line-height: var(--suf-line-height-heading);
+    // Every heading, once, rather than per section.
+    //
+    // Headings here are short display type set at large sizes, which is the
+    // case balance exists for: it evens the lines instead of leaving one word
+    // stranded on the last one. Browsers cap it at a few lines, so a long
+    // heading falls back to normal wrapping rather than breaking.
+    //
+    // It is `balance`, not `pretty`: pretty only prevents the final orphan and
+    // is the right choice for body copy, where balancing every paragraph would
+    // cost layout time for no gain. .suf-ptile__desc uses pretty for that
+    // reason.
+    //
+    // This rule is (0,0,1) -- :where() adds nothing -- so any component that
+    // wants normal wrapping opts out with `text-wrap: wrap` and wins.
+    text-wrap: balance;
   }
 
   h1 {
