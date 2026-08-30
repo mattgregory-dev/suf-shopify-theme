@@ -97,8 +97,20 @@
       grid-template-columns: 1fr;
     }
 
+    // Released when the columns stack -- see the note on .suf-spotlight__lead.
+    // Scoped to --split: a plain band is single-column at every width, so its
+    // 56ch is a real measure rather than a column constraint.
+    .suf-band__subhead {
+      max-width: none;
+    }
+
+    // DELIBERATELY EXEMPT from the stacked-media cap on
+    // .suf-spotlight__media. The band is the page's opener and bleeds to its
+    // own edges by design; a centred 560px photo inside a full-bleed navy
+    // band reads as an image dropped into a gap rather than as part of the
+    // band. The 3:2 crop keeps it to a reasonable height at full width, which
+    // is what the cap exists to prevent elsewhere.
     .suf-band__media {
-      max-width: 520px;
       min-height: 0;
       aspect-ratio: 3 / 2;
 

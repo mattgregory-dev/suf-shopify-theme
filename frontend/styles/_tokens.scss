@@ -180,6 +180,25 @@
   --suf-container-padding: 40px;
   --suf-measure: 68ch;
 
+  // Stacked media caps.
+  //
+  // How wide a two-column section's image is allowed to get once the columns
+  // stack. Two values, chosen by the CROP rather than by the component, and
+  // every stacked image is also centred -- see the shared note in
+  // _suf-spotlight.scss.
+  //
+  // Why a cap is needed at all: these sections force an aspect-ratio, so an
+  // uncapped 4:5 image in a 960px container is 1200px tall -- a full screen of
+  // photo to scroll past. The caps only bite between ~640px and each
+  // component's breakpoint; below that the container is already narrower than
+  // either value.
+  //
+  //   tall  4:5 portrait crops -- spotlight, certification rows
+  //   wide  4:3, 3:2 and natural-ratio images -- quote spotlight, page band,
+  //         split-fact photos
+  --suf-stack-media-tall: 440px;
+  --suf-stack-media-wide: 560px;
+
   // Other.
   --suf-radius: 4px;
   --suf-transition: 150ms ease;

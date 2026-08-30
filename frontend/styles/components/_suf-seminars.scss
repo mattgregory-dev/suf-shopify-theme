@@ -21,8 +21,13 @@
   @media (max-width: 980px) {
     grid-template-columns: 1fr;
 
+    // Capped and CENTRED, the same pairing as the stacked media caps -- see
+    // the note on .suf-spotlight__media. The cap was here already; without the
+    // centring each card sat hard against the left edge of the container.
     .suf-listcard {
+      width: 100%;
       max-width: 560px;
+      margin-inline: auto;
     }
   }
 }
@@ -339,8 +344,13 @@
   position: relative;
   aspect-ratio: 4 / 3;
 
+  // Stacked, the photo leads, capped and centred -- the shared rule. A 4:3
+  // crop, so the wide cap. See the note on .suf-spotlight__media.
   @media (max-width: 900px) {
-    max-width: 520px;
+    order: -1;
+    width: 100%;
+    max-width: var(--suf-stack-media-wide);
+    margin-inline: auto;
   }
 
   img {
@@ -371,6 +381,11 @@
   color: var(--suf-color-text-on-dark);
   font-size: 15.5px;
   line-height: 1.65;
+
+  // Released when the columns stack -- see the note on .suf-spotlight__lead.
+  @media (max-width: 900px) {
+    max-width: none;
+  }
 }
 
 .suf-qspot .suf-qspot__who {

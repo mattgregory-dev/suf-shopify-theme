@@ -543,6 +543,14 @@
   font-size: clamp(18px, 1.5vw, 21px);
   line-height: 1.6;
 
+  // Released at 980 -- see the note on .suf-spotlight__lead. This section is
+  // single-column at every width, so the cap is a measure rather than a column
+  // constraint; it is released anyway to match the two-column sections it sits
+  // between on About, which would otherwise step in and out down the page.
+  @media (max-width: 980px) {
+    max-width: none;
+  }
+
   p {
     margin: 0 0 var(--suf-space-3);
 

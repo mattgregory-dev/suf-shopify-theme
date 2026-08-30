@@ -33,17 +33,21 @@
 
   .suf-cert__media {
     order: 1;
+
+    // Stacked, the image leads regardless of which side it sat on -- a
+    // certification is bought on the photo first. Set here rather than on
+    // .suf-cert__media because that bare class cannot out-specify the
+    // `order: 1` two lines up.
+    @media (max-width: 1020px) {
+      order: -1;
+    }
   }
 }
 
 // Image before text visually, but never in the markup -- see the section
-// comment. Below the breakpoint the image follows the text either way.
+// comment.
 .suf-cert--image-left .suf-cert__media {
   order: -1;
-
-  @media (max-width: 1020px) {
-    order: 0;
-  }
 }
 
 .suf-cert__media {
@@ -51,8 +55,12 @@
   aspect-ratio: 4 / 5;
   max-height: 560px;
 
+  // Capped and centred when stacked -- the shared rule, and a 4:5 crop, so the
+  // tall cap. See the note on .suf-spotlight__media.
   @media (max-width: 1020px) {
-    max-width: 440px;
+    width: 100%;
+    max-width: var(--suf-stack-media-tall);
+    margin-inline: auto;
   }
 
   img {
@@ -107,6 +115,11 @@
     max-width: 58ch;
     margin: 0 0 var(--suf-space-3);
     color: var(--suf-color-text);
+
+    // Released when the columns stack -- see the note on .suf-spotlight__lead.
+    @media (max-width: 1020px) {
+      max-width: none;
+    }
   }
 }
 

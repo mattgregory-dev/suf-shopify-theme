@@ -47,6 +47,11 @@
   margin: 0 0 var(--suf-space-3);
   color: var(--suf-color-text);
 
+  // Released when the columns stack -- see the note on .suf-spotlight__lead.
+  @media (max-width: 1000px) {
+    max-width: none;
+  }
+
   p {
     margin: 0 0 var(--suf-space-3);
 
@@ -89,11 +94,29 @@
   .suf-splitfact__media {
     order: -1;
 
-    // Below the breakpoint the image follows the text either way -- a lone
-    // image above a heading reads as orphaned.
+    // Stacked, the panel follows the text -- see the rule below, which puts
+    // the photo variant back in front.
     @media (max-width: 1000px) {
       order: 0;
     }
+  }
+}
+
+// STACKED ORDER DEPENDS ON WHAT THE PANEL IS, and only here.
+//
+// A chart follows the text: .suf-factpanel and the bars are the EVIDENCE for
+// the argument beside them, and a big number read before the claim it supports
+// is a floating statistic. That is the default above.
+//
+// A photograph leads it. It is the way into the block rather than proof of
+// anything, and a heading is a poor first thing to meet on a phone.
+//
+// The section derives --panel-image from its `panel` setting rather than
+// exposing a second switch, so a chart cannot be configured to outrank the
+// argument it supports. Same principle as the frame side.
+@media (max-width: 1000px) {
+  .suf-splitfact--panel-image .suf-splitfact__media {
+    order: -1;
   }
 }
 
@@ -101,6 +124,25 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+// Capped and centred when stacked -- the shared rule. The wide cap: this is
+// the one media block that sets NO aspect-ratio, so its images render at their
+// natural ratio.
+//
+// It previously had no cap at all and went full width. That looked fine only
+// because both images in use happen to be landscape; a portrait photo in this
+// slot would have run to a full screen of height. The cap makes the section
+// safe against its own settings rather than against today's content.
+//
+// Scoped to the photo variant. A .suf-factpanel is capped by its own rule
+// above, and capping the wrapper as well would compound the two.
+@media (max-width: 1000px) {
+  .suf-splitfact--panel-image .suf-splitfact__media {
+    width: 100%;
+    max-width: var(--suf-stack-media-wide);
+    margin-inline: auto;
+  }
 }
 
 // Offset frame, same device and same rule as the spotlight: it sits on the
@@ -149,8 +191,13 @@
   background: var(--suf-color-surface);
   text-align: center;
 
+  // Capped and centred when stacked -- the shared rule. Not an image, but it
+  // is the other column of a two-column section and stretches the same way.
+  // See the note on .suf-spotlight__media.
   @media (max-width: 1000px) {
-    max-width: 440px;
+    width: 100%;
+    max-width: var(--suf-stack-media-tall);
+    margin-inline: auto;
   }
 }
 

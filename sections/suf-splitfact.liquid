@@ -42,6 +42,12 @@
   if section.settings.image_side == 'left'
     assign classes = classes | append: ' suf-splitfact--image-left'
   endif
+  # Only a PHOTO leads the text when the columns stack -- see the note in
+  # _suf-cpt.scss. Derived from `panel` rather than offered as its own setting,
+  # so a chart cannot be configured to outrank the argument it supports.
+  if section.settings.panel == 'image'
+    assign classes = classes | append: ' suf-splitfact--panel-image'
+  endif
   if section.settings.frame != 'none'
     assign classes = classes | append: ' suf-splitfact--frame-' | append: section.settings.frame
   endif

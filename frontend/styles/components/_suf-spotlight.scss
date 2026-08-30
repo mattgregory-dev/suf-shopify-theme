@@ -36,12 +36,6 @@
 
   .suf-spotlight__media {
     order: -1;
-
-    // Below the breakpoint the image should follow the text, as it does in the
-    // image-right variant -- a lone image above a heading reads as orphaned.
-    @media (max-width: 1000px) {
-      order: 0;
-    }
   }
 }
 
@@ -56,6 +50,23 @@
     max-width: 58ch;
     margin: 0 0 var(--suf-space-3);
     color: var(--suf-color-text);
+
+    // ---------------------------------------------------------------------
+    // THE STACKED-MEASURE RULE. Canonical copy; the other two-column sections
+    // point here.
+    //
+    // The measure is released once the columns stack. Beside an image the cap
+    // is doing real work -- it keeps the text column from running to the
+    // gutter. Stacked, there is no second column, so the same cap leaves the
+    // copy ending well short of the image above it and reads as a ragged
+    // half-column rather than a deliberate measure.
+    //
+    // `none`, not a larger number: a second cap would be a second decision to
+    // keep in step with the first.
+    // ---------------------------------------------------------------------
+    @media (max-width: 1000px) {
+      max-width: none;
+    }
   }
 
   .suf-btnrow {
@@ -68,8 +79,39 @@
   aspect-ratio: 4 / 5;
   max-height: 520px;
 
+  // Stacked, the image leads regardless of which side it sat on. A spotlight
+  // is an image-led device; dropping the photo below the copy on a phone turns
+  // it into a wall of text with a picture nobody scrolls to.
+  //
+  // ---------------------------------------------------------------------
+  // THE STACKED-MEDIA RULE. This is the canonical copy; the other stacked
+  // images point here rather than restating it.
+  //
+  // Every two-column section's image is CAPPED and CENTRED once the columns
+  // stack. Both halves matter and they were previously applied at random --
+  // five components had five different caps and only this one centred, so a
+  // 440px image sat hard against the left edge of a 960px container and read
+  // as a layout bug.
+  //
+  // The cap comes from --suf-stack-media-tall / --wide, chosen by the crop.
+  // Do not introduce a per-component number: the whole point is that there
+  // are two decisions here, not one per section. See _tokens.scss.
+  // ---------------------------------------------------------------------
+  // `width: 100%` IS LOAD-BEARING, and every capped-and-centred grid item
+  // below needs it. A grid item stretches to its area only while its inline
+  // margins are not auto; the moment `margin-inline: auto` is set, stretch is
+  // switched off and the item falls back to shrink-to-fit -- so it sizes to
+  // its own CONTENT and the cap never applies. Cards then come out at
+  // different widths down the page, each one centred, which looks like a
+  // stagger rather than like a missing width.
+  //
+  // width:100% restores the stretch; max-width caps it; the auto margins then
+  // centre what is left. All three are required.
   @media (max-width: 1000px) {
-    max-width: 420px;
+    order: -1;
+    width: 100%;
+    max-width: var(--suf-stack-media-tall);
+    margin-inline: auto;
   }
 
   // z-index 1 against the frame's 0, rather than the frame using -1.
