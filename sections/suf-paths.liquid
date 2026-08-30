@@ -1,13 +1,22 @@
 {% comment %}
-  Numbered ledger rows -- the "choose your path" wayfinding block.
+  Image tiles -- the "choose your path" wayfinding block.
 
-  Each ROW is one link. The "Start Here" cue is a <span>, not a nested anchor,
-  so a row is one tab stop with one accessible name. Two links per row would
-  double the tab stops and read the destination twice.
+  It was numbered ledger rows until the homepage re-flow. The tiles carry more
+  visual weight, which this block now needs: it sits between the Why section
+  and the dark proof band rather than directly under the stat bar, and a row of
+  text rules got lost there.
+
+  Each TILE is one link. The cue is a <span>, not a nested anchor, so a tile is
+  one tab stop with one accessible name. Two links per card would double the
+  tab stops and read the destination twice.
 
   Numbers are generated from block order, not typed. A merchant reordering the
-  rows in the editor gets 01-04 renumbered automatically; typing them by hand
-  guarantees they eventually disagree with the order.
+  tiles in the editor gets 01-04 renumbered automatically; typing them by hand
+  guarantees they eventually disagree with the order. They are decorative --
+  the order is already carried by the DOM -- so they are aria-hidden.
+
+  A tile with no image still renders: the photo is a backdrop for the number,
+  not the content.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
@@ -28,17 +37,35 @@
     <div class="suf-paths">
       {%- for block in section.blocks -%}
         <a
-          class="suf-rowpath"
+          class="suf-ptile"
           href="{{ block.settings.url | default: '#' }}"
           {{ block.shopify_attributes }}
         >
-          <span class="suf-rowpath__n">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-          <h3>{{ block.settings.heading | escape }}</h3>
-          <p class="suf-rowpath__desc">{% render 'suf-nb', text: block.settings.body %}</p>
-          <span class="suf-rowpath__cue">
-            {{- block.settings.cue | default: 'Start Here' | escape }}
-            <span class="suf-rowpath__arrow" aria-hidden="true">&rarr;</span>
-          </span>
+          <div class="suf-ptile__media">
+            <span class="suf-ptile__n" aria-hidden="true">
+              {{- forloop.index | prepend: '0' | slice: -2, 2 -}}
+            </span>
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 640
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '320, 480, 640',
+                  sizes: '(min-width: 901px) 25vw, (min-width: 521px) 50vw, 90vw',
+                  alt: block.settings.image_alt
+              }}
+            {%- endif -%}
+          </div>
+
+          <div class="suf-ptile__body">
+            <h3>{{ block.settings.heading | escape }}</h3>
+            <p class="suf-ptile__desc">{% render 'suf-nb', text: block.settings.body %}</p>
+            <span class="suf-ptile__cue">
+              {{- block.settings.cue | default: 'Start Here' | escape }}
+              <span class="suf-ptile__arrow" aria-hidden="true">&rarr;</span>
+            </span>
+          </div>
         </a>
       {%- endfor -%}
     </div>
@@ -67,6 +94,8 @@
       "settings": [
         { "type": "text", "id": "heading", "label": "Heading" },
         { "type": "inline_richtext", "id": "body", "label": "Description" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
         { "type": "text", "id": "cue", "label": "Link text", "default": "Start Here" },
         { "type": "url", "id": "url", "label": "Link" }
       ]

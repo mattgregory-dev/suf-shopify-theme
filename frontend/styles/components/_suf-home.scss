@@ -1,117 +1,155 @@
 // Homepage-only sections: paths, packages, proof band.
 
 // ---------------------------------------------------------------------------
-// PATHS -- numbered ledger rows
+// PATHS -- image tiles
 //
-// A whole row is one link. The "Start Here" cue is a <span>, not a nested
-// anchor, so each row carries exactly one tab stop and one accessible name.
+// Was numbered ledger rows until the homepage re-flow. The block moved from
+// directly under the stat bar to between the Why section and the dark proof
+// band, where a row of text rules had no weight against its neighbours.
+//
+// A whole tile is one link. The cue is a <span>, not a nested anchor, so each
+// tile carries exactly one tab stop and one accessible name.
 // ---------------------------------------------------------------------------
 
 .suf-paths {
-  border-top: 1px solid var(--suf-color-border-subtle);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--suf-space-3);
+  margin-top: var(--suf-space-4);
+
+  // 900px: four tiles stop giving their descriptions a readable measure.
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.suf-rowpath {
-  display: grid;
-  // number | title | description | cue
-  grid-template-columns: 110px 240px 1fr auto;
-  gap: var(--suf-space-4);
-  align-items: center;
-  padding: 30px 18px;
-  border-bottom: 1px solid var(--suf-color-border-subtle);
+.suf-ptile {
+  position: relative;
+  display: block;
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
   color: inherit;
   text-decoration: none;
-  cursor: pointer;
-  // Declared at zero width so the hover only animates the size, not the colour.
-  box-shadow: inset 0 0 0 0 var(--suf-red);
   transition:
-    background-color var(--suf-transition),
+    border-color var(--suf-transition),
     box-shadow var(--suf-transition);
 
   &:hover,
   &:focus-visible {
-    position: relative;
-    z-index: 1;
-    background: var(--suf-color-surface);
-    box-shadow:
-      inset 4px 0 0 0 var(--suf-red),
-      0 14px 30px rgb(0 32 54 / 12%);
+    border-color: var(--suf-blue-light);
+    box-shadow: 0 16px 34px rgb(0 32 54 / 14%);
 
-    .suf-rowpath__n {
-      color: var(--suf-red);
+    // The zoom is on the IMAGE, not the tile: scaling the tile would nudge
+    // its neighbours in the grid.
+    .suf-ptile__media img {
+      transform: scale(1.045);
     }
 
-    .suf-rowpath__cue {
+    .suf-ptile__cue {
       color: var(--suf-color-accent);
       border-color: var(--suf-color-accent);
     }
 
-    .suf-rowpath__arrow {
-      transform: translateX(5px);
+    .suf-ptile__arrow {
+      transform: translateX(4px);
     }
   }
+}
 
-  // 900px: four columns cannot hold a 52ch description and a number this size.
-  // Below it the row becomes a stack, and the number leads.
-  @media (max-width: 900px) {
-    grid-template-columns: auto 1fr;
-    gap: var(--suf-space-3);
-    align-items: start;
+// The navy background shows through when a tile has no image yet, so an
+// unfilled tile reads as a dark panel rather than a collapsed one.
+.suf-ptile__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #0a2a3f;
 
-    .suf-rowpath__body {
-      grid-column: 2;
-    }
-
-    .suf-rowpath__cue {
-      grid-column: 2;
-    }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 350ms ease;
   }
+}
+
+// Above the image, and above its zoom -- overflow:hidden on the media clips
+// the scaling image, and without the z-index the number goes with it.
+.suf-ptile__n {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  padding: 6px 12px;
+  background: var(--suf-red);
+  color: var(--suf-white);
+  font-size: 14px;
+  font-weight: 900;
+  // Tabular figures keep 01/02/03/04 the same width.
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+}
+
+.suf-ptile__body {
+  padding: var(--suf-space-3) var(--suf-space-3) calc(var(--suf-space-3) + 4px);
 
   h3 {
-    margin: 0;
-    font-size: 21px;
+    margin: 0 0 7px;
+    font-size: 19px;
+    line-height: 1.15;
   }
 }
 
-.suf-rowpath .suf-rowpath__desc {
-  max-width: 52ch;
-  margin: 0;
+.suf-ptile .suf-ptile__desc {
+  margin: 0 0 16px;
   color: var(--suf-color-text);
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 
-.suf-rowpath__n {
-  color: #c6d2da;
-  font-size: clamp(36px, 3vw, 52px);
-  font-weight: 800;
-  // Tabular figures keep 01/02/03/04 the same width, so the titles line up.
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  transition: color var(--suf-transition);
-}
-
-.suf-rowpath__cue {
+.suf-ptile__cue {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding-bottom: 3px;
+  padding-bottom: 2px;
   border-bottom: 2px solid var(--suf-color-link);
   color: var(--suf-color-link);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  white-space: nowrap;
   transition:
     color var(--suf-transition),
     border-color var(--suf-transition);
 }
 
-.suf-rowpath__arrow {
+.suf-ptile__arrow {
   display: inline-block;
   transition: transform var(--suf-transition);
+}
+
+// The zoom and the arrow nudge are decorative; the border and colour change
+// carry the hover on their own.
+@media (prefers-reduced-motion: reduce) {
+  .suf-ptile__media img,
+  .suf-ptile__arrow {
+    transition: none;
+  }
+
+  .suf-ptile:hover .suf-ptile__media img,
+  .suf-ptile:focus-visible .suf-ptile__media img {
+    transform: none;
+  }
+
+  .suf-ptile:hover .suf-ptile__arrow,
+  .suf-ptile:focus-visible .suf-ptile__arrow {
+    transform: none;
+  }
 }
 
 // ---------------------------------------------------------------------------
