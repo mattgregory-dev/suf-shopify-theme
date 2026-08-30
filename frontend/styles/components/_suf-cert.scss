@@ -183,3 +183,13 @@
   gap: var(--suf-space-2);
   justify-items: start;
 }
+
+// Pairs with .suf-qspot--flush-bottom -- see the note in _suf-seminars.scss.
+//
+// The seam is a border rather than nothing at all: two identical navy blocks
+// meeting invisibly makes the pair read as one very tall band, and the hairline
+// is what keeps them legible as two things.
+.suf-cert--flush-top {
+  margin-top: 0;
+  border-top: 1px solid #0d3b56;
+}

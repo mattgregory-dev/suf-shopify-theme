@@ -25,6 +25,9 @@
   assign classes = 'suf-cert'
   if section.settings.dark
     assign classes = classes | append: ' suf-cert--dark'
+    if section.settings.flush_top
+      assign classes = classes | append: ' suf-cert--flush-top'
+    endif
   else
     assign classes = 'suf-section ' | append: classes
   endif
@@ -188,6 +191,13 @@
       "id": "dark",
       "label": "Dark band",
       "info": "Full-bleed navy, square crop, larger heading. Count the dark bands already on the page first.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "flush_top",
+      "label": "Butt against the band above",
+      "info": "Dark bands only. Zeroes this band's top margin and adds a hairline seam, so two navy bands read as one block. The band above needs its own \"Butt against the band below\".",
       "default": false
     },
     {

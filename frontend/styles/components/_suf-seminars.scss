@@ -502,3 +502,21 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
+
+// ---------------------------------------------------------------------------
+// FLUSH DARK BANDS
+//
+// Two navy bands reading as one block, with a hairline seam rather than a page
+// gap between them. Used on continuing education, where the proof band runs
+// straight into the bundle: the testimonials are the argument FOR the bundle,
+// so a strip of page background between them breaks the sentence.
+//
+// It takes a setting on BOTH bands rather than an adjacent-sibling selector,
+// because Shopify wraps every section in its own <section class="shopify-
+// section"> -- `.suf-qspot + .suf-cert--dark` are never siblings in the
+// rendered DOM and such a rule would silently never match.
+// ---------------------------------------------------------------------------
+
+.suf-qspot--flush-bottom {
+  margin-bottom: 0;
+}

@@ -17,7 +17,7 @@
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
 
-<div class="suf-qspot">
+<div class="suf-qspot{% if section.settings.flush_bottom %} suf-qspot--flush-bottom{% endif %}">
   <div class="suf-wrap">
     <div class="suf-qspot__inner">
       <div>
@@ -75,7 +75,7 @@
           <p class="suf-qspot__prooflabel">{% render 'suf-nb', text: proof_heading %}</p>
         {%- endif -%}
 
-        <div class="suf-quotegrid suf-quotegrid--two">
+        <div class="suf-quotegrid suf-quotegrid--{{ section.settings.proof_columns }}">
           {%- for block in section.blocks -%}
             <div class="suf-qcard" {{ block.shopify_attributes }}>
               {%- assign rating = block.settings.rating | plus: 0 -%}
@@ -133,6 +133,24 @@
       "id": "proof_heading",
       "label": "Testimonial label",
       "info": "Shown above the quotes. Add Quote blocks to fill the row."
+    },
+    {
+      "type": "select",
+      "id": "proof_columns",
+      "label": "Quote columns",
+      "options": [
+        { "value": "two", "label": "Two" },
+        { "value": "three", "label": "Three" }
+      ],
+      "default": "two"
+    },
+    { "type": "header", "content": "Surface" },
+    {
+      "type": "checkbox",
+      "id": "flush_bottom",
+      "label": "Butt against the band below",
+      "info": "Zeroes this band's bottom margin. The band below needs its own \"Butt against the band above\" for the seam to close.",
+      "default": false
     }
   ],
   "blocks": [
