@@ -1,0 +1,243 @@
+{
+  "layout": "suf",
+  "sections": {
+    "band": {
+      "type": "suf-page-band",
+      "settings": {
+        "eyebrow": "Legal",
+        "heading": "Privacy Policy",
+        "subhead": "How Show Up Fitness collects, uses, and protects your information when you use our website, enroll in the SUF-CPT, or attend our seminars.",
+        "tier_3": true,
+        "overlap": false
+      }
+    },
+    "body": {
+      "type": "suf-legal",
+      "blocks": {
+        "b01": {
+          "type": "heading",
+          "settings": {
+            "text": "1. Introduction"
+          }
+        },
+        "b02": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>"
+          }
+        },
+        "b03": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>"
+          }
+        },
+        "b04": {
+          "type": "heading",
+          "settings": {
+            "text": "2. Information We Collect"
+          }
+        },
+        "b05": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>"
+          }
+        },
+        "b06": {
+          "type": "subheading",
+          "settings": {
+            "text": "Information You Provide to Us"
+          }
+        },
+        "b07": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>"
+          }
+        },
+        "b08": {
+          "type": "subheading",
+          "settings": {
+            "text": "Information Collected Automatically"
+          }
+        },
+        "b09": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>"
+          }
+        },
+        "b10": {
+          "type": "heading",
+          "settings": {
+            "text": "3. How We Use Your Information"
+          }
+        },
+        "b11": {
+          "type": "text",
+          "settings": {
+            "text": "<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum. We use the information we collect for the following purposes:</p>"
+          }
+        },
+        "b12": {
+          "type": "list",
+          "settings": {
+            "items": "Deliverum et molestias to provide, operate, and maintain our courses and services.\nExcepturi sint occaecati to process enrollments, payments, and certification records.\nCupiditate non provident to send administrative messages, updates, and support responses.\nSimilique sunt in culpa to improve the website experience and measure engagement.\nOfficia deserunt mollitia to comply with legal obligations and enforce our terms.",
+            "numbered": false
+          }
+        },
+        "b13": {
+          "type": "heading",
+          "settings": {
+            "text": "4. Cookies and Tracking Technologies"
+          }
+        },
+        "b14": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.</p>"
+          }
+        },
+        "b15": {
+          "type": "heading",
+          "settings": {
+            "text": "5. How We Share Information"
+          }
+        },
+        "b16": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet. We may share information with the following categories of recipients:</p>"
+          }
+        },
+        "b17": {
+          "type": "list",
+          "settings": {
+            "items": "Service providers.|Ut et voluptates repudiandae sint et molestiae non recusandae, itaque earum rerum hic tenetur a sapiente delectus.\nCertification partners.|Aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\nLegal and safety.|Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat.",
+            "numbered": true
+          }
+        },
+        "b18": {
+          "type": "heading",
+          "settings": {
+            "text": "6. Data Retention"
+          }
+        },
+        "b19": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat quibusdam et aut officiis debitis.</p>"
+          }
+        },
+        "b20": {
+          "type": "heading",
+          "settings": {
+            "text": "7. Your Rights and Choices"
+          }
+        },
+        "b21": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Depending on where you live, you may have the following rights regarding your personal information:</p>"
+          }
+        },
+        "b22": {
+          "type": "list",
+          "settings": {
+            "items": "Voluptatem accusantium the right to access the information we hold about you.\nDoloremque laudantium the right to correct inaccurate or incomplete information.\nTotam rem aperiam the right to request deletion of your information.\nEaque ipsa quae the right to opt out of certain marketing communications.",
+            "numbered": false
+          }
+        },
+        "b23": {
+          "type": "heading",
+          "settings": {
+            "text": "8. Data Security"
+          }
+        },
+        "b24": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est.</p>"
+          }
+        },
+        "b25": {
+          "type": "heading",
+          "settings": {
+            "text": "9. Children’s Privacy"
+          }
+        },
+        "b26": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Consectetur adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem ut enim ad minima veniam.</p>"
+          }
+        },
+        "b27": {
+          "type": "heading",
+          "settings": {
+            "text": "10. Changes to This Policy"
+          }
+        },
+        "b28": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. We will post any changes on this page and update the date above.</p>"
+          }
+        },
+        "b29": {
+          "type": "heading",
+          "settings": {
+            "text": "11. Contact Us"
+          }
+        },
+        "b30": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Questions about this policy? Reach us at <a href=\"mailto:email@example.com\">email@example.com</a> or (000) 000-0000, or visit our <a href=\"/pages/suf-contact\">contact page</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b07",
+        "b08",
+        "b09",
+        "b10",
+        "b11",
+        "b12",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b17",
+        "b18",
+        "b19",
+        "b20",
+        "b21",
+        "b22",
+        "b23",
+        "b24",
+        "b25",
+        "b26",
+        "b27",
+        "b28",
+        "b29",
+        "b30"
+      ],
+      "settings": {
+        "updated": "Last updated: August 27, 2026",
+        "lead": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. This Privacy Policy explains how we handle personal information and is provided here as placeholder copy for layout review.</p>"
+      }
+    }
+  },
+  "order": [
+    "band",
+    "body"
+  ]
+}

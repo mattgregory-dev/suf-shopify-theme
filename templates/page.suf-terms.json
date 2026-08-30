@@ -1,0 +1,263 @@
+{
+  "layout": "suf",
+  "sections": {
+    "band": {
+      "type": "suf-page-band",
+      "settings": {
+        "eyebrow": "Legal",
+        "heading": "Terms & Conditions",
+        "subhead": "The terms that govern your use of the Show Up Fitness website, your enrollment in the SUF-CPT, and your access to our courses and seminars.",
+        "tier_3": true,
+        "overlap": false
+      }
+    },
+    "body": {
+      "type": "suf-legal",
+      "blocks": {
+        "b01": {
+          "type": "heading",
+          "settings": {
+            "text": "1. Acceptance of Terms"
+          }
+        },
+        "b02": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. By accessing or using our website and services, you agree to be bound by these terms. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>"
+          }
+        },
+        "b03": {
+          "type": "heading",
+          "settings": {
+            "text": "2. Eligibility"
+          }
+        },
+        "b04": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>"
+          }
+        },
+        "b05": {
+          "type": "heading",
+          "settings": {
+            "text": "3. Accounts and Registration"
+          }
+        },
+        "b06": {
+          "type": "subheading",
+          "settings": {
+            "text": "Creating an Account"
+          }
+        },
+        "b07": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo, nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>"
+          }
+        },
+        "b08": {
+          "type": "subheading",
+          "settings": {
+            "text": "Account Security"
+          }
+        },
+        "b09": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est qui dolorem ipsum quia dolor sit amet.</p>"
+          }
+        },
+        "b10": {
+          "type": "heading",
+          "settings": {
+            "text": "4. Enrollment, Payments, and Refunds"
+          }
+        },
+        "b11": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore. The following terms apply to all purchases:</p>"
+          }
+        },
+        "b12": {
+          "type": "list",
+          "settings": {
+            "items": "Pricing.|Ut labore et dolore magnam aliquam quaerat voluptatem ut enim ad minima veniam, quis nostrum exercitationem ullam corporis.\nPayment.|Suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur autem vel eum iure reprehenderit qui in ea voluptate.\nRefunds.|Velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.\nChargebacks.|At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.",
+            "numbered": true
+          }
+        },
+        "b13": {
+          "type": "heading",
+          "settings": {
+            "text": "5. Certification and Course Access"
+          }
+        },
+        "b14": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>"
+          }
+        },
+        "b15": {
+          "type": "heading",
+          "settings": {
+            "text": "6. Acceptable Use"
+          }
+        },
+        "b16": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Omnis voluptas assumenda est, omnis dolor repellendus. You agree that you will not:</p>"
+          }
+        },
+        "b17": {
+          "type": "list",
+          "settings": {
+            "items": "Temporibus autem copy, resell, or redistribute our course materials without written permission.\nQuibusdam et aut share your account credentials with any third party.\nOfficiis debitis attempt to disrupt, reverse engineer, or gain unauthorized access to the platform.\nRerum necessitatibus use the services for any unlawful or fraudulent purpose.",
+            "numbered": false
+          }
+        },
+        "b18": {
+          "type": "heading",
+          "settings": {
+            "text": "7. Intellectual Property"
+          }
+        },
+        "b19": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur.</p>"
+          }
+        },
+        "b20": {
+          "type": "heading",
+          "settings": {
+            "text": "8. Third-Party Links and Services"
+          }
+        },
+        "b21": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Aut perferendis doloribus asperiores repellat. Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>"
+          }
+        },
+        "b22": {
+          "type": "heading",
+          "settings": {
+            "text": "9. Disclaimers"
+          }
+        },
+        "b23": {
+          "type": "text",
+          "settings": {
+            "text": "<p>The services are provided “as is” without warranties of any kind. Quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>"
+          }
+        },
+        "b24": {
+          "type": "heading",
+          "settings": {
+            "text": "10. Limitation of Liability"
+          }
+        },
+        "b25": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit. To the fullest extent permitted by law, Show Up Fitness shall not be liable for indirect or consequential damages.</p>"
+          }
+        },
+        "b26": {
+          "type": "heading",
+          "settings": {
+            "text": "11. Indemnification"
+          }
+        },
+        "b27": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem ut enim ad minima veniam, quis nostrum exercitationem.</p>"
+          }
+        },
+        "b28": {
+          "type": "heading",
+          "settings": {
+            "text": "12. Governing Law"
+          }
+        },
+        "b29": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. These terms are governed by the laws of the State of California, without regard to conflict-of-law principles.</p>"
+          }
+        },
+        "b30": {
+          "type": "heading",
+          "settings": {
+            "text": "13. Changes to These Terms"
+          }
+        },
+        "b31": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae. We may update these terms from time to time and will post the revised version on this page.</p>"
+          }
+        },
+        "b32": {
+          "type": "heading",
+          "settings": {
+            "text": "14. Contact Us"
+          }
+        },
+        "b33": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Questions about these terms? Reach us at <a href=\"mailto:email@example.com\">email@example.com</a> or (000) 000-0000, or visit our <a href=\"/pages/suf-contact\">contact page</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b01",
+        "b02",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b07",
+        "b08",
+        "b09",
+        "b10",
+        "b11",
+        "b12",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b17",
+        "b18",
+        "b19",
+        "b20",
+        "b21",
+        "b22",
+        "b23",
+        "b24",
+        "b25",
+        "b26",
+        "b27",
+        "b28",
+        "b29",
+        "b30",
+        "b31",
+        "b32",
+        "b33"
+      ],
+      "settings": {
+        "updated": "Last updated: August 27, 2026",
+        "lead": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Please read these Terms & Conditions carefully. This is placeholder copy provided for layout review only.</p>"
+      }
+    }
+  },
+  "order": [
+    "band",
+    "body"
+  ]
+}

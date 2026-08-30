@@ -1,0 +1,151 @@
+// Legal document body -- Privacy Policy and Terms & Conditions.
+//
+// Ported from the mockup's .legal (section 15 of css/styles.css).
+//
+// The measure is 72ch and the column is 820px, which is narrower than any
+// other body copy on the site. That is the point: this is the only content
+// here that anyone reads top to bottom rather than scanning, and a long
+// measure is what makes a policy unreadable.
+//
+// The section's own headings are element selectors -- h2, h3 -- rather than
+// classes, because the merchant writes this document in the theme editor and
+// the blocks emit bare headings. Scoped inside .suf-legal so they reach
+// nothing else.
+
+.suf-legal {
+  max-width: 820px;
+  margin-inline: auto;
+
+  // Each numbered section opens with a rule, which is what turns a wall of
+  // text into something a reader can find their place in. The padding above
+  // the text belongs to the heading, not the rule.
+  h2 {
+    margin: var(--suf-space-5) 0 var(--suf-space-3);
+    padding-top: var(--suf-space-3);
+    border-top: 1px solid var(--suf-color-border-subtle);
+    font-size: var(--suf-font-size-h3);
+    line-height: 1.15;
+  }
+
+  h3 {
+    margin: var(--suf-space-4) 0 10px;
+    color: var(--suf-color-heading);
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  // 1.7 rather than the site's 1.55: denser text, read for longer, needs the
+  // extra leading to stay trackable.
+  p {
+    max-width: 72ch;
+    margin: 0 0 16px;
+    color: var(--suf-color-text);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  // Grid rather than list margins, so the gap between items is one value and
+  // does not collapse against the paragraph margins around the list.
+  ul,
+  ol {
+    display: grid;
+    gap: 10px;
+    max-width: 72ch;
+    margin: 0 0 18px;
+    padding: 0;
+  }
+
+  li {
+    color: var(--suf-color-text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  li b {
+    color: var(--suf-color-heading);
+  }
+
+  // The slash bullet, same parallelogram as the eyebrow and the feature lists,
+  // so a legal page is still drawn in the design's own vocabulary.
+  ul {
+    list-style: none;
+  }
+
+  ul li {
+    position: relative;
+    padding-left: 28px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      background: var(--suf-blue);
+      clip-path: polygon(0 100%, 62% 0, 100% 0, 38% 100%);
+    }
+  }
+
+  // Counter rather than the browser's own numerals: the marker has to be red
+  // and tabular, and list-style markers cannot be styled independently of the
+  // item's text.
+  ol {
+    counter-reset: suf-legal-item;
+    list-style: none;
+  }
+
+  ol li {
+    position: relative;
+    padding-left: 36px;
+    counter-increment: suf-legal-item;
+
+    &::before {
+      content: counter(suf-legal-item);
+      position: absolute;
+      top: 1px;
+      left: 0;
+      color: var(--suf-color-accent);
+      font-weight: 800;
+      // 10 and 11 must not sit wider than 1 and 2, or the text column steps.
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  // Underlined rather than colour-only: inside a wall of body copy a link
+  // distinguished by hue alone is easy to miss and fails on its own against
+  // the surrounding text for anyone who cannot separate the two colours.
+  p a {
+    border-bottom: 1px solid currentcolor;
+  }
+}
+
+// Nested for specificity: these render as <p>, and `.suf-body p` is (0,1,1)
+// with a `margin` shorthand -- a bare class at (0,1,0) loses and the margins
+// come back.
+.suf-legal .suf-legal__updated {
+  margin: 0 0 var(--suf-space-3);
+  color: var(--suf-color-link);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+// The wrapper is a <div>; the rule below reaches the <p> the richtext setting
+// emits inside it.
+.suf-legal .suf-legal__lead p {
+  margin: 0 0 var(--suf-space-4);
+  color: var(--suf-color-text);
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.6;
+}
+
+// The first heading follows the lead paragraph, which already provides the
+// separation -- its own top margin and rule on top of that reads as a gap
+// before the document has started.
+.suf-legal > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}

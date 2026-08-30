@@ -1,0 +1,180 @@
+{% comment %}
+  Legal document body. Privacy Policy and Terms & Conditions.
+
+  BLOCKS, NOT ONE RICHTEXT FIELD. Shopify's richtext setting permits only
+  <p>, <br>, <strong>, <em> and <a> -- it cannot produce the headings and
+  lists a legal document is made of. So the document's STRUCTURE is blocks and
+  only the prose inside each one is richtext.
+
+  That also means the merchant can rewrite this in the theme editor without
+  touching the repo, which is the point: the copy here is placeholder and is
+  expected to be replaced by real policy text.
+
+  THE CONTENT IS PLACEHOLDER. Lorem ipsum from the mockup, in place so the
+  layout can be built and checked at every width. It is NOT legal copy and
+  must not ship to a live page handle. See docs/redesign-open-items.md.
+
+  LIST ITEMS carry an optional bold lead-in, written before a pipe:
+
+      Service providers.|Ut et voluptates repudiandae sint...
+
+  renders as "<b>Service providers.</b> Ut et voluptates...". One item per
+  line. Everything is escaped, so the pipe is the only markup a merchant can
+  write here and there is no way to inject HTML through a list.
+
+  ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
+{% endcomment %}
+
+{%- assign anchor = section.settings.anchor | handle -%}
+
+<div class="suf-section" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+  <div class="suf-wrap">
+    <div class="suf-legal">
+      {%- if section.settings.updated != blank -%}
+        {%- comment -%}
+          A <p>, not a <time>: the value is merchant-typed prose ("August 27,
+          2026") with no machine-readable datetime to pair with it, and a
+          <time> without a datetime attribute is worth nothing to anything
+          reading the page.
+        {%- endcomment -%}
+        <p class="suf-legal__updated">{{ section.settings.updated | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.lead != blank -%}
+        {%- comment -%}
+          A <div>, not a <p>: a richtext setting emits its own <p>, and
+          nesting one inside another is invalid -- the browser auto-closes the
+          outer element and the content escapes the styled wrapper.
+        {%- endcomment -%}
+        <div class="suf-legal__lead">{% render 'suf-nb', text: section.settings.lead %}</div>
+      {%- endif -%}
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            <h2 {{ block.shopify_attributes }}>
+              {%- assign heading = block.settings.text | escape -%}
+              {%- render 'suf-nb', text: heading -%}
+            </h2>
+
+          {%- when 'subheading' -%}
+            <h3 {{ block.shopify_attributes }}>
+              {%- assign subheading = block.settings.text | escape -%}
+              {%- render 'suf-nb', text: subheading -%}
+            </h3>
+
+          {%- when 'text' -%}
+            <div class="suf-legal__prose" {{ block.shopify_attributes }}>
+              {%- render 'suf-nb', text: block.settings.text -%}
+            </div>
+
+          {%- when 'list' -%}
+            {%- assign items = block.settings.items | strip | newline_to_br | split: '<br />' -%}
+            {%- if items.size > 0 -%}
+              {%- if block.settings.numbered -%}
+                <ol {{ block.shopify_attributes }}>
+              {%- else -%}
+                <ul {{ block.shopify_attributes }}>
+              {%- endif -%}
+
+              {%- for item in items -%}
+                {%- assign line = item | strip -%}
+                {%- if line != blank -%}
+                  <li>
+                    {%- comment -%}
+                      `contains` first: split always returns at least one part,
+                      so testing parts.size cannot tell a lead-in from a plain
+                      line.
+                    {%- endcomment -%}
+                    {%- if line contains '|' -%}
+                      {%- assign parts = line | split: '|' -%}
+                      {%- assign label = parts[0] | strip | escape -%}
+                      {%- assign rest = parts | slice: 1, 99 | join: '|' | strip | escape -%}
+                      <b>{% render 'suf-nb', text: label %}</b>
+                      {{ ' ' }}{% render 'suf-nb', text: rest %}
+                    {%- else -%}
+                      {%- assign line = line | escape -%}
+                      {%- render 'suf-nb', text: line -%}
+                    {%- endif -%}
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+
+              {%- if block.settings.numbered -%}
+                </ol>
+              {%- else -%}
+                </ul>
+              {%- endif -%}
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Legal document (SUF)",
+  "tag": "section",
+  "max_blocks": 50,
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Anchor id" },
+    {
+      "type": "text",
+      "id": "updated",
+      "label": "Last updated",
+      "info": "e.g. \"Last updated: August 27, 2026\"."
+    },
+    {
+      "type": "richtext",
+      "id": "lead",
+      "label": "Opening paragraph",
+      "info": "Set larger than the body copy. One paragraph."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Section heading",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Heading", "info": "Numbered by hand, e.g. \"1. Introduction\"." }
+      ]
+    },
+    {
+      "type": "subheading",
+      "name": "Sub-heading",
+      "settings": [{ "type": "text", "id": "text", "label": "Sub-heading" }]
+    },
+    {
+      "type": "text",
+      "name": "Paragraph",
+      "settings": [{ "type": "richtext", "id": "text", "label": "Text" }]
+    },
+    {
+      "type": "list",
+      "name": "List",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "Items",
+          "info": "One per line. For a bold lead-in, put it before a pipe: \"Refunds.|Text of the item\"."
+        },
+        {
+          "type": "checkbox",
+          "id": "numbered",
+          "label": "Numbered",
+          "info": "Off renders the slash bullets; on renders red numerals.",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Legal document (SUF)",
+      "blocks": [{ "type": "heading" }, { "type": "text" }]
+    }
+  ]
+}
+{% endschema %}
