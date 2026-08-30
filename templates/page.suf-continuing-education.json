@@ -6,7 +6,7 @@
       "settings": {
         "eyebrow": "Continuing Education — Level 2",
         "heading": "Certifications That Command <em>Higher Rates</em>",
-        "subhead": "Built for certified trainers — SUF, NASM, ACE, or ISSA. Two full Level 2 certifications, each with CEUs, that add real skills, new services, and a clear reason to charge more per session.",
+        "subhead": "Built for certified trainers — SUF, NASM, ACE, or ISSA. Two full Level 2 certifications — Soft Tissue Mobilization and Nutrition Coaching, <b>not add-on courses.</b> Each earns 2.0 CEUs and adds real skills, new services, and a clear reason to charge more per session.",
         "tier_3": false,
         "overlap": false,
         "button_label": "Get Both — Save $XXX",
@@ -15,14 +15,6 @@
         "button2_url": "/pages/suf-compare-packages",
         "image": "shopify://shop_images/home-02.webp",
         "image_alt": "Trainer demonstrating a resistance band lateral raise while a coach cues him"
-      }
-    },
-    "intro": {
-      "type": "suf-statement",
-      "settings": {
-        "heading": "Two Level 2 Certifications",
-        "body": "<p>Full certifications, not add-on courses. Each earns 2.0 CEUs and comes with its own curriculum, live calls, and materials in the SUF Library. Soft Tissue Mobilization and Nutrition Coaching — both below.</p>",
-        "dark": false
       }
     },
     "stm": {
@@ -160,8 +152,8 @@
         "button_label": "Buy Now",
         "go_to_checkout": true,
         "micro": "<p>Straight to secure checkout</p>",
-        "image": "shopify://shop_images/Nutrition_course_for_Certified_Personal_Trainers.png",
-        "image_alt": "Coach reviewing a nutrition plan with a client",
+        "image": "shopify://shop_images/exercise-01.webp",
+        "image_alt": "Two coaches working through a plan together in a gym",
         "image_side": "right",
         "frame": "blue",
         "dark": false
@@ -209,7 +201,8 @@
         "image_side": "right",
         "frame": "red",
         "dark": true,
-        "pointer": "<p>Want everything we teach — all three certifications and all three seminars, with lifetime library access? <a href=\"/pages/suf-compare-packages\">Compare every package, including the Qualified Trainer Package →</a></p>"
+        "pointer": "<p>Want everything we teach — all three certifications and all three seminars, with lifetime library access? <a href=\"/pages/suf-compare-packages\">Compare every package, including the Qualified Trainer Package →</a></p>",
+        "flush_top": true
       }
     },
     "skill": {
@@ -224,45 +217,6 @@
         "body": "<p>Certified but never really taught how to program? This 75-minute video covers the SUF fundamentals: core movement patterns, acute variables, and how to program for any client walking through the door — while adding in service and sales. Good on its own, and a 75-minute taste of how SUF teaches everything.</p>",
         "product": "how-to-program-for-the-general-population-programming-101",
         "button_label": "Add to Cart"
-      }
-    },
-    "quotes": {
-      "type": "suf-quotes",
-      "blocks": {
-        "q1": {
-          "type": "quote",
-          "settings": {
-            "rating": 5,
-            "quote": "I’ve been a trainer at LA Fitness for almost two years. In 3 months I was able to relearn a lot of what I’d forgotten — the deeper shoulder and hip anatomy helped me step up my game and better help my clients.",
-            "who": "— Saular"
-          }
-        },
-        "q2": {
-          "type": "quote",
-          "settings": {
-            "rating": 5,
-            "quote": "I’m coaching nutrition on top of my regular training, and that second stream has been the difference between a good year and a great one.",
-            "who": "— Renee T."
-          }
-        },
-        "q3": {
-          "type": "quote",
-          "settings": {
-            "rating": 5,
-            "quote": "I have learned so much more than I ever expected in just 2 weeks. I am learning how to become the best coach possible for my clients — not just learning how to pass the test.",
-            "who": "— Kandy"
-          }
-        }
-      },
-      "block_order": [
-        "q1",
-        "q2",
-        "q3"
-      ],
-      "settings": {
-        "heading": "What Trainers Are Saying",
-        "aside": "Certified trainers who came to SUF to go further.",
-        "columns": "three"
       }
     },
     "faq": {
@@ -303,16 +257,61 @@
         "link_label": "Or compare every package side by side →",
         "link_url": "/pages/suf-compare-packages"
       }
+    },
+    "proof": {
+      "type": "suf-qspot",
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I’ve been a trainer at LA Fitness for almost two years. In 3 months I was able to relearn a lot of what I’d forgotten — the deeper shoulder and hip anatomy helped me step up my game and better help my clients.",
+            "who": "— Saular"
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I’m coaching nutrition on top of my regular training, and that second stream has been the difference between a good year and a great one.",
+            "who": "— Renee T."
+          }
+        },
+        "q3": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "quote": "I have learned so much more than I ever expected in just 2 weeks. I am learning how to become the best coach possible for my clients — not just learning how to pass the test.",
+            "who": "— Kandy"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {
+        "eyebrow": "Proof It Works",
+        "headline": "That second stream has been the difference between a good year and a great one.",
+        "result": "Added a $XXK nutrition stream",
+        "quote": "I took the Nutrition cert to give my clients more, and it turned into real money — I coach nutrition on top of every training package now, and it books out faster than my sessions do.",
+        "who": "— Renee T., Nutrition Coach Cert",
+        "image": "shopify://shop_images/home-01.webp",
+        "image_alt": "Group of trainees flexing and posing together in front of a Lifetime University sign",
+        "proof_heading": "What Trainers Are Saying",
+        "proof_columns": "three",
+        "flush_bottom": true
+      }
     }
   },
   "order": [
     "band",
-    "intro",
     "stm",
     "nutrition",
+    "proof",
     "bundle",
     "skill",
-    "quotes",
     "faq",
     "cta"
   ]
