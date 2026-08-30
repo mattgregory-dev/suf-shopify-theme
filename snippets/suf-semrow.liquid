@@ -1,0 +1,52 @@
+{% comment %}
+  One row of the event list.
+
+  Extracted so the two sources -- a Seminars collection and hand-authored
+  blocks -- render identically. Duplicating the markup in both branches is how
+  the fallback quietly stops matching the real thing.
+
+  Every value arrives already resolved. The snippet makes no decisions about
+  where a row points or what it costs; it only draws.
+
+    city        string, required
+    date        string, already formatted for display
+    focus       string, blank renders the TBA state
+    price       string, already money-formatted
+    target      href. Ignored when sold_out
+    sold_out    boolean. Renders a <div>, not a link
+    cue         link text, defaults to "Reserve"
+    attrs       block.shopify_attributes, or blank in collection mode
+{% endcomment %}
+
+{%- if sold_out -%}
+  <div class="suf-semrow" {{ attrs }}>
+{%- else -%}
+  <a class="suf-semrow" href="{{ target | default: '#' }}" {{ attrs }}>
+{%- endif -%}
+
+<span class="suf-semrow__city">{{ city | escape }}</span>
+<span class="suf-semrow__date">{{ date | escape }}</span>
+
+{%- comment -%}
+  Cities are announced before their focus is decided, so an empty value is a
+  normal state rather than a missing one. Left bare it rendered as a blank cell
+  in the middle of the row, which reads as broken rather than as pending.
+{%- endcomment -%}
+{%- if focus != blank -%}
+  <span class="suf-semrow__focus">{{ focus | escape }}</span>
+{%- else -%}
+  <span class="suf-semrow__focus suf-semrow__focus--tba">Focus TBA</span>
+{%- endif -%}
+
+<span class="suf-semrow__price">{{ price }}</span>
+
+{%- if sold_out -%}
+  <span class="suf-semrow__focus">Sold out</span>
+{%- else -%}
+  <span class="suf-semrow__cue">
+    {{- cue | default: 'Reserve' | escape }}
+    <span class="suf-semrow__arrow" aria-hidden="true">&rarr;</span>
+  </span>
+{%- endif -%}
+
+{%- if sold_out -%}</div>{%- else -%}</a>{%- endif -%}

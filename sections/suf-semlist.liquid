@@ -1,87 +1,196 @@
 {% comment %}
-  Upcoming events. One block per date -- the buy point of the seminars page.
+  Upcoming events. The buy point of the seminars page.
 
-  Whole row is one link, cue is a <span>, same rule as the other row lists.
+  TWO SOURCES, and the collection wins when it is set.
 
-  WHERE THE ROW GOES. A row is an <a>, and an <a> cannot contain the <form> that
-  a true "straight to checkout" needs, so there are two honest options:
+    collection   one row per product, everything read from metafields
+    blocks       hand-authored rows, used when no collection is chosen
 
-    product   the product page, where Shopify's own buy flow takes over
-    cart      /cart/{variant}:1 -- adds the seat and shows the cart
+  Blocks are the fallback rather than the primary because a typed price is a
+  lie waiting to happen: it sits next to a real product and does not follow it.
+  A dead product handle behaves the same way -- Liquid returns nothing rather
+  than erroring, so the row silently falls back to typed values and looks
+  perfectly normal. That has already happened once here, when a product was
+  renamed. In collection mode the product is the only source, so a missing one
+  is a missing row.
 
-  Neither lands the buyer directly on checkout. The mockup's note says "Each
-  Reserve goes straight to secure checkout for that event"; if that copy is
-  kept, this section needs rebuilding as one form per row with a submit styled
-  as the row, which costs the whole-row click target. Flagged rather than
-  quietly mismatched.
+  THE SETTING IS `events_collection`, NOT `collection`. A setting whose id is
+  `collection` collides with Liquid's global collection drop and reads back
+  EMPTY -- `section.settings.collection` is blank however valid the template
+  JSON is. Nothing errors; the section just falls through to the blocks branch
+  and renders plausible-looking rows from the wrong source. Do not rename it
+  back. The same caution applies to `product`, `cart` and `customer`.
 
-  Price and availability come from the product. A sold-out date says so instead
-  of linking, because a seminar seat that has gone is the one thing a visitor
-  most needs told.
+  METAFIELDS, all on the product, all namespace `custom`:
+
+    custom_seminar_city    single line text   "Tampa, FL"
+    custom_seminar_start   date               2026-09-25
+    custom_seminar_end     date               2026-09-26
+    custom_seminar_focus   single line text   "Upper Body", blank = TBA
+
+  The displayed date is DERIVED from start and end, so nobody types
+  "September 25 & 26" and nobody can mistype it. Same month collapses to
+  "September 25 & 26"; different months render both.
+
+  SORTING. Liquid cannot sort a collection by a metafield -- `sort` reaches
+  simple properties only. So the rows are ordered by building an array of
+  `YYYYMMDD~index` strings and sorting THAT: the key is zero-padded and
+  fixed-width, which makes a lexical sort chronological. The loop index rather
+  than the handle avoids `all_products`, which is capped at 20 lookups a page.
+
+  A product with no start date sorts last on 99999999 rather than jumping to
+  the front on an empty key.
+
+  PAST EVENTS DROP OFF by themselves, judged on the end date so a seminar is
+  still listed on its first morning. Nothing has to be remembered.
+
+  WHERE THE ROW GOES. A row is an <a>, and an <a> cannot contain the <form>
+  that a true "straight to checkout" needs, so there are two honest options:
+  the product page, or /cart/{variant}:1. Neither lands the buyer on checkout.
+  The note under the list says "straight to secure checkout"; if that copy is
+  kept, this needs rebuilding as one form per row with a submit styled as the
+  row, which costs the whole-row click target. Flagged rather than quietly
+  mismatched.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
 
-{%- assign anchor = section.settings.anchor | handle -%}
+{%- liquid
+  assign anchor = section.settings.anchor | handle
+  assign events = section.settings.events_collection
+  assign today = 'now' | date: '%Y%m%d' | plus: 0
+-%}
 
 <div class="suf-section" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
   <div class="suf-wrap">
     <div class="suf-semlist">
-      {%- for block in section.blocks -%}
+      {%- if events != blank -%}
         {%- liquid
-          assign product = block.settings.product
-          assign target = block.settings.url
-          if target == blank and product != blank
-            if block.settings.link_mode == 'cart'
-              assign vid = product.selected_or_first_available_variant.id
-              assign target = '/cart/' | append: vid | append: ':1'
-            else
-              assign target = product.url
+          assign keyed = ''
+          for p in events.products
+            assign starts = p.metafields.custom.custom_seminar_start.value | date: '%Y%m%d'
+            if starts == blank
+              assign starts = '99999999'
             endif
-          endif
-          assign sold_out = false
-          if product != blank and product.available == false
-            assign sold_out = true
-          endif
+            assign keyed = keyed | append: starts | append: '~' | append: forloop.index0 | append: ','
+          endfor
+          assign keys = keyed | split: ',' | sort
+          assign shown = 0
         -%}
 
-        {%- if sold_out -%}
-          <div class="suf-semrow" {{ block.shopify_attributes }}>
-        {%- else -%}
-          <a class="suf-semrow" href="{{ target | default: '#' }}" {{ block.shopify_attributes }}>
-        {%- endif -%}
+        {%- for key in keys -%}
+          {%- liquid
+            assign idx = key | split: '~' | last | plus: 0
+            assign product = events.products[idx]
 
-        <span class="suf-semrow__city">{{ block.settings.city | escape }}</span>
-        <span class="suf-semrow__date">{{ block.settings.date | escape }}</span>
-        {%- comment -%}
-          Cities are announced before their focus is decided, so an empty
-          setting is a normal state rather than a missing one. Left bare it
-          rendered as a blank cell in the middle of the row, which reads as
-          broken rather than as pending.
-        {%- endcomment -%}
-        {%- if block.settings.focus != blank -%}
-          <span class="suf-semrow__focus">{{ block.settings.focus | escape }}</span>
-        {%- else -%}
-          <span class="suf-semrow__focus suf-semrow__focus--tba">Focus TBA</span>
-        {%- endif -%}
-        <span class="suf-semrow__price">
-          {%- if product != blank -%}
-            {{ product.price | money_without_trailing_zeros }}
-          {%- else -%}
-            {{ block.settings.price | escape }}
+            assign starts = product.metafields.custom.custom_seminar_start.value
+            assign ends = product.metafields.custom.custom_seminar_end.value | default: starts
+
+            # Judged on the end date, so a two-day seminar is still listed on
+            # its first morning.
+            #
+            # `| plus: 0` on both sides is load-bearing: Liquid compares
+            # strings with < by returning false, silently, so an unconverted
+            # comparison never drops anything and the filter looks like it
+            # works right up until a date passes.
+            assign over = ends | date: '%Y%m%d' | plus: 0
+            assign is_past = false
+            if ends != blank and over < today
+              assign is_past = true
+            endif
+          -%}
+
+          {%- if is_past == false and shown < section.settings.limit -%}
+            {%- liquid
+              assign shown = shown | plus: 1
+
+              # Each half is formatted on its OWN line. Chaining them --
+              # `first | append: ' & ' | append: ends | date: '%-d'` -- pipes
+              # the whole concatenated string into date, not the end date.
+              assign m1 = starts | date: '%B'
+              assign m2 = ends | date: '%B'
+              assign first_half = starts | date: '%B %-d'
+              if m1 == m2
+                assign second_half = ends | date: '%-d'
+              else
+                assign second_half = ends | date: '%B %-d'
+              endif
+              assign when = first_half | append: ' & ' | append: second_half
+              if starts == blank
+                assign when = ''
+              endif
+
+              assign city = product.metafields.custom.custom_seminar_city.value | default: product.title
+              assign focus = product.metafields.custom.custom_seminar_focus.value
+              assign price = product.price | money_without_trailing_zeros
+
+              assign sold_out = false
+              unless product.available
+                assign sold_out = true
+              endunless
+
+              if section.settings.link_mode == 'cart'
+                assign vid = product.selected_or_first_available_variant.id
+                assign target = '/cart/' | append: vid | append: ':1'
+              else
+                assign target = product.url
+              endif
+            -%}
+
+            {%- comment -%}
+              Every argument is a plain variable. A render argument takes a
+              value, not an expression -- `sold_out: product.available == false`
+              is a parse error, and the section 500s rather than degrading.
+            {%- endcomment -%}
+            {%- render 'suf-semrow',
+              city: city,
+              date: when,
+              focus: focus,
+              price: price,
+              target: target,
+              sold_out: sold_out,
+              cue: section.settings.cue
+            -%}
           {%- endif -%}
-        </span>
-        {%- if sold_out -%}
-          <span class="suf-semrow__focus">Sold out</span>
-        {%- else -%}
-          <span class="suf-semrow__cue">
-            {{- block.settings.cue | default: 'Reserve' | escape }}
-            <span class="suf-semrow__arrow" aria-hidden="true">&rarr;</span>
-          </span>
-        {%- endif -%}
+        {%- endfor -%}
 
-        {%- if sold_out -%}</div>{%- else -%}</a>{%- endif -%}
-      {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign product = block.settings.product
+            assign target = block.settings.url
+            if target == blank and product != blank
+              if block.settings.link_mode == 'cart'
+                assign vid = product.selected_or_first_available_variant.id
+                assign target = '/cart/' | append: vid | append: ':1'
+              else
+                assign target = product.url
+              endif
+            endif
+
+            assign sold_out = false
+            if product != blank
+              assign price = product.price | money_without_trailing_zeros
+              unless product.available
+                assign sold_out = true
+              endunless
+            else
+              assign price = block.settings.price
+            endif
+          -%}
+
+          {%- render 'suf-semrow',
+            city: block.settings.city,
+            date: block.settings.date,
+            focus: block.settings.focus,
+            price: price,
+            target: target,
+            sold_out: sold_out,
+            cue: block.settings.cue,
+            attrs: block.shopify_attributes
+          -%}
+        {%- endfor -%}
+      {%- endif -%}
     </div>
 
     {%- if section.settings.note != blank -%}
@@ -102,12 +211,40 @@
       "label": "Anchor id",
       "info": "Lets a button elsewhere link here, e.g. \"upcoming\"."
     },
+    { "type": "header", "content": "Source" },
+    {
+      "type": "collection",
+      "id": "events_collection",
+      "label": "Seminars collection",
+      "info": "Set this and the rows come from its products. City, dates and focus are read from each product's metafields; the Event blocks below are then ignored."
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Rows to show",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "link_mode",
+      "label": "Where Reserve goes",
+      "info": "Collection mode only. Neither lands directly on checkout -- see the section comment.",
+      "options": [
+        { "value": "product", "label": "Product page" },
+        { "value": "cart", "label": "Add to cart, then cart" }
+      ],
+      "default": "product"
+    },
+    { "type": "text", "id": "cue", "label": "Link text", "default": "Reserve" },
     { "type": "richtext", "id": "note", "label": "Note under the list" }
   ],
   "blocks": [
     {
       "type": "event",
-      "name": "Event",
+      "name": "Event (fallback)",
       "settings": [
         { "type": "text", "id": "city", "label": "City" },
         { "type": "text", "id": "date", "label": "Date" },
@@ -127,7 +264,6 @@
           "type": "select",
           "id": "link_mode",
           "label": "Where Reserve goes",
-          "info": "Neither lands directly on checkout -- see the section comment.",
           "options": [
             { "value": "product", "label": "Product page" },
             { "value": "cart", "label": "Add to cart, then cart" }

@@ -204,7 +204,11 @@
       ],
       "settings": {
         "anchor": "upcoming",
-        "note": "<p>New cities are added on a rolling basis — <a href=\"/pages/suf-contact\">get first access to new dates</a>.</p>"
+        "note": "<p>New cities are added on a rolling basis — <a href=\"/pages/suf-contact\">get first access to new dates</a>.</p>",
+        "limit": 6,
+        "link_mode": "product",
+        "cue": "Reserve",
+        "events_collection": "seminars"
       }
     },
     "bundle": {
