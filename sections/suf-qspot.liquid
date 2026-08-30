@@ -37,10 +37,21 @@
           <p class="suf-qspot__result">{{ section.settings.result | escape }}</p>
         {%- endif -%}
 
+        {%- comment -%}
+          <blockquote> only when there is an attribution. On study guides this
+          field carries Show Up Fitness's own prose explaining the headline
+          quote above it, not a second quotation -- and marking prose up as a
+          blockquote tells a screen reader it is someone else's words.
+          Attribution present is the honest test for that.
+        {%- endcomment -%}
         {%- if section.settings.quote != blank -%}
-          <blockquote>
+          {%- if section.settings.who != blank -%}
+            <blockquote>
+              <p class="suf-qspot__quote">{{ section.settings.quote | escape }}</p>
+            </blockquote>
+          {%- else -%}
             <p class="suf-qspot__quote">{{ section.settings.quote | escape }}</p>
-          </blockquote>
+          {%- endif -%}
         {%- endif -%}
 
         {%- if section.settings.who != blank -%}

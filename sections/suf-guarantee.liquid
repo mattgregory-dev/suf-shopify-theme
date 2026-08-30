@@ -13,7 +13,7 @@
 
 <div class="suf-section">
   <div class="suf-wrap">
-    <div class="suf-guarantee">
+    <div class="suf-guarantee{% if section.settings.light %} suf-guarantee--light{% endif %}">
       <div>
         {%- if section.settings.heading != blank -%}
           <h3>{% render 'suf-nb', text: section.settings.heading %}</h3>
@@ -57,6 +57,13 @@
       "type": "url",
       "id": "button_url",
       "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "light",
+      "label": "Light surface",
+      "info": "A white card with a hairline border instead of the navy box. Use it on a page that already carries a dark band.",
+      "default": false
     }
   ],
   "presets": [

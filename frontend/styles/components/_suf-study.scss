@@ -355,3 +355,35 @@
   max-width: 1000px;
   margin-inline: auto;
 }
+
+// Light variant of the guarantee callout.
+//
+// The design rations full-bleed and near-full-bleed navy, and study guides
+// now opens its proof section as a dark band -- so the guarantee, sitting a
+// section later, would be the page's second dark block in quick succession.
+// White with a hairline border keeps the callout's structure and gives the
+// dark band back its weight.
+.suf-guarantee--light {
+  background: var(--suf-color-surface);
+  border: 1px solid var(--suf-color-border-subtle);
+  box-shadow: none;
+  color: var(--suf-color-text);
+
+  h3 {
+    color: var(--suf-color-heading);
+  }
+
+  p {
+    color: var(--suf-color-text);
+  }
+
+  em,
+  p a {
+    color: var(--suf-color-link);
+  }
+
+  p a:hover,
+  p a:focus-visible {
+    color: var(--suf-color-accent);
+  }
+}
