@@ -167,6 +167,14 @@
 
   padding-bottom: calc(var(--suf-space-5) + var(--suf-band-overlap));
   border-bottom: none;
+
+  // The overlap itself is unchanged -- it is half of a matched pair with
+  // .suf-section--overlap-up and the two must agree. Only the band's OWN
+  // padding on top of it shrinks, which is what closes the gap between the
+  // band's copy and the panel overlapping its edge.
+  @media (max-width: 900px) {
+    padding-bottom: calc(var(--suf-space-1) + var(--suf-band-overlap));
+  }
 }
 
 .suf-section--overlap-up {

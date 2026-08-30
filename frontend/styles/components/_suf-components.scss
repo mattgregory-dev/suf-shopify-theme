@@ -25,7 +25,17 @@
   margin-inline: auto;
   padding-inline: var(--suf-space-3);
 
-  @include m.from(m.$bp-md) {
+  // 500px, deliberately NOT m.$bp-md.
+  //
+  // The narrow gutter exists for phones, where 40px of padding leaves too
+  // little usable width. By 500px there is room for the full gutter, and
+  // holding the narrow one all the way to 768 left every section looking
+  // edge-to-edge on a small tablet.
+  //
+  // A literal rather than a new variable, and not a change to $bp-md: that
+  // breakpoint is shared by the search, footer, page and base layers, and
+  // moving it to suit the container would drag six unrelated rules with it.
+  @media (min-width: 500px) {
     padding-inline: var(--suf-container-padding);
   }
 }

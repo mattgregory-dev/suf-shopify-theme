@@ -51,6 +51,15 @@
   // Deeper than the top: the stat bar overlaps this edge and must not collide
   // with the buttons.
   padding-bottom: 120px;
+
+  // Both come in on small screens. The desktop values are drawn against a
+  // 640px-tall hero with a short headline beside empty space; once the
+  // headline wraps and the buttons stack, the same padding pushes the fold
+  // well past the copy.
+  @media (max-width: 900px) {
+    padding-top: 60px;
+    padding-bottom: 100px;
+  }
 }
 
 .suf-hero {

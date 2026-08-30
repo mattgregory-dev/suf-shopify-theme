@@ -26,14 +26,12 @@
 
   // 1000px: the fact panel stops being readable beside the argument.
   //
-  // The gap tightens with the stack. --suf-space-6 is sized as a COLUMN gap --
-  // it has to hold two columns apart across the full width of the section.
-  // Once they stack it becomes 64-96px of vertical space between a paragraph
-  // and the chart that illustrates it, which is enough for the two to stop
-  // reading as one thought.
+  // The gap does NOT change with the stack: --suf-space-6 was tried at
+  // --suf-space-4 here and the panel ended up too close to the copy above it.
+  // The full gap is what keeps the chart reading as its own element rather
+  // than as part of the paragraph.
   @media (max-width: 1000px) {
     grid-template-columns: 1fr;
-    gap: var(--suf-space-4);
   }
 }
 
