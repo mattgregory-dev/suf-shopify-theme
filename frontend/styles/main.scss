@@ -35,3 +35,9 @@
 @use 'components/suf-search';
 @use 'components/suf-footer';
 @use 'components/fontawesome-retire';
+
+// LAST, and deliberately unscoped. Commerce and blog chrome ported from the
+// live site's custom.css, for the templates this redesign is not rebuilding.
+// It has to out-order dt-framework.css, and it must NOT be wrapped in
+// .suf-body -- those templates render through theme.liquid. See the file.
+@use 'legacy/custom-port';

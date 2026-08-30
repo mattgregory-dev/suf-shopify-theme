@@ -1,0 +1,716 @@
+// Selected rules ported from the LIVE site's assets/custom.css.
+//
+// WHAT THIS IS. Production runs a theme roughly two years newer than this
+// repo, and carries a hand-written custom.css of ~2,200 lines on top of it.
+// Most of that file is one-off styling for pages that no longer exist in the
+// redesign. A minority of it is real commerce chrome -- the product page, the
+// collection grids, the cart and its drawer, the blog -- and that part is
+// worth keeping, because those templates are NOT being rebuilt in this pass
+// and would otherwise render with none of production's corrections.
+//
+// This file is that minority, and nothing else.
+//
+// DELIBERATELY NOT PORTED: Calendly, the form widgets themselves, the old
+// contact form, the homepage overlap hacks, "Meet Chris", "Congrats on taking
+// the first step", the team/trainers blocks, the header tweaks, and every
+// `#shopify-block-<uuid>` rule. Those target markup that is either gone or
+// replaced by a suf-* section. Do not add them back without a reason that
+// names the page they serve.
+//
+// PRODUCTION'S HEADINGS ARE NOT A GUIDE TO WHAT A BLOCK IS. The footer contact
+// band appears twice in that file, once under "Hulk Forms" and once under
+// "Klaviyo Form", and neither set styles a form -- both lay out a two-column
+// contact region that happens to contain one. Both ARE ported, by decision;
+// see FOOTER CONTACT BLOCK. Judge a block by its selectors, not its comment.
+//
+// ---------------------------------------------------------------------------
+// WHY THIS FILE IS NOT SCOPED UNDER .suf-body
+// ---------------------------------------------------------------------------
+//
+// Every other partial here is scoped, because suf.css is loaded by BOTH
+// layouts and an unscoped rule would reach the ~30 legacy templates. That is
+// the whole point of this one: cart, product, collection, blog and article all
+// still render through theme.liquid, where .suf-body does not exist. Scoping
+// these would make the port do nothing at all.
+//
+// It is safe in the other direction. Every selector below matches legacy
+// markup only -- .dt-sc-*, .cart_table, #CartDrawer, .collection-grid,
+// .product-tab -- and each was checked against sections/, snippets/ and
+// frontend/styles/ before porting. None of them appears in any suf-* section.
+// Verify that again before adding a rule with a generic selector.
+//
+// ---------------------------------------------------------------------------
+// CHANGES MADE DURING THE PORT
+// ---------------------------------------------------------------------------
+//
+// * #0292db is the brand blue, so it is var(--suf-blue). The token resolves on
+//   legacy pages too: _tokens.scss compiles to :root inside suf.css, which
+//   theme.liquid loads. It picks up the compiled fallback rather than the
+//   theme-editor override, which is the same value.
+// * `!important` is kept exactly as production has it. These rules exist to
+//   beat dt-framework.css, which is 117 KB of high-specificity theme CSS still
+//   loaded on every legacy page. Removing the flags would silently undo the
+//   port.
+// * Two rules that set the same property twice, dead first value included,
+//   were reduced to the value that actually applied.
+// * `.content-wrapper` was dropped: it appears nowhere in this theme's markup,
+//   so it belongs to production's newer templates.
+
+// ---------------------------------------------------------------------------
+// GLOBAL TYPE ON LEGACY PAGES
+//
+// FIRST IN THIS FILE, deliberately. Everything below is more specific and
+// therefore wins -- the blog's own h2 size, the app blocks' h3. Move this
+// block down and it starts overriding them on a specificity tie.
+//
+// `body:not(.suf-body)` is the INVERSE of the scoping every other partial
+// uses, and it is the only correct scope for a rule production applies
+// globally. A bare `h2 { font-size: 50px !important }` would land on every
+// suf page as well, and `!important` means it would beat the entire clamp
+// scale in _tokens.scss -- every section heading on the new pages, fixed at
+// 50px, at every width. Excluding .suf-body confines it to the ~30 templates
+// that render through theme.liquid, which is where production's value came
+// from and the only place it belongs.
+//
+// This is the pattern for any other global rule from that file. h1 and h3-h6
+// have equivalents in production and are not ported yet; if they are needed,
+// they belong here, in this form.
+// ---------------------------------------------------------------------------
+
+body:not(.suf-body) h2 {
+  font-size: 50px !important;
+}
+
+// ---------------------------------------------------------------------------
+// UIKIT APP BLOCKS
+//
+// The `uk-*` classes are UIkit, loaded by the app that renders these blocks --
+// not theme CSS and not ours. `.ecb-block` is the app's own outer wrapper, and
+// it is on every one of them: .ecb-block > .container-inner > .uk-card >
+// .uk-card-body > .description > p.
+//
+// Production sets this size GLOBALLY:
+//
+//     p:not(.tw p), li:not(.tw li) { font-size: 19px; cursor: auto; }
+//
+// That is deliberately not ported. A site-wide body size would land on every
+// suf page as well and fight the type scale in _tokens.scss, and it would win
+// -- (0,0,1) against a base layer that is also (0,0,1) but declared earlier.
+// The app blocks are the only markup that actually needs it, so it is scoped
+// to them.
+//
+// The `:not(.tw ...)` exclusion is dropped. `.tw` marked off an abandoned
+// Tailwind experiment; the class appears nowhere in this theme, so the
+// exclusion had nothing left to exclude even before the rule was scoped. The
+// same `:not(.tw ...)` appears on nine rules in production's file and is dead
+// weight on all of them.
+//
+// `cursor: auto` is production's, and it is not cosmetic -- dt-framework sets
+// a pointer cursor on this text, which makes body copy look clickable.
+.ecb-block {
+  p,
+  li {
+    cursor: auto;
+    font-size: 19px;
+  }
+
+  // The heading above that body copy. Production sizes h1-h6 globally in the
+  // same block as the p/li rule; only h3 is ported, because h3 is the only
+  // level these app blocks emit -- every card renders <h3 class="uk-h3">.
+  //
+  // The 600px step is production's too and comes with it: at 34px the longer
+  // card titles ("Transform Your Fitness Journey from Anywhere: Remote
+  // Training") run to four lines on a phone.
+  //
+  // NOT ported from that block: `font-family: 'Indivisible-Bold' !important`.
+  // That is the old brand face, and it would override Hanken Grotesk wherever
+  // these blocks appear.
+  //
+  // !important is required. UIkit's own .uk-h3 sets a size, and it is loaded
+  // by the app rather than by us, so source order is not ours to control.
+  h3 {
+    font-size: 34px !important;
+
+    @media (max-width: 600px) {
+      font-size: 30px !important;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// LEGACY BUTTONS
+//
+// Used by the hand-built HTML sections on index, internship, team-and-trainers
+// and in-person-suf-cpt-2. Not scoped to .ecb-block: those pages write the
+// markup themselves, outside any app block. None of these class names appears
+// in a suf-* section.
+//
+// THE THREE RULES ARE ONE UNIT. The base paints everything red, and the blue
+// variant is a later override -- port the base alone and every .blue-button
+// and UIkit primary button on the site turns red.
+//
+// INDIVISIBLE IS NOT DECLARED. Production asks for
+// `font-family: Indivisible-Bold, Arial, sans-serif !important`, but all four
+// Indivisible files were destroyed by a UTF-8 round trip and no browser can
+// parse them -- see snippets/suf-fonts.liquid. Production has been falling
+// through to Arial for years, so naming Arial first changes nothing on screen
+// and stops the dead face being copied forward again.
+// ---------------------------------------------------------------------------
+
+.red-button,
+.blue-button,
+.uk-button-primary.uk-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 12px 24px;
+  background-color: var(--suf-red);
+  border: none;
+  border-radius: 27px;
+  color: #fff;
+  cursor: pointer;
+  font-family: Arial, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 600;
+  line-height: 27px !important;
+}
+
+.red-button:hover {
+  border: none !important;
+  color: #fff !important;
+}
+
+.blue-button,
+.uk-button-primary.uk-button {
+  background-color: var(--suf-blue);
+}
+
+.blue-button:hover,
+.uk-button-primary.uk-button:hover {
+  background-color: #0477b1;
+  color: #fff !important;
+}
+
+// ---------------------------------------------------------------------------
+// GRID BANNERS
+//
+// The theme's icon-grid sections: home-grid-banner, home-specification-block,
+// and the pages that use them -- index, internship, online-suf-cpt,
+// trainer-ed, la-jolla, weekend-seminars, collection.
+//
+// Production carries this block TWICE, byte-identical, ~60 lines apart. Once
+// here.
+//
+// THE IMG RULE IS BLUNT AND IS PORTED ANYWAY. `width/height: !important` on
+// every img inside .grid-banner sizes them all to a 53x67 icon. That is right
+// for the icon grids these sections were built for, and wrong for any banner
+// that holds a photograph -- it would be squashed rather than cropped. It is
+// production's behaviour on the same sections, so it goes in as-is, but it is
+// worth a look at one of those pages before trusting it.
+// ---------------------------------------------------------------------------
+
+.grid-banner {
+  img {
+    width: 53px !important;
+    height: 67px !important;
+  }
+
+  .dt-sc-grid-banner-image.with-overlay {
+    float: unset;
+    text-align: center;
+  }
+
+  .dt-sc-grid-banner {
+    padding: 25px 25px 15px;
+    border: 1px solid #dbdbdb !important;
+    border-radius: 3px !important;
+    box-shadow: 0 0 7px 0 rgb(0 0 0 / 10%);
+  }
+
+  .dt-sc-heading-description {
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// FOOTER CONTACT BLOCK
+//
+// TWO CLASS NAMES FOR THE SAME REGION, and production carries a full rule set
+// for each:
+//
+//   .footer-form           the older Hulk Forms version. This is what THIS
+//                          theme renders -- the block still contains a
+//                          pxFormGenerator div.
+//   .footer-contact-info   production's current version, rebuilt around a
+//                          Klaviyo form.
+//
+// Both are covered here rather than renaming anything. The class name lives in
+// the app block's stored content, not in this repo, so it cannot be changed
+// from a template -- and changing it in the app would only move the mismatch,
+// since the two environments would still disagree until both were edited.
+//
+// The shared rules are written once against both selectors. The two genuinely
+// differ in how the columns are sized, because they are sized around different
+// forms, so those declarations stay apart.
+//
+// IT HAS A SHELF LIFE. When the footer is rebuilt this either moves into the
+// new section as suf-* styles or goes with the old one.
+//
+// The four rules that shared its 600px media query in production are NOT here
+// -- they are section headings and list indents with nothing to do with this
+// block, and they live under SMALL-SCREEN TYPE below.
+// ---------------------------------------------------------------------------
+
+.footer-form,
+.footer-contact-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 50px;
+  max-width: 1416px;
+  margin: 100px auto 0;
+  padding-top: 88px;
+  border-top: 1px solid #ccc;
+
+  h2 {
+    margin: 0 !important;
+  }
+
+  .col-1 h2 {
+    margin-bottom: 24px !important;
+  }
+
+  .sub-heading {
+    margin-top: 0 !important;
+    margin-bottom: 24px !important;
+    color: #b8b8b8;
+    font-size: 31px !important;
+  }
+
+  .locations {
+    display: flex;
+    gap: 20px;
+  }
+
+  .locations .left,
+  .locations .right {
+    width: 50%;
+    padding: 35px 35px 25px 25px;
+    background-color: #fff;
+    border: 1px solid #dbdbdb !important;
+    border-radius: 3px;
+    box-shadow: 0 0 8px 0 rgb(0 0 0 / 13%);
+  }
+
+  // The cards stop fitting side by side well before the columns do.
+  @media (max-width: 1200px) {
+    .locations {
+      flex-direction: column;
+    }
+
+    .locations .left,
+    .locations .right {
+      width: 100%;
+    }
+
+    .locations .right {
+      margin-bottom: 24px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    display: block;
+
+    .col-1 {
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h2 {
+      font-size: 40px !important;
+    }
+  }
+}
+
+// Sized around a Hulk form, which needs a fixed minimum to lay out at all.
+.footer-form {
+  justify-content: flex-start;
+
+  .col-1 {
+    min-width: 481px;
+  }
+
+  @media (max-width: 600px) {
+    .col-1 {
+      min-width: 100%;
+    }
+  }
+}
+
+// Sized around a Klaviyo form, which is fluid, so the split is proportional.
+.footer-contact-info {
+  justify-content: space-between;
+
+  .col-1 {
+    max-width: 30%;
+  }
+
+  .col-2 {
+    max-width: 60%;
+  }
+
+  @media (max-width: 600px) {
+    .col-1 {
+      min-width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    .col-2 {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      margin-top: 48px !important;
+    }
+
+    .col-1 h2,
+    .col-2 h2 {
+      font-size: 30px !important;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// SMALL-SCREEN TYPE ON LEGACY SECTIONS
+//
+// These four rules arrived inside production's "Klaviyo Form" block, sharing a
+// 600px media query with the .footer-contact-info layout. They have nothing to
+// do with that footer -- they are section headings and list indents that were
+// swept into the same query. The footer half is NOT ported; see below.
+// ---------------------------------------------------------------------------
+
+@media (max-width: 600px) {
+  // Every large section heading in the legacy vocabulary at once: the theme's
+  // own .dt-sc-main-heading, the UIkit app blocks' h2, and the slideshow
+  // heading. All three are sized for desktop and overflow a phone.
+  .dt-sc-heading h2.dt-sc-main-heading,
+  .uk-card-body h2.uk-h2,
+  .slider-content h2.slide-heading {
+    font-size: 35px !important;
+  }
+
+  // Pairs with the grid-banner block above: the content column keeps its
+  // desktop side padding inside a card that has its own.
+  .dt-sc-grid-banner-content {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  // Merchant-authored HTML. Same problem as .product-tab ul -- dt-framework
+  // strips the indent a bulleted list needs.
+  .row.bare-html ul {
+    padding-left: 20px !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PRODUCT PAGE
+// ---------------------------------------------------------------------------
+
+// Production merges these into one button; they are two rules there only
+// because they were added on different days.
+.shopify-payment-button__button {
+  width: 207px !important;
+  height: unset !important;
+}
+
+// The wishlist is a theme feature the store does not use. Both the header icon
+// and the product-page button are hidden rather than removed, because the
+// markup comes from the vendor theme.
+.site-header__icon.site-header__wishlist,
+.dT_VProdWishList {
+  display: none !important;
+}
+
+.product-tab {
+  margin-top: 24px;
+}
+
+// The tabs are labels, not controls -- there is only ever one -- hence the
+// text cursor and the absent hover treatment.
+.dt-sc-tabs .tablinks {
+  background-color: #737373;
+  border: none;
+  color: #fff;
+  cursor: text;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+// The reviews tab. Hidden rather than removed from the section, same reason.
+.dt-sc-tabs .tablinks:last-child {
+  display: none;
+}
+
+.dt-sc-tabs-content {
+  border: 1px solid #c0c0c0;
+  border-radius: 20px;
+}
+
+// dt-framework strips list markers globally. The product description is
+// merchant-authored rich text, where a bulleted list has to look like one.
+.product-tab ul,
+.product-tab ol {
+  margin-left: 0 !important;
+  padding-left: 1.5rem !important;
+}
+
+.product-tab ul li,
+.product-tab ol li {
+  display: list-item !important;
+  list-style-position: outside !important;
+  list-style-type: disc !important;
+}
+
+#product-description .product-title {
+  font-size: 40px !important;
+}
+
+.main-product-block .swiper-container .swiper-slide img {
+  width: 100% !important;
+}
+
+.product-page-row,
+.dt-sc-tabs-container {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.dt-sc-tabs-container {
+  margin-bottom: 100px;
+}
+
+.product-description-product-template .product-price li .money {
+  color: #000;
+  font-size: 34px;
+}
+
+.product-description-product-template .product-price li.product-price-list .money {
+  font-size: 26px;
+}
+
+h6.product-label {
+  color: #000 !important;
+}
+
+#inventory-product {
+  display: none !important;
+}
+
+p.no-refunds {
+  margin-top: 30px;
+}
+
+// dt-framework animates these over 300ms, which reads as lag on a buy button.
+form[class*='shopify-product'] > div.product_payments_btns > *,
+.product-form__item--submit button,
+.product_payments_btns button.shopify-payment-button__button,
+.product-item-caption-qty button[data-type='minus'],
+.product-item-caption-qty button[data-type='plus'],
+.js-drawer-open-right .drawer--right .dt-sc-btn,
+.drawer .ajaxcart__product .product-item-caption-qty button.ajaxcart__qty--minus,
+.drawer .ajaxcart__product .product-item-caption-qty button.ajaxcart__qty--plus {
+  transition-duration: 0.1s !important;
+}
+
+@media (max-width: 767px) {
+  #product-gallery {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  #product-description .product-title {
+    font-size: 36px !important;
+  }
+
+  .product-description-product-template .product-price .product-label {
+    width: 100%;
+  }
+
+  .product-description-product-template .product-price li .money {
+    display: block;
+    padding-top: 14px;
+    padding-left: 0;
+  }
+
+  .paywhirl-plan-selector .paywhirl-plan-selector-plan {
+    margin-left: 0 !important;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// COLLECTION / CATEGORY PAGES
+// ---------------------------------------------------------------------------
+
+.product-vendor {
+  display: none;
+}
+
+.collection-grid h4.grid-link__title a {
+  font-weight: 700 !important;
+  transition-duration: 0.1s !important;
+
+  &:hover {
+    color: var(--suf-blue) !important;
+  }
+}
+
+// The vendor theme's hover overlay on each card. Dropped in production, so a
+// card is the image and its title and nothing else.
+.collection-grid .products .product-container .ImageOverlayCa,
+.collection-grid .products .product-container .ImageWrapper {
+  display: none;
+}
+
+.quick-shop-modal-inner h2 {
+  font-size: 38px !important;
+  line-height: 1.2 !important;
+}
+
+.payment-plans {
+  margin-top: 12px;
+}
+
+// ---------------------------------------------------------------------------
+// CART AND CART DRAWER
+// ---------------------------------------------------------------------------
+
+#CartDrawer .close-icon {
+  background-color: #858585;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  transition-duration: 0.1s !important;
+
+  &:hover {
+    background-color: var(--suf-blue);
+  }
+}
+
+.drawer .total p {
+  display: none;
+  font-size: 18px !important;
+  line-height: 1.3 !important;
+}
+
+.cart__additional_checkout,
+#CartContainer .additional_checkout_buttons {
+  margin-top: 12px !important;
+}
+
+// "Add a note" is a link, not a button, whatever dt-framework styles it as.
+.cart_table .text-link.cart__note-add,
+#CartContainer .ajaxcart__footer.row a.dt-sc-btn {
+  padding: 0 !important;
+  background-color: #fff !important;
+  color: rgb(2 154 231) !important;
+  text-transform: unset !important;
+}
+
+#CartContainer .ajaxcart__footer.row a.dt-sc-btn {
+  margin-top: 19px !important;
+}
+
+#your-shopping-cart .btn_actions .dt-sc-btn,
+#your-shopping-cart .btn_actions input {
+  padding: 10px 20px 8px !important;
+  background-color: #898989 !important;
+  font-size: 16px !important;
+}
+
+// Shopify's own accelerated-checkout custom properties. They are not ours to
+// rename, so the suf- prefix rule is switched off for this block only.
+/* stylelint-disable custom-property-pattern */
+#dynamic-checkout-cart {
+  --shopify-accelerated-checkout-button-border-radius: 9999px;
+  --shopify-accelerated-checkout-button-block-size: 56px;
+  --shopify-accelerated-checkout-button-box-shadow: none;
+  --shopify-accelerated-checkout-button-inline-size: 100%;
+}
+/* stylelint-enable custom-property-pattern */
+
+// Shop Pay purple. A brand colour owned by Shopify, so it is a literal rather
+// than a token -- it must not move when ours do.
+.shopify-payment-button {
+  padding: 5px !important;
+  background: #5433eb !important;
+  border-radius: 10px !important;
+}
+
+// ---------------------------------------------------------------------------
+// BLOG AND ARTICLE
+// ---------------------------------------------------------------------------
+
+.sidebar_title {
+  padding: 12px !important;
+  border-bottom: none !important;
+  color: #fff !important;
+}
+
+.sidebar > div[class*='filter-panel'] .sidebar_title,
+.sidebar .StickySidebar > div[class*='filter-panel'] .sidebar_title,
+.sidebar .sidebar_title,
+.widget[class*='product-sidebar'] .sidebar_title {
+  border-bottom: none !important;
+}
+
+// Article bodies are merchant-authored: embeds and images arrive inline with
+// no spacing of their own.
+.dt-sc-blog-single iframe {
+  display: block !important;
+  margin: 24px auto 0 !important;
+}
+
+.dt-sc-blog-single p img,
+.dt-sc-blog-single div img {
+  margin-top: 24px !important;
+  margin-bottom: 24px !important;
+}
+
+.dt-sc-blog-single h2 {
+  font-size: 38px !important;
+}
+
+#show-up-fitness h3.dt-sc-blog-title {
+  line-height: 1em !important;
+}
+
+#show-up-fitness h3.dt-sc-blog-title a {
+  font-size: 24px !important;
+}
+
+// The featured image fills the column rather than sitting in the vendor
+// theme's fixed-width frame.
+.dt-sc-blog-single .dt-sc-blog-item .dt-sc-blog-image,
+.dt-sc-blog-single .dt-sc-blog-item .dt-sc-blog-image img {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.dt-sc-blog-single .dt-sc-blog-image {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-bottom: 0 !important;
+}
+
+.dt-sc-blog-description {
+  margin-top: 0 !important;
+}
+
+.dt-sc-blog-item .dt-sc-btn::after {
+  display: none !important;
+}
+
+.dt-sc-blog-item h3.dt-sc-blog-title a:hover,
+.dt-sc-blog-item .dt-sc-btn:hover {
+  color: var(--suf-blue) !important;
+}
