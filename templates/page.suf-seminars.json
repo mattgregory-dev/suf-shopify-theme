@@ -62,7 +62,8 @@
       "settings": {
         "heading": "Three Seminars. Three Focuses.",
         "body": "<p>Every seminar runs the same engine — assess, program with the Core / Core / Accessory (CCA) system taught at Show Up Fitness, get hands-on reps, and practice the sales conversations that turn skill into income. Pick the focus your practice needs most.</p>",
-        "dark": false
+        "dark": false,
+        "intro": true
       }
     },
     "focus": {
@@ -161,7 +162,8 @@
       "settings": {
         "heading": "Upcoming Seminars",
         "body": "<p>Every seminar is $XXX and held at a Life Time Fitness. Pick your city and date — travel and lodging are up to you, and most attendees make a weekend of it.</p>",
-        "dark": false
+        "dark": false,
+        "intro": true
       }
     },
     "upcoming": {
@@ -227,7 +229,8 @@
       "settings": {
         "eyebrow": "Unlock Your Potential",
         "heading": "Seminar Schedule",
-        "dark": false
+        "dark": false,
+        "intro": true
       }
     },
     "schedule": {

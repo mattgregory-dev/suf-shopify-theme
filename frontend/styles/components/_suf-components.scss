@@ -58,6 +58,21 @@
   scroll-margin-top: 80px;
 }
 
+// For a section that introduces the one below it rather than standing alone.
+//
+// The rhythm above works because each section pads HALF the gap: two
+// neighbours make one ~100px gap between separate ideas. An intro and the
+// thing it introduces are not separate ideas, so the full gap reads as a
+// disconnection -- the heading stops looking like it belongs to the cards
+// under it.
+//
+// Applied to the INTRO rather than the section below, because the intro is
+// the element that knows it is an intro. The section below is reusable and
+// should not need to know what precedes it.
+.suf-section--flush-bottom {
+  padding-bottom: 0;
+}
+
 .suf-section__head {
   display: flex;
   align-items: flex-start;

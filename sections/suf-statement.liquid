@@ -21,6 +21,11 @@
     assign classes = classes | append: ' suf-statement--dark'
   else
     assign classes = 'suf-section ' | append: classes
+    # Only on the light variant. The dark one is a full-bleed band that does
+    # not carry .suf-section, so it has no section padding to drop.
+    if section.settings.intro
+      assign classes = classes | append: ' suf-section--flush-bottom'
+    endif
   endif
 -%}
 
@@ -66,6 +71,13 @@
       "id": "dark",
       "label": "Dark band",
       "info": "Full-bleed navy. Count the dark bands already on the page before adding another.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "intro",
+      "label": "Introduces the section below",
+      "info": "Drops the gap underneath so this reads as the heading for what follows. Light variant only.",
       "default": false
     }
   ],
