@@ -226,6 +226,20 @@
     grid-template-columns: 1fr;
   }
 
+  // The button is a GRID ITEM, and a grid item stretches to its area by
+  // default -- `display: inline-block` on .suf-btn does not survive that.
+  //
+  // It goes unnoticed on the two-column layout because the button's column is
+  // `auto`, so the area is already the button's own width. The moment the
+  // grid stacks, the area becomes the full row and the button grows into a
+  // full-width block.
+  //
+  // justify-self, not a width: the button should size to its label at every
+  // width, which is what `start` does without naming a number.
+  .suf-btn {
+    justify-self: start;
+  }
+
   h3 {
     margin: 0 0 var(--suf-space-2);
     color: var(--suf-color-heading-on-dark);

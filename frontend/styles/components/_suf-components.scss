@@ -61,6 +61,13 @@
     font-size: var(--suf-font-size-h2);
     line-height: 1.12;
   }
+
+  // 450px: the heading and its aside stop being able to share a line at all --
+  // the aside is reduced to a two-word column beside a heading that wraps to
+  // four lines. Stacked, each gets the full width.
+  @media (max-width: 450px) {
+    flex-direction: column;
+  }
 }
 
 // The aside is supporting copy, so it may not exist. margin-left:auto on the
@@ -77,6 +84,15 @@
   font-size: var(--suf-font-size-small);
   text-align: right;
   text-wrap: balance;
+
+  // Stacked, the aside is no longer opposite the heading, so the two
+  // properties that pushed it there have to go with the row. Left as they
+  // were, it would sit right-aligned under a left-aligned heading.
+  @media (max-width: 450px) {
+    margin-left: 0;
+    max-width: none;
+    text-align: left;
+  }
 }
 
 // Drop the head's own rule when the section below opens with one of its own,
@@ -136,7 +152,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--suf-space-2);
+  gap: var(--suf-space-3);
 }
 
 // Cards that lift their own button.
@@ -181,6 +197,23 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
     box-shadow var(--suf-transition),
     background-color var(--suf-transition),
     border-color var(--suf-transition);
+
+  // Full width on phones. Below 450px a button sized to its label is a small
+  // target adrift in a wide column, and two of them in a row wrap to different
+  // widths, which reads as one being more important than the other.
+  //
+  // text-align comes with it: the label is centred by the shrink-to-fit box at
+  // every other width, and without this it would sit hard left once the box is
+  // full width.
+  //
+  // display:block rather than a width alone, so it behaves the same as an <a>
+  // and as a <button>, and so a bare button not inside .suf-btnrow still takes
+  // its own line.
+  @media (max-width: 450px) {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 
   &:active {
     transform: translate(0, 0);

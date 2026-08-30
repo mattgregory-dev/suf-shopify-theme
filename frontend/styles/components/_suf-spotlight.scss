@@ -138,6 +138,14 @@
     width: 60%;
     height: 60%;
     border: 3px solid var(--suf-frame-color, transparent);
+
+    // Pulled in on small screens. The 14px offset is drawn against a desktop
+    // image; on a phone the same overhang is a larger share of the frame and
+    // starts crowding the container's own padding.
+    @media (max-width: 600px) {
+      bottom: -9px;
+      left: -10px;
+    }
   }
 }
 
@@ -151,6 +159,12 @@
 .suf-spotlight--image-left .suf-spotlight__media::after {
   left: auto;
   right: -14px;
+
+  // Mirrors the small-screen inset above. `left: auto` still applies, so only
+  // the right offset needs restating.
+  @media (max-width: 600px) {
+    right: -10px;
+  }
 }
 
 .suf-spotlight--frame-red {

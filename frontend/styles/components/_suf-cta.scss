@@ -68,4 +68,20 @@
     justify-content: center;
     margin-bottom: var(--suf-space-3);
   }
+
+  // Opts out of the full-width phone rule on .suf-btn.
+  //
+  // That rule exists because a label-width button adrift in a wide left-
+  // aligned column is a small target with no edge to anchor it. Neither is
+  // true here: this band is centred, so the buttons are already the focal
+  // point of a short centred stack, and stretching them edge to edge turns a
+  // deliberate closing statement into two blocks of red and navy.
+  //
+  // (0,2,0) against the base rule's (0,1,0), so it wins wherever it applies.
+  .suf-btn {
+    @media (max-width: 450px) {
+      display: inline-block;
+      width: auto;
+    }
+  }
 }

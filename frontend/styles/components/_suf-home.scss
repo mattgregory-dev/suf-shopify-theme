@@ -166,8 +166,15 @@
   align-items: center;
 
   // 900px: three price cards side by side stop being comparable.
+  //
+  // A gap comes back with the stack. Side by side the cards deliberately abut
+  // and share their seams -- that is what makes the row read as one price
+  // table rather than three loose cards, and the seam handling below exists to
+  // serve it. Stacked there are no seams left to share: the borders are
+  // restored, so three boxes touching edge to edge just look joined.
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+    gap: var(--suf-space-4);
   }
 }
 
@@ -303,6 +310,27 @@
     box-shadow:
       inset 0 0 0 1px var(--suf-blue-light),
       0 28px 70px rgb(0 32 54 / 32%);
+  }
+
+  // Stacked, the shadow comes down a long way.
+  //
+  // Side by side it is cast onto the page, and its job is to lift this card
+  // out of the row -- 24px of offset under a 60px blur, deliberately heavy.
+  // Stacked, the card directly below is within that reach, so the same shadow
+  // is cast onto ANOTHER CARD and darkens its whole top edge. It stops reading
+  // as elevation and starts reading as the next card being greyed out.
+  //
+  // Shortened rather than removed: the featured card still has to look lifted,
+  // it just has to stay inside the gap above its neighbour.
+  @media (max-width: 900px) {
+    box-shadow: 0 10px 26px rgb(0 32 54 / 16%);
+
+    &:hover,
+    &:focus-visible {
+      box-shadow:
+        inset 0 0 0 1px var(--suf-blue-light),
+        0 14px 34px rgb(0 32 54 / 24%);
+    }
   }
 }
 
@@ -475,6 +503,41 @@
   margin-top: var(--suf-space-5);
   padding-top: var(--suf-space-4);
   border-top: 1px solid var(--suf-color-border-on-dark);
+
+  // Below ~1000px the row cannot hold the label and four marks on one line, and
+  // left to itself it wraps mid-row: the label keeps one or two logos company
+  // and the rest drop below, so the label reads as a caption on the logos that
+  // happen to follow it rather than on all of them.
+  //
+  // Breaking the label onto its own line turns it into a heading for the whole
+  // set, and the marks below then wrap wherever they like without any of the
+  // arrangements being wrong. Done with flex-basis rather than a wrapper
+  // element so the markup stays one flat row -- see snippets/suf-gymline.liquid,
+  // which both the homepage proof band and the About credibility band render.
+  @media (max-width: 1000px) {
+    // Row gap tightens; the column gap between marks is unchanged. At
+    // --suf-space-5 the label would sit as far from its own logos as the logos
+    // sit from each other, which reads as a fourth item rather than a heading.
+    gap: var(--suf-space-3) var(--suf-space-5);
+
+    .suf-gymline__cap {
+      flex-basis: 100%;
+    }
+  }
+
+  // 710px: the marks no longer fill a line, so a left-aligned row leaves a
+  // ragged tail of empty space on the last one. Centred, the wrap looks
+  // deliberate at any count.
+  //
+  // The label is centred too -- it is full-width by now, so text-align is what
+  // moves it; justify-content only places the marks.
+  @media (max-width: 710px) {
+    justify-content: center;
+
+    .suf-gymline__cap {
+      text-align: center;
+    }
+  }
 }
 
 .suf-gymline__cap {
@@ -511,6 +574,18 @@
   margin: var(--suf-space-3) 0 0;
   color: var(--suf-color-heading-on-dark);
   font-size: 17px;
+
+  // Centred with the logo row above it -- see the note on .suf-gymline. The
+  // note is that row's caption; left alone it would sit hard left under a
+  // centred set of marks.
+  //
+  // margin-inline AND text-align: the max-width makes this a block narrower
+  // than its container, so the box has to be centred as well as the text
+  // inside it.
+  @media (max-width: 710px) {
+    margin-inline: auto;
+    text-align: center;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -571,4 +646,10 @@
   margin: var(--suf-space-3) 0 0;
   color: var(--suf-color-text);
   font-size: 15px;
+
+  // Centred with the logo row above it, as on the proof band.
+  @media (max-width: 710px) {
+    margin-inline: auto;
+    text-align: center;
+  }
 }

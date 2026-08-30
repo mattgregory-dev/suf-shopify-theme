@@ -25,8 +25,15 @@
   align-items: center;
 
   // 1000px: the fact panel stops being readable beside the argument.
+  //
+  // The gap tightens with the stack. --suf-space-6 is sized as a COLUMN gap --
+  // it has to hold two columns apart across the full width of the section.
+  // Once they stack it becomes 64-96px of vertical space between a paragraph
+  // and the chart that illustrates it, which is enough for the two to stop
+  // reading as one thought.
   @media (max-width: 1000px) {
     grid-template-columns: 1fr;
+    gap: var(--suf-space-4);
   }
 }
 
@@ -165,12 +172,26 @@
     width: 60%;
     height: 60%;
     border: 3px solid var(--suf-frame-color, transparent);
+
+    // Pulled in on small screens, matching .suf-spotlight__media::after. The
+    // 14px overhang is drawn against a desktop image; on a phone it is a
+    // larger share of the frame and crowds the container's padding.
+    @media (max-width: 600px) {
+      bottom: -9px;
+      left: -10px;
+    }
   }
 }
 
 .suf-splitfact--image-left .suf-splitfact__media--framed::after {
   left: auto;
   right: -14px;
+
+  // Mirrors the small-screen inset above. `left: auto` still applies, so only
+  // the right offset needs restating.
+  @media (max-width: 600px) {
+    right: -10px;
+  }
 }
 
 .suf-splitfact--frame-red {
@@ -702,6 +723,13 @@
   color: var(--suf-color-text);
   font-size: 15px;
   line-height: 1.6;
+
+  // Released when the bar stacks -- see the note on .suf-spotlight__lead. The
+  // 52ch is what keeps this copy off the figure and the button either side of
+  // it; stacked there is nothing left to keep it off.
+  @media (max-width: 900px) {
+    max-width: none;
+  }
 
   // The richtext setting supplies its own paragraphs.
   p {
