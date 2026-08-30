@@ -17,7 +17,7 @@
         "book": {
           "type": "resource",
           "settings": {
-            "image": "shopify://shop_images/instructor-01.webp",
+            "image": "shopify://shop_images/article-01.webp",
             "image_alt": "How to Become a Successful Personal Trainer book cover",
             "title": "<em>How to Become a Successful Personal Trainer</em>",
             "meta": "Chris Hitchko · 2021",

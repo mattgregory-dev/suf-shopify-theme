@@ -247,7 +247,8 @@
         "eyebrow": "Get Certified",
         "heading": "One Certification. One Optional Add-On.",
         "body": "<p>Add the hands-on weekend if you want it — most people do.</p>",
-        "dark": false
+        "dark": false,
+        "intro": true
       }
     },
     "buys": {
