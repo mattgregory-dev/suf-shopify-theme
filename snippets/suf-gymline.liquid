@@ -1,0 +1,70 @@
+{% comment %}
+  The "our graduates train at" logo row.
+
+  Shared by the homepage proof band and the About page's credibility section.
+  Extracted rather than copied: the logo list is a case statement mapping a
+  merchant's choice to an asset AND its intrinsic size, and a second copy would
+  drift the moment a logo was added to one and not the other.
+
+  THE LOGOS ARE MASKED, not <img>. Each is a theme asset used as a CSS mask so
+  it takes the row's colour, which is what lets one SVG sit on navy here and on
+  white on About. suf.css is compiled and cannot call asset_url, so the mask URL
+  and the intrinsic size arrive as inline custom properties.
+
+  ADDING A LOGO means adding an asset AND a case below. Deliberate: a logo is a
+  claim about a real company, so it should not be possible to add one by typing
+  a filename into the theme editor.
+
+  Usage:
+    {% render 'suf-gymline', blocks: section.blocks, label: section.settings.x %}
+
+    blocks   the section's blocks. Only `logo` and `badge` types are read.
+    label    the small caps lead-in. Optional.
+{% endcomment %}
+
+{%- assign logo_blocks = blocks | where: 'type', 'logo' -%}
+{%- assign badge_blocks = blocks | where: 'type', 'badge' -%}
+
+{%- if logo_blocks.size > 0 or badge_blocks.size > 0 -%}
+  <div class="suf-gymline">
+    {%- if label != blank -%}
+      <span class="suf-gymline__cap">{{ label | escape }}</span>
+    {%- endif -%}
+
+    {%- for block in blocks -%}
+      {%- if block.type == 'logo' -%}
+        {%- liquid
+          case block.settings.logo
+            when 'lifetime'
+              assign file = 'suf-logo-lifetime.svg'
+              assign w = '141px'
+              assign h = '30px'
+            when 'equinox'
+              assign file = 'suf-logo-equinox.svg'
+              assign w = '172px'
+              assign h = '26px'
+            when 'genesis'
+              assign file = 'suf-logo-genesis.svg'
+              assign w = '92px'
+              assign h = '80px'
+            else
+              assign file = blank
+          endcase
+        -%}
+        {%- if file != blank -%}
+          <span
+            class="suf-gymline__logo"
+            role="img"
+            aria-label="{{ block.settings.label | escape }}"
+            style="--suf-logo-mask: url({{ file | asset_url }}); --suf-logo-w: {{ w }}; --suf-logo-h: {{ h }}"
+            {{ block.shopify_attributes }}
+          ></span>
+        {%- endif -%}
+      {%- elsif block.type == 'badge' -%}
+        <span class="suf-gymline__text" {{ block.shopify_attributes }}>
+          {{- block.settings.text | escape | newline_to_br -}}
+        </span>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

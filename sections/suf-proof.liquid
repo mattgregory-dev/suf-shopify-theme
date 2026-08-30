@@ -62,50 +62,7 @@
       </div>
     </div>
 
-    {%- assign logo_blocks = section.blocks | where: 'type', 'logo' -%}
-    {%- assign badge_blocks = section.blocks | where: 'type', 'badge' -%}
-    {%- if logo_blocks.size > 0 or badge_blocks.size > 0 -%}
-      <div class="suf-gymline">
-        {%- if section.settings.gymline_label != blank -%}
-          <span class="suf-gymline__cap">{{ section.settings.gymline_label | escape }}</span>
-        {%- endif -%}
-
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'logo' -%}
-            {%- liquid
-              case block.settings.logo
-                when 'lifetime'
-                  assign file = 'suf-logo-lifetime.svg'
-                  assign w = '141px'
-                  assign h = '30px'
-                when 'equinox'
-                  assign file = 'suf-logo-equinox.svg'
-                  assign w = '172px'
-                  assign h = '26px'
-                when 'genesis'
-                  assign file = 'suf-logo-genesis.svg'
-                  assign w = '92px'
-                  assign h = '80px'
-                else
-                  assign file = blank
-              endcase
-            -%}
-            {%- if file != blank -%}
-              <span
-                class="suf-gymline__logo"
-                role="img"
-                aria-label="{{ block.settings.label | escape }}"
-                style="--suf-logo-mask: url({{ file | asset_url }}); --suf-logo-w: {{ w }}; --suf-logo-h: {{ h }}"
-              ></span>
-            {%- endif -%}
-          {%- elsif block.type == 'badge' -%}
-            <span class="suf-gymline__text" {{ block.shopify_attributes }}>
-              {{- block.settings.text | escape | newline_to_br -}}
-            </span>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
+    {%- render 'suf-gymline', blocks: section.blocks, label: section.settings.gymline_label -%}
 
     {%- if section.settings.note != blank -%}
       <p class="suf-gymnote">{% render 'suf-nb', text: section.settings.note %}</p>
