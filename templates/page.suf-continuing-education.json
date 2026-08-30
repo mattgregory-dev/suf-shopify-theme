@@ -9,10 +9,10 @@
         "subhead": "Built for certified trainers — SUF, NASM, ACE, or ISSA. Two full Level 2 certifications, each with CEUs, that add real skills, new services, and a clear reason to charge more per session.",
         "tier_3": false,
         "overlap": false,
-        "button_label": "See the Certifications",
-        "button_url": "#certifications",
-        "button2_label": "See the Bundle — Save $XXX",
-        "button2_url": "#bundle",
+        "button_label": "Get Both — Save $XXX",
+        "button_url": "#bundle",
+        "button2_label": "Compare All Packages",
+        "button2_url": "/pages/suf-compare-packages",
         "image": "shopify://shop_images/home-02.webp",
         "image_alt": "Trainer demonstrating a resistance band lateral raise while a coach cues him"
       }
