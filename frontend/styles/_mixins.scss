@@ -65,3 +65,33 @@ $bp-xl: 1280px;
     margin-inline-start: 0;
   }
 }
+
+// The standalone call-to-action link: blue, 2px underline, red on hover.
+//
+// ONE definition, because it is applied two ways. `.suf-link` is the class a
+// section puts on an anchor it owns. The mixin is for the anchors it does NOT
+// own -- a link typed into a richtext setting, where the merchant writes the
+// markup and cannot add a class. Both must look identical, and a second copy
+// of the rule is how they stop being.
+//
+// Distinct from a prose link on purpose: this is a call to action, so it is
+// uppercase and tracked.
+@mixin cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--suf-color-link);
+  color: var(--suf-color-link);
+  font-size: var(--suf-font-size-small);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-color-accent);
+    border-color: var(--suf-color-accent);
+  }
+}

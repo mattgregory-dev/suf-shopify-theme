@@ -353,6 +353,18 @@
 .suf-body .suf-pkg-more {
   margin: var(--suf-space-4) 0 0;
   text-align: center;
+
+  // The link inside is a richtext setting, so the merchant writes the <a> and
+  // cannot put .suf-link on it. The wrapper supplies the treatment instead --
+  // same mixin, so this cannot drift from the class.
+  //
+  // Scoped to `a` inside THIS wrapper rather than applied to richtext links
+  // generally: a prose link in a body paragraph must stay a prose link. This
+  // footnote is a standalone call to action that happens to be authored as
+  // richtext.
+  a {
+    @include m.cta-link;
+  }
 }
 
 // ---------------------------------------------------------------------------

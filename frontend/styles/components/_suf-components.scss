@@ -377,23 +377,7 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
 // ---------------------------------------------------------------------------
 
 .suf-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding-bottom: 3px;
-  border-bottom: 2px solid var(--suf-color-link);
-  color: var(--suf-color-link);
-  font-size: var(--suf-font-size-small);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-
-  &:hover,
-  &:focus-visible {
-    color: var(--suf-color-accent);
-    border-color: var(--suf-color-accent);
-  }
+  @include m.cta-link;
 }
 
 // ---------------------------------------------------------------------------
