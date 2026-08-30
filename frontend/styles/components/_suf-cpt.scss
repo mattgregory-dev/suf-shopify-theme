@@ -1,4 +1,4 @@
-// SUF-CPT: split fact bands, the checklist, the steps row.
+// SUF-CPT: split fact bands, the number strip, the offer strip, the steps row.
 
 // ---------------------------------------------------------------------------
 // SPLIT FACT
@@ -379,45 +379,6 @@
     width: 12px;
     height: 11px;
     background: var(--suf-red);
-    clip-path: polygon(0 100%, 62% 0, 100% 0, 38% 100%);
-  }
-}
-
-// ---------------------------------------------------------------------------
-// CHECKLIST -- two columns of slash bullets
-// ---------------------------------------------------------------------------
-
-.suf-body .suf-checklist {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px 56px;
-  max-width: 960px;
-  margin-inline: auto;
-  padding: 0;
-  color: var(--suf-color-text);
-  font-size: 15.5px;
-  list-style: none;
-
-  // 700px: two columns of prose stop having a workable measure.
-  @media (max-width: 700px) {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  li {
-    position: relative;
-    padding-left: 30px;
-    line-height: 1.55;
-  }
-
-  li::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 0;
-    width: 13px;
-    height: 13px;
-    background: var(--suf-blue);
     clip-path: polygon(0 100%, 62% 0, 100% 0, 38% 100%);
   }
 }

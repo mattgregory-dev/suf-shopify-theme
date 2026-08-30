@@ -1,10 +1,15 @@
 @use '../mixins' as m;
 
-// Testimonial card grid.
+// Testimonial cards.
 //
-// A shared page pattern in the mockup (section 6), used by study guides,
-// continuing education and seminars. Defaults to 3-up; seminars overrides to
-// 2-up, which is a section setting here rather than a page-scoped rule.
+// THE SECTION THAT ONCE OWNED THESE IS GONE. `sections/suf-quotes.liquid` was
+// deleted in the 2026-08 re-flow, when every page folded its testimonials into
+// a dark proof band instead of running them as a standalone light section.
+//
+// The CARDS survive and are still the only testimonial card in the codebase:
+// suf-splitfact and suf-qspot both render .suf-qcard inside their proof rows,
+// and .suf-quotegrid is what lays them out. Do not delete this file with its
+// section -- grep for .suf-qcard before touching it.
 
 .suf-quotegrid {
   display: grid;
