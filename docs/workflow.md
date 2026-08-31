@@ -110,7 +110,7 @@ all net-new, so `npm run lint:css` should exit clean. Keep it that way.
 
 `.theme-check.yml` extends `theme-check:recommended`.
 
-- **Baseline is ~706 offenses across 224 files. This is inherited and expected**
+- **Baseline is ~680 offenses across 217 files. This is inherited and expected**
   for a Vintage theme (`DeprecatedFilter`, `DeprecatedTag`, lazysizes). **Do not
   mass-fix.** Treat it as a ratchet: lint new work, leave the legacy count
   alone. It was ~1,080 before unreferenced sections and snippets were removed,

@@ -341,8 +341,16 @@ body:not(.suf-body) {
 // differ in how the columns are sized, because they are sized around different
 // forms, so those declarations stay apart.
 //
-// IT HAS A SHELF LIFE. When the footer is rebuilt this either moves into the
-// new section as suf-* styles or goes with the old one.
+// IT IS NOT THE SITE FOOTER, despite the class name, and it did NOT go with
+// sections/footer.liquid when that was deleted on 2026-08-31.
+//
+// The markup lives in an `apps` section on the page templates -- index,
+// page.about, page.internship, page.la-jolla, page.one-on-one,
+// page.online-suf-cpt, page.santa-monica, page.team-and-trainers,
+// page.trainer-ed, page.in-person-suf-cpt-2 -- as stored app-block content. It
+// is a contact region that happens to sit low on those pages, and it outlives
+// any footer rebuild. Verify with a grep of templates/*.json before touching
+// it; the class name invites exactly the wrong conclusion.
 //
 // The four rules that shared its 600px media query in production are NOT here
 // -- they are section headings and list indents with nothing to do with this
