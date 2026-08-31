@@ -6,7 +6,14 @@
   hidden from assistive tech.
 {% endcomment %}
 {%- liquid
-  assign networks = 'facebook,instagram,twitter,youtube,linkedin,pinterest' | split: ','
+  # Order follows the footer mockup: YouTube first, then the rest. Only links
+  # that are set render, so an order longer than the shop's actual list costs
+  # nothing.
+  #
+  # NO SPOTIFY. The mockup draws one, but this theme has no social_spotify_link
+  # setting and suf-icon has no glyph for it. Adding it means a settings_schema
+  # change and a new icon -- worth doing, not worth faking with a placeholder.
+  assign networks = 'youtube,instagram,facebook,twitter,linkedin,pinterest' | split: ','
 -%}
 <ul class="suf-social" role="list">
   {%- for network in networks -%}

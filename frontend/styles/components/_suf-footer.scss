@@ -1,6 +1,14 @@
-@use '../mixins' as m;
-
-// SPECIFICITY: several children below are written `& &__x`, not `&__x`.
+// sections/suf-footer.liquid
+//
+// Ported from `.footerbar` / `.footer-copyright` in
+// ~/projects/suf/mockups/index.html on 2026-08-31.
+//
+// NOT SCOPED UNDER .suf-body. Like _suf-nav.scss, this section is written so
+// it could be rendered by layout/theme.liquid as well, and .suf-body exists on
+// only one of the two layouts. Everything scopes to .suf-footer, a class the
+// section itself emits.
+//
+// SPECIFICITY: children are written `& &__x`, not `&__x`.
 //
 // `&__x` CONCATENATES -- it compiles to `.suf-footer__x`, a single class at
 // (0,1,0), which loses to the scoped base rules. `.suf-body h2` was overriding
@@ -8,160 +16,298 @@
 // reinstating margins these rules explicitly set to 0.
 //
 // `& &__x` compiles to `.suf-footer .suf-footer__x` at (0,2,0), which wins.
-// See architecture.md, "The trap that scoping creates".
-
-// sections/suf-footer.liquid
+// That also happens to be the depth _suf-nav.scss needed against
+// dt-framework's attribute selectors, so this is already braced for a shared
+// footer. See docs/migration.md.
 //
 // Colour lives here, not in section settings. The legacy footer exposes 30+
-// colour pickers because the theme had no tokens; overriding a --suf-* token is
-// the replacement for that, and it changes every component at once instead of
-// one section.
+// colour pickers because the theme had no tokens; overriding a --suf-* token
+// is the replacement for that, and it changes every component at once instead
+// of one section.
 
 .suf-footer {
-  margin-block-start: var(--suf-space-xl);
-  background: var(--suf-footer-bg);
-  color: var(--suf-footer-text);
+  background: var(--suf-color-surface);
+}
+
+// The light body of the footer. The rule sits on this rather than on
+// .suf-footer so the navy copyright strip below is not also topped by it.
+.suf-footer .suf-footer__bar {
+  border-top: 1px solid var(--suf-color-border-subtle);
+}
+
+// ---------------------------------------------------------------------------
+// COLUMNS
+//
+// Flex with generous flex-basis rather than a fixed column count: the columns
+// reflow on their own as the viewport narrows, and the two breakpoints below
+// only adjust how they pair up. A grid with explicit tracks would need a
+// breakpoint for every arrangement.
+
+.suf-footer .suf-footer__cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--suf-space-5);
+  padding-block: var(--suf-space-5);
+}
+
+.suf-footer .suf-footer__col {
+  // 180px basis: enough that a column of link text never wraps mid-phrase,
+  // small enough that four of them fit a desktop row.
+  flex: 1 1 180px;
+}
+
+.suf-footer .suf-footer__title {
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--suf-color-border-subtle);
+  color: var(--suf-color-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.suf-footer .suf-footer__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suf-footer .suf-footer__list a {
+  display: block;
+  padding: 6px 0;
+  color: var(--suf-color-text);
+  font-size: 14px;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-color-link);
+  }
+}
+
+// Emitted by snippets/suf-navlabel.liquid, shared with the nav -- hence the
+// unprefixed class. The mockup calls it .sub.
+//
+// INLINE HERE, unlike the nav's dropdown, where it is a block on its own line.
+// Footer links are short and the subtext is a qualifier -- "Swag, tees,
+// hoodies & more" -- so it reads as part of the line rather than a second
+// deck. Left to flow, it wraps onto the next line only when it has to, which
+// is what a one-column phone layout wants anyway.
+.suf-footer .suf-navsub {
+  padding-left: 7px;
+  color: var(--suf-color-text-muted);
+  font-size: 12px;
+}
+
+// ---------------------------------------------------------------------------
+// BRAND COLUMN
+
+.suf-footer .suf-footer__col--brand {
+  display: flex;
+  flex-direction: column;
+  // Wider basis than a link column: it holds a 72px logo and a row of five
+  // social buttons, and at 180px those would wrap against each other.
+  flex: 1 1 260px;
+  align-items: center;
+  text-align: center;
+}
+
+// 100px, not the mockup's 72. Same reasoning as the partner seal above and the
+// nav's mark: this logo is close to square, so height is what it has to spend
+// to get any presence, and 72px left it looking incidental next to the column
+// headings.
+.suf-footer .suf-footer__logo img {
+  display: block;
+  width: auto;
+  height: 100px;
+}
+
+.suf-footer .suf-footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 14px 0;
+  font-size: 15px;
 
   a {
-    color: var(--suf-footer-link);
+    color: var(--suf-color-heading);
+    text-decoration: none;
 
     &:hover,
     &:focus-visible {
-      color: var(--suf-footer-link-hover);
-    }
-  }
-
-  &__inner {
-    display: grid;
-    gap: var(--suf-space-lg);
-    padding-block: var(--suf-space-xl);
-    grid-template-columns: 1fr;
-
-    @include m.from(m.$bp-md) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    // The live footer is four columns: about, menu, more info, newsletter.
-    @include m.from(m.$bp-lg) {
-      grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-      gap: var(--suf-space-xl);
-    }
-  }
-
-  & &__title {
-    margin-block-end: var(--suf-space-md);
-    font-size: var(--suf-font-size-h5);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  // Inherits the footer's text colour rather than the base link colour. Was
-  // previously achieved by excluding it in _suf-base.scss; said here instead.
-  .suf-social__link {
-    color: inherit;
-  }
-
-  & &__logo-img {
-    max-width: 240px;
-  }
-
-  &__about {
-    max-width: var(--suf-measure);
-    color: var(--suf-color-text-muted);
-  }
-
-  & &__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    li + li {
-      margin-block-start: var(--suf-space-sm);
-    }
-  }
-
-  // Merchant HTML (partner logos, the Klaviyo embed). Constrained so an
-  // oversized <img width="310"> cannot blow out the grid column.
-  &__html img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  // Partner seals inside a Custom HTML block. Sized down from the raw
-  // width attributes the live site uses, which are 310px and 160px.
-  &__partners {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--suf-space-md);
-    margin-block-start: var(--suf-space-md);
-
-    img {
-      width: auto;
-      max-height: 48px;
-    }
-  }
-
-  &__bar {
-    background: var(--suf-footer-bar-bg);
-    color: var(--suf-footer-bar-text);
-
-    a {
-      color: var(--suf-footer-bar-text);
-    }
-  }
-
-  &__bar-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--suf-space-md);
-    padding-block: var(--suf-space-md);
-  }
-
-  & &__copyright {
-    margin: 0;
-    font-size: 0.875rem;
-  }
-
-  & &__payment {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--suf-space-sm);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    svg {
-      display: block;
-      width: 38px;
-      height: auto;
+      color: var(--suf-color-link);
     }
   }
 }
 
-.suf-social {
+// ---------------------------------------------------------------------------
+// SOCIAL
+//
+// Circles rather than bare glyphs: at 16px an icon alone is a small target,
+// and the 34px ring gives it a hit area that clears the 24px minimum with room
+// to spare.
+
+.suf-footer .suf-social {
   display: flex;
-  gap: var(--suf-space-sm);
-  margin-block-start: var(--suf-space-md);
+  gap: 8px;
+  justify-content: center;
+  margin: 0;
   padding: 0;
   list-style: none;
+}
 
-  &__link {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--suf-color-border);
-    border-radius: 50%;
-    transition:
-      border-color var(--suf-transition),
-      color var(--suf-transition);
+.suf-footer .suf-social__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--suf-color-border-subtle);
+  border-radius: 50%;
+  color: var(--suf-color-text);
+  transition: background var(--suf-transition), border-color var(--suf-transition),
+    color var(--suf-transition);
 
-    &:hover,
-    &:focus-visible {
-      border-color: currentColor;
-    }
+  &:hover,
+  &:focus-visible {
+    background: var(--suf-color-accent);
+    border-color: var(--suf-color-accent);
+    color: var(--suf-white);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PARTNER BADGES
+
+// NO BORDER, NO PADDING. The mockup drew a bordered box because it had no
+// artwork -- the box WAS the placeholder, standing in for a logo with the
+// words "[ MyCPR Now badge ]" inside it. Real partner logos come with their
+// own shape and whitespace, and a border round them reads as a second frame.
+//
+// The border and padding survive only for the text fallback below, which is
+// what renders when a block has a name but no image.
+.suf-footer .suf-footer__badge {
+  display: block;
+  margin-bottom: var(--suf-space-3);
+  color: var(--suf-color-text-muted);
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.suf-footer a.suf-footer__badge {
+  transition: opacity var(--suf-transition);
+
+  // Opacity rather than a border colour, now that there is no border to
+  // change. It is the only hover affordance a bare logo can take without
+  // recolouring someone else's artwork.
+  &:hover,
+  &:focus-visible {
+    opacity: 0.75;
+  }
+}
+
+// TWO CAPS, because the two badges are constrained by different dimensions.
+//
+// The IFG seal is a circle, so its HEIGHT is what limits it. The MyCPR mark is
+// a ~4:1 wordmark, so its WIDTH is. With only a height cap the wordmark
+// expanded to fill whatever column it was in and dwarfed the seal -- worst in
+// the tablet range, where the column is widest.
+//
+// min() rather than a bare 130px so the cap can never exceed the column on a
+// narrow phone and push the badge outside it.
+.suf-footer .suf-footer__badge-img {
+  width: auto;
+  max-width: min(270px, 100%);
+  // Partner logos arrive at whatever size and aspect the partner supplies, and
+  // capping the height is what stops one of them setting the column's height.
+  //
+  // 130px. The Insure Fitness seal is a CIRCLE, so a height cap costs it width
+  // as well and it read far smaller than the wordmark beside it. A square mark
+  // needs more height than a wide one to carry the same visual weight -- the
+  // same trade the nav logo makes, for the same reason.
+  //
+  // This does not enlarge the wordmark, which is width-bound: at 270px wide it
+  // only wants ~70px of height, so the two caps govern one badge each.
+  max-height: 130px;
+  margin-inline: auto;
+}
+
+// ---------------------------------------------------------------------------
+// COPYRIGHT STRIP
+
+.suf-footer .suf-footer__copyright {
+  background: var(--suf-navy-deepest);
+  color: var(--suf-color-text-muted-on-dark);
+  font-size: 12px;
+}
+
+.suf-footer .suf-footer__copyright-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 14px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.suf-footer .suf-footer__payment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suf-footer .suf-footer__payment-icon {
+  display: block;
+  width: 32px;
+  height: 20px;
+}
+
+// ---------------------------------------------------------------------------
+// STACKING
+//
+// Two breakpoints, and they do different jobs. At 820 the brand column takes
+// the full width and the three text columns pair up beneath it -- 42% rather
+// than 50% so the gap has somewhere to come from. At 480 everything is one
+// column, because two columns of link text at phone width leaves neither
+// enough room.
+
+@media (max-width: 820px) {
+  .suf-footer .suf-footer__cols {
+    gap: var(--suf-space-3) var(--suf-space-5);
+  }
+
+  .suf-footer .suf-footer__col {
+    flex: 1 1 42%;
+  }
+
+  .suf-footer .suf-footer__col--brand {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .suf-footer .suf-footer__col {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suf-footer .suf-social__link,
+  .suf-footer a.suf-footer__badge {
+    transition: none;
   }
 }

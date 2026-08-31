@@ -1,88 +1,166 @@
 {% comment %}
-  Rebuilt footer for layout/suf.liquid.
+  The footer, rebuilt from the mockup on 2026-08-31.
 
-  A reimplementation, not a port: sections/footer.liquid is 1,071 lines and
-  carries 30+ colour settings that exist because the legacy theme had no design
-  tokens. Colour here comes from --suf-* custom properties in
-  frontend/styles/components/_suf-footer.scss, so the settings are content only.
+  Ported from `.footerbar` / `.footer-copyright` in
+  ~/projects/suf/mockups/index.html. It replaced a generic block-based footer
+  that predated that design: four repeatable column types, each a heading plus
+  arbitrary content. The mockup is not generic -- it is a brand column, two
+  link columns and a partners column, in that order -- so the section now
+  describes that shape directly. Fewer knobs, and the layout cannot be
+  arranged into something the CSS was never drawn for.
 
-  Content parity with the live footer is deliberate — same four columns, same
-  links, same partner logos — so a page on this layout does not look like a
-  different site while pages are cut over one at a time.
+  WRITTEN TO SURVIVE BOTH LAYOUTS, like sections/suf-nav.liquid, even though
+  only layout/suf.liquid renders it today. Nothing here depends on `.suf-body`,
+  and the stylesheet scopes to `.suf-footer`, a class this section emits. If
+  layout/theme.liquid is ever pointed here, see the traps recorded in
+  docs/migration.md -- dt-framework will contest every property this file
+  leaves undeclared.
 
-  Social links are read from the existing theme settings (settings.social_*_link)
-  rather than re-entered, so there is one place to change them and the legacy
-  footer stays in sync.
+  LINK SUBTEXT reuses snippets/suf-navlabel.liquid, the same `Label | subtext`
+  convention the nav uses. The mockup's "Swag / tees, hoodies & more" is that
+  pattern, and a second mechanism for the same thing would be one more thing to
+  remember.
+
+  SOCIAL LINKS come from the theme settings the legacy footer already reads, so
+  there is one place to change a URL.
 {% endcomment %}
 
 <footer class="suf-footer" role="contentinfo">
-  <div class="suf-footer__inner">
-    {%- for block in section.blocks -%}
-      <div class="suf-footer__col suf-footer__col--{{ block.type }}" {{ block.shopify_attributes }}>
-        {%- case block.type -%}
+  <div class="suf-footer__bar">
+    <div class="suf-wrap">
+      <div class="suf-footer__cols">
+        <div class="suf-footer__col suf-footer__col--brand">
+          {%- if section.settings.logo != blank -%}
+            <a class="suf-footer__logo" href="{{ routes.root_url }}">
+              {{
+                section.settings.logo
+                | image_url: width: 320
+                | image_tag: loading: 'lazy', alt: shop.name, widths: '160,240,320'
+              }}
+            </a>
+          {%- endif -%}
 
-          {%- when 'about' -%}
-            {%- if block.settings.logo != blank -%}
-              <a class="suf-footer__logo" href="{{ routes.root_url }}">
-                {{ block.settings.logo
-                   | image_url: width: 480
-                   | image_tag:
-                     loading: 'lazy',
-                     alt: shop.name,
-                     class: 'suf-footer__logo-img',
-                     widths: '240, 360, 480',
-                     sizes: '(min-width: 768px) 240px, 60vw' }}
-              </a>
+          {%- if section.settings.phone != blank or section.settings.location != blank -%}
+            <div class="suf-footer__contact">
+              {%- if section.settings.phone != blank -%}
+                {%- comment -%}
+                  tel: needs the digits only -- a href with spaces or brackets
+                  is not a valid telephone URI and some dialers drop it.
+                {%- endcomment -%}
+                {%- assign tel = section.settings.phone
+                  | remove: ' '
+                  | remove: '('
+                  | remove: ')'
+                  | remove: '-'
+                  | remove: '.'
+                -%}
+                <a href="tel:{{ tel }}">{{ section.settings.phone }}</a>
+              {%- endif -%}
+              {%- if section.settings.location != blank -%}
+                <span>{{ section.settings.location }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {% render 'suf-social-links' %}
+        </div>
+
+        {%- comment -%}
+          Two link columns, each a heading and a menu. Menus rather than blocks
+          so the links live where every other menu on the site lives, and
+          editing one does not mean opening the theme editor.
+        {%- endcomment -%}
+        {%- assign col_one = linklists[section.settings.menu_one] -%}
+        {%- if col_one.links.size > 0 -%}
+          <div class="suf-footer__col">
+            {%- if section.settings.heading_one != blank -%}
+              <h2 class="suf-footer__title">{{ section.settings.heading_one }}</h2>
             {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <p class="suf-footer__about">{{ block.settings.text }}</p>
+            <ul class="suf-footer__list" role="list">
+              {%- for link in col_one.links -%}
+                <li>
+                  <a href="{{ link.url }}">{% render 'suf-navlabel', title: link.title %}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- assign col_two = linklists[section.settings.menu_two] -%}
+        {%- if col_two.links.size > 0 -%}
+          <div class="suf-footer__col">
+            {%- if section.settings.heading_two != blank -%}
+              <h2 class="suf-footer__title">{{ section.settings.heading_two }}</h2>
             {%- endif -%}
-            {%- if section.settings.show_social -%}
-              {% render 'suf-social-links' %}
+            <ul class="suf-footer__list" role="list">
+              {%- for link in col_two.links -%}
+                <li>
+                  <a href="{{ link.url }}">{% render 'suf-navlabel', title: link.title %}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <div class="suf-footer__col suf-footer__col--partners">
+            {%- if section.settings.heading_partners != blank -%}
+              <h2 class="suf-footer__title">{{ section.settings.heading_partners }}</h2>
             {%- endif -%}
 
-          {%- when 'menu' -%}
-            {%- if block.settings.title != blank -%}
-              <h2 class="suf-footer__title">{{ block.settings.title }}</h2>
-            {%- endif -%}
-            {%- assign menu = linklists[block.settings.menu] -%}
-            {%- if menu.links.size > 0 -%}
-              <ul class="suf-footer__list">
-                {%- for link in menu.links -%}
-                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                {%- endfor -%}
-              </ul>
-            {%- endif -%}
+            {%- for block in section.blocks -%}
+              {%- comment -%}
+                Blocks, not settings, because the number of partners changes and
+                a fixed pair of image pickers would have to be edited in code to
+                add a third.
+              {%- endcomment -%}
+              {%- capture badge -%}
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 400
+                    | image_tag:
+                      loading: 'lazy',
+                      alt: block.settings.name,
+                      widths: '200,300,400',
+                      class: 'suf-footer__badge-img'
+                  }}
+                {%- else -%}
+                  {{ block.settings.name | default: 'Partner' }}
+                {%- endif -%}
+              {%- endcapture -%}
 
-          {%- when 'richtext' -%}
-            {%- if block.settings.title != blank -%}
-              <h2 class="suf-footer__title">{{ block.settings.title }}</h2>
-            {%- endif -%}
-            <div class="suf-footer__rte rte">{{ block.settings.text }}</div>
-
-          {%- when 'html' -%}
-            {%- if block.settings.title != blank -%}
-              <h2 class="suf-footer__title">{{ block.settings.title }}</h2>
-            {%- endif -%}
-            <div class="suf-footer__html">{{ block.settings.html }}</div>
-
-        {%- endcase -%}
+              {%- if block.settings.url != blank -%}
+                <a
+                  class="suf-footer__badge"
+                  href="{{ block.settings.url }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{ badge }}
+                </a>
+              {%- else -%}
+                <div class="suf-footer__badge" {{ block.shopify_attributes }}>{{ badge }}</div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       </div>
-    {%- endfor -%}
+    </div>
   </div>
 
-  <div class="suf-footer__bar">
-    <div class="suf-footer__bar-inner">
-      <p class="suf-footer__copyright">
+  <div class="suf-footer__copyright">
+    <div class="suf-wrap suf-footer__copyright-row">
+      <p>
         &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
         {%- if section.settings.copyright_text != blank %} · {{ section.settings.copyright_text }}{% endif -%}
       </p>
 
       {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-        {% comment %}
+        {%- comment -%}
           Native Shopify payment SVGs. No asset files, no icon font, and the
-          list follows whatever the merchant has actually enabled.
-        {% endcomment %}
+          list follows whatever the merchant has actually enabled -- the mockup
+          drew six grey placeholders.
+        {%- endcomment -%}
         <ul class="suf-footer__payment" role="list">
           {%- for type in shop.enabled_payment_types -%}
             <li>{{ type | payment_type_svg_tag: class: 'suf-footer__payment-icon' }}</li>
@@ -100,12 +178,40 @@
   "class": "suf-footer-section",
   "settings": [
     {
-      "type": "checkbox",
-      "id": "show_social",
-      "label": "Show social links",
-      "info": "Reads the social URLs already set in Theme settings.",
-      "default": true
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "The full-colour mark -- this footer is on a white surface, not the navy bar."
     },
+    { "type": "text", "id": "phone", "label": "Phone" },
+    { "type": "text", "id": "location", "label": "Location" },
+    { "type": "header", "content": "Link columns" },
+    {
+      "type": "text",
+      "id": "heading_one",
+      "label": "First column heading",
+      "default": "Explore"
+    },
+    { "type": "link_list", "id": "menu_one", "label": "First column menu" },
+    {
+      "type": "text",
+      "id": "heading_two",
+      "label": "Second column heading",
+      "default": "More"
+    },
+    { "type": "link_list", "id": "menu_two", "label": "Second column menu" },
+    {
+      "type": "paragraph",
+      "content": "Add ' | subtext' to a menu item's title to give it a second line, as in 'Swag | tees, hoodies & more'."
+    },
+    { "type": "header", "content": "Partners" },
+    {
+      "type": "text",
+      "id": "heading_partners",
+      "label": "Partners heading",
+      "default": "Partners"
+    },
+    { "type": "header", "content": "Bottom bar" },
     {
       "type": "checkbox",
       "id": "show_payment_icons",
@@ -121,53 +227,24 @@
   ],
   "blocks": [
     {
-      "type": "about",
-      "name": "Logo and about",
-      "limit": 1,
+      "type": "partner",
+      "name": "Partner",
       "settings": [
-        { "type": "image_picker", "id": "logo", "label": "Logo" },
-        { "type": "textarea", "id": "text", "label": "About text" }
-      ]
-    },
-    {
-      "type": "menu",
-      "name": "Menu",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Heading", "default": "Service" },
-        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
-      ]
-    },
-    {
-      "type": "richtext",
-      "name": "Text",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Heading" },
-        { "type": "richtext", "id": "text", "label": "Text" }
-      ]
-    },
-    {
-      "type": "html",
-      "name": "Custom HTML",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Heading" },
+        { "type": "image_picker", "id": "image", "label": "Logo" },
         {
-          "type": "html",
-          "id": "html",
-          "label": "HTML",
-          "info": "For app embeds such as the Klaviyo newsletter form."
-        }
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "info": "Used as the image's alt text, and shown instead of the image if none is set."
+        },
+        { "type": "url", "id": "url", "label": "Link" }
       ]
     }
   ],
   "presets": [
     {
       "name": "Footer (SUF)",
-      "blocks": [
-        { "type": "about" },
-        { "type": "menu" },
-        { "type": "html" },
-        { "type": "html" }
-      ]
+      "blocks": [{ "type": "partner" }, { "type": "partner" }]
     }
   ]
 }
