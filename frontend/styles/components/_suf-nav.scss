@@ -300,7 +300,7 @@
     display: block;
     padding: 12px 20px;
     color: var(--suf-navy);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     line-height: 1.25;
     text-decoration: none;
@@ -358,26 +358,51 @@
   // ---------------------------------------------------------------------------
   // ICONS
 
+  // 6px, not the 18px this had before the icons became circles.
+  //
+  // The gap is measured between the CIRCLES, and each one adds 11px of its own
+  // padding either side of a 20px glyph. At 18px the glyphs ended up 40px
+  // apart -- more than twice their old spacing. 6px puts them at 28px, near
+  // where they were, with the circles still clearly separate when two are lit.
   .sufnav__icons {
     display: flex;
     flex-shrink: 0;
-    gap: 18px;
+    gap: 6px;
     align-items: center;
   }
 
+  // CIRCULAR BUTTONS. Invisible at rest, so the bar still reads as three plain
+  // glyphs; the circle appears under the pointer and gives each one a target
+  // that is obviously a button.
+  //
+  // 42px is also what makes them a legitimate hit area. A bare 20px glyph is
+  // under the 24px minimum, and on a phone the whole bar is these three icons
+  // plus a burger.
   .sufnav__icon {
     display: flex;
     position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
     padding: 0;
     border: 0;
+    border-radius: 50%;
     background: none;
     color: var(--suf-color-text-on-dark);
     cursor: pointer;
-    transition: color 0.16s;
+    transition: background var(--suf-transition), color 0.16s;
 
+    // A near-solid white disc with a navy glyph -- the icon inverts rather
+    // than merely brightening.
+    //
+    // 68% rather than flat white: enough of the navy reads through that the
+    // disc still belongs to the bar instead of looking like a hole punched in
+    // it, and it stays correct if the navy is ever retuned.
     &:hover,
     &:focus-visible {
-      color: var(--suf-white);
+      background: rgb(255 255 255 / 68%);
+      color: var(--suf-navy);
     }
 
     svg {
@@ -390,8 +415,11 @@
   .sufnav__badge {
     display: flex;
     position: absolute;
-    top: -9px;
-    right: -8px;
+    // Anchored to the 42px circle, not the 20px glyph it used to hang off.
+    // The glyph is centred, so it starts 11px in on both axes -- these offsets
+    // put the badge back in the same place relative to the cart it marks.
+    top: 2px;
+    right: 3px;
     align-items: center;
     justify-content: center;
     min-width: 17px;
@@ -473,6 +501,13 @@
   .sufnav__burger:focus-visible {
     outline: 2px solid var(--suf-white);
     outline-offset: -2px;
+  }
+
+  // The icons are the exception, because :focus-visible also turns them into a
+  // near-white disc -- and a white ring on a white disc is no ring at all.
+  // Navy, inset, so it reads against the fill the focus state itself creates.
+  .sufnav__icon:focus-visible {
+    outline-color: var(--suf-navy);
   }
 
   // The stacked menu is a light panel, so the ring flips to the focus blue and
@@ -836,6 +871,7 @@
     .sufnav__label,
     .sufnav__label::after,
     .sufnav__caret,
+    .sufnav__icon,
     .sufnav__burger span,
     .sufnav__drop a {
       transition: none;
