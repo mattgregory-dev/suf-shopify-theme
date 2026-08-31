@@ -56,7 +56,7 @@ what it weighs.
 | Layout | Used by | Loads |
 |---|---|---|
 | `layout/theme.liquid` | every inherited template | jQuery, dt-plugins (Swiper), select2, handlebars, dt-theme.js, dT_main*.js, ajax-cart, lazysizes, dt-framework.css, dt-custom.css, swiper, select2.css, `suf.css`, `suf.js` |
-| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js`, the Indivisible fonts, `content_for_header` — plus jQuery, `dt-framework.css`, `dt-custom.css` and the two search files, **only** for the forked header |
+| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js` (which imports `suf-nav`, `suf-motion` and `suf-search`), the Hanken Grotesk fonts, `content_for_header`. jQuery, `dt-framework.css` and `dt-custom.css` are **not** loaded — the file's own header comment says so and why |
 
 A template opts in with a top-level key (JSON) or a tag (Liquid):
 
@@ -160,9 +160,14 @@ The corollary: a component that relies on the base for a property must now
 declare it. `.suf-btn` and `.suf-social__link` gained `color: inherit` when the
 lists were deleted, because that was what the exclusions had been buying them.
 
-**One block is deliberately NOT wrapped**: the LEGACY BASE COMPATIBILITY block
-at the bottom of `_suf-base.scss`. It props up the forked header's inherited
-markup and needs its weight. It goes when the header is rebuilt.
+**The LEGACY BASE COMPATIBILITY block used to be the one exception**, left
+unwrapped at the bottom of `_suf-base.scss` because the forked header's
+inherited markup needed its weight. It went with that header on 2026-08-31.
+
+What survives there is two rules on `.suf-body a`, unwrapped and deliberately
+so: they strip the browser's default underline, with `.rte a` putting it back
+in prose. They were never legacy compatibility — they only lived in that block
+— and deleting them underlines every link on every suf page.
 
 **Do not reach for `!important`.** It wins the fight and loses the file: the
 next override has nowhere to go.
