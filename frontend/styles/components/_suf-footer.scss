@@ -29,6 +29,18 @@
   background: var(--suf-color-surface);
 }
 
+// dt-framework rounds every image inside a link -- `a img { border-radius:
+// 20px }` -- which on legacy templates clips the corners off the logo and both
+// partner badges. The nav hit the same rule.
+//
+// Declared for EVERY image here rather than per element: at (0,1,1) this beats
+// the (0,0,2) it is answering, and an image added later inherits the fix
+// instead of quietly arriving with rounded corners. An undeclared property is
+// a gap the legacy sheet fills however specific the selector around it is.
+.suf-footer img {
+  border-radius: 0;
+}
+
 // The light body of the footer. The rule sits on this rather than on
 // .suf-footer so the navy copyright strip below is not also topped by it.
 .suf-footer .suf-footer__bar {
@@ -56,12 +68,25 @@
   flex: 1 1 180px;
 }
 
+// THE ONE !important IN THIS FILE, and it is not optional.
+//
+// _custom-port.scss sets `body:not(.suf-body) h2 { font-size: 50px !important }`
+// -- legacy typography for legacy CONTENT, which this heading is not. It is
+// new markup that happens to render on a legacy page.
+//
+// Specificity cannot answer an !important declaration; only a more specific
+// !important can. This selector is (0,2,0) against that rule's (0,1,2), so it
+// wins once it is marked too.
+//
+// The element stays an <h2>. Dropping to <h3> to dodge the rule would not
+// help -- h3 is 34px !important in the same block -- and would pick the
+// document outline to solve a stylesheet problem.
 .suf-footer .suf-footer__title {
   margin: 0 0 14px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--suf-color-border-subtle);
   color: var(--suf-color-text-muted);
-  font-size: 12px;
+  font-size: 12px !important;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -177,8 +202,8 @@
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -256,8 +281,16 @@
   justify-content: space-between;
   padding-block: 14px;
 
+  // font-size is restated rather than inherited from .suf-footer__copyright.
+  // On legacy templates _custom-port.scss sets `body:not(.suf-body) p
+  // { font-size: 19px }`, and a rule on the element beats a value inherited
+  // from its parent no matter how specific the parent's rule is.
+  //
+  // No !important needed: that rule carries none, and this selector is
+  // (0,2,1) against its (0,1,2).
   p {
     margin: 0;
+    font-size: 12px;
   }
 }
 

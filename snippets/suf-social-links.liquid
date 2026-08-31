@@ -6,14 +6,15 @@
   hidden from assistive tech.
 {% endcomment %}
 {%- liquid
-  # Order follows the footer mockup: YouTube first, then the rest. Only links
-  # that are set render, so an order longer than the shop's actual list costs
-  # nothing.
+  # Order follows the footer mockup: YouTube, Spotify, then the rest. Only
+  # links that are set render, so an order longer than the shop's actual list
+  # costs nothing.
   #
-  # NO SPOTIFY. The mockup draws one, but this theme has no social_spotify_link
-  # setting and suf-icon has no glyph for it. Adding it means a settings_schema
-  # change and a new icon -- worth doing, not worth faking with a placeholder.
-  assign networks = 'youtube,instagram,facebook,twitter,linkedin,pinterest' | split: ','
+  # Spotify is the podcast. It is NOT one of the theme's inherited networks --
+  # social_spotify_link was added to config/settings_schema.json on 2026-08-31
+  # and the glyph to suf-icon.liquid, so it will not appear until a URL is
+  # entered under Theme settings > Social.
+  assign networks = 'youtube,spotify,instagram,facebook,twitter,linkedin,pinterest' | split: ','
 -%}
 <ul class="suf-social" role="list">
   {%- for network in networks -%}

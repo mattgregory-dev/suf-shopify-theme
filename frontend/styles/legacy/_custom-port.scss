@@ -40,6 +40,44 @@
 // Verify that again before adding a rule with a generic selector.
 
 // ---------------------------------------------------------------------------
+// ICON FALLBACK TEXT, RESCUED FROM sections/footer.liquid
+//
+// Same trap as the cart drawer and sections/header.liquid: CSS for something
+// else, parked in a section's inline <style>.
+//
+// snippets/social-links.liquid renders a visually-hidden network name next to
+// each icon and relies on these to hide it. Its only remaining caller is
+// sections/modal-newsletter.liquid.
+//
+// THIS IS INSURANCE, NOT A LIVE DEPENDENCY. That section is currently switched
+// off -- enable_newsletter_modal is false, and its guard is `!= blank`, which
+// false does not satisfy -- so nothing renders it today. Its other callers
+// were footer partials that went with sections/footer.liquid.
+//
+// Kept because two rules are cheaper than the bug that appears if anyone ever
+// ticks that checkbox. If the theme's own newsletter modal is deleted, delete
+// these with it.
+//
+// font-size: 0 rather than a visually-hidden clip: it is the legacy theme's
+// own technique and screen readers still announce the text. Not changed here,
+// because this is inherited chrome, not new work.
+//
+// NOT ported: `label.for-option-color`, also in that block. Nothing in
+// sections/, snippets/, assets/ or layout/ emits that class -- it is a
+// leftover from a swatch feature that is no longer installed.
+// ---------------------------------------------------------------------------
+
+.icon__fallback-text {
+  font-size: 0;
+}
+
+.dt-sc-icon-brand .icon__fallback-text {
+  padding-left: 5px;
+  /* stylelint-disable-next-line custom-property-pattern -- dt-framework's name */
+  font-size: var(--DTFontSizeBase);
+}
+
+// ---------------------------------------------------------------------------
 // STICKY POSITIONING, ON LEGACY TEMPLATES
 // ---------------------------------------------------------------------------
 //

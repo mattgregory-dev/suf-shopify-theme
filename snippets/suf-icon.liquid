@@ -29,6 +29,18 @@
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
     {%- when 'twitter' -%}
       <path d="M4 4l7.5 9.7L4.4 20h1.7l6.2-6.6L17.4 20H20l-7.9-10.2L19.5 4h-1.7l-5.7 6.1L8 4z" fill="currentColor" stroke="none"/>
+    {%- when 'spotify' -%}
+      {%- comment -%}
+        Drawn as strokes, not the usual filled Spotify glyph, so it matches the
+        other icons here -- every one of them is an outline on a shared
+        stroke-width. A filled path would need fill="currentColor"
+        stroke="none" overriding the svg's own attributes and would read
+        heavier than its neighbours at 16px.
+      {%- endcomment -%}
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M7 14.6c2.9-1 6.4-.6 8.9 1"/>
+      <path d="M6.4 11.1c3.5-1.2 8-.6 11 1.4"/>
+      <path d="M6 7.6c4-1.2 9.4-.5 12.9 1.8"/>
     {%- when 'youtube' -%}
       <path d="M22.5 7.4a2.7 2.7 0 0 0-1.9-1.9C18.9 5 12 5 12 5s-6.9 0-8.6.5A2.7 2.7 0 0 0 1.5 7.4 28 28 0 0 0 1 12a28 28 0 0 0 .5 4.6 2.7 2.7 0 0 0 1.9 1.9C5.1 19 12 19 12 19s6.9 0 8.6-.5a2.7 2.7 0 0 0 1.9-1.9A28 28 0 0 0 23 12a28 28 0 0 0-.5-4.6z"/>
       <polygon points="9.8 15.1 15.5 12 9.8 8.9" fill="currentColor" stroke="none"/>
