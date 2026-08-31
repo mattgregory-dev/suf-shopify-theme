@@ -313,6 +313,39 @@
     }
   }
 
+  // THE CURRENT PAGE, INSIDE A PANEL.
+  //
+  // Two indicators with two different jobs, and they are deliberately not the
+  // same shape:
+  //
+  //   red bar   -- the BRANCH you are in. Stays on the top-level item, which
+  //                is also lit when one of its children is current.
+  //   fill+weight -- the PAGE you are actually on.
+  //
+  // A red bar on the child as well would put two identical marks at two
+  // indents, and stacked on mobile they read as the same claim made twice
+  // rather than as section-then-page. A different shape reads as a different
+  // meaning immediately; a different indent does not.
+  //
+  // It also costs nothing new: these rows already tint on hover, so the
+  // current row is speaking the vocabulary the panel already has. It simply
+  // does not go away.
+  //
+  // Hooked on aria-current, which the section already emits -- no extra class,
+  // and the styling cannot drift from the semantics.
+  .sufnav__drop a[aria-current='page'] {
+    background: var(--suf-color-border-faint);
+    color: var(--suf-navy);
+    font-weight: 800;
+
+    // Hover still has to register on the row you are already on, or the panel
+    // feels dead under the pointer.
+    &:hover,
+    &:focus-visible {
+      background: var(--suf-color-border-subtle);
+    }
+  }
+
   .sufnav__drop .suf-navsub {
     display: block;
     margin-top: 3px;

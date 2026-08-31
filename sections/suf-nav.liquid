@@ -69,7 +69,38 @@
           if link.links.size > 0
             assign item_classes = item_classes | append: ' sufnav__item--has'
           endif
-          if link.active or link.child_active
+
+          # PATHS ARE COMPARED HERE RATHER THAN TRUSTING link.active.
+          #
+          # link.active matches a menu link's URL against the current page, and
+          # these menu links carry a ?view= preview parameter -- the technique
+          # in docs/migration.md for rendering a new template without
+          # reassigning it in the admin. A custom URL with a query string never
+          # matches a clean path, so link.active is false on every suf page.
+          # /blogs/blog has no parameter, which is why the blog was the one
+          # item that ever highlighted.
+          #
+          # Splitting on ? and comparing to request.path is true in BOTH
+          # states, so this keeps working after cutover drops the parameters
+          # rather than quietly starting to work then.
+          assign here = false
+          assign link_path = link.url | split: '?' | first
+          if link.active or link_path == request.path
+            assign here = true
+          endif
+
+          # A parent is also "here" when one of its children is.
+          unless here
+            for child in link.links
+              assign child_path = child.url | split: '?' | first
+              if child.active or child_path == request.path
+                assign here = true
+                break
+              endif
+            endfor
+          endunless
+
+          if here or link.child_active
             assign item_classes = item_classes | append: ' is-active'
           endif
         -%}
@@ -102,7 +133,13 @@
             {%- endcomment -%}
             <div class="sufnav__drop" id="sufnav-drop-{{ forloop.index }}">
               {%- for child in link.links -%}
-                <a href="{{ child.url }}"{% if child.active %} aria-current="page"{% endif %}>
+                {%- assign child_path = child.url | split: '?' | first -%}
+                <a
+                  href="{{ child.url }}"
+                  {% if child.active or child_path == request.path %}
+                    aria-current="page"
+                  {% endif %}
+                >
                   {% render 'suf-navlabel', title: child.title %}
                 </a>
               {%- endfor -%}
@@ -111,7 +148,7 @@
             <a
               class="sufnav__label"
               href="{{ link.url }}"
-              {% if link.active %}
+              {% if here %}
                 aria-current="page"
               {% endif %}
             >
