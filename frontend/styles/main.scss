@@ -31,23 +31,6 @@
 @use 'components/suf-ctable';
 @use 'components/suf-seminars';
 @use 'components/suf-cpt';
-// DISABLED at step 4 of the header rebuild, not yet deleted.
-//
-// This partial styles sections/suf-header.liquid, and it is scoped under
-// .suf-body -- a class only layout/suf.liquid sets. That layout now renders
-// suf-nav instead, and theme.liquid renders sections/header.liquid, which
-// cannot match .suf-body. So the file styles nothing on either layout.
-//
-// It is disabled rather than merely ignored because it is not inert. It
-// contains bare element selectors inside the .suf-body wrapper -- `nav`,
-// `header`, `ul` -- which are (0,1,1) and therefore BEAT every .sufnav__*
-// class at (0,1,0). Two of them broke the mobile menu: `nav {position:
-// relative}` stopped the panel escaping the flex row, and `nav
-// {background-color: transparent}` made it see-through.
-//
-// Restore this line if the rebuild is abandoned and suf-header comes back.
-// Delete the file at step 6.
-// @use 'components/suf-header';
 // NOT scoped under .suf-body -- it is built to render on both layouts. See the
 // file.
 // AFTER suf-search, deliberately. The nav restyles the shared search panel

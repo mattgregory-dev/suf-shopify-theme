@@ -65,8 +65,8 @@ with no `--theme`, which prompts with a list that includes the LIVE theme. One
 wrong keystroke would overwrite two years of production work. Every push script
 here names its target explicitly; keep it that way.
 
-Pushing sends `config/settings_data.json`, so the seeded suf-header and
-suf-footer settings travel with it and the preview matches local. It also
+Pushing sends `config/settings_data.json`, so the seeded suf-nav and suf-footer
+settings travel with it and the preview matches local. It also
 *overwrites* that theme's settings, so never aim a push at a theme whose
 settings matter.
 
@@ -110,13 +110,13 @@ all net-new, so `npm run lint:css` should exit clean. Keep it that way.
 
 `.theme-check.yml` extends `theme-check:recommended`.
 
-- **Baseline is ~735 offenses. This is inherited and expected** for a Vintage
-  theme (`DeprecatedFilter`, `DeprecatedTag`, lazysizes). **Do not mass-fix.**
-  Treat it as a ratchet: lint new work, leave the legacy count alone. It was
-  ~1,080 before unreferenced sections and snippets were removed, and ~719
-  before `sections/suf-header.liquid` was forked. The fork duplicates 16 of
-  `header.liquid`'s own offenses; that 16 disappears when the legacy header is
-  eventually deleted. New code should still add none.
+- **Baseline is ~706 offenses across 224 files. This is inherited and expected**
+  for a Vintage theme (`DeprecatedFilter`, `DeprecatedTag`, lazysizes). **Do not
+  mass-fix.** Treat it as a ratchet: lint new work, leave the legacy count
+  alone. It was ~1,080 before unreferenced sections and snippets were removed,
+  ~719 before `sections/suf-header.liquid` was forked, and ~735 while both
+  headers existed. Deleting them on 2026-08-31 gave back the 16 duplicated
+  offenses and more. New code should still add none.
 - **Trap: `--fail-level` does not work.** Verified on CLI 3.92.1 — exits `0`
   with 178 errors present, at every level. CI gating must parse
   `--output json` and count offenses itself.

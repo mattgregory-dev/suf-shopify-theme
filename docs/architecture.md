@@ -79,11 +79,21 @@ A template opts in with a top-level key (JSON) or a tag (Liquid):
 - **Only `suf-*` sections belong in a suf template.** Inherited sections are
   styled by `dt-framework.css` and will render unstyled here.
 - **No lazysizes.** Use native `loading="lazy"`, not `class="lazyload"`.
-- **The header is a fork, not new code.** `sections/suf-header.liquid` began as
-  a verbatim copy of `sections/header.liquid` so it can be reduced without
-  touching the ~30 templates that render the original. The legacy assets in the
-  layout exist solely to keep it working and come off as it shrinks. Checklist
-  in [migration.md](migration.md#reducing-the-forked-header).
+- **The header is shared, and it is new code.** `sections/suf-nav.liquid` is
+  rendered by BOTH layouts, so they read one `settings_data` key: one logo, one
+  menu, no drift. It was written from scratch on 2026-08-30/31 and replaced two
+  headers — `sections/header.liquid` and the fork `sections/suf-header.liquid`,
+  both since deleted.
+  - Its CSS is **not** scoped under `.suf-body`. It cannot be: the class only
+    exists on one of the two layouts it renders on. It scopes to `.sufnav-wrap`
+    instead, which the section itself emits. `_suf-search.scss` does the same,
+    for the same reason.
+  - On `theme.liquid` it is up against `dt-framework.css`, which styles buttons
+    with `button[type="button"]` — (0,1,1), enough to beat any single class.
+    That is why `_suf-nav.scss` nests everything one level deeper, and why it
+    declares properties it does not care about (`margin`, `float`,
+    `border-radius`): an **undeclared** property is a gap the legacy sheet
+    fills no matter how specific your selector is.
 - **Never add to the legacy block in the layout.** If something needs jQuery or
   `dt-framework.css`, port the section instead.
 
@@ -297,9 +307,14 @@ vendor code.** Each carries a banner comment naming its original. Current list:
 
 | File | Forked from | Status |
 |---|---|---|
-| `sections/suf-header.liquid` | `sections/header.liquid` | verbatim; being reduced, see [migration.md](migration.md#reducing-the-forked-header) |
+| _(none)_ | | |
 
-**If you fork another one, add the banner and add it to that table.**
+The only entry was `sections/suf-header.liquid`, a verbatim fork of
+`sections/header.liquid`. Both were deleted on 2026-08-31 when
+`sections/suf-nav.liquid` replaced them — see
+[migration.md](migration.md#the-header-rebuild).
+
+**If you fork one, add the banner and add it to that table.**
 
 #### Why this is written down
 

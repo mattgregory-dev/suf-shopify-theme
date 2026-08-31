@@ -11,9 +11,6 @@
 //
 // type="module" is deferred by default, so the DOM is already parsed here.
 
-import "./suf-header.js";
-// No-ops unless sections/suf-nav.liquid is on the page, so it is safe to load
-// before either layout renders that section.
 import "./suf-nav.js";
 import "./suf-search.js";
 import "./suf-form.js";

@@ -35,17 +35,12 @@
 
   * NO CART DRAWER. The header cart icon falls back to its own href and goes to
     the cart page. New pages link straight to checkout, so the drawer is not
-    wanted. The mobile NAV drawer still works, because its code is inline in
-    the header section rather than in any file dropped above.
+    wanted. The header supplies its own nav drawer, in sections/suf-nav.liquid.
   * NO LAZYSIZES. Use native loading="lazy", not class="lazyload".
   * NO COOKIE BANNER yet. See docs/migration.md — resolve before any suf page
     is assigned to a live page handle.
-  * Legacy sections other than the forked header render only as well as
-    dt-framework.css happens to style them. Prefer suf-* sections here.
-
-  The legacy block below is temporary and shrinks as sections/suf-header.liquid
-  is reduced. Do not add to it — port the section instead. The reduction
-  checklist is in docs/migration.md.
+  * Legacy sections render only as well as dt-framework.css happens to style
+    them, and this layout does not load it. Prefer suf-* sections here.
 {% endcomment %}
 <html lang="{{ request.locale.iso_code }}">
   <head>
@@ -98,12 +93,13 @@
 
     {% comment %}
       Theme-editor values -> custom properties, after suf.css so they override
-      the fallbacks compiled into it. Two separate sets on purpose: the brand
-      palette for new components, and the inherited palette the forked header
-      still needs. See each snippet for why they cannot be one.
+      the fallbacks compiled into it.
+
+      There used to be a second set here, suf-legacy-tokens, bridging the OLD
+      theme-editor pickers for the forked header. It went with the header on
+      2026-08-31.
     {% endcomment %}
     {% render 'suf-tokens' %}
-    {% render 'suf-legacy-tokens' %}
 
     {% comment %}
       Hanken Grotesk is applied on this layout only. theme.liquid stays on
@@ -152,19 +148,8 @@
     <span class="suf-totop__sentinel" aria-hidden="true"></span>
 
     {% comment %}
-      The rebuilt header. See docs/header-rebuild.md -- this is step 3, and
-      reverting it means restoring the four lines below and nothing else:
-
-        <div class="mobile-menu" data-menu="dt-main-menu" id="dt-main-menu-panel"></div>
-        <div class="mobile-menu-overlay"></div>
-        {% raw %}{% section 'suf-header' %}{% endraw %}
-
-      Those two empty divs were scaffolding the forked header's inline JS
-      filled with the mobile menu; suf-nav carries its own panel, so they went
-      with it. sections/suf-header.liquid is untouched on disk.
-
-      layout/theme.liquid still renders sections/header.liquid. Pointing it
-      here is step 5, after this one has been lived with.
+      The header. layout/theme.liquid renders this same section, so both
+      layouts read one settings key: one logo, one menu, no drift.
     {% endcomment %}
     {% section 'suf-nav' %}
 

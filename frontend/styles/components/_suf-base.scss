@@ -23,9 +23,9 @@
 // templates stay untouched -- but the base layer now sits UNDER the components
 // instead of competing with them, which is what a base layer is for.
 //
-// The legacy-compatibility block at the bottom of this file is deliberately
-// NOT wrapped: it props up the forked header's inherited markup and needs its
-// weight.
+// The link-decoration block at the bottom of this file is deliberately NOT
+// wrapped in :where(). It is the remnant of a legacy-compatibility block that
+// propped up the forked header's inherited markup, and it keeps its weight.
 
 // Smooth scrolling for in-page anchors -- the back-to-top link, the hero
 // buttons that jump to #bundle and #upcoming. This replaces the legacy
@@ -158,8 +158,9 @@
     margin: 0;
   }
 
-  // A visible focus ring is the only keyboard affordance on a layout with no
-  // navigation chrome yet. Do not remove it.
+  // The default keyboard affordance for anything that does not draw its own.
+  // sections/suf-nav.liquid supplies its own rings, tuned to the navy bar; this
+  // is what everything else gets. Do not remove it.
   :focus-visible {
     outline: 2px solid var(--suf-color-focus);
     outline-offset: 2px;
@@ -171,8 +172,8 @@
   min-height: 50vh;
 }
 
-// Skip link: off-screen until focused. The layout has no header, so this is
-// currently the first focusable element on the page.
+// Skip link: off-screen until focused, and the first focusable element on the
+// page -- ahead of the header's logo, so it can be reached before the nav.
 .suf-skip-link {
   position: absolute;
   inset-inline-start: var(--suf-space-md);
@@ -336,27 +337,25 @@
 }
 
 // ---------------------------------------------------------------------------
-// LEGACY BASE COMPATIBILITY
+// LINK DECORATION
 //
-// dt-framework.css and dt-custom.css were dropped from layout/suf.liquid on
-// 2026-08-23. By then they were not supplying component styles: an audit of the
-// rendered page found only 53 of their 1,014 selectors could match it, and 44
-// of those were bare element selectors. What they were supplying is the RESET
-// that the forked header's CSS was written on top of.
+// All that survives of the LEGACY BASE COMPATIBILITY block, deleted alongside
+// sections/suf-header.liquid on 2026-08-31. Everything else in it existed for
+// the forked header's inherited markup and had nothing left to match once that
+// section went: the .container grid, the .dt-sc-flex utilities, the list reset
+// on header and .mobile-menu lists, .menu-trigger's label, and the positioning
+// rule on section elements inside a header.
 //
-// These rules stand in for the ones the inherited markup actually depends on.
-// Every one exists solely for sections/suf-header.liquid. DELETE THIS WHOLE
-// BLOCK when the header is rebuilt -- nothing else needs it.
+// Also gone with it: the .shopify-section display rule, and with that the
+// :not(.sufnav-section) exemption it forced. Shopify's section wrapper is a
+// div and stacks as a block on its own.
 //
-// Deliberately NOT carried over: overflow-x hidden on html and body, which the
-// legacy reset set. That is the classic way to silently break position sticky
-// further down a page, and nothing here was found to need it.
+// THESE TWO ARE NOT LEGACY COMPATIBILITY, despite having lived in that block.
+// Browsers underline links by default and this design does not, except in
+// prose. Deleting them underlines every link on every suf page.
 // ---------------------------------------------------------------------------
 
 .suf-body {
-  // The most load-bearing one. The legacy reset declared a text-decoration of
-  // none, so without this every link in the inherited header renders
-  // underlined.
   a {
     text-decoration: none;
   }
@@ -365,79 +364,5 @@
   // win, and the legacy theme re-added them the same way.
   .rte a {
     text-decoration: underline;
-  }
-
-  // Submenu panels and the sticky header position against their section.
-  //
-  // Scoped to the header, and that scoping matters. Unscoped, this matched
-  // Shopify's cookie banner -- injected as <section id="shopify-pc__banner">
-  // at the top of <body> -- and overrode its fixed positioning, dropping it
-  // into normal flow at the top of the page. Any bare element selector in this
-  // block can collide with markup that Shopify or an app injects at runtime,
-  // which no audit of the served HTML will ever show.
-  //
-  // The sticky clone is inserted as a sibling of the real header section, so
-  // it is still inside <header> and still matched.
-  header section {
-    position: relative;
-  }
-
-  // Shopify wraps every section in this. The legacy rule floated it; block
-  // layout stacks full-width the same way without needing a clearfix.
-  //
-  // THE NAV SECTION IS EXEMPT, and it has to be. sections/suf-nav.liquid needs
-  // its wrapper erased with `display: contents` so its sticky child's
-  // containing block is the body rather than a div the height of the header --
-  // inside that div sticky has zero travel and silently does nothing. This
-  // rule is (0,2,0) and the exemption in _suf-nav.scss is (0,1,0), so without
-  // the :not() this quietly wins and the header is simply never sticky.
-  .shopify-section:not(.sufnav-section) {
-    display: block;
-    width: 100%;
-  }
-
-  .container-fluid {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .container-fluid.spacing_enabled > .row {
-    margin-inline: var(--suf-legacy-container-spacing);
-  }
-
-  .container {
-    width: var(--suf-legacy-container);
-    max-width: 100%;
-    margin-inline: auto;
-    padding-inline: calc(var(--suf-legacy-gutter) / 2);
-  }
-
-  // The inherited nav markup assumes the global list-style none that the
-  // legacy reset applied. Scoped to the chrome rather than global, so lists in
-  // page content keep their markers.
-  header ul,
-  .mobile-menu ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  // Flex utilities. .site-header__links carries .dt-sc-flex, and the nav
-  // carries .dt-sc-flex-space-between; both were defined in dt-framework, so
-  // without them the header icons stack vertically instead of sitting in a row.
-  .dt-sc-flex {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .dt-sc-flex-space-between {
-    justify-content: space-between;
-  }
-
-  // The hamburger's label. It is the button's accessible name -- the button has
-  // no aria-label -- so it is hidden visually rather than removed, the same way
-  // the header icon labels are handled. Production shows the icon alone.
-  .menu-trigger > span {
-    @include m.visually-hidden;
   }
 }
