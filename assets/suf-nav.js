@@ -105,16 +105,31 @@ function init() {
     // and saying it is open are the same action. See the .is-open comment in
     // _suf-nav.scss.
     //
-    // Guarded on the breakpoint: stacked, these are tap-to-expand accordions,
-    // and a stray mouseenter would spring them open.
-    item.addEventListener('mouseenter', () => {
-      if (!MOBILE.matches) setPanel(item, true);
+    // POINTER EVENTS, AND A pointerType TEST, because of touch devices wide
+    // enough to still be showing the desktop nav -- a tablet in landscape.
+    //
+    // Browsers emulate hover on tap: a tap fires pointerenter BEFORE click. So
+    // with a plain mouseenter listener the first tap opened the panel and the
+    // click that followed toggled it straight back shut -- a visible flash of
+    // the panel, and the menu appearing to need two taps. The second tap
+    // worked only because no fresh enter event fired.
+    //
+    // Testing event.pointerType is per-INTERACTION, not per-device, so a
+    // laptop with a touchscreen still opens on hover with the mouse and
+    // toggles on tap with a finger. A `(hover: hover)` media query would have
+    // to pick one for the whole device and get one of them wrong.
+    //
+    // Guarded on the breakpoint too: stacked, these are tap-to-expand
+    // accordions, and a stray enter event would spring them open.
+    item.addEventListener('pointerenter', (event) => {
+      if (MOBILE.matches || event.pointerType !== 'mouse') return;
+      setPanel(item, true);
     });
 
-    item.addEventListener('mouseleave', () => {
+    item.addEventListener('pointerleave', (event) => {
+      if (MOBILE.matches || event.pointerType !== 'mouse') return;
       // Not while the keyboard is inside it -- the pointer wandering off must
       // not close a panel someone is tabbing through.
-      if (MOBILE.matches) return;
       if (item.contains(document.activeElement)) return;
       setPanel(item, false);
     });
@@ -138,12 +153,19 @@ function init() {
     closeAllPanels();
   });
 
-  // A click outside dismisses the open drawer, the same way the search panel
-  // behaves.
   document.addEventListener('click', (event) => {
-    if (!nav.classList.contains('is-open')) return;
-    if (event.target.closest('[data-sufnav]')) return;
-    setMenu(false);
+    // A click outside dismisses the open drawer, the same way the search panel
+    // behaves.
+    if (nav.classList.contains('is-open') && !event.target.closest('[data-sufnav]')) {
+      setMenu(false);
+    }
+
+    // And dismisses an open desktop panel. Only a pointer that can hover gets
+    // a pointerleave to close one, so without this a panel opened by tapping
+    // on a tablet stays open until its own parent is tapped again.
+    if (!MOBILE.matches && !event.target.closest('.sufnav__item--has')) {
+      closeAllPanels();
+    }
   });
 
   // Crossing the breakpoint leaves the menu in a state that means nothing on
