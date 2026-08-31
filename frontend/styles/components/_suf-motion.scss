@@ -1,0 +1,380 @@
+// Scroll-triggered accents.
+//
+// Ported from EFFECT A in ~/projects/suf/mockups/motion-accents-demo.html: the
+// eyebrow's red slash scales up from nothing while the caps label slides in
+// beside it. One shot, on the way in, never replayed.
+//
+// ---------------------------------------------------------------------------
+// WHY [data-suf-motion] GATES ALL OF IT
+// ---------------------------------------------------------------------------
+//
+// The resting state of an animated element is INVISIBLE -- opacity 0. Written
+// unconditionally, that is a stylesheet that hides content and a script that
+// un-hides it, so anything that stops the script leaves the page permanently
+// missing its eyebrows: a JS error in an unrelated module, a blocked asset, a
+// browser with scripting off.
+//
+// The attribute is set by an inline script in layout/suf.liquid, so the
+// hidden state only ever exists on a page that can undo it. No script, no
+// hiding.
+//
+// It has to be INLINE and in the <head>, not in assets/suf.js. That file is a
+// deferred module: the browser would paint the eyebrows visible, run the
+// module, hide them, then animate them back. A flicker on first paint, worse
+// than no animation.
+//
+// ---------------------------------------------------------------------------
+// REDUCED MOTION
+// ---------------------------------------------------------------------------
+//
+// The whole block sits inside `prefers-reduced-motion: no-preference`, rather
+// than being written and then overridden. Someone who has asked for less
+// motion never gets the hidden state in the first place, so there is no
+// dependency on the observer for them either -- one fewer way for the content
+// to go missing.
+
+// ---------------------------------------------------------------------------
+// THE OFFSET FRAME REVEAL IS OFF BY DECISION. Tried and rejected, 2026-08-31.
+// ---------------------------------------------------------------------------
+//
+// This is not a convenience toggle awaiting a preference. The effect was
+// built, lived with, and turned off.
+//
+// WHY. The eyebrow reveal fires on nearly every section, so it IS this site's
+// motion budget. Two or three sections carry an eyebrow AND a framed image,
+// and there the eyebrow arrives from the LEFT while the frame rises from
+// BELOW: two gestures in one viewport, moving in different directions,
+// competing rather than compounding. Each is fine alone. Together they read as
+// busy.
+//
+// A parallax version of the same accent was tried in the mockup before this
+// one and was further over the same line, which is what the subtler rise was
+// meant to answer. It did not answer it.
+//
+// TURN IT ON ONLY IF THE EYEBROW REVEAL IS DROPPED. That is the condition
+// under which the answer changes -- the frames were never the problem on their
+// own, the total was. Flipping this back to true while the eyebrows still
+// animate reproduces exactly what was rejected.
+//
+// `false` emits NOTHING: the rules are never generated rather than overridden,
+// so no dead CSS ships. Verified both ways.
+//
+// assets/suf-motion.js still observes the media elements while this is false.
+// It adds .is-in to something with no styles attached -- a few microseconds
+// and a handful of style recalcs, once, then it unobserves. The alternative is
+// a second switch in another language that has to be kept in step with this
+// one, which is the more expensive mistake.
+$suf-frame-reveal: false !default;
+
+@media (prefers-reduced-motion: no-preference) {
+  // (0,2,0) against `.suf-body .suf-eyebrow` at (0,1,1), so these win without
+  // needing to restate the component's own scoping.
+  [data-suf-motion] .suf-eyebrow {
+    opacity: 0;
+    // 8px, and only on one axis. The label arrives from the same side its
+    // slash grows from, so the pair reads as one gesture rather than two
+    // things moving independently.
+    transform: translateX(-8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+
+    // transform-origin at the bottom-left corner, which is where the
+    // parallelogram's own point sits -- it grows out of the corner it is
+    // anchored by rather than swelling from its middle.
+    //
+    // The delay is what makes this read as one movement: the label starts
+    // first and the slash catches up.
+    &::before {
+      transform: scale(0);
+      transform-origin: 0 100%;
+      transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.5, 1) 0.12s;
+    }
+  }
+
+  [data-suf-motion] .suf-eyebrow.is-in {
+    opacity: 1;
+    transform: none;
+
+    // The overshoot in that cubic-bezier takes the slash slightly past full
+    // size and settles it back. On a 14px shape it is barely perceptible as
+    // overshoot and reads as the thing having weight.
+    &::before {
+      transform: scale(1);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // NUMBER STRIP -- cells reveal left to right
+  //
+  // The trigger sits on the STRIP, not on each cell. One observer entry means
+  // the four fire as one sweep at a fixed rhythm; observing each cell
+  // separately would make the timing depend on scroll speed, and on a fast
+  // flick they would all fire at once and there would be no sweep at all.
+  //
+  // The stagger is nth-child rather than anything positional, so it survives
+  // the grid dropping to two columns at 820 and one at 480 -- the order is
+  // still the order they are read in.
+  //
+  // Delays run to six. The section takes four blocks today; a fifth added in
+  // the editor would otherwise arrive with no delay and jump the queue.
+  [data-suf-motion] .suf-numstrip__cell {
+    opacity: 0;
+    // 8px, and vertical. The cells carry the strip's internal dividers, so a
+    // horizontal shift would slide those against the fixed outer border and
+    // read as the strip coming apart.
+    transform: translateY(8px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  [data-suf-motion] .suf-numstrip.is-in .suf-numstrip__cell {
+    opacity: 1;
+    transform: none;
+  }
+
+  @for $i from 1 through 6 {
+    [data-suf-motion] .suf-numstrip.is-in .suf-numstrip__cell:nth-child(#{$i}) {
+      transition-delay: #{($i - 1) * 0.18}s;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // COMPARISON BARS -- each bar grows out to its own width
+  //
+  // WIDTH, NOT transform: scaleX, and that is the whole decision here.
+  //
+  // scaleX would be cheaper -- compositor only, no layout -- but these bars are
+  // cut with `clip-path: polygon(...)` giving them a 14px angled tip, and
+  // clip-path is applied in the element's own coordinate space BEFORE the
+  // transform. Scaling the box scales the cut with it, so the tip would start
+  // as a sliver and widen to 14px as the bar grew: the shape would appear to
+  // change while it moved. Animating width keeps the tip at a constant 14px
+  // and the bar simply gets longer, which is what the eye expects.
+  //
+  // The cost is a layout pass per frame. There are two bars on one section, so
+  // it is not worth trading the shape for.
+  //
+  // The trigger sits on .suf-bars for the same reason as the number strip: one
+  // entry, one rhythm, independent of scroll speed.
+  [data-suf-motion] .suf-bars__bar {
+    width: 0;
+    // Ease-out: fast away from zero, settling into its final width, which
+    // reads as a measurement landing rather than a box being drawn.
+    transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-suf-motion] .suf-bars.is-in .suf-bars__bar {
+    width: var(--suf-bar-pct, 100%);
+  }
+
+  // The rows are the comparison, so they resolve in reading order rather than
+  // together -- the highlighted one lands first and the one it is being
+  // measured against follows.
+  //
+  // EACH ROW ALSO TAKES LONGER THAN THE ONE ABOVE IT. Given a fixed duration,
+  // a long bar has to travel further in the same time, so it moves visibly
+  // faster than a short one and the pair reads as two unrelated animations.
+  // Stretching the duration down the list keeps their speeds closer, and the
+  // longer bar arrives last, which is also where the comparison lands.
+  //
+  // This assumes the rows get longer as they go down, which is true of the one
+  // section using it -- and is the usual shape of a comparison, since the bar
+  // being argued against is the big one. If a section ever puts the longest
+  // bar first, this is the rule that will look wrong, and the honest fix then
+  // is to emit a duration per bar from the same percentage that sets its
+  // width, in suf-splitfact.liquid, rather than inferring it from position.
+  @for $i from 1 through 6 {
+    [data-suf-motion] .suf-bars.is-in .suf-bars__row:nth-child(#{$i}) .suf-bars__bar {
+      transition-delay: #{($i - 1) * 0.14}s;
+      transition-duration: #{0.7 + ($i - 1) * 0.75}s;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // STEPS -- the ghost numbers only
+  //
+  // ONLY .suf-step__n moves. The headings and copy stay put, because they are
+  // the content and this is a four-column grid: animating whole columns would
+  // reflow the reader's eye across the section every time it comes into view.
+  // The numbers are decoration -- aria-hidden, with the real order carried by
+  // the <ol> -- so they are the one part that can move without the text
+  // appearing to arrive late.
+  //
+  // 0.18s to match the number strip. Both are four-item horizontal sweeps on
+  // the same page, and two different rhythms would read as two different
+  // ideas.
+  [data-suf-motion] .suf-step__n {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  [data-suf-motion] .suf-steps.is-in .suf-step__n {
+    opacity: 1;
+    transform: none;
+  }
+
+  // Delay keyed to the STEP, not the number -- .suf-step__n is the first child
+  // of its own <li>, so :nth-child on it would match every one of them.
+  @for $i from 1 through 6 {
+    [data-suf-motion] .suf-steps.is-in .suf-step:nth-child(#{$i}) .suf-step__n {
+      transition-delay: #{($i - 1) * 0.18}s;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // GYM LOGO LINE -- the marks, not the label
+  //
+  // "Graduates work at" stays put. It is the sentence the logos complete, so
+  // it should already be there when they arrive rather than sweeping in as if
+  // it were one of them.
+  //
+  // The logos are mask-painted spans sized by --suf-logo-w / -h, so they take
+  // a transform like anything else -- nothing here touches the mask.
+  //
+  // This line appears in two places and the observer picks up both, since it
+  // queries every match rather than a known one.
+  [data-suf-motion] .suf-gymline__logo,
+  [data-suf-motion] .suf-gymline__text {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  [data-suf-motion] .suf-gymline.is-in .suf-gymline__logo,
+  [data-suf-motion] .suf-gymline.is-in .suf-gymline__text {
+    opacity: 1;
+    transform: none;
+  }
+
+  // Delay by position in the LINE, not by type. The children are mixed -- one
+  // label, three logos, one text mark -- so counting logos separately would
+  // put the last item out of step with the row it sits in. The label picks up
+  // a delay it never uses, which is free.
+  //
+  // 0.12s rather than the 0.18s used elsewhere: these sit on one row with a
+  // wide gap, so the eye crosses them faster than it does a grid of cells.
+  @for $i from 1 through 8 {
+    [data-suf-motion] .suf-gymline.is-in > :nth-child(#{$i}) {
+      transition-delay: #{($i - 1) * 0.12}s;
+    }
+  }
+
+  @if $suf-frame-reveal {
+    // ---------------------------------------------------------------------------
+    // OFFSET FRAMES -- BUILT, THEN SWITCHED OFF.
+    //
+    // See $suf-frame-reveal at the top of this file for why, and for the one
+    // condition that would bring it back. Nothing below is emitted while that
+    // is false, which is its current state.
+    //
+    // The offset frame behind a spotlight photo rises a short distance into
+    // place. Nothing else in the section moves: the photo, the heading and the
+    // copy are all already there, and only the accent arrives.
+    //
+    // NOT SETTLED. Kept deliberately small -- 12px and a fade -- because this
+    // one is decoration on decoration, and the frame's whole job is to be barely
+    // noticed. If it draws the eye it has failed, and the honest outcome may be
+    // to delete this block.
+    //
+    // TRANSFORM, NOT bottom. The frame is positioned with bottom/left offsets
+    // that CHANGE at 600px and flip to the right edge on --image-left, so
+    // animating the offset would mean restating all four variants and keeping
+    // them in step. A transform composes on top of whatever the layout resolved
+    // to, so it works for every variant without knowing about any of them.
+    //
+    // The observer watches .suf-spotlight__media, the element that owns the
+    // pseudo-element -- a ::after cannot be observed, and it cannot carry a
+    // class either, so the state has to live on the parent.
+    // All three framed components share this. Spotlight, cert and splitfact draw
+    // the SAME frame -- same 14px offsets, same 600px inset, same flip to the
+    // inner edge facing the text -- so they take one reveal rather than three
+    // rules that would drift apart the first time anyone tuned one of them.
+    //
+    // Only splitfact's is opt-in: its media takes the frame from the --framed
+    // modifier, so an unframed one has no ::after to move and this simply does
+    // not match.
+    [data-suf-motion] .suf-spotlight__media::after,
+    [data-suf-motion] .suf-cert__media::after,
+    [data-suf-motion] .suf-splitfact__media--framed::after {
+      opacity: 0;
+      transform: translateY(12px);
+      // Delayed slightly. The frame is anchored to the photo, so it should look
+      // like it settles after the photo rather than with it.
+      transition: opacity 0.55s ease 0.1s, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)
+        0.1s;
+    }
+
+    [data-suf-motion] .suf-spotlight__media.is-in::after,
+    [data-suf-motion] .suf-cert__media.is-in::after,
+    [data-suf-motion] .suf-splitfact__media--framed.is-in::after {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // THE TOP SECTION NEVER ANIMATES
+  //
+  // An entrance animation on content that is already on screen when the page
+  // loads plays to nobody: it either fires before the reader has looked at it,
+  // or it fires on load, which is the thing entrance animations get criticised
+  // for. Below the fold the reveal is genuinely caused by scrolling, which is
+  // the whole idea.
+  //
+  // POSITIONAL, NOT BY COMPONENT, because the reason is positional. Every suf
+  // template happens to open with suf-page-band or suf-hero today, but naming
+  // those would exempt a band used halfway down a page too -- and would need
+  // editing the first time a page opens with something else. content_for_layout
+  // renders straight into <main>, so the top section is always this element,
+  // whatever it is.
+  //
+  // Written as the resting state rather than as .is-in, so these do not depend
+  // on the observer reaching them at all.
+  [data-suf-motion] .suf-main > .shopify-section:first-child .suf-eyebrow,
+  [data-suf-motion] .suf-main > .shopify-section:first-child .suf-numstrip__cell,
+  [data-suf-motion] .suf-main > .shopify-section:first-child .suf-step__n,
+  [data-suf-motion] .suf-main > .shopify-section:first-child .suf-gymline__logo,
+  [data-suf-motion] .suf-main > .shopify-section:first-child .suf-gymline__text {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  // The frames' exemption is behind the switch too, so turning the effect off
+  // emits nothing about frames at all rather than leaving three no-op rules
+  // undoing a state that was never applied.
+  @if $suf-frame-reveal {
+    [data-suf-motion] .suf-main > .shopify-section:first-child .suf-spotlight__media::after,
+    [data-suf-motion] .suf-main > .shopify-section:first-child .suf-cert__media::after,
+    [data-suf-motion]
+      .suf-main
+      > .shopify-section:first-child
+      .suf-splitfact__media--framed::after {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  // THE SLASH IS RESET SEPARATELY, and it has to be.
+  //
+  // This was nested as `&::before` inside the rule above. Sass expands `&` to
+  // EVERY selector in that list, and three of them already end in ::after --
+  // producing `.suf-spotlight__media::after::before`, which is not a valid
+  // selector. In a comma-separated list one invalid selector invalidates the
+  // WHOLE rule, so the browser dropped the reset entirely and the slash kept
+  // animating in the top section.
+  //
+  // Nothing warns about this: Sass compiles it happily and stylelint accepts
+  // it. The only symptom is a rule that silently does nothing.
+  [data-suf-motion] .suf-main > .shopify-section:first-child .suf-eyebrow::before {
+    transform: none;
+    transition: none;
+  }
+
+  // Bars need their width back rather than opacity, so they cannot share the
+  // rule above.
+  [data-suf-motion] .suf-main > .shopify-section:first-child .suf-bars__bar {
+    width: var(--suf-bar-pct, 100%);
+    transition: none;
+  }
+}

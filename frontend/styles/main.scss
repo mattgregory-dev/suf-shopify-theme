@@ -40,6 +40,9 @@
 @use 'components/suf-search';
 @use 'components/suf-nav';
 @use 'components/suf-footer';
+// Scroll-triggered accents. Gated on [data-suf-motion], set by an inline
+// script in layout/suf.liquid -- see the file.
+@use 'components/suf-motion';
 // Shopify's injected consent banner. Deliberately unscoped -- it is added to
 // <body> on every template, so it has to be styled on both layouts.
 @use 'components/suf-consent';

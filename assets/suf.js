@@ -12,6 +12,7 @@
 // type="module" is deferred by default, so the DOM is already parsed here.
 
 import "./suf-nav.js";
+import "./suf-motion.js";
 import "./suf-search.js";
 import "./suf-form.js";
 import "./suf-totop.js";

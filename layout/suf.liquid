@@ -102,6 +102,26 @@
     {% render 'suf-tokens' %}
 
     {% comment %}
+      Enables the scroll-in accents. See
+      frontend/styles/components/_suf-motion.scss.
+
+      INLINE, AND IN THE HEAD, deliberately. The resting state of an animated
+      accent is opacity 0, so the stylesheet only applies it on a page that can
+      undo it -- no script, no hiding, and a JS failure costs the animation
+      rather than the content.
+
+      It cannot live in assets/suf.js. That is a deferred module: the browser
+      would paint the eyebrows visible, run the module, hide them, then animate
+      them back in. A flicker on first paint is worse than no animation.
+
+      One line, and it stays one line. Anything that needs more than an
+      attribute belongs in assets/suf-motion.js.
+    {% endcomment %}
+    <script>
+      document.documentElement.dataset.sufMotion = '';
+    </script>
+
+    {% comment %}
       Hanken Grotesk is applied on this layout only. theme.liquid stays on
       Arial permanently -- that is a settled decision, not a pending task, and
       the reasoning is in snippets/suf-fonts.liquid. The legacy templates have
