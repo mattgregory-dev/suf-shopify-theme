@@ -847,6 +847,303 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 // so none of the cart-page rules above reach it.
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// THE DRAWER'S OWN LAYOUT, RESCUED FROM sections/header.liquid
+//
+// This is not a restyle. It is the drawer's ONLY stylesheet, and it lived in a
+// 500-line inline <style> inside the header section -- so pointing
+// theme.liquid at suf-nav deleted it, and the drawer rendered unstyled in
+// normal flow at the top of the page.
+//
+// Nothing about the drawer belonged in the header. The header's only
+// connection to it was a cart link carrying .js-drawer-open-right, and
+// suf-nav deliberately does not have one: the drawer opens from the product
+// page's own add-to-cart. The CSS was simply parked in the nearest section.
+//
+// Copied verbatim on 2026-08-30, --DT_* variables and all, because this is
+// inherited chrome for templates the redesign is not rebuilding. Do not tidy
+// it into design tokens; it has to keep matching the rest of dt-framework.
+//
+// The other ~330 lines of that <style> block were genuinely header-specific
+// (`header .dt-sc-*`, `header .site-header__*`) and were left to die with it.
+//
+// The --DT* names below are dt-framework's own, and stylelint's naming rule is
+// disabled for exactly that reason: renaming them to --suf-* would unbind them
+// from the variables the legacy theme actually sets, and the drawer would lose
+// its colours and radii entirely.
+// ---------------------------------------------------------------------------
+
+/* stylelint-disable custom-property-pattern -- inherited dt-framework names */
+
+// ---------------------------------------------------------------------------
+// STACKING, AND THE ONE THING HERE THAT IS NOT VERBATIM
+//
+// The original z-indexes were 4 for the overlay and 5 for the panel. They only
+// ever had to clear the old header, which sat below them.
+//
+// sections/suf-nav.liquid is sticky and sets .sufnav-wrap to z-index 80, so it
+// has to sit above page content -- which left the drawer sliding out UNDERNEATH
+// the header. The drawer is modal: while it is open it outranks everything,
+// the header included.
+//
+// Raised to 85 and 90 rather than dropping the header, because lowering the
+// header would put it back under ordinary page content when scrolled.
+// Change these together, and keep them above .sufnav-wrap.
+// ---------------------------------------------------------------------------
+
+.js-drawer-open .is-moved-by-drawer::before {
+  content: '';
+  position: fixed;
+  z-index: 85;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  transition: var(--DTBaseTransition);
+}
+
+.drawer {
+  display: none;
+  position: fixed;
+  // Above .sufnav-wrap's 80 -- see the stacking note above.
+  z-index: 90;
+  top: 0;
+  left: 100%;
+  width: 300px;
+  height: 100%;
+  padding: 15px;
+  overflow-y: auto;
+  background: var(--DTBodyBGColor);
+  transition: var(--DTBaseTransition);
+}
+
+.shifter-enabled .drawer {
+  display: block;
+}
+
+.drawer--right {
+  transform: translateX(0);
+}
+
+.js-drawer-open-right .drawer--right {
+  transform: translateX(-100%);
+}
+
+.js-drawer-close.dt-sc-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--DTRadius);
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.js-drawer-open-right .drawer--right .dt-sc-btn {
+  left: 0;
+  padding: 15px 20px;
+}
+
+#CartDrawer {
+  padding: 0;
+  overflow: visible;
+}
+
+#CartDrawer .drawer__header {
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0 15px;
+  background: #fff;
+  box-shadow: 0 0 3px 0 rgb(0 0 0 / 25%);
+}
+
+#CartDrawer .drawer__header h4 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: var(--DTFontSize_H5);
+}
+
+#CartDrawer .drawer__header .close-icon {
+  padding: 0;
+  transform: translateX(-100%);
+}
+
+// The scrolling body of the drawer. The 65px of top padding is what clears
+// .drawer__header, which is absolutely positioned over it.
+#CartContainer {
+  height: 100%;
+  padding: 65px 15px 15px;
+  overflow-y: auto;
+}
+
+// Written against a BARE class in the original, with no .drawer ancestor,
+// which is why it was missed on the first pass through header.liquid and the
+// remove control rendered as a full-width grey bar. It is meant to be a small
+// overlay pinned to the corner of the row and revealed on hover -- see
+// `.drawer .ajaxcart__product:hover .remove-btn` below, which is the only
+// thing that raises its opacity.
+.remove-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2px 5px;
+  opacity: 0;
+  background-color: var(--DTPrimaryColor);
+  color: var(--DTBodyBGColor);
+  line-height: normal;
+  cursor: pointer;
+  transition: var(--DTBaseTransition);
+
+  &:hover {
+    background-color: var(--DTSecondaryColor);
+  }
+}
+
+.drawer .ajaxcart__product {
+  clear: both;
+  display: block;
+  width: 100%;
+}
+
+.drawer .ajaxcart__product .row {
+  display: flex;
+  position: relative;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--DTColor_Border);
+}
+
+.ajaxcart__inner .ajaxcart__product:last-child .row {
+  border-bottom-width: 0;
+}
+
+.drawer .ajaxcart__product .item_img {
+  max-width: 60px;
+  margin-bottom: 5px;
+}
+
+.drawer .ajaxcart__product .item_img a {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.drawer .ajaxcart__product .details {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.drawer .ajaxcart__product .details h6 {
+  margin: 0 0 5px;
+}
+
+.drawer .ajaxcart__product .details p {
+  margin: 5px 0;
+}
+
+.drawer .ajaxcart__product .details p.onsale {
+  font-size: 12px;
+}
+
+.drawer .ajaxcart__product .details .remove-btn {
+  margin-top: 0;
+  padding: 3px;
+  border-radius: var(--DTRadius);
+  background-color: #000;
+
+  &::before {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    background-color: var(--DTPrimaryColor);
+  }
+}
+
+.drawer .ajaxcart__product:hover .remove-btn {
+  opacity: 1;
+}
+
+.drawer .cart_savings.onsale {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  border-color: var(--DTColor_Border);
+
+  p {
+    margin: 15px 0;
+  }
+}
+
+.drawer .ajaxcart__product .product-item-caption-qty {
+  margin-top: 8px;
+}
+
+.drawer .ajaxcart__product .product-item-caption-qty button {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--DTColor_Border);
+  font-size: 18px;
+  line-height: 30px;
+}
+
+.drawer .ajaxcart__product .product-item-caption-qty button.ajaxcart__qty--minus {
+  border-radius: var(--DTRadius) 0 0 var(--DTRadius);
+}
+
+.drawer .ajaxcart__product .product-item-caption-qty button.ajaxcart__qty--plus {
+  border-radius: 0 var(--DTRadius) var(--DTRadius) 0;
+}
+
+.drawer .product-item-caption-qty input.input-number {
+  height: 30px;
+  border: 1px solid var(--DTColor_Border);
+  border-width: 1px 0;
+  color: var(--DTSecondaryColor);
+}
+
+.drawer .ajaxcart__product-meta {
+  font-size: 16px;
+}
+
+.drawer .subtotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: var(--DTColor_Border);
+
+  p {
+    margin: 0;
+  }
+}
+
+.drawer .total p {
+  margin: 10px 0 20px;
+  font-size: 0.875rem;
+  font-weight: normal;
+}
+
+.drawer .ajaxcart__footer {
+  margin-bottom: 15px;
+}
+
+.drawer .ajaxcart__footer .dt-sc-btn {
+  width: 100%;
+}
+
+/* stylelint-enable custom-property-pattern */
+
+
 // Product title, matching the cart page: the link colour, lightening on hover
 // rather than going red like a prose link.
 #CartDrawer .ajaxcart__product-name {

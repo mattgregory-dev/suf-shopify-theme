@@ -56,6 +56,31 @@ are full of them.
 **Fix** — never pass backticked text through a shell argument. Use a quoted
 heredoc (`<<'EOF'`) or an editor tool.
 
+### The quoted heredoc does not save you inside `bash -c "…"`
+
+Worth stating separately, because the fix above looks like it was applied and
+the thing still fails.
+
+    # STILL BROKEN. The heredoc is quoted, and it does not matter.
+    wsl.exe -d Ubuntu-24.04 -- bash -c "cd ~/x && git commit -F- <<'EOF'
+    ... a message containing `backticks` ...
+    EOF"
+
+The quoting protects the text from the shell that *runs* the heredoc. But the
+whole thing is first a double-quoted argument to `bash -c`, so the OUTER shell
+expands backticks and `$` while the heredoc is still just characters inside a
+string. It never gets the chance to protect anything.
+
+Seen in practice: a commit message documenting a CSS rule ran two of its own
+lines as commands, then hung until the tool timed out. Nothing was staged and
+nothing was committed, so the recovery was to check for `.git/index.lock` and
+retry — but the failure reads like a broken git, not a quoting problem.
+
+**Fix** — feed it on stdin (`bash -s <<'EOF'`), which is the second of the two
+invocations at the top of this file. For commit messages specifically, write
+the message to a file with an editor tool and use `git commit -F <file>`:
+nothing crosses a shell boundary at all.
+
 ## Trap: npm cannot run from a UNC path
 
 **Symptom** — `npm error code ERR_INVALID_URL`, immediately, with no other

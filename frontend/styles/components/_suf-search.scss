@@ -68,8 +68,20 @@
     font: inherit;
     color: var(--suf-color-text);
 
+    // dt-framework rounds and borders inputs; the ring belongs to the field
+    // wrapper, not the input itself.
+    border-radius: 0;
+
+    // The border is restated for :focus because dt-framework has a separate
+    // focus rule -- `input[type="search"]:focus { border: 1px solid
+    // var(--DTPrimaryColor) }` at (0,2,1), which outranks this selector at
+    // (0,2,0). It drew a red outline inside the field on legacy templates.
+    // Matching its (0,2,1) and winning on source order, since theme.liquid
+    // links suf.css after dt-framework.css.
     &:focus {
       outline: none;
+      border: 0;
+      border-radius: 0;
     }
   }
 
@@ -137,7 +149,10 @@
 
   .suf-search__result {
     display: flex;
-    align-items: center;
+    // Top-aligned, not centred. Titles run to two and three lines while the
+    // thumbnail is a fixed 60px, so centring floats the image at a different
+    // height in every row and the left edge stops reading as a column.
+    align-items: flex-start;
     gap: var(--suf-space-sm);
     padding: var(--suf-space-sm);
     border: 1px solid var(--suf-color-border);
@@ -171,10 +186,14 @@
     color: var(--suf-color-text);
     text-decoration: none;
 
+    // No underline on hover. The row already answers "this is clickable" with
+    // its border and tint, and underlining the title on top of that is the
+    // same message told twice -- it reads as the text being a separate target
+    // from the row it sits in.
     &:hover,
     &:focus-visible {
       color: var(--suf-color-link);
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 
