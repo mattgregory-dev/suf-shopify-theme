@@ -1,0 +1,51 @@
+{% comment %}
+  A navigation label, optionally carrying a line of subtext.
+
+  Shopify menu items cannot hold metafields -- a linklist link is not a
+  metafield-owning resource -- so the subtext is written into the link TITLE in
+  the admin, after a pipe:
+
+      The SUF-CPT | start here — Level 1
+
+  and rendered as
+
+      The SUF-CPT<span class="suf-navsub">start here — Level 1</span>
+
+  WHY THE TITLE AND NOT A THEME SETTING. The alternative is header section
+  blocks pairing a handle to a subtitle, which gives the merchant proper fields
+  but two lists to keep in step: rename a menu item and its subtitle silently
+  orphans. Here the label and its subtext are one string, edited in the same
+  place, and they cannot drift apart.
+
+  The cost is a pipe visible in the admin menu editor. That is the whole cost.
+
+  NO PIPE, NO SPAN. A title without one renders exactly as before, so every
+  existing menu item is unaffected and the subtext is opt-in per link.
+
+  `contains` is tested first because `split` always returns at least one part
+  -- parts.size can never distinguish "has a subtitle" from "does not".
+
+  Everything is escaped. The merchant is typing into a menu field, and the pipe
+  is the only markup this snippet lets through.
+
+  Usage:
+    {% render 'suf-navlabel', title: child_link.title %}
+{% endcomment %}
+
+{%- assign raw = title | default: '' | strip -%}
+
+{%- if raw contains '|' -%}
+  {%- assign parts = raw | split: '|' -%}
+  {%- assign label = parts[0] | strip -%}
+  {%- comment -%}
+    Rejoined rather than taking parts[1]: a subtitle is allowed to contain a
+    pipe of its own, and only the FIRST one separates label from subtext.
+  {%- endcomment -%}
+  {%- assign sub = parts | slice: 1, 99 | join: '|' | strip -%}
+  {{- label | escape -}}
+  {%- if sub != blank -%}
+    <span class="suf-navsub">{{ sub | escape }}</span>
+  {%- endif -%}
+{%- else -%}
+  {{- raw | escape -}}
+{%- endif -%}
