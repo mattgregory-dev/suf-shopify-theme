@@ -34,6 +34,9 @@
   if section.settings.wide
     assign classes = classes | append: ' suf-spotlight--wide'
   endif
+  if section.settings.uncropped
+    assign classes = classes | append: ' suf-spotlight--uncropped'
+  endif
 -%}
 
 <div class="{{ classes }}">
@@ -208,6 +211,13 @@
       "id": "wide",
       "label": "Landscape crop",
       "info": "Use for a photo that does not crop well to a portrait 4:5.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "uncropped",
+      "label": "Do not crop the image",
+      "info": "Constrains the photo by width only and keeps its own proportions. Overrides the landscape crop.",
       "default": false
     },
     {

@@ -36,7 +36,8 @@
         "body": "<p>Fitness was a part of Chris Hitchko's life from an early age, with his dad in the military. He earned a degree in kinesiology on a path toward physical therapy school, but started training clients instead. And by 2008, he'd moved into teaching trainers.</p><p>He taught for over a decade and kept seeing the same thing: students who knew the textbook cold and froze the moment a real client walked in. So he ran one of the largest surveys done in the field, interviewing trainers and managers at gyms like Equinox, Life Time, and Crunch. The problem was never knowledge — it was that no one had taught these trainers to do the actual job. He built Show Up Fitness to fix that: real practice, live coaching, and a certification you earn by doing, not just a passing score.</p><p>He's since certified over 10,000 trainers, and in 2021 he wrote the book on it, literally. <em>How to Become a Successful Personal Trainer</em> is highly rated among trainers who used it to break into the field.</p>",
         "image": "shopify://shop_images/instructor-01.webp",
         "image_alt": "Chris Hitchko, founder of Show Up Fitness",
-        "image_side": "left",
+        "uncropped": true,
+          "image_side": "left",
         "frame": "blue"
       }
     },

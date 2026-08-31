@@ -181,6 +181,31 @@
   max-height: none;
 }
 
+// UNCROPPED. The column sets the width and the photo sets its own height.
+//
+// The default is a fixed 4:5 box with object-fit: cover, which crops whatever
+// is supplied to fit. That is right for photos chosen for the slot, and wrong
+// for one where the framing IS the picture -- a portrait at 3:4 loses the top
+// and bottom of the frame to a crop nobody asked for.
+//
+// It has to undo all three parts of the default, and each is load-bearing:
+// aspect-ratio holds the box at 4:5, max-height clamps it at 520px, and
+// height: 100% on the img is what stretches the photo into whatever box those
+// two produce. Leave any one and the crop survives.
+//
+// Listed after --wide so it wins when both are set; the schema says so.
+.suf-spotlight--uncropped .suf-spotlight__media {
+  aspect-ratio: auto;
+  max-height: none;
+
+  img {
+    height: auto;
+    // Redundant once the height is auto -- there is no box left to fit into --
+    // but declared so the intent survives a future change to the rule above.
+    object-fit: fill;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // RESOURCE CARDS
 //
