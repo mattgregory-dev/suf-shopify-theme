@@ -81,6 +81,67 @@ invocations at the top of this file. For commit messages specifically, write
 the message to a file with an editor tool and use `git commit -F <file>`:
 nothing crosses a shell boundary at all.
 
+## Trap: `$` is expanded before WSL ever sees it
+
+**Symptom** — a shell loop that iterates on nothing, a `grep` that matches
+everything or nothing, a `sed` that silently changes no lines, a Python script
+whose variables are all empty. Nothing errors. The command reports success and
+does the wrong thing.
+
+Seen repeatedly in one session: `for f in a b c; do grep "$f" ...; done` searched
+for the empty string and returned every file in the repo. `sed
+'s/^\$var: true/\$var: false/'` matched nothing, so a "test" of a toggle proved
+the opposite of what it claimed.
+
+**Cause** — the same one as the backticks above. `wsl.exe -- bash -c "..."`
+makes the whole command a double-quoted string in the OUTER shell first, so
+that shell expands `$f`, `$SP`, `$X` and friends and hands WSL the result. A
+loop variable that does not exist outside expands to nothing.
+
+Escaping (`\$`) works in some layers and not others, and which layer ate it is
+not visible from the output. Do not try to out-quote it.
+
+**Fix** — keep `$` out of the boundary entirely:
+
+- Feed the script on stdin: `bash -s <<'EOF'` — quoted, so nothing expands.
+- For anything non-trivial, write the script to a file with an editor tool and
+  run it by path. This is the only approach that has never failed here.
+- Prefer the Grep and Glob tools over shell loops. They take a pattern, not a
+  command line.
+
+**The tell:** if a command that loops or substitutes returns a suspiciously
+round result — all files, no files, no matches — assume the variable was eaten
+before assuming the logic is wrong.
+
+## Trap: `npm run css:build` during development strips the source maps
+
+**Symptom** — devtools stops showing which partial a rule came from. Every rule
+is attributed to `suf.css` instead of `_suf-nav.scss:412`. Restarting
+`npm run dev` fixes it, and then it breaks again a few minutes later.
+
+**Cause** — the two scripts build differently, and they are not
+interchangeable:
+
+```
+css:watch   sass ... --style=expanded --embed-sources     <- npm run dev
+css:build   sass ... --style=compressed --no-source-map   <- npm run preview
+```
+
+`css:build` is the DEPLOY build. `--no-source-map` strips the
+`sourceMappingURL` comment from `assets/suf.css`, so the `.map` file is still
+on disk but nothing points at it. Running it while someone is working in
+devtools silently undoes their tooling.
+
+**Fix** — to verify a stylesheet change mid-session, use the dev-shaped build:
+
+```
+npx sass frontend/styles/main.scss:assets/suf.css --style=expanded --embed-sources
+```
+
+`css:build` is correct where it is actually used — `npm run preview` runs it
+before `shopify theme push`, which is exactly when you want compressed output
+and no maps.
+
 ## Trap: npm cannot run from a UNC path
 
 **Symptom** — `npm error code ERR_INVALID_URL`, immediately, with no other

@@ -60,6 +60,55 @@ Then Online Store → Themes → that theme → ⋯ → Preview, and use the sha
 in the preview bar. The viewer needs no admin access, and `?view=` URLs work
 because a preview is real Shopify rather than a sandbox.
 
+### Testing on a real phone
+
+The same preview link is the answer. `shopify theme dev` binds to
+`127.0.0.1:9292` **inside WSL**, so a phone on the same wifi cannot reach it —
+WSL2 has its own network namespace and Windows does not forward to it.
+
+`shopify theme dev --host 0.0.0.0` exists and would work, but it needs a
+`netsh interface portproxy` rule on the Windows side plus a firewall opening,
+and the WSL IP changes on most restarts, so it is a recurring chore rather than
+setup. Worth it only for a long session of iterating on mobile CSS.
+
+For a checklist pass, `npm run preview` and open the share link on the phone.
+`?view=` works there, so unassigned templates are reachable.
+
+What only a real device gives you, and why the mobile pass is tracked as
+outstanding rather than assumed: true touch targets, iOS Safari rather than a
+Chrome emulation of it, browser chrome actually eating viewport height — which
+is what `100dvh` on the nav drawer exists for — and the sticky header against a
+collapsing address bar. None of that reproduces in devtools.
+
+To debug rather than look: Android over USB gives full devtools at
+`chrome://inspect`. iOS needs a Mac for Safari's remote inspector.
+
+### The theme editor writes to the THEME, not the repo
+
+You can open **Customize** on any unpublished theme without publishing it, and
+its template picker lists every template in that theme — so `page.suf-*` are all
+editable there. Safe: it touches that theme's files and nothing else in the
+store.
+
+**But nothing comes back.** Edits land in that theme's `config/settings_data.json`
+and templates, and the next `npm run preview` overwrites them, silently. If you
+edit in the editor, pull before you push again:
+
+```
+shopify theme pull --theme 000000000000 --only config/settings_data.json
+```
+
+The repo is the source of truth while the redesign is in flight. Section
+settings are seeded directly into `templates/*.json` here, which is the same
+data the editor would write — so prefer editing them here and pushing. The
+editor is for the merchant after launch.
+
+**Do NOT confuse this with a page's template assignment.** Online Store → Pages
+→ *Theme template* sets `template_suffix`, which is **store data shared by every
+theme**, so changing it points the LIVE theme at a template it does not have.
+That is the one destructive control, and it belongs at cutover. See
+[migration.md](migration.md).
+
 **`npm run deploy` was deliberately removed.** It ran `shopify theme push`
 with no `--theme`, which prompts with a list that includes the LIVE theme. One
 wrong keystroke would overwrite two years of production work. Every push script
