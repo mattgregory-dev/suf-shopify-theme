@@ -336,14 +336,16 @@
 // of which card is featured, not a hover affordance, so it holds still.
 .suf-gcard--featured {
   border: 2px solid var(--suf-blue-light);
-  // Roughly 35% off the original 24/60/22%. The border and the flag were
-  // already carrying the "this is the one" signal; the shadow only has to lift
-  // the card off the page, and at full strength it read as a drop shadow in
-  // its own right rather than as elevation.
+  // NO RESTING SHADOW, matching the plain card beside it.
   //
-  // These are the same numbers .suf-pkg--featured already uses, so the two
-  // featured cards on the site agree.
-  box-shadow: 0 16px 39px rgb(0 32 54 / 14%);
+  // This card carried a permanent elevation -- originally 24/60/22%, then a
+  // dialled-back 16/39/14% -- on the theory that being lifted off the page is
+  // part of saying "this is the one". In practice the two cards sat side by
+  // side with different depths and it read as the plain card being pushed
+  // back rather than this one coming forward.
+  //
+  // The 2px light-blue border and the red flag carry that signal on their own.
+  box-shadow: none;
 
   // NO scale(1.03). The mockup has one; it is deliberately not ported. The
   // border, the blue and the elevation already mark this card out, and scaling
@@ -356,11 +358,15 @@
   // being later in the file. It has to: the resting shadow here is already
   // deeper than the plain card's hover shadow, so without a stronger one the
   // hover would read as no change at all.
-  // Dialled down by the same ~35%, so hover still deepens on the resting
-  // shadow rather than merely differing from it. Both had to move together:
-  // cutting only the hover would have made pointing at the card LIFT IT LESS.
+  // The plain card's hover shadow, exactly, so both cards lift the same
+  // amount under the pointer.
+  //
+  // WITHOUT its inset ring, though. That ring exists on the plain card to
+  // thicken a 1px border to a crisp 2px without resizing the card. This card
+  // already has a 2px border that deliberately does not move on hover, so the
+  // ring would put back the 2px-to-3px jump removed in 17263f8.
   &:hover {
-    box-shadow: 0 18px 46px rgb(0 32 54 / 21%);
+    box-shadow: 0 14px 30px rgb(0 32 54 / 12%);
   }
 }
 
