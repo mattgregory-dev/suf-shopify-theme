@@ -47,10 +47,16 @@
   WHERE THE ROW GOES. A row is an <a>, and an <a> cannot contain the <form>
   that a true "straight to checkout" needs, so there are two honest options:
   the product page, or /cart/{variant}:1. Neither lands the buyer on checkout.
-  The note under the list says "straight to secure checkout"; if that copy is
-  kept, this needs rebuilding as one form per row with a submit styled as the
-  row, which costs the whole-row click target. Flagged rather than quietly
-  mismatched.
+
+  RESOLVED 2026-08-31 BY CHANGING THE COPY, not the markup. The note under the
+  list used to promise "straight to secure checkout", which the row could not
+  deliver. It now talks about new cities being added, and link_mode is
+  `product` -- so the page no longer says anything the link does not do.
+
+  The alternative was one form per row with a submit styled as the row, which
+  would buy a real checkout jump at the cost of the whole-row click target.
+  Not worth it. Keep the copy honest instead: if anyone reinstates a checkout
+  promise here, this becomes a real problem again.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
