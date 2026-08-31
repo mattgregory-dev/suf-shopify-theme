@@ -84,7 +84,7 @@
         "image": "shopify://shop_images/online-education.jpg",
         "image_alt": "Coaches guiding a client through a hands-on assessment on a mat",
         "image_side": "left",
-        "frame": "red",
+        "frame": "blue",
         "dark": false
       }
     },
@@ -155,7 +155,7 @@
         "image": "shopify://shop_images/exercise-01.webp",
         "image_alt": "Two coaches working through a plan together in a gym",
         "image_side": "right",
-        "frame": "blue",
+        "frame": "red",
         "dark": false
       }
     },
