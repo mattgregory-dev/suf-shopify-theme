@@ -384,7 +384,14 @@
 
   // Shopify wraps every section in this. The legacy rule floated it; block
   // layout stacks full-width the same way without needing a clearfix.
-  .shopify-section {
+  //
+  // THE NAV SECTION IS EXEMPT, and it has to be. sections/suf-nav.liquid needs
+  // its wrapper erased with `display: contents` so its sticky child's
+  // containing block is the body rather than a div the height of the header --
+  // inside that div sticky has zero travel and silently does nothing. This
+  // rule is (0,2,0) and the exemption in _suf-nav.scss is (0,1,0), so without
+  // the :not() this quietly wins and the header is simply never sticky.
+  .shopify-section:not(.sufnav-section) {
     display: block;
     width: 100%;
   }

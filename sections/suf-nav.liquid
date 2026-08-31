@@ -1,0 +1,227 @@
+{% comment %}
+  The rebuilt site header. See docs/header-rebuild.md for the decisions behind
+  it; the short version:
+
+  ONE SECTION, BOTH LAYOUTS. This is written to be rendered by suf.liquid AND
+  theme.liquid, which is why nothing here depends on `.suf-body`. Everything it
+  needs it emits itself: the scope class is `.sufnav`, on the root element.
+
+  THE CART DRAWER IS OUT OF SCOPE. The cart icon is a link to /cart and a
+  count, and nothing else. That is already the behaviour on both layouts, so
+  pointing theme.liquid at this section changes nothing about the drawer --
+  legacy product pages keep opening it from their own add-to-cart button.
+
+  NEW MARKUP, not snippets/navigation.liquid. The dt-sc-* vocabulary and its
+  mega-menu scaffolding are gone; suf-navlabel.liquid is called directly from
+  here instead.
+
+  ACCOUNT LINKS come from `routes`, never a literal URL. This store has new
+  customer accounts enabled and routes.account_login_url already resolves to
+  the /customer_authentication/redirect form with the right locale and region.
+
+  THE MENU SETTING HAS NO DEFAULT, deliberately. Shopify accepts only its own
+  reserved handles -- 'main-menu' and 'footer' -- as a link_list default, and
+  rejects the entire schema for anything else. This shop's menu is
+  'main-menu-redesign', so it is seeded in config/settings_data.json instead.
+  ('comment' is not an allowed schema property either, which is why this note
+  is here rather than beside the setting.)
+
+  The parent of a submenu is a <button>, not a link. It opens a panel; it does
+  not go anywhere, and on touch there is no hover to open it with. Its own
+  destination, if the menu item has one, is repeated as the first row of the
+  panel so it is still reachable.
+{% endcomment %}
+
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign classes = 'sufnav'
+  if section.settings.sticky
+    assign classes = classes | append: ' sufnav--sticky'
+  endif
+-%}
+
+{%- comment -%}
+  The sentinel is what tells the header it has scrolled: an IntersectionObserver
+  watches it leave the viewport. A scroll listener would fire on every frame to
+  answer the same yes/no question.
+{%- endcomment -%}
+<div class="sufnav__sentinel" data-sufnav-sentinel aria-hidden="true"></div>
+
+<div class="sufnav-wrap">
+  <header class="{{ classes }}" data-sufnav>
+    <a class="sufnav__logo" href="{{ routes.root_url }}">
+      {%- if section.settings.logo -%}
+        {%- assign logo_alt = section.settings.logo.alt | default: shop.name -%}
+        {{
+          section.settings.logo
+          | image_url: width: 480
+          | image_tag: alt: logo_alt, loading: 'eager', fetchpriority: 'high', widths: '160,240,320,480'
+        }}
+      {%- else -%}
+        <span class="sufnav__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="sufnav__menu" id="sufnav-menu" aria-label="Main">
+      {%- for link in menu.links -%}
+        {%- liquid
+          assign item_classes = 'sufnav__item'
+          if link.links.size > 0
+            assign item_classes = item_classes | append: ' sufnav__item--has'
+          endif
+          if link.active or link.child_active
+            assign item_classes = item_classes | append: ' is-active'
+          endif
+        -%}
+        <div class="{{ item_classes }}">
+          {%- if link.links.size > 0 -%}
+            <button
+              class="sufnav__label"
+              type="button"
+              aria-expanded="false"
+              aria-controls="sufnav-drop-{{ forloop.index }}"
+            >
+              {% render 'suf-navlabel', title: link.title %}
+              <span class="sufnav__caret" aria-hidden="true">
+                {% render 'suf-icon', icon: 'chevron-down', size: 12 %}
+              </span>
+            </button>
+
+            {%- comment -%}
+              NO REPEATED PARENT ROW. The disclosure pattern normally opens the
+              panel with the parent's own destination, since the parent is a
+              button and no longer navigates. Here it earns nothing: the
+              category parents are labels rather than pages, and the ones that
+              do have a page already list it among their children -- so the row
+              was a visible duplicate.
+
+              THE TRAP, if a menu item is added later: a parent with a real URL
+              that is NOT among its own children becomes unreachable from the
+              header, because the button only opens the panel. Add it as the
+              first child in the Shopify menu editor.
+            {%- endcomment -%}
+            <div class="sufnav__drop" id="sufnav-drop-{{ forloop.index }}">
+              {%- for child in link.links -%}
+                <a href="{{ child.url }}"{% if child.active %} aria-current="page"{% endif %}>
+                  {% render 'suf-navlabel', title: child.title %}
+                </a>
+              {%- endfor -%}
+            </div>
+          {%- else -%}
+            <a
+              class="sufnav__label"
+              href="{{ link.url }}"
+              {% if link.active %}
+                aria-current="page"
+              {% endif %}
+            >
+              {% render 'suf-navlabel', title: link.title %}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+
+      {%- comment -%}
+        The account row: mobile only, inside the panel. Its desktop counterpart
+        is the icon below. Logging out is a POST -- new customer accounts will
+        not accept a GET -- so it is a form, not a link.
+      {%- endcomment -%}
+      {%- if customer -%}
+        <form method="post" action="{{ routes.account_logout_url }}" class="sufnav__acct">
+          {% render 'suf-icon', icon: 'user' %}
+          <button type="submit">Log Out</button>
+        </form>
+      {%- else -%}
+        <a class="sufnav__acct" href="{{ routes.account_login_url }}">
+          {% render 'suf-icon', icon: 'user' %}
+          <span>Log In</span>
+        </a>
+      {%- endif -%}
+    </nav>
+
+    <div class="sufnav__icons">
+      <a
+        class="sufnav__icon sufnav__icon--acct"
+        href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+      >
+        {% render 'suf-icon', icon: 'user', label: 'Account' %}
+      </a>
+
+      {%- comment -%}
+        Always /cart. The badge is server-rendered from cart.item_count, so it
+        is correct on first paint and needs no JavaScript.
+      {%- endcomment -%}
+      <a class="sufnav__icon sufnav__icon--cart" href="{{ routes.cart_url }}">
+        {% render 'suf-icon', icon: 'cart', label: 'Cart' %}
+        {%- comment -%}
+          EMPTY, NOT hidden, when the cart is. On legacy templates
+          assets/ajax-cart.js.liquid writes the new count into #CartCount when
+          the drawer updates -- it would set the text and leave a `hidden`
+          attribute it knows nothing about in place, so a first item added
+          through the drawer would update an invisible badge.
+
+          Rendering nothing instead lets `.sufnav__badge:empty` do the hiding,
+          and the badge reappears by itself the moment anything writes a number
+          into it.
+        {%- endcomment -%}
+        <span class="sufnav__badge" id="CartCount">
+          {%- if cart.item_count > 0 -%}{{ cart.item_count }}{%- endif -%}
+        </span>
+      </a>
+
+      <button
+        class="sufnav__icon sufnav__icon--search"
+        type="button"
+        data-suf-search-toggle
+        aria-expanded="false"
+      >
+        {% render 'suf-icon', icon: 'search', label: 'Search' %}
+      </button>
+    </div>
+
+    <button
+      class="sufnav__burger"
+      type="button"
+      data-sufnav-burger
+      aria-expanded="false"
+      aria-controls="sufnav-menu"
+      aria-label="Menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  {%- comment -%}
+    Inside the wrapper, below the bar, so opening it pushes the page down
+    rather than covering it -- and so it travels with the header when sticky.
+  {%- endcomment -%}
+  {% render 'suf-search' %}
+</div>
+
+{% schema %}
+{
+  "name": "Header (SUF)",
+  "class": "sufnav-section",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Add ' | subtext' to a menu item's title to give it a second line in the dropdown."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "White or light artwork -- the bar is navy."
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Stick to the top on scroll",
+      "info": "The bar compresses once the page scrolls.",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

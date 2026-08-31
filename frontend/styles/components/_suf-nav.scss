@@ -1,0 +1,657 @@
+// sections/suf-nav.liquid -- the rebuilt header.
+//
+// NOT SCOPED UNDER .suf-body, and that is deliberate. This section is built to
+// render on both layouts, so it scopes to `.sufnav` / `.sufnav-wrap`, classes
+// the section itself emits. Every other partial here can assume suf.liquid;
+// this one cannot assume anything but its own markup.
+//
+// Ported from VARIANT 1 -- BASELINE in ~/projects/suf/mockups/blog.html, with
+// two deliberate departures:
+//
+//   * cqi -> vw. The mockup renders each header inside a narrow demo frame, so
+//     it needs container queries. A real header's container IS the viewport,
+//     and neither layout has a `container-type` ancestor to query.
+//   * the logo height clamps too, rather than only stepping at the sticky
+//     state. It shrinks continuously, which buys width before the hamburger
+//     has to take over.
+//   * the logo is sized for a SQUARE mark. The mockup's placeholder is a wide
+//     horizontal lockup, for which 60px tall is unremarkable; the real logo is
+//     about 1:1, so height is the expensive dimension. See the logo block.
+//
+// ONE BREAKPOINT: 900px, the hamburger takeover. Everything above it narrows
+// continuously. That is the whole point of clamping here -- the alternative is
+// a ladder of breakpoints, each of which is a place for the layout to jump.
+
+// THE SECTION WRAPPER HAS TO BE ERASED FOR STICKY TO WORK.
+//
+// {% section %} wraps everything in <div id="shopify-section-suf-nav">, and
+// that div is .sufnav-wrap's containing block. It is exactly as tall as the
+// header, so a sticky child has zero travel inside it and never moves -- the
+// rule applies, it just can never do anything. The symptom is a header that
+// looks correct and simply is not sticky.
+//
+// `display: contents` removes the wrapper's box from the tree entirely, so
+// .sufnav-wrap's containing block becomes the body and it can travel the whole
+// page. The class comes from "class": "sufnav-section" in the schema.
+//
+// The alternative -- making the section wrapper itself sticky -- would drag
+// .sufnav__sentinel along with it, so the sentinel would never leave the
+// viewport and the compressed state could never fire.
+.sufnav-section {
+  display: contents;
+}
+
+// The bar and the search panel below it move as one unit when sticky, which is
+// why the sticky positioning is on the wrapper and not on .sufnav itself.
+.sufnav-wrap {
+  position: relative;
+  z-index: 80;
+}
+
+.sufnav-wrap:has(> .sufnav--sticky) {
+  position: sticky;
+  top: 0;
+}
+
+// A 1px marker above the header. An IntersectionObserver watching it leave the
+// viewport answers "have we scrolled?" without a per-frame scroll handler.
+.sufnav__sentinel {
+  height: 1px;
+  margin-bottom: -1px;
+  pointer-events: none;
+}
+
+.sufnav {
+  display: flex;
+  position: relative;
+  gap: 28px;
+  align-items: center;
+  padding: 0 30px;
+  background: var(--suf-navy);
+  font-family: var(--suf-font-body);
+}
+
+// ---------------------------------------------------------------------------
+// LOGO
+
+// SIZED FOR A SQUARE MARK, which is what this shop's logo is. That is not a
+// detail -- it inverts which dimension is scarce.
+//
+// A wide lockup at 60px tall costs 60px of bar height and buys 200px of
+// presence. A 1:1 mark at the same height costs the same 60px and buys 60px,
+// so it reads as small while making the bar as tall as the wide one would.
+// The logo, not the nav labels, is what sets the bar height here: 56 + 18 of
+// padding is 74px, against 61px for a label row.
+//
+// TARGET: an 80px MARK at full size, which makes the bar 98px -- 80 plus 9px
+// of padding either side.
+//
+// The label row is only 61-66px across the whole range, so it is never what
+// sets the bar height. The logo is, always. Change the clamp below or the
+// padding and the bar moves; change the type size and it does not.
+.sufnav__logo {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 9px 0;
+  text-decoration: none;
+  // Matched to the img height transition, or the mark shrinks smoothly inside
+  // a box that snaps.
+  transition: padding 0.22s ease;
+
+  img {
+    display: block;
+    width: auto;
+    // Continuous rather than the mockup's fixed 60px: see the header comment.
+    // 70px floor, 80px ceiling -- a narrow range on purpose. 80px is already
+    // lean for this mark next to the production site's, and below about 70 a
+    // square logo stops carrying the wordmark legibly, so there is very little
+    // room to trade height for width here.
+    //
+    // 5.33vw reaches 80px at 1500 and holds the 70px floor below 1313.
+    height: clamp(70px, 5.33vw, 80px);
+    // A guard, not a look. Height alone sizes a square mark correctly, but a
+    // merchant who swaps in a wide lockup would otherwise push the nav out of
+    // the bar. object-fit is what keeps that cap from squashing the artwork --
+    // width and height are both constrained at that point, so without it the
+    // aspect ratio breaks.
+    max-width: clamp(120px, 14vw, 200px);
+    object-fit: contain;
+    object-position: left center;
+    transition: height 0.22s ease;
+  }
+}
+
+.sufnav__logo-text {
+  color: var(--suf-white);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+// ---------------------------------------------------------------------------
+// MENU
+
+.sufnav__menu {
+  display: flex;
+  flex: 1;
+  gap: clamp(0px, 0.3vw, 4px);
+  justify-content: center;
+}
+
+.sufnav__item {
+  display: flex;
+  position: relative;
+  align-items: stretch;
+}
+
+// One rule for both, because the parent of a submenu is a <button> and a leaf
+// is an <a>. They have to be indistinguishable to look at.
+.sufnav__label {
+  display: flex;
+  position: relative;
+  gap: 7px;
+  align-items: center;
+  padding: 24px clamp(9px, 1.15vw, 15px);
+  border: 0;
+  background: none;
+  color: var(--suf-color-text-on-dark);
+  font-family: inherit;
+  // 13px at the 900px takeover, 18px from 1500px up. The mockup's 11.5-13px
+  // was sized for a demo frame; at real viewport widths it read as fine print.
+  //
+  // The floor is the OLD ceiling deliberately: 13px is what six uppercase
+  // items plus the logo and icons will fit in at 900px, and below that the
+  // hamburger has taken over anyway. Raising the floor with the ceiling would
+  // overflow the bar in the 900-1050px band instead.
+  font-size: clamp(13px, 0.83vw + 5.5px, 18px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: clamp(0.03em, 0.09vw, 0.075em);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.16s;
+}
+
+.sufnav__item:hover > .sufnav__label,
+.sufnav__item.is-active > .sufnav__label,
+.sufnav__label:focus-visible {
+  color: var(--suf-white);
+}
+
+// The active indicator lives on the LABEL and nowhere else. The dropdown
+// deliberately carries no red line, so the two reds can never stack -- that
+// collision is the thing this variant was drawn to fix.
+.sufnav__label::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  bottom: 0;
+  left: 15px;
+  height: 3px;
+  background: var(--suf-red);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.sufnav__item:hover > .sufnav__label::after,
+.sufnav__item.is-active > .sufnav__label::after {
+  transform: scaleX(1);
+}
+
+.sufnav__caret {
+  display: flex;
+  opacity: 0.65;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.sufnav__item.is-open .sufnav__caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+// The subtext span comes from snippets/suf-navlabel.liquid, which is shared
+// with the legacy header -- hence the unprefixed class name. On a top-level
+// label it is suppressed; the dropdown is where it belongs.
+.sufnav__label .suf-navsub {
+  display: none;
+}
+
+// ---------------------------------------------------------------------------
+// DROPDOWN
+
+.sufnav__drop {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 60;
+  min-width: 262px;
+  // Flush: the rows carry their own 12px of vertical padding, so the panel's
+  // own padding stacked on top of the first and last row's and read as a gap
+  // between the navy rule and the list.
+  padding: 0;
+  border-top: 3px solid var(--suf-navy);
+  background: var(--suf-white);
+  box-shadow: 0 18px 40px -8px rgb(0 20 35 / 28%);
+}
+
+// .is-open IS THE ONLY THING THAT OPENS A PANEL, including on hover.
+//
+// There was a `:hover > .sufnav__drop { display: block }` rule here, and it
+// made the ARIA lie: CSS opened the panel while aria-expanded stayed "false",
+// because only JS ever writes that attribute. Anyone pairing a screen reader
+// with a mouse was told the menu was collapsed while looking at it open.
+//
+// suf-nav.js now opens on mouseenter instead, so the class, the attribute and
+// what is on screen cannot disagree.
+.sufnav__item.is-open > .sufnav__drop {
+  display: block;
+}
+
+.sufnav__drop a {
+  display: block;
+  padding: 12px 20px;
+  color: var(--suf-navy);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  transition: background 0.14s, color 0.14s;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--suf-color-border-faint);
+    color: var(--suf-blue);
+  }
+}
+
+.sufnav__drop .suf-navsub {
+  display: block;
+  margin-top: 3px;
+  color: var(--suf-color-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+// ---------------------------------------------------------------------------
+// ICONS
+
+.sufnav__icons {
+  display: flex;
+  flex-shrink: 0;
+  gap: 18px;
+  align-items: center;
+}
+
+.sufnav__icon {
+  display: flex;
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--suf-color-text-on-dark);
+  cursor: pointer;
+  transition: color 0.16s;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-white);
+  }
+
+  svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.sufnav__badge {
+  display: flex;
+  position: absolute;
+  top: -7px;
+  right: -8px;
+  align-items: center;
+  justify-content: center;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 9px;
+  background: var(--suf-red);
+  color: var(--suf-white);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+
+  // :empty rather than [hidden] -- the legacy drawer script writes a number
+  // straight into this element and knows nothing about our attributes, so the
+  // badge has to reveal itself purely from having content. See the section.
+  &:empty {
+    display: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// BURGER -- hidden until the takeover
+
+.sufnav__burger {
+  display: none;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 5px;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 2px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 24px;
+    height: 2.5px;
+    background: var(--suf-white);
+    transition: 0.22s;
+  }
+}
+
+.sufnav.is-open .sufnav__burger span:nth-child(1) {
+  transform: translateY(7.5px) rotate(45deg);
+}
+
+.sufnav.is-open .sufnav__burger span:nth-child(2) {
+  opacity: 0;
+}
+
+.sufnav.is-open .sufnav__burger span:nth-child(3) {
+  transform: translateY(-7.5px) rotate(-45deg);
+}
+
+// The account row surfaces only inside the open mobile panel; on desktop its
+// job is done by the icon.
+.sufnav__acct {
+  display: none;
+}
+
+// ---------------------------------------------------------------------------
+// COMPRESSED -- set by suf-nav.js once the sentinel scrolls out of view
+
+.sufnav.is-compressed {
+  // The padding compresses with the mark. With a square logo the padding is a
+  // meaningful share of the bar height, so holding it fixed would waste most
+  // of what the smaller mark just saved.
+  .sufnav__logo {
+    padding-block: 7px;
+  }
+
+  // 62px: the smallest this mark is allowed to go anywhere, shared with the
+  // stacked bar below.
+  //
+  // Compression therefore buys less than it used to -- 98px down to 80px
+  // rather than to 62px. That is the cost of a legibility floor on a square
+  // logo, and it is the right trade: a scrolled header that is 18px shorter
+  // beats one carrying a mark too small to read.
+  .sufnav__logo img {
+    height: 62px;
+  }
+
+  .sufnav__label {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// THE SQUEEZE BAND -- the last of the width before the takeover
+
+@media (max-width: 1040px) {
+  .sufnav {
+    gap: 16px;
+    padding: 0 22px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// HAMBURGER TAKEOVER
+
+@media (max-width: 900px) {
+  .sufnav {
+    gap: 14px;
+    padding: 0 18px;
+  }
+
+  .sufnav__burger {
+    display: flex;
+  }
+
+  // NO LOGO OVERRIDE HERE, deliberately. The clamp's 70px floor already holds
+  // everywhere below 1313px, so a fixed height at this breakpoint would be a
+  // duplicate of the value the clamp produces anyway -- and, being fixed, it
+  // would silently win and make the clamp dead code. It did exactly that at
+  // 62px before this was removed.
+
+  // The nav has left the flex row, so the icons take the space it vacated and
+  // sit against the burger.
+  .sufnav__icons {
+    margin-left: auto;
+  }
+
+  .sufnav__icon--acct {
+    display: none;
+  }
+
+  .sufnav__menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 70;
+    flex-direction: column;
+    gap: 0;
+    // Flush to the bar. Every item carries its own border-top, so the mockup's
+    // 8px of panel padding showed as a strip of bare background above the
+    // first row rather than as spacing.
+    padding: 0;
+    background: var(--suf-color-border-faint);
+    box-shadow: 0 24px 40px -12px rgb(0 10 20 / 40%);
+    // With every panel expanded this menu is taller than a phone. Without a
+    // cap the overflow is simply unreachable -- the panel is absolutely
+    // positioned, so it does not extend the page and the document has nothing
+    // extra to scroll. dvh, not vh, or mobile browser chrome eats the last row.
+    max-height: calc(100dvh - 100%);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .sufnav.is-open .sufnav__menu {
+    display: flex;
+  }
+
+  .sufnav__item {
+    flex-direction: column;
+    align-items: stretch;
+    border-top: 1px solid var(--suf-color-border-subtle);
+  }
+
+  .sufnav__label {
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px 24px;
+    color: var(--suf-navy);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+  }
+
+  .sufnav__item:hover > .sufnav__label,
+  .sufnav__item.is-active > .sufnav__label {
+    color: var(--suf-navy);
+  }
+
+  // The underline is a desktop indicator; stacked, the active item is marked
+  // with an inset bar instead.
+  .sufnav__label::after {
+    display: none;
+  }
+
+  .sufnav__item.is-active > .sufnav__label {
+    box-shadow: inset 3px 0 0 var(--suf-red);
+  }
+
+  // Hover means nothing on touch: panels stay collapsed until the parent is
+  // tapped, which is what sets .is-open.
+  .sufnav__item:hover .sufnav__caret {
+    transform: none;
+  }
+
+  .sufnav__item.is-open .sufnav__caret {
+    transform: rotate(180deg);
+  }
+
+  .sufnav__drop,
+  .sufnav__item:hover > .sufnav__drop {
+    display: none;
+  }
+
+  .sufnav__item.is-open > .sufnav__drop {
+    display: block;
+  }
+
+  .sufnav__drop {
+    position: static;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--suf-color-border-subtle);
+    box-shadow: none;
+  }
+
+  .sufnav__drop a {
+    padding: 11px 24px 11px 40px;
+  }
+
+  // Search overlays rather than pushes, matching the drawer beside it.
+  //
+  // On desktop it still displaces the page -- there is room, and displacing is
+  // the calmer behaviour when the panel is a thin strip. Stacked, the two
+  // things that open from this bar sit in the same place, and having one shove
+  // the page down while the other floats over it reads as a bug.
+  //
+  // top: 100% is measured from .sufnav-wrap, which is only as tall as the bar
+  // once this element is out of flow -- so the panel lands directly under it.
+  .sufnav-wrap .suf-search {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    // Under the drawer's 70. They are mutually exclusive -- suf-nav.js closes
+    // the drawer when search opens -- but if that ever fails, the menu being
+    // on top is the recoverable way round.
+    z-index: 65;
+    box-shadow: 0 24px 40px -12px rgb(0 10 20 / 40%);
+  }
+
+  .sufnav__acct {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 6px;
+    padding: 16px 24px;
+    border: 0;
+    border-top: 1px solid var(--suf-color-border-subtle);
+    background: #e4ebef;
+    color: var(--suf-navy);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--suf-blue);
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    // The logged-in row is a POST form, so its label is a submit button. It has
+    // to be indistinguishable from the anchor next to it.
+    button {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      cursor: pointer;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// DEFENCE AGAINST THE LEGACY RESET
+//
+// Only reachable on layout/theme.liquid, which loads dt-framework.css. None of
+// this does anything on the suf layout -- it exists so the section survives
+// being pointed at the legacy one.
+//
+// The rules being defended against are (0,0,1) bare element selectors, so they
+// lose to any .sufnav__* class. That is exactly why they are dangerous: they
+// only reach properties this file leaves UNDECLARED, which makes them
+// invisible in review. Declaring the property is the whole fix.
+//
+// Audited against assets/dt-framework.css.liquid on 2026-08-30.
+.sufnav-wrap {
+  // Its reset gives every <button> `margin: 10px 0 0` and a padding and radius
+  // from --DT_* tokens. Three elements here are buttons -- the dropdown
+  // parents, the hamburger and the search toggle -- and a 10px top margin
+  // drops all three below the logo and the plain links beside them.
+  //
+  // PADDING IS NOT ZEROED HERE. Every button in this section already declares
+  // its own -- the label, the icons, the account row's submit -- except the
+  // hamburger, which is handled below. Zeroing it from a (0,2,0) descendant
+  // selector would have overridden the label's padding in BOTH the stacked
+  // layout and the compressed state, since those are (0,1,0) and come earlier.
+  button {
+    margin: 0;
+    border-radius: 0;
+  }
+
+  // The one button with no padding of its own; it is sized by width/height.
+  .sufnav__burger {
+    padding: 0;
+  }
+
+  // `svg { width: 20px; height: 20px }` in the reset beats the width and
+  // height ATTRIBUTES that suf-icon.liquid renders, since presentational
+  // attributes lose to any CSS declaration. The caret is the only icon whose
+  // attribute size is not already 20px, so it is the only one that moves.
+  .sufnav__caret svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// MOTION
+
+@media (prefers-reduced-motion: reduce) {
+  .sufnav__logo,
+  .sufnav__logo img,
+  .sufnav__label,
+  .sufnav__label::after,
+  .sufnav__caret,
+  .sufnav__burger span,
+  .sufnav__drop a {
+    transition: none;
+  }
+}

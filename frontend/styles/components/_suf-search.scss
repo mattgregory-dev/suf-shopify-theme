@@ -7,10 +7,20 @@
 // --DTColor_Border, --DT_Button_Border_Radius and --DTRadius; those come from
 // the legacy theme and are not what a rebuilt component should follow.
 //
-// Scoped under .suf-body, like every other partial here: suf.css is served on
-// both layouts, and the legacy header renders its own search panel.
+// SCOPED TO .sufnav-wrap, NOT .suf-body -- unlike every other partial here.
+//
+// This panel is rendered by sections/suf-nav.liquid, which is built to run on
+// BOTH layouts. .suf-body is set only by layout/suf.liquid, so scoping there
+// would leave the panel completely unstyled on legacy templates: the markup
+// renders, not one rule matches, and it degrades to a bare form.
+//
+// .sufnav-wrap is emitted by the section itself, so it is present wherever the
+// panel is. Same reasoning as _suf-nav.scss being unscoped.
+//
+// The legacy header renders its own panel from snippets/dT_top-search.liquid
+// and is unaffected either way.
 
-.suf-body {
+.sufnav-wrap {
   .suf-search {
     position: relative;
     z-index: 5;
@@ -64,9 +74,26 @@
   }
 
   // The ring goes on the field, since the input's own border is suppressed.
+  //
+  // Matched to the contact form's treatment rather than the default outline,
+  // so the two text fields on the site behave the same way. :focus-within, not
+  // :focus-visible-within -- a text field should show focus however it was
+  // reached, including by click. That differs from buttons deliberately.
   .suf-search__field:focus-within {
-    outline: 2px solid var(--suf-color-focus);
-    outline-offset: 2px;
+    outline: none;
+    border-color: var(--suf-color-focus);
+    background: var(--suf-color-surface);
+    box-shadow: 0 0 0 3px rgb(2 146 219 / 14%);
+  }
+
+  // The ring above is a box-shadow, and box-shadows are not rendered in forced
+  // colours mode -- so without this the focused field would have no visible
+  // indicator at all for those users.
+  @media (forced-colors: active) {
+    .suf-search__field:focus-within {
+      outline: 2px solid;
+      outline-offset: 1px;
+    }
   }
 
   .suf-search__submit,

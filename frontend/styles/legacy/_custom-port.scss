@@ -38,6 +38,58 @@
 // .product-tab -- and each was checked against sections/, snippets/ and
 // frontend/styles/ before porting. None of them appears in any suf-* section.
 // Verify that again before adding a rule with a generic selector.
+
+// ---------------------------------------------------------------------------
+// STICKY POSITIONING, ON LEGACY TEMPLATES
+// ---------------------------------------------------------------------------
+//
+// dt-framework.css opens its reset with:
+//
+//     body,html{overflow-x:hidden;width:100%;min-height:100vh}
+//
+// `overflow-x: hidden` on BODY makes body a scroll container. A sticky element
+// positions itself against its nearest scrolling ancestor, so it would stick
+// to body -- which never scrolls, because html does. The header would sit
+// there looking correct and never move. This is not a specificity problem: the
+// rule applies perfectly and simply cannot do anything.
+//
+// `clip` contains overflow exactly as `hidden` does, but explicitly does NOT
+// establish a scroll container. Sticky works, and nothing the reset was hiding
+// becomes visible.
+//
+// DELETING THE RESET RULE was the obvious alternative and is far riskier. It
+// is masking real horizontal overflow across ~30 inherited templates -- full
+// bleed rows, sliders rendering off-screen slides in flow, decorations parked
+// past the right edge. Removing it trades a header that does not stick for
+// horizontal scrollbars on pages this rebuild is meant to leave alone.
+//
+// Scoped away from .suf-body deliberately: layout/suf.liquid never loads
+// dt-framework and has no overflow-x at all, which is why sticky already works
+// there.
+//
+// Safari below 16 (September 2022) drops `clip` as invalid and keeps the
+// reset's `hidden`, so those users get exactly today's behaviour. The
+// degradation is a header that does not stick, not a broken page.
+//
+// ---------------------------------------------------------------------------
+// DO NOT REMOVE THE CONTAINMENT. Tested 2026-08-30, and it failed.
+//
+// This was tried as `unset` first -- overflow-x is not inherited, so that
+// computes to `visible` and is a true removal. The legacy templates came
+// apart: the viewport dragged sideways and the pages read as unmoored. The
+// reset is holding back real overflow, not doing nothing.
+//
+// So `clip` is the answer and not a compromise. It contains exactly what
+// `hidden` contained; it just does not establish a scroll container, which is
+// the only reason `hidden` broke sticky.
+//
+// Do not re-run this experiment. Whatever overflows on those templates is
+// still there, and it is not this file's job to hunt it down.
+// ---------------------------------------------------------------------------
+html:has(> body:not(.suf-body)),
+body:not(.suf-body) {
+  overflow-x: clip;
+}
 //
 // ---------------------------------------------------------------------------
 // CHANGES MADE DURING THE PORT

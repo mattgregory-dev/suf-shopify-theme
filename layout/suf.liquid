@@ -149,16 +149,21 @@
     <span class="suf-totop__sentinel" aria-hidden="true"></span>
 
     {% comment %}
-      ---- LEGACY SCAFFOLDING, FOR THE HEADER ONLY.
-      The header's inline JS targets these two elements by class and fills the
-      first one with the mobile menu. They are empty markup, not behaviour, but
-      the mobile nav does not open without them.
-    {% endcomment %}
-    <div class="mobile-menu" data-menu="dt-main-menu" id="dt-main-menu-panel"></div>
-    <div class="mobile-menu-overlay"></div>
+      The rebuilt header. See docs/header-rebuild.md -- this is step 3, and
+      reverting it means restoring the four lines below and nothing else:
 
-    {% section 'suf-header' %}
-    {% comment %} ---- end legacy scaffolding {% endcomment %}
+        <div class="mobile-menu" data-menu="dt-main-menu" id="dt-main-menu-panel"></div>
+        <div class="mobile-menu-overlay"></div>
+        {% raw %}{% section 'suf-header' %}{% endraw %}
+
+      Those two empty divs were scaffolding the forked header's inline JS
+      filled with the mobile menu; suf-nav carries its own panel, so they went
+      with it. sections/suf-header.liquid is untouched on disk.
+
+      layout/theme.liquid still renders sections/header.liquid. Pointing it
+      here is step 5, after this one has been lived with.
+    {% endcomment %}
+    {% section 'suf-nav' %}
 
     <main id="suf-main" class="suf-main">
       {{ content_for_layout }}
