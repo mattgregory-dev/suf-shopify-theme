@@ -1,3 +1,5 @@
+@use '../mixins' as m;
+
 // Scroll-triggered accents.
 //
 // Ported from EFFECT A in ~/projects/suf/mockups/motion-accents-demo.html: the
@@ -67,38 +69,72 @@
 $suf-frame-reveal: false !default;
 
 @media (prefers-reduced-motion: no-preference) {
-  // (0,2,0) against `.suf-body .suf-eyebrow` at (0,1,1), so these win without
-  // needing to restate the component's own scoping.
-  [data-suf-motion] .suf-eyebrow {
-    opacity: 0;
-    // 8px, and only on one axis. The label arrives from the same side its
-    // slash grows from, so the pair reads as one gesture rather than two
-    // things moving independently.
-    transform: translateX(-8px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+  // ---------------------------------------------------------------------------
+  // EYEBROW -- DESKTOP AND LANDSCAPE TABLET ONLY, from 1024px up
+  //
+  // Turned off below that on 2026-08-31, after the first pass on a real phone.
+  // The label slide and the slash's diagonal grow are calibrated for a line
+  // that sits alone on a wide measure. On a narrow one the eyebrow is already
+  // hard against the left gutter with the heading directly beneath it, so the
+  // 8px arrival has nowhere to travel and reads as a jitter on the way in
+  // rather than as a reveal. The other accents stay -- they were reviewed on
+  // the same device and are subtle enough at that size.
+  //
+  // 1024 rather than 768, which is the more obvious phone/tablet line, because
+  // a phone in landscape is around 844 wide and would sit above it. That is
+  // the same device and the same eyebrow.
+  //
+  // NOT 900 EITHER, which is the other candidate and a real number here: it is
+  // the hamburger takeover in _suf-nav.scss, hardcoded rather than a token,
+  // and the chrome's idea of where mobile starts. Close enough to 1024 that it
+  // makes no practical difference to this effect, and reusing it would imply
+  // the eyebrow is tied to the nav's layout when it is not. $bp-lg keeps this
+  // on a shared token.
+  //
+  // GATING BOTH RULES TOGETHER IS WHAT MAKES THIS SAFE. The resting state is
+  // the INVISIBLE one, so a media query that dropped only the `.is-in` half
+  // would hide every eyebrow on every phone permanently. Below 1024 neither
+  // rule is emitted, so the eyebrow is simply itself -- no hidden state, and
+  // nothing needed to undo one. Same reasoning as the [data-suf-motion] gate
+  // above, one axis over.
+  //
+  // The observer still adds `.is-in` down here. That is deliberate and costs
+  // nothing: a class with no rule attached to it. Filtering by width in JS
+  // would put the breakpoint in two files and let them disagree on a resize.
+  @include m.from(m.$bp-lg) {
+    // (0,2,0) against `.suf-body .suf-eyebrow` at (0,1,1), so these win without
+    // needing to restate the component's own scoping.
+    [data-suf-motion] .suf-eyebrow {
+      opacity: 0;
+      // 8px, and only on one axis. The label arrives from the same side its
+      // slash grows from, so the pair reads as one gesture rather than two
+      // things moving independently.
+      transform: translateX(-8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
 
-    // transform-origin at the bottom-left corner, which is where the
-    // parallelogram's own point sits -- it grows out of the corner it is
-    // anchored by rather than swelling from its middle.
-    //
-    // The delay is what makes this read as one movement: the label starts
-    // first and the slash catches up.
-    &::before {
-      transform: scale(0);
-      transform-origin: 0 100%;
-      transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.5, 1) 0.12s;
+      // transform-origin at the bottom-left corner, which is where the
+      // parallelogram's own point sits -- it grows out of the corner it is
+      // anchored by rather than swelling from its middle.
+      //
+      // The delay is what makes this read as one movement: the label starts
+      // first and the slash catches up.
+      &::before {
+        transform: scale(0);
+        transform-origin: 0 100%;
+        transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.5, 1) 0.12s;
+      }
     }
-  }
 
-  [data-suf-motion] .suf-eyebrow.is-in {
-    opacity: 1;
-    transform: none;
+    [data-suf-motion] .suf-eyebrow.is-in {
+      opacity: 1;
+      transform: none;
 
-    // The overshoot in that cubic-bezier takes the slash slightly past full
-    // size and settles it back. On a 14px shape it is barely perceptible as
-    // overshoot and reads as the thing having weight.
-    &::before {
-      transform: scale(1);
+      // The overshoot in that cubic-bezier takes the slash slightly past full
+      // size and settles it back. On a 14px shape it is barely perceptible as
+      // overshoot and reads as the thing having weight.
+      &::before {
+        transform: scale(1);
+      }
     }
   }
 
