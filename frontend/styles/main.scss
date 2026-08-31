@@ -40,6 +40,9 @@
 @use 'components/suf-search';
 @use 'components/suf-nav';
 @use 'components/suf-footer';
+// Shopify's injected consent banner. Deliberately unscoped -- it is added to
+// <body> on every template, so it has to be styled on both layouts.
+@use 'components/suf-consent';
 @use 'components/fontawesome-retire';
 
 // LAST, and deliberately unscoped. Commerce and blog chrome ported from the
