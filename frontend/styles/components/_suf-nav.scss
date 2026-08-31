@@ -423,6 +423,42 @@
   }
 
   // ---------------------------------------------------------------------------
+  // FOCUS
+  //
+  // Every interactive thing in the navy bar. Until this existed the only
+  // keyboard feedback was a colour change from #c3d2da to white, which is a
+  // contrast step most people will not notice and nobody can rely on.
+  //
+  // White rather than --suf-color-focus: the focus blue is a mid-tone against
+  // navy, and this ring has to read instantly on the darkest surface here.
+  //
+  // Negative offset so the ring sits INSIDE the element. The labels run the
+  // full height of the bar, and a ring outside them would be clipped at the
+  // top and bottom edges.
+  .sufnav__label:focus-visible,
+  .sufnav__icon:focus-visible,
+  .sufnav__burger:focus-visible {
+    outline: 2px solid var(--suf-white);
+    outline-offset: -2px;
+  }
+
+  // The stacked menu is a light panel, so the ring flips to the focus blue and
+  // sits outside, as it does everywhere else on a light surface.
+  @media (max-width: 900px) {
+    .sufnav__label:focus-visible,
+    .sufnav__acct:focus-visible,
+    .sufnav__acct button:focus-visible {
+      outline: 2px solid var(--suf-color-focus);
+      outline-offset: -2px;
+    }
+  }
+
+  .sufnav__drop a:focus-visible {
+    outline: 2px solid var(--suf-color-focus);
+    outline-offset: -2px;
+  }
+
+  // ---------------------------------------------------------------------------
   // SEARCH PANEL
   //
   // AT EVERY WIDTH, not just stacked. The old forked header rendered this panel
@@ -712,8 +748,11 @@
     // margin on a button, so nesting alone does not cover it.
     margin: 0;
     float: none;
-    outline: none;
     border-radius: 0;
+    // NO `outline: none` HERE. It was listed as a gap to close and it was a
+    // mistake: dt-framework already sets it, so this added nothing except
+    // stripping the browser's default ring from every button in the header.
+    // Focus is drawn explicitly below instead.
     // The label already sets white-space: nowrap, but the reset's `flex-wrap:
     // wrap` would still let the caret drop to a second line if a label ever
     // grew a third child.

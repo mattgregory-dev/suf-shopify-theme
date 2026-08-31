@@ -8,8 +8,25 @@
   The faces are always declared; a browser only downloads a font something
   actually uses, so declaring on a layout that does not apply them costs
   nothing. `family` chooses what the applying rules set, which is how Hanken
-  Grotesk is live on layout/suf.liquid while layout/theme.liquid stays on Arial
-  until the ~30 legacy templates have been reviewed.
+  Grotesk is live on layout/suf.liquid while layout/theme.liquid stays on
+  Arial.
+
+  THEME.LIQUID STAYS ON ARIAL. SETTLED, not pending. Decided 2026-08-30.
+
+  This was once phrased as "until the legacy templates have been reviewed",
+  which read as a task someone would finish. Nobody will. The Indivisible
+  faces have been corrupt for years (see below), so those ~30 templates have
+  rendered in Arial for their whole life -- that IS what the legacy site looks
+  like, and restyling every one of them to make a font consistent is work
+  spent on pages the redesign is replacing.
+
+  The direction is to migrate templates onto layout/suf.liquid, where Hanken
+  Grotesk already applies, and let this shrink. Do not "fix" it by passing a
+  family here.
+
+  ONE EXCEPTION, and it is deliberate: sections/suf-nav.liquid opts back into
+  Hanken Grotesk for itself. It is the same section on both layouts and has to
+  look identical on both. See the font block in _suf-nav.scss.
 
   The applying rules carry !important because both layouts load
   dt-framework.css, which sets font-family on the same elements at higher

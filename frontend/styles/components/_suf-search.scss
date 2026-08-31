@@ -122,6 +122,15 @@
     &:hover {
       color: var(--suf-color-accent);
     }
+
+    // These two sit between the input and the first result in the tab order,
+    // and with no focus style they read as two presses of Tab where nothing
+    // happens before the results finally light up. Focus was landing on them
+    // the whole time; there was simply nothing to see.
+    &:focus-visible {
+      outline: 2px solid var(--suf-color-focus);
+      outline-offset: 2px;
+    }
   }
 
   /* ---- suggestions ---- */
@@ -149,6 +158,8 @@
 
   .suf-search__result {
     display: flex;
+    // The containing block for the stretched link below.
+    position: relative;
     // Top-aligned, not centred. Titles run to two and three lines while the
     // thumbnail is a fixed 60px, so centring floats the image at a different
     // height in every row and the left edge stops reading as a column.
@@ -158,12 +169,28 @@
     border: 1px solid var(--suf-color-border);
     border-radius: var(--suf-radius);
 
-    // Keyboard highlight and hover are the same affordance deliberately: the
-    // arrow keys should look like pointing at a row.
+    // Keyboard highlight, hover and focus are the same affordance
+    // deliberately: arrow keys, the pointer and Tab should all look like
+    // pointing at a row.
     &.is-active,
-    &:hover {
+    &:hover,
+    &:has(.suf-search__result-link:focus-visible) {
       border-color: var(--suf-color-link);
       background: color-mix(in srgb, var(--suf-color-link) 6%, transparent);
+    }
+
+    // THE FOCUS RING GOES ON THE ROW, NOT THE TITLE.
+    //
+    // Tab moves focus to the anchor, whose own box is just the title text --
+    // so a ring drawn on it outlines a couple of lines of text sitting inside
+    // a card, which reads as the wrong thing being selected. The card is what
+    // gets activated, so the card is what the ring belongs to.
+    //
+    // :has, not :focus-within, so this stays keyboard-only. A pointer click
+    // would otherwise leave a ring behind on the row it dismissed from.
+    &:has(.suf-search__result-link:focus-visible) {
+      outline: 2px solid var(--suf-color-focus);
+      outline-offset: 2px;
     }
   }
 
@@ -186,6 +213,25 @@
     color: var(--suf-color-text);
     text-decoration: none;
 
+    // THE WHOLE ROW IS THE TARGET.
+    //
+    // The row already promised this -- it takes a border and a tint on hover --
+    // but only the title text was clickable, so the thumbnail and the price
+    // did nothing. This overlays the entire row without touching the markup,
+    // adding a second tab stop, or nesting anything in the anchor.
+    //
+    // Keyboard selection is unaffected: suf-search.js follows link.href on
+    // Enter and never depends on the anchor's own box.
+    //
+    // The trade is that text inside the row can no longer be selected. For a
+    // suggestion list that is the right way round -- these rows exist to be
+    // chosen, not read.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
     // No underline on hover. The row already answers "this is clickable" with
     // its border and tint, and underlining the title on top of that is the
     // same message told twice -- it reads as the text being a separate target
@@ -194,6 +240,25 @@
     &:focus-visible {
       color: var(--suf-color-link);
       text-decoration: none;
+    }
+
+    // THE FALLBACK, and the reason this ring is declared twice.
+    //
+    // Where :has is unsupported the row-level ring above never matches, and
+    // the anchor is the only thing left that can show focus. A ring around the
+    // title is worse than one around the card; it is enormously better than
+    // nothing, which is what tabbing through these results used to give.
+    //
+    // Suppressed wherever :has works, so the two can never both draw.
+    &:focus-visible {
+      outline: 2px solid var(--suf-color-focus);
+      outline-offset: 2px;
+    }
+
+    @supports selector(:has(*)) {
+      &:focus-visible {
+        outline: none;
+      }
     }
   }
 

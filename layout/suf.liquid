@@ -106,8 +106,11 @@
     {% render 'suf-legacy-tokens' %}
 
     {% comment %}
-      Hanken Grotesk is applied on this layout only. theme.liquid stays on Arial
-      until the legacy templates have been reviewed -- see docs/migration.md.
+      Hanken Grotesk is applied on this layout only. theme.liquid stays on
+      Arial permanently -- that is a settled decision, not a pending task, and
+      the reasoning is in snippets/suf-fonts.liquid. The legacy templates have
+      rendered in Arial for years and are being replaced rather than restyled;
+      the header opts back in for itself because it is shared.
 
       set_weights: false because this layout supplies its own weights from
       suf.css. The snippet's `h1, h2, ...` rule is (0,0,1); the suf base layer
