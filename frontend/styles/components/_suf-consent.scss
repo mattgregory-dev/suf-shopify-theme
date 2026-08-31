@@ -35,6 +35,33 @@
 // by positioning its own child instead.
 
 // ---------------------------------------------------------------------------
+// THE FONT, ON LEGACY TEMPLATES
+//
+// layout/theme.liquid renders snippets/suf-fonts.liquid with no family, which
+// applies
+//
+//     p, li, a, body, footer, aside, nav, section, article, div, span,
+//     input, button, textarea, label { font-family: Arial !important }
+//
+// deliberately -- the legacy templates stay on Arial, permanently. But this
+// dialog is not a legacy template. It is chrome that appears on every page of
+// the site, and it should look the same on all of them.
+//
+// The banner's root is a <section> and everything inside it is a div, span, p,
+// button or heading, so every element is caught. !important is the only
+// instrument that answers an !important; the universal selector after an ID
+// gives it the specificity to win.
+//
+// Same reasoning, and the same shape, as the font block in _suf-nav.scss.
+
+#shopify-pc__banner,
+#shopify-pc__banner *,
+#shopify-pc__prefs,
+#shopify-pc__prefs * {
+  font-family: var(--suf-font-body) !important;
+}
+
+// ---------------------------------------------------------------------------
 // BANNER -- a compact card, bottom right, rather than a full-width bar
 
 #shopify-pc__banner.shopify-pc__banner__dialog {
@@ -60,10 +87,20 @@
   text-align: left;
 }
 
+// THE THREE !important FLAGS IN THIS FILE ARE ALL THE SAME BUG.
+//
+// On legacy templates _custom-port.scss sets `body:not(.suf-body) h2` to 50px
+// and h3 to 34px, both !important -- legacy typography for legacy CONTENT,
+// which a Shopify-injected dialog is not. An !important cannot be answered by
+// specificity, only by a more specific !important, and an ID selector is as
+// specific as this gets.
+//
+// Without them the consent banner rendered its title at 50px on every legacy
+// page while looking correct on the suf ones.
 #shopify-pc__banner__body-title {
   margin: 0 0 6px;
   color: var(--suf-navy);
-  font-size: 15px;
+  font-size: 15px !important;
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: 0.01em;
@@ -117,6 +154,10 @@
   padding: 10px 16px;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  // dt-framework's reset puts `word-break: break-word` on <html>, so on legacy
+  // templates a narrow button breaks its label mid-word -- "DE CLI NE". These
+  // labels are one short word each and should never wrap at all.
+  white-space: nowrap;
 }
 
 // SOURCE ORDER IS manage-prefs, accept, decline. `order` puts the destructive
@@ -150,20 +191,23 @@
 
 // Third and full width: a tertiary choice, so it reads as a link rather than
 // competing with the two buttons above it.
-// THE FLEX-BASIS AND THE max-width DO DIFFERENT JOBS, and it needs both.
+// FULL WIDTH, AND NO max-width. An earlier version clamped this with
+// `max-width: fit-content` to stop the focus ring drawing across the whole
+// card, and that broke the row.
 //
-// flex-basis: 100% is what pushes it onto its own line -- it cannot fit beside
-// the two buttons above, so it wraps. But that also made the BOX the full
-// width of the banner, and an outline follows the box, so the focus ring drew
-// a rectangle right across the card.
+// max-width does not only constrain the painted box: it clamps the flex
+// item's HYPOTHETICAL MAIN SIZE, which is what the line-breaking step
+// measures. Clamped to its text, this button stopped being too wide to sit
+// beside the other two, so all three shared one line and Decline and Accept
+// were squeezed to about 50px each. dt-framework's reset puts
+// `word-break: break-word` on <html>, so the squeezed labels then broke
+// mid-word into "DE CLI NE".
 //
-// max-width: fit-content clamps the used width back to the text once it is on
-// that line, and the auto margins centre it. The ring then hugs the label.
+// The ring is drawn on the inner <span> instead -- see the focus block at the
+// end of this file. That is the element whose size actually matches the text.
 #shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs {
   order: 3;
   flex: 1 1 100%;
-  max-width: fit-content;
-  margin-inline: auto;
   padding: 2px 4px 0;
   border: 0;
   background: none;
@@ -223,11 +267,12 @@
   border-bottom: 1px solid var(--suf-color-border-subtle);
 }
 
+// Also an <h2>. See the note on the banner title.
 #shopify-pc__prefs__header-title {
   flex: 1 1 100%;
   margin: 0;
   color: var(--suf-navy);
-  font-size: 17px;
+  font-size: 17px !important;
   font-weight: 800;
   letter-spacing: 0.01em;
 }
@@ -329,10 +374,11 @@
   padding: 0;
 }
 
+// An <h3>, which the same legacy block sets to 34px !important.
 #shopify-pc__prefs .shopify-pc__prefs__intro h3 {
   margin: 0 0 3px;
   color: var(--suf-navy);
-  font-size: 14px;
+  font-size: 14px !important;
   font-weight: 800;
 }
 
@@ -495,14 +541,29 @@
 }
 
 // THE INNER SPAN. Only the manage-prefs button wraps its label in a <span>,
-// and Shopify's focus outline is on the SPAN, not the button -- which is why
-// two rings drew: theirs tight around the text, ours around the button.
+// and it is the right place for this button's ring: the button is full width
+// so the ring would otherwise stretch across the whole card, while the span is
+// exactly the width of the text.
+//
+// Shopify already outlines this span on :focus, in a pale blue that matches
+// nothing here -- so theirs is cleared and ours drawn on :focus-visible, the
+// same swap made for every other control in this file.
 //
 // Not !important: this is (1,2,2) against their (0,3,2), so the ID wins.
-#shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs:focus span,
-#shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs:focus-visible span {
+#shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs:focus span {
   outline: none;
   box-shadow: none;
+}
+
+// And the BUTTON takes no ring, or the shared rule above would draw one across
+// the full width of the card at the same time.
+#shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs:focus-visible {
+  outline: none;
+}
+
+#shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs:focus-visible span {
+  outline: 2px solid var(--suf-color-focus);
+  outline-offset: 2px;
 }
 
 #shopify-pc__banner .shopify-pc__banner__btns button:focus-visible,
