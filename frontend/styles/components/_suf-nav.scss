@@ -519,8 +519,9 @@
   // sits outside, as it does everywhere else on a light surface.
   @media (max-width: 900px) {
     .sufnav__label:focus-visible,
-    .sufnav__acct:focus-visible,
-    .sufnav__acct button:focus-visible {
+    // Both states of this row are an <a> now. It used to be a POST form when
+    // signed in, whose label was a submit button and needed its own ring.
+    .sufnav__acct:focus-visible {
       outline: 2px solid var(--suf-color-focus);
       outline-offset: -2px;
     }
@@ -769,19 +770,6 @@
       svg {
         width: 20px;
         height: 20px;
-      }
-
-      // The logged-in row is a POST form, so its label is a submit button. It has
-      // to be indistinguishable from the anchor next to it.
-      button {
-        padding: 0;
-        border: 0;
-        background: none;
-        color: inherit;
-        font: inherit;
-        letter-spacing: inherit;
-        text-transform: inherit;
-        cursor: pointer;
       }
     }
   }

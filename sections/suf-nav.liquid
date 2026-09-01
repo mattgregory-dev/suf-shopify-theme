@@ -160,14 +160,40 @@
 
       {%- comment -%}
         The account row: mobile only, inside the panel. Its desktop counterpart
-        is the icon below. Logging out is a POST -- new customer accounts will
-        not accept a GET -- so it is a form, not a link.
+        is the icon below.
+
+        SIGNED IN, THIS GOES TO THE ACCOUNT PAGE. IT DOES NOT LOG ANYONE OUT,
+        AND IT CANNOT.
+
+        It was a POST form to routes.account_logout_url, on the reasoning that
+        new customer accounts reject a GET logout. Half right: they reject the
+        GET, and they do not accept the POST either. On this store that route
+        resolves to /customer_identity/logout, and posting to it returns 404 --
+        confirmed against the live site on 2026-09-01.
+
+        This store uses NEW customer accounts: signing in lands on
+        shopify.com/<shop id>/account, and the session is Shopify's rather than
+        the storefront's. A theme cannot end it. Shopify's own sign-out on that
+        page is a bare <button type="button"> with no form and no href, driven
+        by their JavaScript against an API we have no route to.
+
+        Dawn confirms the direction: it no longer hand-rolls any of this. Its
+        header renders <shopify-account>, a Shopify web component, and contains
+        no reference to routes.account_logout_url at all.
+
+        So the row sends people to the account page, which carries Shopify's own
+        "Sign out" and "Sign out of all devices". One trip instead of none, and
+        it matches the desktop icon, which already went to routes.account_url.
+
+        IF A LOGOUT ROW IS WANTED BACK, the way to get it is <shopify-account>,
+        which brings Shopify's own markup and menu with it -- that is a design
+        decision about the header, not a bug fix.
       {%- endcomment -%}
       {%- if customer -%}
-        <form method="post" action="{{ routes.account_logout_url }}" class="sufnav__acct">
+        <a class="sufnav__acct" href="{{ routes.account_url }}">
           {% render 'suf-icon', icon: 'user' %}
-          <button type="submit">Log Out</button>
-        </form>
+          <span>Account</span>
+        </a>
       {%- else -%}
         <a class="sufnav__acct" href="{{ routes.account_login_url }}">
           {% render 'suf-icon', icon: 'user' %}
