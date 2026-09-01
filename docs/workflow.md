@@ -160,6 +160,46 @@ settings travel with it and the pushed theme matches local. It also
 means the live site's. Pull `config/settings_data.json` before pushing if
 anyone has touched the editor since the last deploy.
 
+### `.shopifyignore` is not `.gitignore`, and the difference costs you
+
+**`.gitignore` keeps things out of the REPO. `.shopifyignore` keeps things off
+the STORE.** They share no machinery: the CLI walks the working directory and
+has no idea what git thinks. A file can be gitignored and still pushed to the
+live theme on every deploy, which is exactly what was happening.
+
+`assets/suf.css.map` was going up with every push — 385 KB, more than three
+times `suf.css` itself. Not a performance problem: `css:build` uses
+`--no-source-map`, so the deployed stylesheet carries no `sourceMappingURL` and
+no visitor ever requests the map. The reason to stop is different. `css:watch`
+uses `--embed-sources`, so the map's `sourcesContent` holds **all 29 SCSS files
+in full, comments and all**, published at a URL on a store whose repo is meant
+to stay private.
+
+Note `css:build` not regenerating the map is why this was easy to miss: the
+stale file from the last `npm run dev` sits in `assets/` and gets pushed
+regardless of how the deploy build was configured.
+
+**Verified in both directions on 2026-09-01, not assumed:**
+
+- **Push** — deleted the map from the theme, pushed, confirmed it was not
+  re-added.
+- **Pull** — put an EMPTY file at the same path on the theme, pulled, and
+  confirmed the real 385 KB local file was not overwritten. A neat test: if the
+  ignore were push-only, the empty file would have clobbered the real one.
+
+**An ignored path is unmanaged in BOTH directions, which has a sting.** Push
+normally deletes remote files that are missing locally; ignored ones are
+skipped entirely, so anything already sitting at that path on the theme stays
+there and no longer answers to the CLI. Removing it means admin → Edit code, by
+hand. Clean up before adding the ignore, not after.
+
+`assets/suf.css` is deliberately NOT in `.shopifyignore`. It is gitignored
+because it is generated and churns, but the store needs it — which is why every
+push script builds first.
+
+The flag form `shopify theme push -x "assets/suf.css.map"` does the same job if
+a one-off exclusion is ever wanted without touching the file.
+
 `shopify theme dev` already provides hot reload for CSS and sections — it
 defaults to `--live-reload hot-reload`. That is not a reason to add a bundler.
 

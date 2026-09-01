@@ -1,0 +1,18 @@
+# Files the Shopify CLI must not upload.
+#
+# NOT the same job as .gitignore, and the difference is the whole point:
+# .gitignore keeps things out of the REPO, this keeps things off the STORE.
+# assets/suf.css and assets/suf.css.map are both gitignored, but git has no say
+# in what `shopify theme push` sends -- it walks the working directory.
+#
+# suf.css.map is ~385 KB, more than three times suf.css itself, and it is of no
+# use to a visitor. `npm run dev` writes it, `shopify theme dev` uploads it on
+# every rebuild (visible in the dev log as "Synced update assets/suf.css.map"),
+# and every push carried it to the live theme. `css:build` uses
+# --no-source-map, so the deploy build does not REGENERATE it -- but the stale
+# file from the last dev session is still on disk and still gets pushed.
+#
+# suf.css itself is NOT listed here, deliberately. It is gitignored because it
+# is generated and churns, but the store needs it -- a clean clone has no
+# compiled CSS, which is why every push script builds first.
+assets/suf.css.map
