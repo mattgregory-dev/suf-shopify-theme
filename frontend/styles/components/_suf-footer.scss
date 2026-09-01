@@ -329,6 +329,18 @@
 
   .suf-footer .suf-footer__col--brand {
     flex: 1 1 100%;
+    // The row gap above drops to space-3 for the PAIRED LINK COLUMNS, which
+    // stack in two rows and want to read as one block. The brand column is not
+    // part of that block -- it is now a full-width band with a logo, a phone
+    // number and five social buttons sitting directly on top of two column
+    // headings, and at space-3 the headings crowd the buttons.
+    //
+    // space-4 on top of the space-3 gap comes back to roughly the space-5 this
+    // seam has above 820, so the separation the brand block had as a column is
+    // preserved once it becomes a row. It is a margin rather than a larger gap
+    // because only THIS seam wants the space -- widening the gap would push the
+    // two link rows apart again, which is what the breakpoint just tightened.
+    margin-block-end: var(--suf-space-4);
   }
 }
 

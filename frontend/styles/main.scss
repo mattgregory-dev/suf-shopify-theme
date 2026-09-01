@@ -48,6 +48,13 @@
 @use 'components/suf-consent';
 @use 'components/fontawesome-retire';
 
+// LAST OF THE COMPONENTS. Per-instance overrides: one section on one page,
+// usually a spacing tweak that a component cannot make without moving every
+// other instance of itself. Loaded here so a tie goes its way; it does not
+// rely on that, since its selectors are a step more specific. See the file for
+// how sections are targeted and when a rule should be promoted out of it.
+@use 'components/suf-instance';
+
 // LAST, and deliberately unscoped. Commerce and blog chrome ported from the
 // live site's custom.css, for the templates this redesign is not rebuilding.
 // It has to out-order dt-framework.css, and it must NOT be wrapped in

@@ -396,12 +396,17 @@
     // A near-solid white disc with a navy glyph -- the icon inverts rather
     // than merely brightening.
     //
-    // 68% rather than flat white: enough of the navy reads through that the
+    // 75% rather than flat white: enough of the navy reads through that the
     // disc still belongs to the bar instead of looking like a hole punched in
     // it, and it stays correct if the navy is ever retuned.
+    //
+    // Raised from 68% after the mobile pass -- on a phone screen, outdoors and
+    // at a glance, the disc was reading as grey rather than as an inverted
+    // icon. The ceiling is flat white, which is the point at which it stops
+    // belonging to the bar at all.
     &:hover,
     &:focus-visible {
-      background: rgb(255 255 255 / 68%);
+      background: rgb(255 255 255 / 75%);
       color: var(--suf-navy);
     }
 
@@ -560,6 +565,28 @@
     // item while the search panel is down, and the menu has to win.
     z-index: 60;
     box-shadow: 0 24px 40px -12px rgb(0 10 20 / 40%);
+
+    // THE SAME CAP THE DRAWER TAKES, AND FOR THE SAME REASON. A handful of
+    // results is taller than a phone, and because this panel is absolutely
+    // positioned it does not extend the page -- so the document has nothing
+    // extra to scroll and everything past the fold is simply unreachable. Four
+    // results already overflow at 390px.
+    //
+    // `100%` resolves against .sufnav-wrap, which is only as tall as the bar,
+    // so this is "the viewport minus the header" without naming a header
+    // height that would then need maintaining in two places. It follows the
+    // bar's own compression for free.
+    //
+    // dvh, not vh: on mobile Safari, vh is the LARGEST viewport, so the last
+    // row would sit under the browser chrome and be exactly as unreachable as
+    // it is now.
+    //
+    // overscroll-behavior stops the page behind from taking over the scroll
+    // once the list hits its end -- without it, continuing to drag scrolls the
+    // document under the panel, which reads as the panel being broken.
+    max-height: calc(100dvh - 100%);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   // ---------------------------------------------------------------------------

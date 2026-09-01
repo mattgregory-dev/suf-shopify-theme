@@ -85,6 +85,37 @@
   box-shadow: 0 12px 34px rgb(0 48 73 / 18%);
   font-family: var(--suf-font-body);
   text-align: left;
+
+  // A FULL-BLEED TRAY BELOW 600px, not a floating card.
+  //
+  // The card shape needs room around it to read as a card. On a phone the
+  // 20px margins leave a sliver of page either side of something that already
+  // spans nearly the whole width -- so it reads as a mis-sized bar rather than
+  // as a deliberate card, and the text measure gets squeezed for nothing.
+  // Dropped to the bottom edge it becomes a tray, which is the conventional
+  // mobile shape for this and buys back 40px of measure.
+  //
+  // 600 rather than a token: this is about the width at which the 360px card
+  // stops having room around it, which is a fact about this component and not
+  // about the page grid. Same reasoning as the nav's hardcoded 900.
+  //
+  // LEFT: 0 IS DOING THE WORK, and is easy to miss. With `left: auto` a fixed
+  // box shrink-to-fits its content however wide the max-width allows, so
+  // clearing width and max-width alone gets close to full bleed on a long
+  // string and visibly short of it on a short one -- it would look right in
+  // English and wrong the first time the copy changed. Anchoring both edges
+  // makes the width a fact rather than a consequence of the text.
+  @media (max-width: 600px) {
+    left: 0;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    // The side and bottom borders now sit ON the viewport edges, where they
+    // read as a rendering artefact rather than as an edge. The red top border
+    // stays: it is the only one still bounding anything.
+    border-inline: 0;
+    border-block-end: 0;
+  }
 }
 
 // THE THREE !important FLAGS IN THIS FILE ARE ALL THE SAME BUG.
@@ -138,6 +169,30 @@
   gap: 18px;
   align-items: center;
   margin-top: 18px;
+
+  // STACKED AND FULL WIDTH BELOW 480px.
+  //
+  // Above this the two buttons share a line on `flex: 1 1 0`. Once the tray is
+  // this narrow they wrap onto separate lines and each sits at its own label
+  // width, centred -- two small islands in a full-width tray, which reads as
+  // unfinished rather than as a choice. Stretched, each is a full-width target,
+  // which is also the easier thing to hit with a thumb.
+  //
+  // `display: flex` IS RESTATED DELIBERATELY, not by accident. We do not own
+  // this markup and cannot see Shopify's own stylesheet from here; their CSS
+  // is injected at runtime and may well carry its own narrow breakpoint on
+  // these same class names. If it switches the row to `display: block`, a lone
+  // `flex-direction` here would be a declaration on a box that is no longer a
+  // flex container -- silently inert, and the symptom would be exactly what is
+  // on screen now. Restating it costs one line and removes the guess.
+  //
+  // align-items: stretch is what does the widening -- it replaces the `center`
+  // above, which is what was sizing each button to its own label.
+  @media (max-width: 480px) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 #shopify-pc__banner .shopify-pc__banner__btns button {
@@ -160,32 +215,71 @@
   white-space: nowrap;
 }
 
-// SOURCE ORDER IS manage-prefs, accept, decline. `order` puts the destructive
-// choice first and the primary one second, which is the convention, without
-// touching markup we do not control.
+// SOURCE ORDER IS manage-prefs, accept, decline. `order` rearranges them
+// without touching markup we do not control: accept first, decline second,
+// manage-prefs last on its own row.
+//
+// ACCEPT LEADS, which reverses the earlier arrangement here -- that put the
+// destructive choice first on the reasoning that it is the convention. Changed
+// 2026-08-31 on the client's call.
+//
+// `order` IS THE ONLY REORDERING MECHANISM IN THIS ROW, deliberately.
+// `flex-direction: row-reverse` reaches the same arrangement and was
+// considered; it was rejected because it would compose with these `order`
+// values rather than replace them, and the rendered result would then be the
+// product of two transforms pointing opposite ways. Anyone changing this later
+// would have to hold both in their head to predict what renders. If this needs
+// rearranging again, move these numbers and add nothing.
+//
+// Not an accessibility improvement either way: tab order follows the DOM, so
+// it stays manage-prefs, accept, decline whatever these say. That mismatch is
+// inherent to reordering markup we cannot edit and predates this change.
+//
+// BOTH BUTTONS ARE NAVY, and the pair is deliberately quiet. The site's reds
+// and blues are for actions the visitor came here to take; this is a consent
+// choice they did not ask for, and neither answer should be sold to them.
+// Filled versus outline is the only hierarchy left, which is enough.
+//
+// It also keeps the banner out of a fight with whatever is behind it -- it
+// floats over page content, so a red or a blue button lands on top of the
+// design's own accents at unpredictable moments.
 #shopify-pc__banner button.shopify-pc__banner__btn-decline {
-  order: 1;
+  order: 2;
   flex: 1 1 0;
   border: 1px solid var(--suf-navy);
   background: transparent;
   color: var(--suf-navy);
 
+  // A TINT, NOT A FILL, and this is the one hover that could not be obvious.
+  //
+  // Filling this navy -- which is what it used to do -- now paints it into
+  // exactly the accept button's resting state sitting right beside it. The
+  // hovered secondary would be indistinguishable from the unhovered primary,
+  // which is worse than no hover at all on a choice like this one.
+  //
+  // 8% of the same navy reads as "this one is live" without borrowing the
+  // other button's appearance. The border darkens with it so the edge does not
+  // go slack against the tinted face.
   &:hover {
-    background: var(--suf-navy);
-    color: var(--suf-white);
+    border-color: var(--suf-navy-deep);
+    color: var(--suf-navy-deep);
   }
 }
 
 #shopify-pc__banner button.shopify-pc__banner__btn-accept {
-  order: 2;
+  order: 1;
   flex: 1 1 0;
-  border: 1px solid var(--suf-cta-bg);
-  background: var(--suf-cta-bg);
-  color: var(--suf-cta-text);
+  border: 1px solid var(--suf-navy);
+  background: var(--suf-navy);
+  color: var(--suf-white);
 
+  // --suf-navy-deep, the palette's own darker navy, rather than a computed
+  // shade. It exists for stacked dark surfaces that must read as distinct, so
+  // it is already tuned to be a perceptible step from navy without becoming
+  // black.
   &:hover {
-    border-color: var(--suf-cta-bg-hover);
-    background: var(--suf-cta-bg-hover);
+    border-color: var(--suf-navy-deep);
+    background: var(--suf-navy-deep);
   }
 }
 
@@ -311,14 +405,18 @@
 }
 
 // Targeted by ID: these three buttons carry no classes at all.
+//
+// Navy, matching the banner's accept -- see the note there. This is the SAME
+// choice offered twice, so the two have to agree: an Accept in one colour here
+// and another there would read as two different actions.
 #shopify-pc__prefs__header-accept {
-  border-color: var(--suf-cta-bg);
-  background: var(--suf-cta-bg);
-  color: var(--suf-cta-text);
+  border-color: var(--suf-navy);
+  background: var(--suf-navy);
+  color: var(--suf-white);
 
   &:hover {
-    border-color: var(--suf-cta-bg-hover);
-    background: var(--suf-cta-bg-hover);
+    border-color: var(--suf-navy-deep);
+    background: var(--suf-navy-deep);
   }
 }
 
@@ -526,8 +624,9 @@
 // first. Cleared on :focus so a mouse click does not leave one behind, ring
 // added on :focus-visible so only the keyboard gets it.
 //
-// `background` is deliberately not reset here: the accept buttons are red, and
-// clearing it would strip them on focus.
+// `background` is deliberately not reset here: the accept buttons carry a
+// fill -- blue since the swap, red before it -- and clearing it would strip
+// them on focus. The colour is not the point; having one is.
 
 // !important on box-shadow only, and it is earned: without it two rings drew
 // at once -- their box-shadow tight to the button, our outline 2px outside it.

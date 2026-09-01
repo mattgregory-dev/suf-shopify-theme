@@ -1,0 +1,93 @@
+// PER-INSTANCE OVERRIDES. One section on one page, never a component.
+//
+// WHY THIS FILE EXISTS
+//
+// The components' own spacing is right in general and is not what these tweak.
+// What varies is the CONTENT: a spotlight holding a tall portrait and one
+// holding a wide chart want different room around them even though they are
+// the same component with the same rules. Fixing that in the component moves
+// every other instance of it, so each fix costs a regression somewhere else on
+// the site and the tuning never converges.
+//
+// So these are deliberately one-offs. A rule in here says "this section, on
+// this page, at this width" and nothing more.
+//
+// HOW SECTIONS ARE TARGETED
+//
+// Shopify wraps every section in <section id="shopify-section-template--<theme
+// template id>__<key>">. The NUMBER IS NOT STABLE -- it is the template's id in
+// a particular theme, so it differs between the dev theme, the preview theme
+// and production, and a selector naming it in full works locally and silently
+// does nothing once pushed.
+//
+// The KEY is stable: it is the section's name in templates/page.suf-*.json and
+// travels with the file. So match the end of the id and ignore the number:
+//
+//     [id$="__problem"] .suf-splitfact__inner { ... }
+//
+// Two consequences worth knowing. It matches that key on ANY template, so keys
+// have to stay unique across templates -- they are today, and a duplicate would
+// be worth renaming anyway. And renaming a section key in the JSON silently
+// disables its rule here, with no error: the rule just stops matching. If a
+// tweak stops working, check the key first.
+//
+// SPECIFICITY. `[id$="..."] .suf-x` is (0,2,0) against a component's (0,1,0),
+// so these win without !important and without depending on load order. This
+// file is still loaded last among the components so that ties go this way too.
+//
+// WHEN TO PROMOTE ONE OUT OF HERE. If the same override appears three or four
+// times, it has stopped being a one-off and is telling you the component's
+// default is wrong for a whole class of content. Fix it there instead and
+// delete the copies.
+
+// ---------------------------------------------------------------------------
+// SPLIT FACT GAPS, once the section stacks.
+//
+// The component keeps --suf-space-6 when it stacks, which floors at 64px. That
+// is right for the dense panels on suf-cpt and too much for these two, and the
+// difference is the CONTENT rather than the width -- which is why it is here
+// and not on the component. Changing it there was tried and reverted; the note
+// in _suf-cpt.scss records that.
+//
+// 1000 matches the component's own stacking breakpoint, so the gap changes at
+// the same moment the layout does rather than at some second width where the
+// section visibly reflows twice on a slow resize.
+//
+//   __problem  a bare number and a two-segment bar -- visually light and
+//              short, so at 64px it reads as detached from the argument it is
+//              evidence for rather than as the other half of it.
+//   __library  needs less than the default but more than __problem: space-5.
+@media (max-width: 1000px) {
+  [id$='__problem'] .suf-splitfact__inner {
+    gap: var(--suf-space-4);
+  }
+
+  [id$='__library'] .suf-splitfact__inner {
+    gap: var(--suf-space-5);
+  }
+}
+
+// page.suf-cpt -- the live exam centred head, left-aligned on narrow screens.
+//
+// A centred heading over a centred sub reads as a title on a wide measure. At
+// phone width the same block becomes several short ragged lines centred against
+// a left-aligned page, which reads as a mistake rather than as emphasis.
+//
+// All three parts have to move together: the text alignment, the eyebrow's own
+// flex centring, and the sub's max-width -- which exists to hold a centred line
+// to a readable measure and only narrows the column once the text is ranged
+// left.
+@media (max-width: 700px) {
+  [id$='__exam'] .suf-centerhead {
+    text-align: left;
+
+    .suf-eyebrow {
+      justify-content: flex-start;
+    }
+
+    .suf-centerhead__sub {
+      max-width: unset;
+    }
+  }
+}
+

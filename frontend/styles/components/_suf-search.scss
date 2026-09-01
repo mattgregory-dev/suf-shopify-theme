@@ -66,6 +66,33 @@
     background: none;
     padding: var(--suf-space-sm);
     font: inherit;
+    // 16px IS A HARD FLOOR ON iOS, and this input was under it. Same rule as
+    // the contact form, which already carries this comment -- see
+    // _suf-contact.scss.
+    //
+    // --suf-font-size-base is clamp(15px, 1.1vw, 17px), so on a 390px phone
+    // 1.1vw is about 4px and the clamp floors at 15. `font: inherit` brought
+    // that down here, one pixel under the threshold at which iOS Safari zooms
+    // the viewport on focus.
+    //
+    // THAT ZOOM IS WHY THE PANEL LOOKS TOO WIDE, and it is worth being explicit
+    // because the symptom does not look like a type-size bug. Safari zooms in
+    // on focus and DOES NOT zoom back out on blur, so one tap in the field
+    // leaves the layout viewport permanently narrower than the visual one for
+    // the rest of the session: the panel overhangs, the result cards are cut
+    // off at the right, and the close button sits near or past the edge. All
+    // three are one event, and they persist long after the keyboard is gone --
+    // which is why the panel looks wrong even "before" anything happens.
+    //
+    // It cannot reproduce in the devtools emulator: the emulator resizes a
+    // desktop viewport and has no iOS focus-zoom behaviour to emulate. A
+    // difference between the emulator and the device is itself the tell here.
+    //
+    // max() rather than a flat 16px so the desktop end still tracks the token
+    // -- the base clamps up to 17px on a wide screen and this follows it.
+    // Placed AFTER the shorthand deliberately: `font: inherit` resets
+    // font-size, so declaring it above would be overwritten.
+    font-size: max(16px, var(--suf-font-size-base));
     color: var(--suf-color-text);
 
     // dt-framework rounds and borders inputs; the ring belongs to the field
@@ -133,6 +160,68 @@
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // CLOSE -- a round chip, matching the header's icon buttons
+  //
+  // 38px, a little under the 42px nav icons in _suf-nav.scss. Close to them
+  // rather than matched to them, deliberately: this one sits in a white panel
+  // beside a text field rather than in the navy bar, and at a full 42 it
+  // competed with the field for weight. Still comfortably over the 24px
+  // minimum target size.
+  //
+  // The submit stays a bare glyph: it sits INSIDE the field's border, and a
+  // second bordered shape in there reads as two controls.
+  .suf-search__close {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    transition: background var(--suf-transition), color 0.16s;
+
+    // THE GREY IS THE MID ONE, NOT --suf-grey, and that is a deliberate
+    // departure from "light grey" as asked.
+    //
+    // --suf-grey is #dadada. A white glyph on it lands around 1.4:1, which is
+    // not a judgement call about taste -- it is below the point where the X is
+    // reliably visible, and this is the only control that closes the panel.
+    // --suf-color-text-muted is the grey in this palette that can carry white,
+    // at about 4.6:1, and still reads as a grey chip rather than a coloured
+    // button.
+    //
+    // If the lighter disc is wanted, the way to have it is to keep #dadada and
+    // DROP the white glyph -- a dark X on a light grey chip is the same idea
+    // and clears contrast comfortably. What does not work is light grey plus
+    // white.
+    @media (hover: hover) {
+      &:hover {
+        background: var(--suf-color-text-muted);
+        color: var(--suf-white);
+      }
+    }
+
+    // TOUCH GETS THE SAME TREATMENT VIA :active, and the hover above is behind
+    // a (hover: hover) query so that it does not double up here.
+    //
+    // On a touch screen :hover latches: it applies on tap and stays applied
+    // until something else is tapped, so the panel would close with the button
+    // still lit and the state would be left on a control the user can no
+    // longer see. :active is the honest equivalent -- it lasts exactly as long
+    // as the finger is down.
+    &:active {
+      background: var(--suf-color-text-muted);
+      color: var(--suf-white);
+    }
+
+    // The shared rule above puts the ring 2px outside a SQUARE box. On a
+    // circle that reads as a rounded square floating around a round button, so
+    // the radius is restated for the ring's own shape.
+    &:focus-visible {
+      outline-offset: 3px;
+      border-radius: 50%;
+    }
+  }
+
   /* ---- suggestions ---- */
 
   .suf-search__results {
@@ -168,6 +257,20 @@
     padding: var(--suf-space-sm);
     border: 1px solid var(--suf-color-border);
     border-radius: var(--suf-radius);
+    // --suf-color-surface, which IS white -- named rather than literal because
+    // the separation it draws is the design's, not this component's: the page
+    // is off-white and cards sit on it in white, and that difference is the
+    // only thing distinguishing the two. See the note on the token.
+    //
+    // The panel behind these rows is --suf-color-bg, so without this the cards
+    // were the same colour as the surface under them and only their border
+    // said they were cards.
+    //
+    // Safe under the hover state below: that is a color-mix against
+    // `transparent`, so it composites OVER whatever is behind it rather than
+    // replacing it. It was relying on the panel showing through before, and it
+    // reads the same way over white.
+    background: var(--suf-color-surface);
 
     // Keyboard highlight, hover and focus are the same affordance
     // deliberately: arrow keys, the pointer and Tab should all look like
@@ -176,7 +279,10 @@
     &:hover,
     &:has(.suf-search__result-link:focus-visible) {
       border-color: var(--suf-color-link);
-      background: color-mix(in srgb, var(--suf-color-link) 6%, transparent);
+      // 12%, up from 6%. The rows now sit on white rather than letting the
+      // off-white panel through, so the tint has a lighter ground to register
+      // against and 6% had stopped being a state you would notice.
+      background: color-mix(in srgb, var(--suf-color-link) 12%, transparent);
     }
 
     // THE FOCUS RING GOES ON THE ROW, NOT THE TITLE.

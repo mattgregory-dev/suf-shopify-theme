@@ -226,6 +226,22 @@
     grid-template-columns: 1fr;
   }
 
+  // space-5 floors at 40px, which on a 390px screen is a fifth of the width
+  // spent on inset -- on all four sides, so it reads as a heavy frame around a
+  // short paragraph rather than as breathing room. space-4 floors at 24px.
+  //
+  // SAFE TO CHANGE ON THE COMPONENT, unlike most of this pass: suf-guarantee
+  // is used by exactly one template, page.suf-study-guides.json. Verified
+  // against the templates rather than assumed -- if it is ever added to a
+  // second page, this stops being a component default and becomes a decision
+  // about both.
+  //
+  // 480 rather than the 900 above: the stack and the inset are separate
+  // problems. At 900 the padding is still proportionate.
+  @media (max-width: 480px) {
+    padding: var(--suf-space-4);
+  }
+
   // The button is a GRID ITEM, and a grid item stretches to its area by
   // default -- `display: inline-block` on .suf-btn does not survive that.
   //

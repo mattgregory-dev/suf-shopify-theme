@@ -122,8 +122,20 @@
 
 // Drop the head's own rule when the section below opens with one of its own,
 // which would otherwise read as a double line.
+//
+// ALL THREE PROPERTIES, NOT TWO. The base head sets `padding-bottom: 18px` to
+// hold the heading off its own rule. With the rule gone that padding is
+// holding the heading off nothing -- 18px of dead space above whatever the
+// section opens with, which is exactly the gap this modifier exists to close.
+// It was missed originally because the border and the margin are the visible
+// half of the pair and the padding is not.
+//
+// The general shape, since it is not specific to this modifier: a modifier
+// that removes a border has to remove the padding that positioned the element
+// against it. They are one decision written as two declarations.
 .suf-section__head--flush {
   margin-bottom: 0;
+  padding-bottom: 0;
   border-bottom: none;
 }
 

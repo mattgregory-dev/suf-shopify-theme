@@ -76,22 +76,63 @@ $bp-xl: 1280px;
 //
 // Distinct from a prose link on purpose: this is a call to action, so it is
 // uppercase and tracked.
+// THE UNDERLINE IS A TEXT DECORATION, NOT A BORDER, AND THE BOX IS INLINE.
+//
+// It was `display: inline-flex` with a `border-bottom`, which is fine on one
+// line and wrong on two. An inline-flex box shrink-wraps to its max-content
+// width -- the whole string on ONE line -- and when that exceeds the space
+// available it takes the full width instead. A border then draws under the
+// BOX, so a wrapped link got one full-width rule under two short centred
+// lines, reading as a broken button rather than a link.
+//
+// `display: inline` makes the box hug its text per line, and a text decoration
+// underlines each line rather than the box, so this now looks deliberate at
+// any length. Identical on one line, which is every other use of it.
+//
+// The flex was vestigial: `gap` and `align-items` only matter with an element
+// child, and both links using this contain text only -- the arrow is a typed →
+// in merchant copy, not an icon. If an icon is ever added here, it wants to be
+// an inline SVG with a margin, NOT a return to flex.
+//
+// text-decoration-color is left to follow currentColor, so the hover below
+// recolours the rule without restating it.
 @mixin cta-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding-bottom: 3px;
-  border-bottom: 2px solid var(--suf-color-link);
+  display: inline;
   color: var(--suf-color-link);
   font-size: var(--suf-font-size-small);
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  text-decoration: none;
+  // 2.3, and it is the WRAPPED case this is for. Every line of a wrapped link
+  // now carries its own rule, and at the default leading the first line's
+  // underline sits almost against the caps of the second -- two lines of text
+  // with a rule jammed between them, which reads as cramped rather than as one
+  // link.
+  //
+  // The number is high because it is doing two jobs at once: it has to clear
+  // the 8px underline offset BELOW the first line as well as leave a readable
+  // gap above the second. 1.8 and 2 were both tried on a phone and both still
+  // read as tight -- the offset eats most of what the leading adds, so the
+  // usable gap is far smaller than the figure suggests. If the offset ever
+  // changes, this needs revisiting with it.
+  //
+  // It has to be leading rather than a margin: the space needed is BETWEEN the
+  // line boxes, and there is only one box to put a margin on. Costs a little
+  // height on the single-line uses, which is invisible there.
+  line-height: 2.3;
+  text-decoration: underline;
+  // 2px matches the border this replaced. 8px is the offset used by the other
+  // underlined links in the design, so this matches them rather than trying to
+  // reproduce the old border's exact position -- a border sits below the BOX
+  // and an underline is measured from the BASELINE, so there was never a
+  // number that would have made those two identical anyway.
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
 
+  // No border-color to restate any more: the decoration follows currentColor,
+  // so recolouring the text recolours the rule under it.
   &:hover,
   &:focus-visible {
     color: var(--suf-color-accent);
-    border-color: var(--suf-color-accent);
   }
 }

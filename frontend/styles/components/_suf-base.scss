@@ -353,15 +353,34 @@
 // THESE TWO ARE NOT LEGACY COMPATIBILITY, despite having lived in that block.
 // Browsers underline links by default and this design does not, except in
 // prose. Deleting them underlines every link on every suf page.
+//
+// WRAPPED IN :where() ON 2026-08-31, which is what the rest of the base layer
+// already does and what this should have done from the start -- it was left
+// unwrapped only because it lived inside the legacy compatibility block, which
+// genuinely needed the weight. Once that block went, this kept a specificity
+// it had no reason to have.
+//
+// `.suf-body a` is (0,1,1), which beats a plain component class at (0,1,0).
+// So .suf-link setting its own `text-decoration: underline` lost to a base
+// rule saying `none`, silently -- exactly the collision written up in
+// architecture.md, and the reason the base layer is :where()-wrapped
+// everywhere else. At (0,0,1) it still beats the browser default and still
+// only matches inside .suf-body, so nothing about its JOB changed; it just
+// stopped competing with the components above it.
 // ---------------------------------------------------------------------------
 
-.suf-body {
+:where(.suf-body) {
   a {
     text-decoration: none;
   }
 
   // Prose is the exception: underlined links in body copy are an accessibility
   // win, and the legacy theme re-added them the same way.
+  //
+  // Still (0,1,1) rather than (0,0,2) -- :where() zeroes only what is inside
+  // it, and .rte is not. It therefore keeps beating the `a` rule above it, and
+  // a component that wants to opt out of prose underlining still has to say so
+  // at (0,1,1) or better.
   .rte a {
     text-decoration: underline;
   }
