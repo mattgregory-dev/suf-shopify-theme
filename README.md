@@ -20,12 +20,12 @@ shopify theme dev    # local server, hot-reloads CSS and sections
 |---|---|
 | `npm run dev` | `sass --watch` → `assets/suf.css` |
 | `npm run css:build` | One-off compressed build |
-| `npm run preview` | `css:build` then push to the unpublished **Sporto - Redesign** theme, for sharing a preview |
+| `npm run deploy` | `css:build` then push to **Sporto - Redesign** (#000000000000) — **which is the LIVE theme** |
 | `npm run lint` | Theme Check |
 | `npm run format` | Prettier — **scoped to `frontend/` + `suf.js` only** |
 
 `assets/suf.css` is generated and gitignored, so **a clean clone has no compiled
-CSS**. Always build before pushing — `npm run preview` does both.
+CSS**. Always build before pushing — `npm run deploy` does both.
 
 Every push script names its target theme explicitly. There is deliberately no
 unaimed `shopify theme push` here: the prompt it shows includes the live theme.

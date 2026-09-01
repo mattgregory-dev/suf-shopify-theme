@@ -37,7 +37,7 @@ like quoting errors — is catalogued in [wsl-tooling.md](wsl-tooling.md).
 |---|---|
 | `npm run dev` | `sass --watch` → `assets/suf.css` |
 | `npm run css:build` | One-off compressed build |
-| `npm run preview` | `css:build` then push to the **Sporto - Redesign** theme (#000000000000) |
+| `npm run deploy` | `css:build` then push to **Sporto - Redesign** (#000000000000) — **the LIVE theme since 2026-09-01** |
 | `npm run lint` | Theme Check |
 | `npm run lint:css` | Stylelint over `frontend/styles` |
 | `npm run lint:css:fix` | Same, auto-fixing what it can |
@@ -46,19 +46,52 @@ like quoting errors — is catalogued in [wsl-tooling.md](wsl-tooling.md).
 
 Normal loop is two terminals: `npm run dev` alongside `shopify theme dev`.
 
-### Sharing a preview with the client
+### `npm run deploy` PUSHES TO THE LIVE SITE
 
-`shopify theme dev` creates a *development* theme: tied to your CLI session and
-cleaned up automatically, so it is not something to share. To show someone the
-work, push to a real unpublished theme and share its preview from admin:
+It was called `preview` until 2026-09-01, and the rename is not cosmetic. The
+script has always pushed to Sporto - Redesign (#000000000000); what changed is
+that **that theme is now published**. The name said preview and the effect was
+deploy, which is the kind of gap that catches someone out late at night.
 
 ```
-npm run preview        # builds CSS, pushes to Sporto - Redesign (#000000000000)
+npm run deploy         # builds CSS, pushes to the LIVE theme
 ```
 
-Then Online Store → Themes → that theme → ⋯ → Preview, and use the share option
-in the preview bar. The viewer needs no admin access, and `?view=` URLs work
-because a preview is real Shopify rather than a sandbox.
+It carries `--allow-live`, which the CLI requires when the target is published.
+Note what that flag is and is not:
+
+- `--allow-live` is a PERMISSION. It says "proceed if the target happens to be
+  live". It is a no-op when the theme is not live, so the script keeps working
+  unchanged if a different theme is ever published.
+- `--live` is a TARGET, meaning "push to whatever is live right now". It is
+  never wanted in a script. The target here stays the explicit `--theme <id>`.
+
+The flag also removes the confirmation dialog, which until now was the last
+thing standing between a stray push and production. **The only remaining
+protection is that the theme id is written out in `package.json`** — keep it
+that way. The note further down on why an unaimed push script was deleted is
+the same rule, and it is the reason the id is there.
+
+Without it the CLI prompts, and in a non-interactive shell — a hook, CI, a
+coding agent's tool call — that prompt does not render. It hangs or fails with
+nothing that looks like a question. Same family as the `--fail-level` trap in
+the Theme Check notes below.
+
+### Showing work to the client without publishing it
+
+Now that the redesign is live, this needs a target that is not the live theme.
+`shopify theme dev` will not do: it creates a *development* theme tied to your
+CLI session and cleaned up automatically, so there is nothing stable to share.
+
+Push to an unpublished theme instead and share its preview from admin — Online
+Store → Themes → that theme → ⋯ → Preview, then the share option in the preview
+bar. The viewer needs no admin access, and `?view=` URLs work because a preview
+is real Shopify rather than a sandbox.
+
+**There is no script for this yet.** Adding one means creating a staging theme
+and giving it its own `--theme` id; worth doing before the product, cart,
+collection and blog rebuilds, which is the next time work in progress will need
+somewhere to live that is not the live site.
 
 ### Testing on a real phone
 
@@ -71,7 +104,7 @@ WSL2 has its own network namespace and Windows does not forward to it.
 and the WSL IP changes on most restarts, so it is a recurring chore rather than
 setup. Worth it only for a long session of iterating on mobile CSS.
 
-For a checklist pass, `npm run preview` and open the share link on the phone.
+For a checklist pass, `npm run deploy` and open the site on the phone.
 `?view=` works there, so unassigned templates are reachable.
 
 What only a real device gives you, and why the mobile pass is tracked as
@@ -91,7 +124,7 @@ editable there. Safe: it touches that theme's files and nothing else in the
 store.
 
 **But nothing comes back.** Edits land in that theme's `config/settings_data.json`
-and templates, and the next `npm run preview` overwrites them, silently. If you
+and templates, and the next `npm run deploy` overwrites them, silently. If you
 edit in the editor, pull before you push again:
 
 ```
@@ -109,15 +142,23 @@ theme**, so changing it points the LIVE theme at a template it does not have.
 That is the one destructive control, and it belongs at cutover. See
 [migration.md](migration.md).
 
-**`npm run deploy` was deliberately removed.** It ran `shopify theme push`
-with no `--theme`, which prompts with a list that includes the LIVE theme. One
-wrong keystroke would overwrite two years of production work. Every push script
-here names its target explicitly; keep it that way.
+**The NAME `npm run deploy` was once removed, and has been reused.** The
+original script ran `shopify theme push` with no `--theme`, which prompts with a
+list that includes the LIVE theme — one wrong keystroke would have overwritten
+two years of production work. That script is gone and is not what exists today.
+
+The rule it was deleted for still stands, and now matters more rather than
+less: **every push script names its target explicitly.** The current `deploy`
+carries `--theme 000000000000`, and since that theme is live, the id in
+`package.json` is the only thing deciding what gets overwritten. `--allow-live`
+removed the confirmation dialog that used to back it up. Do not replace the id
+with `--live`, and do not remove it and rely on the prompt.
 
 Pushing sends `config/settings_data.json`, so the seeded suf-nav and suf-footer
-settings travel with it and the preview matches local. It also
-*overwrites* that theme's settings, so never aim a push at a theme whose
-settings matter.
+settings travel with it and the pushed theme matches local. It also
+*overwrites* that theme's settings — which, now that the target is published,
+means the live site's. Pull `config/settings_data.json` before pushing if
+anyone has touched the editor since the last deploy.
 
 `shopify theme dev` already provides hot reload for CSS and sections — it
 defaults to `--live-reload hot-reload`. That is not a reason to add a bundler.

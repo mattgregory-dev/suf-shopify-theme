@@ -124,7 +124,7 @@ interchangeable:
 
 ```
 css:watch   sass ... --style=expanded --embed-sources     <- npm run dev
-css:build   sass ... --style=compressed --no-source-map   <- npm run preview
+css:build   sass ... --style=compressed --no-source-map   <- npm run deploy
 ```
 
 `css:build` is the DEPLOY build. `--no-source-map` strips the
@@ -138,7 +138,7 @@ devtools silently undoes their tooling.
 npx sass frontend/styles/main.scss:assets/suf.css --style=expanded --embed-sources
 ```
 
-`css:build` is correct where it is actually used — `npm run preview` runs it
+`css:build` is correct where it is actually used — `npm run deploy` runs it
 before `shopify theme push`, which is exactly when you want compressed output
 and no maps.
 
