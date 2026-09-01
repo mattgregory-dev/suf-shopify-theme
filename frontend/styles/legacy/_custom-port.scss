@@ -693,6 +693,49 @@ h6.product-label {
   color: #000 !important;
 }
 
+// SPACING FOR THE ATTRIBUTE ROWS -- "Type: Guide", "Quantity: [-][1][+]".
+//
+// NOT a regression from the redesign. production's custom.css carried
+// `.product-attributes { display: none }`, so the Type row never rendered on
+// the live site -- and Quantity survived only because dt-framework's
+// `form[class*=shopify-product] .dt-sc-qty { display: flex }` is (0,2,1) and
+// outranks it. Unlinking custom.css brought the Type row back, and
+// migration.md lists it under what that file was hiding.
+//
+// So neither row has ever had spacing of its own: one was invisible, the
+// other's layout came entirely from that flex rule. The markup is
+// `<h6 class="product-label">Type:</h6> Guide` -- a label and a bare text node
+// with nothing between them but collapsed whitespace.
+//
+// TWO SELECTORS, because the quantity label is defended much harder than the
+// other rows and the difference is easy to misjudge.
+//
+// dt-framework has:
+//
+//     form[class*=shopify-product] .dt-sc-qty .product-label { margin: 0 }
+//
+// which is (0,3,1), NOT (0,2,1). `form[class*=shopify-product]` is an
+// attribute selector AND an element -- (0,1,1) on its own -- and the attribute
+// half is the bit that reads as free and is not. It is also a `margin`
+// SHORTHAND, so it resets margin-right even though it never mentions it.
+//
+// The first selector below is (0,2,1) and is enough for the Type row, where
+// nothing competes. The second matches dt-framework's own shape to reach
+// (0,3,2) for the quantity label. Without it that label keeps sitting flush
+// against its buttons while the Type row looks fixed -- a half-applied result
+// that reads like the stylesheet failed to load rather than like a specificity
+// loss.
+.product-attributes h6.product-label,
+form[class*='shopify-product'] .dt-sc-qty h6.product-label {
+  margin-right: 8px;
+}
+
+// The Type row has no margin of its own -- .dt-sc-qty brings its own 30px, so
+// this only reaches rows that are not the quantity block.
+.product-attributes:not(.dt-sc-qty) {
+  margin-bottom: 14px;
+}
+
 #inventory-product {
   display: none !important;
 }
@@ -1236,6 +1279,23 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 // a circle.
 #CartDrawer .ajaxcart__product-image img {
   border-radius: 10px !important;
+}
+
+// The CART PAGE thumbnail takes square corners rather than a reduced radius.
+// It is the larger of the two and sits in a row of square-cornered controls,
+// where a rounded image is the only curve on the page.
+//
+// No !important, unlike the drawer rule above. dt-framework's `a img` is
+// (0,0,2) and declares no !important -- checked, it appears three times in
+// that file and is plain every time -- so a single class clears it. The
+// neighbour's flag looks defensive rather than earned; it is left alone rather
+// than tested on a live cart, but do not copy it into new rules here.
+//
+// NOTE THE DRAWER AND THE PAGE NOW DISAGREE: 10px there, 0 here. That was a
+// deliberate choice for a 60px thumbnail, not an oversight, but if the two
+// should match, this is the pair to change together.
+.cart__image img {
+  border-radius: 0;
 }
 
 // Product title. A link to the product, and the only link in the row -- it
