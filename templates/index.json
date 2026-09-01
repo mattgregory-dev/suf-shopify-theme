@@ -1,0 +1,315 @@
+{
+  "layout": "suf",
+  "sections": {
+    "hero": {
+      "type": "suf-hero",
+      "settings": {
+        "eyebrow": "Personal Trainer Certification & Education",
+        "heading": "Build a training career that <em>actually pays</em>",
+        "subhead": "Show Up Fitness certifies trainers who earn more, get hired at elite gyms, and build real client rosters — not just pass a test.",
+        "image": "shopify://shop_images/homepage-1.webp",
+        "image_alt": "Show Up Fitness seminar — coach demonstrating a resistance band exercise",
+        "button_label": "Get Certified",
+        "button_url": "/pages/suf-cpt",
+        "button2_label": "See Your Path",
+        "button2_url": "#paths"
+      }
+    },
+    "stats": {
+      "type": "suf-statbar",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "figure": "$XXX/hr",
+            "label": "Average SUF-CPT rate"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "figure": "40%",
+            "label": "Higher pay than textbook trainers"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "figure": "$X",
+            "label": "Renewal fees — certified for life"
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "figure": "15+ yrs",
+            "label": "Training trainers since 2008"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {}
+    },
+    "paths": {
+      "type": "suf-paths",
+      "blocks": {
+        "p1": {
+          "type": "path",
+          "settings": {
+            "heading": "Become a Trainer",
+            "body": "Start with the SUF-CPT — the certification built for real-world success.",
+            "cue": "Start Here",
+            "url": "/pages/suf-cpt",
+            "image": "shopify://shop_images/home-02.webp",
+            "image_alt": "Coach demonstrating a resistance band exercise to a trainee"
+          }
+        },
+        "p2": {
+          "type": "path",
+          "settings": {
+            "heading": "Go Further",
+            "body": "Already certified? Add Level 2 certifications and earn more per session.",
+            "cue": "Continuing Ed",
+            "url": "/pages/suf-continuing-education",
+            "image": "shopify://shop_images/exercise-01.webp",
+            "image_alt": "Two trainers doing bicep curls together"
+          }
+        },
+        "p3": {
+          "type": "path",
+          "settings": {
+            "heading": "Learn Hands-On",
+            "body": "Join a 2-day weekend seminar at a Life Time Fitness near you.",
+            "cue": "Find a Seminar",
+            "url": "/pages/suf-seminars",
+            "image": "shopify://shop_images/Best_Certified_Personal_Trainer_Seminars.webp",
+            "image_alt": "Group of trainees at a Show Up Fitness seminar"
+          }
+        },
+        "p4": {
+          "type": "path",
+          "settings": {
+            "heading": "Pass Your Exam",
+            "body": "Study guides for NASM, ACE, and ISSA — clear, practical, free of filler.",
+            "cue": "Get the Guides",
+            "url": "/pages/suf-study-guides",
+            "image": "shopify://shop_images/photo-02.jpg",
+            "image_alt": "Chris holding an NASM personal training textbook"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "p4"
+      ],
+      "settings": {
+        "heading": "Choose your path",
+        "aside": "Four ways in — whether you’re brand new or already certified.",
+        "anchor": "paths"
+      }
+    },
+    "packages": {
+      "type": "suf-packages",
+      "blocks": {
+        "p1": {
+          "type": "package",
+          "settings": {
+            "heading": "SUF-CPT Certification",
+            "price": "$XXX",
+            "body": "Get certified on your budget, at your pace.",
+            "cue": "Learn More",
+            "url": "/pages/suf-cpt"
+          }
+        },
+        "p2": {
+          "type": "package",
+          "settings": {
+            "heading": "SUF-CPT + Seminar",
+            "price": "$XXX",
+            "body": "Certified, plus two days hands-on at a gym near you.",
+            "cue": "Get Started",
+            "url": "/pages/suf-cpt",
+            "featured": true,
+            "flag": "Most Popular"
+          }
+        },
+        "p3": {
+          "type": "package",
+          "settings": {
+            "heading": "Qualified Trainer Package",
+            "price": "$X,XXX",
+            "body": "Everything we teach. New career, one decision.",
+            "cue": "Learn More",
+            "url": "/pages/suf-compare-packages"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "heading": "Simple packages. Honest prices.",
+        "aside": "Lifetime certification — no renewal fees, ever.",
+        "footnote": "<p><a href=\"/pages/suf-compare-packages\">Compare every package side by side →</a></p>"
+      }
+    },
+    "proof": {
+      "type": "suf-proof",
+      "blocks": {
+        "m1": {
+          "type": "mini",
+          "settings": {
+            "rating": 5,
+            "quote": "They even helped me secure a Personal Trainer job at Equinox.",
+            "who": "— Max"
+          }
+        },
+        "m2": {
+          "type": "mini",
+          "settings": {
+            "rating": 5,
+            "quote": "The hands-on learning experience is a game changer! 1000% recommend.",
+            "who": "— Marlene"
+          }
+        },
+        "m3": {
+          "type": "mini",
+          "settings": {
+            "rating": 5,
+            "quote": "If it wasn’t for Show Up Fitness, I would never have been hired at Lifetime and become a manager.",
+            "who": "— Joe"
+          }
+        },
+        "l1": {
+          "type": "logo",
+          "settings": {
+            "logo": "lifetime",
+            "label": "Life Time Fitness"
+          }
+        },
+        "l2": {
+          "type": "logo",
+          "settings": {
+            "logo": "equinox",
+            "label": "Equinox"
+          }
+        },
+        "l3": {
+          "type": "logo",
+          "settings": {
+            "logo": "genesis",
+            "label": "Genesis Sports Clubs"
+          }
+        },
+        "b1": {
+          "type": "badge",
+          "settings": {
+            "text": "Self\nEmployed"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2",
+        "m3",
+        "l1",
+        "l2",
+        "l3",
+        "b1"
+      ],
+      "settings": {
+        "eyebrow": "Trainers Who Show Up",
+        "quote": "NASM gave me a piece of paper. Show Up gave me the knowledge. Best trainers in the world, in person and online.",
+        "quote_who": "— Xavier · <b>SUF-CPT</b>",
+        "gymline_label": "Graduates work at",
+        "note": "Our graduates get hired at the best gyms in the country — or work for themselves with a full book of clients."
+      }
+    },
+    "why": {
+      "type": "suf-spotlight",
+      "blocks": {
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Real sales &amp; pricing skills</b> — how to charge what you’re worth and keep clients"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>Hands-on floor experience</b> — not just multiple-choice anatomy"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "text": "<b>A hiring network</b> — elite gyms that take our graduates first"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "eyebrow": "The SUF-CPT Difference",
+        "heading": "Most certifications teach anatomy. We teach careers.",
+        "body": "<p>Textbook programs send you out knowing how the body works but not how to get clients, set prices, or build a business.</p>",
+        "image": "shopify://shop_images/hero.webp",
+        "image_alt": "Coach cueing a trainee’s push-up on the seminar floor",
+        "image_side": "right",
+        "frame": "red",
+        "button_label": "See What’s Different",
+        "button_url": "/pages/suf-cpt",
+        "button_style": "ghost"
+      }
+    },
+    "founder": {
+      "type": "suf-spotlight",
+      "settings": {
+        "eyebrow": "The Founder",
+        "heading": "He wrote the book on training trainers",
+        "body": "<p>Chris Hitchko has been teaching trainers since 2008. He watched talented people pass their textbook exams, walk onto a gym floor, and wash out within a year — not because they didn’t know anatomy, but because nobody taught them how to actually do the job.</p><p>Show Up Fitness is the school he built to fix that.</p>",
+        "image": "shopify://shop_images/IMG_5337.webp",
+        "image_alt": "Chris kneeling and teaching a group on the studio floor",
+        "image_side": "left",
+        "frame": "blue",
+        "button_label": "Read Chris’s Story",
+        "button_url": "/pages/suf-about",
+        "button_style": "ghost"
+      }
+    },
+    "cta": {
+      "type": "suf-cta",
+      "settings": {
+        "heading": "Ready to show up?",
+        "large_heading": true,
+        "subhead": "The SUF-CPT is $XXX — lifetime certified, no renewals, and built to get you hired.",
+        "button_label": "Get Certified",
+        "button_url": "/pages/suf-cpt",
+        "link_label": "Or talk to a real person first →",
+        "link_url": "/pages/suf-contact"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "stats",
+    "why",
+    "paths",
+    "proof",
+    "packages",
+    "founder",
+    "cta"
+  ]
+}
