@@ -200,13 +200,14 @@ all net-new, so `npm run lint:css` should exit clean. Keep it that way.
 
 `.theme-check.yml` extends `theme-check:recommended`.
 
-- **Baseline is ~680 offenses across 217 files. This is inherited and expected**
+- **Baseline is ~650 offenses across 217 files. This is inherited and expected**
   for a Vintage theme (`DeprecatedFilter`, `DeprecatedTag`, lazysizes). **Do not
   mass-fix.** Treat it as a ratchet: lint new work, leave the legacy count
   alone. It was ~1,080 before unreferenced sections and snippets were removed,
   ~719 before `sections/suf-header.liquid` was forked, and ~735 while both
   headers existed. Deleting them on 2026-08-31 gave back the 16 duplicated
-  offenses and more. New code should still add none.
+  offenses and more, and adding the missing `assets/loading.gif` on
+  2026-09-01 took 679 to 650 from one file. New code should still add none.
 - **Trap: `--fail-level` does not work.** Verified on CLI 3.92.1 — exits `0`
   with 178 errors present, at every level. CI gating must parse
   `--output json` and count offenses itself.
@@ -217,8 +218,12 @@ all net-new, so `npm run lint:css` should exit clean. Keep it that way.
 - A file that fails to parse gets **no other checks run on it**, so fixing a
   syntax error usually *raises* the offense count. That is more coverage, not a
   regression.
-- Some `MissingAsset` offenses are real 404s inherited from the theme, e.g.
-  `assets/loading.gif` is referenced but absent. Production has the file.
+- **`MissingAsset` offenses are real 404s, and they are worth fixing** --
+  unlike most of this baseline. `assets/loading.gif` was 29 of them, one per
+  lazysizes image across 18 inherited files, so it 404'd on nearly every legacy
+  page. Pulling the 43-byte file from production cleared all 29. Two remain,
+  both `snippets/pagination-custom.liquid` on the customer templates. See
+  [migration.md](migration.md).
 
 ## Formatting
 
