@@ -149,3 +149,28 @@
   padding-top: 0;
   border-top: none;
 }
+
+// ---------------------------------------------------------------------------
+// A DOCUMENT SPLIT ACROSS TWO SECTIONS
+//
+// Shopify caps a SECTION at 50 blocks, not a page, so a long legal document
+// has to be rendered by two instances of suf-legal. The `continues` setting
+// marks the second one.
+//
+// .suf-section carries padding-block, so without this the pair would show a
+// full section's padding where they meet and the document would visibly break
+// in half. Only the TOP is zeroed: the bottom still separates the document
+// from whatever follows it.
+//
+// (0,2,0) against `.suf-section` at (0,1,0). No !important and no nesting
+// games needed -- this only ever renders on the suf layout, which loads no
+// legacy stylesheet.
+//
+// Note what is deliberately absent: no hairline seam, unlike
+// .suf-cert--flush-top. That one joins two navy bands, where a rule keeps them
+// legible as two things. Here the split has no meaning to a reader -- it is an
+// artefact of the block cap -- so drawing a line would invent a division the
+// document does not have.
+.suf-section.suf-section--legal-continues {
+  padding-block-start: 0;
+}

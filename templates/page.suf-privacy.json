@@ -17,184 +17,216 @@
         "b01": {
           "type": "heading",
           "settings": {
-            "text": "1. Introduction"
+            "text": "1. Information We Collect"
           }
         },
         "b02": {
           "type": "text",
           "settings": {
-            "text": "<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>"
+            "text": "<p>When you visit any of the Show Up Fitness Sites, Show Up Fitness automatically receives and stores certain types of information including IP addresses, web pages viewed, and dates and times visited. We also collect:</p>"
           }
         },
         "b03": {
-          "type": "text",
+          "type": "subheading",
           "settings": {
-            "text": "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>"
+            "text": "Information you provide"
           }
         },
         "b04": {
-          "type": "heading",
+          "type": "text",
           "settings": {
-            "text": "2. Information We Collect"
+            "text": "<p>Show Up Fitness may collect and maintain (or third parties with whom Show Up Fitness has contracted, may collect and maintain on Show Up Fitness’s behalf) information that you provide to us during your visit to a Show Up Fitness Site. For example, you may provide information to the Site when you register, sign-in, search, participate in sweepstakes, purchase items, request e-mail newsletters, or communicate with Show Up Fitness’s customer service. As a result of those actions, you might supply us with personally identifiable information such as your <strong>name, address, phone number, e-mail address, personal shopping and product preferences, and payment information</strong>.</p>"
           }
         },
         "b05": {
-          "type": "text",
+          "type": "subheading",
           "settings": {
-            "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>"
+            "text": "Device data"
           }
         },
         "b06": {
-          "type": "subheading",
+          "type": "text",
           "settings": {
-            "text": "Information You Provide to Us"
+            "text": "<p>We may collect data from the device you are using, including location data, what type of device it is, what operating system you are using, device settings, unique device identifiers, and crash data. You also may give us permission to access your information in other services. For example, you may be able to link your Facebook, Instagram or Twitter account to a Show Up Fitness Site, which allows us to obtain information from those accounts (like your friends or contacts). The information we get from those services often depends on your settings or their privacy policies, so be sure to check what those are.</p>"
           }
         },
         "b07": {
-          "type": "text",
+          "type": "list",
           "settings": {
-            "text": "<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>"
+            "items": "Device attributes:|information such as the operating system, hardware and software versions, browser type, app and file names and types, and plugins.\nDevice operations:|information about operations and behaviors performed on the device, such as whether a window is foregrounded or backgrounded, or mouse movements (which can help distinguish humans from bots).\nIdentifiers:|unique identifiers, device IDs, and other identifiers, such as from games, apps or accounts you use, and Family Device IDs.\nDevice signals:|Bluetooth signals, and information about nearby Wi-Fi access points, beacons, and cell towers.\nData from device settings:|information you allow us to receive through device settings you turn on, such as access to your GPS location, camera or photos.\nNetwork and connections:|information such as the name of your mobile operator or ISP, language, time zone, mobile phone number, IP address, connection speed and, in some cases, information about other devices that are nearby or on your network.\nCookie data:|data from cookies stored on your device, including cookie IDs and settings.",
+            "numbered": false
           }
         },
         "b08": {
           "type": "subheading",
           "settings": {
-            "text": "Information Collected Automatically"
+            "text": "Use of cookies, log files, devices and other technology"
           }
         },
         "b09": {
           "type": "text",
           "settings": {
-            "text": "<p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>"
+            "text": "<p>Show Up Fitness may use “cookies” to collect or log certain information. A cookie is a small piece of information that a website stores on a personal computer and which it can later retrieve. Show Up Fitness may also use cookies for informational purposes, for example, to store your preferences for certain kinds of products or to serve advertisements tailored to your preferences. If you are uncomfortable with the use of cookie technology, you may get more information on how to opt out of our cookies at any time by emailing showupfitness.com. Please note, if you use more than one type of browser, or more than one computer to access the Internet, you will need to opt out in each browser and on each device that you use. Certain types of Show Up Fitness services, however, could be dependent on cookies, and you may cause those services to be disabled by refusing cookies.</p>"
           }
         },
         "b10": {
           "type": "heading",
           "settings": {
-            "text": "3. How We Use Your Information"
+            "text": "2. Other Reasons We Collect Information about You and How"
           }
         },
         "b11": {
-          "type": "text",
+          "type": "list",
           "settings": {
-            "text": "<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum. We use the information we collect for the following purposes:</p>"
+            "items": "Website Usage.|Show Up Fitness or Show Up Fitness’s authorized service providers may observe activities, preferences, and transactional data (such as your IP address, browser type, and operating system) relating to your use of Show Up Fitness Sites. Show Up Fitness may use this collected or logged information in order to provide better service, to facilitate our customers’ use of the websites, to track usage of the websites, and to address security hazards. Show Up Fitness, or one of Show Up Fitness’s authorized service providers, may also use this information to track aggregate traffic patterns. We may use aggregated, statistical information to describe our customer audience, products and services, and to develop partnerships with third parties to offer products and services that we believe our customers find of interest.\nOnline Transactions.|You may visit a Show Up Fitness Site without registering, but if you enter a sweepstakes or contest, or use other special features that may be offered on our site, you may need to provide us with certain information such as your name, address, phone number, and e-mail address, to open an account with us. We may share your personal information with third parties or affiliates of Show Up Fitness where it is necessary for us to complete a transaction or do something you have asked us to do. We may also use this information to assist you in creating and/or recovering a user ID and a password, to protect your account information and facilitate your use of special features or to complete a transaction.\nUsing Public Areas of Show Up Fitness Sites.|Any information disclosed in public areas of the Show Up Fitness Sites, is public information that may be viewed and collected by any party. We cannot control the use of information disclosed in social networking, chat rooms, reviews, or bulletin board portions of these Sites. You should exercise caution when disclosing information, including photos or images, in public areas of websites and should refrain from disclosing personally identifying information. If you wish to use some of the public portions on these Sites, we will direct you to first create a public ID, which is not your real e-mail address, before you can post information to our Sites. Show Up Fitness reserves the right to remove any information at any time from the Show Up Fitness Sites that we deem inappropriate or for any other reason.\nData Sharing with third parties.|We do not sell your personally identifiable or non-personally identifiable information to third parties for any reason. We may disclose your personally identifiable or non-personally identifiable information to third parties whose products appear on the Show Up Fitness sites and who may want to offer you their own products and services. We may share your personally identifiable and non-personally identifiable information with third parties, or affiliates of Show Up Fitness where it is necessary for us to complete a transaction or do something you have asked us to do, such as payment processing. We may share your personally identifiable and non-personally identifiable information with third parties with whom we have contracted to perform services on our behalf. All companies that act on our behalf are contractually obligated to keep the personal information we provide to them confidential and to use the personal information we share only to provide the services we ask them to perform.",
+            "numbered": false
           }
         },
         "b12": {
-          "type": "list",
+          "type": "text",
           "settings": {
-            "items": "Deliverum et molestias to provide, operate, and maintain our courses and services.\nExcepturi sint occaecati to process enrollments, payments, and certification records.\nCupiditate non provident to send administrative messages, updates, and support responses.\nSimilique sunt in culpa to improve the website experience and measure engagement.\nOfficia deserunt mollitia to comply with legal obligations and enforce our terms.",
-            "numbered": false
+            "text": "<p>We may disclose personally identifiable and non-personally identifiable information about our customers as permitted or required by law, such as in connection with a subpoena or similar legal process, or in connection with a merger, acquisition, or bankruptcy.</p>"
           }
         },
         "b13": {
           "type": "heading",
           "settings": {
-            "text": "4. Cookies and Tracking Technologies"
+            "text": "3. Data Retention"
           }
         },
         "b14": {
-          "type": "text",
+          "type": "list",
           "settings": {
-            "text": "<p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.</p>"
+            "items": "Personal Data.|Personal data shall be kept for as long as is necessary for the purposes as described herein. We may store personal data for longer periods insofar as the personal data will be processed solely for archiving purposes in the public interest, scientific or historical research purposes, regulatory or statistical purposes. If you wish for us to cease storing your personal data, please email showupfitness.com.\nNon-personally Identifiable Data.|Show Up Fitness is required to retain certain non–personally identifiable information collected from users of the Show Up Fitness Sites, Affiliated Sites and Non-Affiliated Sites in order to provide audited information to advertisers and auditors. As a result, ad reporting and delivery data is retained for as long as is necessary for these purposes. Some of the ad reporting and delivery data may be aggregated for statistical purposes and retained indefinitely. Certain aggregated, non-personally identifiable information including historical data and attributes collected by Show Up Fitness prior to an opt out election and which represent large numbers of users combined into aggregated statistical data and information shall be kept despite the fact that the user has opted out. Some of the aggregated, non-personally identifiable information may be further aggregated for statistical purposes and retained indefinitely.",
+            "numbered": false
           }
         },
         "b15": {
-          "type": "heading",
+          "type": "text",
           "settings": {
-            "text": "5. How We Share Information"
+            "text": "<p>Additionally, Show Up Fitness reserves the right to retain and use any information described in this Privacy and Security Policy as reasonably necessary to comply with all laws or regulations, regardless of any limitations set forth in this Policy. Show Up Fitness reserves the right to change its data retention policy and the new data retention policy shall apply to all data collected following such change.</p>"
           }
         },
         "b16": {
-          "type": "text",
+          "type": "heading",
           "settings": {
-            "text": "<p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet. We may share information with the following categories of recipients:</p>"
+            "text": "4. Security Practices"
           }
         },
         "b17": {
-          "type": "list",
+          "type": "text",
           "settings": {
-            "items": "Service providers.|Ut et voluptates repudiandae sint et molestiae non recusandae, itaque earum rerum hic tenetur a sapiente delectus.\nCertification partners.|Aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\nLegal and safety.|Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat.",
-            "numbered": true
+            "text": "<p>Our internal data security policies restrict access to customers’ personal information to authorized employees. Authorized employees may use our customers’ personal information for Show Up Fitness business purposes only. Our employees are bound by Show Up Fitness policies that require them to maintain the confidentiality of our customers’ personal information. Employees who violate these requirements are subject to disciplinary action, up to and including termination. We maintain physical, electronic, and procedural safeguards that are designed to guard our customers’ personal information. For example, for the security of your online visit to a Show Up Fitness Site, we may make use of firewall barriers, encryption techniques, and/or authentication procedures. Unfortunately, no data transmission over the Internet can be guaranteed to be absolutely secure. As a result, while we strive to protect your personal information, Show Up Fitness cannot ensure or warrant the security of any information you transmit to us, and you do so at your own risk. In the event of a breach of the confidentiality or security of your personal information, we will notify you as necessary, so you can take appropriate protective steps. Unless you indicate otherwise, we may notify you under such circumstances using the email address you provided to us when you registered with the Show Up Fitness Site.</p>"
           }
         },
         "b18": {
-          "type": "heading",
+          "type": "text",
           "settings": {
-            "text": "6. Data Retention"
+            "text": "<p>You should be careful to maintain the secrecy of your passwords and/or account information and be responsible about protecting your personal information and identity whenever you are online.</p>"
           }
         },
         "b19": {
-          "type": "text",
+          "type": "heading",
           "settings": {
-            "text": "<p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat quibusdam et aut officiis debitis.</p>"
+            "text": "5. Links to Third-Party Sites"
           }
         },
         "b20": {
-          "type": "heading",
+          "type": "text",
           "settings": {
-            "text": "7. Your Rights and Choices"
+            "text": "<p>Show Up Fitness Sites may contain links to third-party sites, which are maintained by third parties. Please be aware that Show Up Fitness is not responsible for and cannot control the privacy policies of these other linked sites or their practices. We encourage you to read the privacy policies on these sites for applicable privacy practices relating to personally identifiable information you may choose to provide in interacting with these websites and the non-personally identifiable information collected through the use of cookies and other technologies collected via those sites because they may differ from Show Up Fitness’s privacy practices.</p>"
           }
         },
         "b21": {
-          "type": "text",
+          "type": "heading",
           "settings": {
-            "text": "<p>Depending on where you live, you may have the following rights regarding your personal information:</p>"
+            "text": "6. Show Up Fitness Sites Are Not for Use by Children"
           }
         },
         "b22": {
-          "type": "list",
+          "type": "text",
           "settings": {
-            "items": "Voluptatem accusantium the right to access the information we hold about you.\nDoloremque laudantium the right to correct inaccurate or incomplete information.\nTotam rem aperiam the right to request deletion of your information.\nEaque ipsa quae the right to opt out of certain marketing communications.",
-            "numbered": false
+            "text": "<p>Children are not eligible to use Show Up Fitness Sites. We ask that minors (under the age of 18) only use Show Up Fitness Sites in conjunction with their parents or guardians. If you learn that your minor child has provided us with personal information without your consent, please contact us.</p>"
           }
         },
         "b23": {
           "type": "heading",
           "settings": {
-            "text": "8. Data Security"
+            "text": "7. Mergers, Acquisitions, and Bankruptcy"
           }
         },
         "b24": {
           "type": "text",
           "settings": {
-            "text": "<p>Quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est.</p>"
+            "text": "<p>If Show Up Fitness should ever file for bankruptcy or merge with another company, or if Show Up Fitness should decide to buy another business or sell or reorganize part or all of Show Up Fitness’s business, Show Up Fitness may be required to disclose both the information you provide to Show Up Fitness and the information gathered by Show Up Fitness to prospective or actual purchasers and other parties. It is Show Up Fitness’s practice to obtain appropriate protections for information disclosed in these types of transactions. Show Up Fitness cannot, however, guarantee that Show Up Fitness’s Privacy and Security Policy will remain unchanged if Show Up Fitness is sold or merges with another company.</p>"
           }
         },
         "b25": {
           "type": "heading",
           "settings": {
-            "text": "9. Children’s Privacy"
+            "text": "8. Managing Your Privacy Choices"
           }
         },
         "b26": {
-          "type": "text",
+          "type": "list",
           "settings": {
-            "text": "<p>Consectetur adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem ut enim ad minima veniam.</p>"
+            "items": "Updating Your Contact Preferences and Personal Information on Show Up Fitness Sites.|You have choices when it comes to how Show Up Fitness uses your personal information. You can choose not to receive communications from us by e-mail. If you elect not to receive information by e-mail, Show Up Fitness may continue to contact you as necessary to service your account. You can change your contact preferences at any time by emailing showupfitness.com. Keeping your account information accurate and up-to-date is very important, so we can provide you with excellent service. If your account information is incomplete, inaccurate, or not current, please follow the instructions on the applicable Show Up Fitness Site to correct your account information online. If you need additional assistance, please contact Show Up Fitness customer service at email@example.com. Additionally, if you would like to request any changes as to what personal data we collect, please email us at email@example.com.\nDeleting Your Information.|You have the right to obtain the erasure of personal data without undue delay. Please contact email@example.com if you would like us to delete your personal data.",
+            "numbered": false
           }
         },
         "b27": {
-          "type": "heading",
+          "type": "subheading",
           "settings": {
-            "text": "10. Changes to This Policy"
+            "text": "California residents"
           }
         },
         "b28": {
           "type": "text",
           "settings": {
-            "text": "<p>Quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. We will post any changes on this page and update the date above.</p>"
+            "text": "<p>California residents have the right to:</p>"
           }
         },
         "b29": {
-          "type": "heading",
+          "type": "list",
           "settings": {
-            "text": "11. Contact Us"
+            "items": "Know what personal information is being collected;\nAccess the personal information that is collected within 45 days of request, and request it be deleted;\nKnow whether your personal information is being shared, and if so, with whom;\nOpt-out of the sale of your personal information; and\nHave equal service and price, whether or not you choose to exercise your privacy rights.",
+            "numbered": false
           }
         },
         "b30": {
+          "type": "heading",
+          "settings": {
+            "text": "9. This Privacy Policy Applies to U.S. Customers"
+          }
+        },
+        "b31": {
           "type": "text",
           "settings": {
-            "text": "<p>Questions about this policy? Reach us at <a href=\"mailto:email@example.com\">email@example.com</a> or (000) 000-0000, or visit our <a href=\"/pages/suf-contact\">contact page</a>.</p>"
+            "text": "<p>If you are visiting our Site from outside of the United States, please be aware that you are sending information (including personal data) to the United States where our servers are located. That information may then be transferred within in the United States or back out of the United States to other countries outside of your country of residence, depending on the type of information and how it is stored by us. These countries (including the United States) may not have data protection laws as comprehensive or protective as those in your country of residence; however, our collection, storage and use of your personal data will at all times continue to be governed by this Privacy Policy. In addition, such data may be stored on servers located outside your resident jurisdiction, which may have less stringent privacy practices than your own.</p>"
+          }
+        },
+        "b32": {
+          "type": "heading",
+          "settings": {
+            "text": "10. Contact Information"
+          }
+        },
+        "b33": {
+          "type": "text",
+          "settings": {
+            "text": "<p>If you have questions regarding your user account, our Privacy and Security Policy, your privacy choices, our Terms of Service, or any other topic, we are always happy to answer any questions or concerns you may have. You may email us at email@example.com or write us at Show Up Fitness, 123 Example Street Example City, 00000.</p>"
+          }
+        },
+        "b34": {
+          "type": "heading",
+          "settings": {
+            "text": "11. Limitation of Liability"
+          }
+        },
+        "b35": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>YOU UNDERSTAND AND AGREE THAT SHOW UP FITNESS’S LIABILITY REGARDING ANY DISPUTE OVER PRIVACY OR RELATED TO THIS PRIVACY AND SECURITY POLICY ARE HEREBY LIMITED AS SET FORTH IN THE SHOW UP FITNESS SITES TERMS OF SERVICE.</strong></p>"
           }
         }
       },
@@ -228,11 +260,16 @@
         "b27",
         "b28",
         "b29",
-        "b30"
+        "b30",
+        "b31",
+        "b32",
+        "b33",
+        "b34",
+        "b35"
       ],
       "settings": {
-        "updated": "Last updated: August 27, 2026",
-        "lead": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. This Privacy Policy explains how we handle personal information and is provided here as placeholder copy for layout review.</p>"
+        "updated": "Revised and posted as of September 1, 2026",
+        "lead": "<p>Show Up Fitness, 123 Example Street Example City, 00000 (“Show Up Fitness”) owns and operates this website (the “Site”) and other websites and mobile applications (collectively the “Show Up Fitness Sites” or “Sites”). This Privacy Policy applies to the collection of information on all the Show Up Fitness Sites.</p>"
       }
     }
   },

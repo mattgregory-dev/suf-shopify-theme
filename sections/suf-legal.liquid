@@ -27,7 +27,27 @@
 
 {%- assign anchor = section.settings.anchor | handle -%}
 
-<div class="suf-section" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
+{%- comment -%}
+  CONTINUES A SECTION ABOVE IT. A long document has to be split across two
+  instances of this section, because Shopify caps a SECTION at 50 blocks --
+  not a page. Splitting is the only way past that ceiling, and it costs a seam:
+  .suf-section carries padding-block, so two stacked instances double it and
+  the document visibly breaks in half.
+
+  This zeroes the top padding on the continuation so the two read as one
+  document. Same idea as suf-cert's flush_top, and named to match.
+
+  NO HAIRLINE SEAM HERE, unlike suf-cert. That one joins two navy bands and
+  needs the rule to stay legible as two things. This is body copy on the page
+  background, where a rule would announce a division that does not exist -- the
+  split is an implementation detail of the block cap, not part of the document.
+{%- endcomment -%}
+{%- assign section_classes = 'suf-section' -%}
+{%- if section.settings.continues -%}
+  {%- assign section_classes = section_classes | append: ' suf-section--legal-continues' -%}
+{%- endif -%}
+
+<div class="{{ section_classes }}" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
   <div class="suf-wrap">
     <div class="suf-legal">
       {%- if section.settings.updated != blank -%}
@@ -119,6 +139,13 @@
   "max_blocks": 50,
   "settings": [
     { "type": "text", "id": "anchor", "label": "Anchor id" },
+    {
+      "type": "checkbox",
+      "id": "continues",
+      "label": "Continues the section above",
+      "info": "For a document long enough to need two of these sections -- a section is capped at 50 blocks. Zeroes the top padding so the two read as one document. Leave the heading numbering running on, and leave \"Last updated\" and the opening paragraph on the FIRST one only.",
+      "default": false
+    },
     {
       "type": "text",
       "id": "updated",
