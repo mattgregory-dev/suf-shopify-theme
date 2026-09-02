@@ -9,9 +9,9 @@
         "subhead": "Two ways in. Start with where you are.",
         "tier_3": true,
         "overlap": false,
-        "button_label": "New to Personal Training? Start Here",
+        "button_label": "New? Start Here",
         "button_url": "#new-trainers",
-        "button2_label": "Already Certified? Level Up Here",
+        "button2_label": "Certified? Level Up Here",
         "button2_url": "#continuing-ed"
       }
     },
@@ -44,7 +44,8 @@
             "button_style": "primary",
             "micro": "Straight to secure checkout",
             "product": "suf-cpt-plus-seminar-bundle",
-            "go_to_checkout": true
+            "go_to_checkout": true,
+            "seminar_credit": true
           }
         },
         "p3": {
@@ -58,7 +59,9 @@
             "button_style": "primary",
             "micro": "Straight to secure checkout",
             "product": "qualified-trainer-package",
-            "go_to_checkout": true
+            "go_to_checkout": true,
+            "seminar_credit": true,
+            "seminar_credit_value": "3 seminar credits — to be booked later"
           }
         },
         "r1": {

@@ -171,13 +171,13 @@
         "f2": {
           "type": "feature",
           "settings": {
-            "text": "<b>3.0–4.0 CEUs</b>, depending on your two"
+            "text": "<b>3.1–4.0 CEUs</b>, depending on your two"
           }
         },
         "f3": {
           "type": "feature",
           "settings": {
-            "text": "<b>6 months of SUF Library access</b> with daily live calls"
+            "text": "<b>3–6 months of SUF Library access</b> with daily live calls"
           }
         }
       },
@@ -190,18 +190,18 @@
         "anchor": "bundle",
         "eyebrow": "The Smart Buy",
         "heading": "Continuing Education Bundle — Any Two for $XXX",
-        "body": "<p>Pick any two: the Soft Tissue Mobilization Certification, the Nutrition Coach Certification, or a weekend seminar at a Life Time Fitness near you. Bought separately, any two run $X,XXX — the bundle saves you $XXX. And your SUF Library access extends from 3 months to 6.</p>",
+        "body": "<p>Pick any two: the Soft Tissue Mobilization Certification, the Nutrition Coach Certification, or a weekend seminar at a Life Time Fitness near you. Bought separately, any two run $X,XXX — the bundle saves you $XXX. Take both certifications and your SUF Library access extends from 3 months to 6.</p>",
         "product": "continuing-education-bundle",
         "button_label": "Buy Now",
         "go_to_checkout": true,
         "compare_note": "$X,XXX bought separately",
-        "micro": "<p>Straight to secure checkout — pick your two at checkout. Adding a seminar? <a href=\"/pages/suf-seminars\">Browse seminar cities</a></p>",
+        "micro": "<p>Straight to secure checkout</p>",
         "image": "shopify://shop_images/photo-06.jpg",
         "image_alt": "Trainers holding Become a Personal Trainer books in front of a Lifetime University sign",
         "image_side": "right",
         "frame": "red",
         "dark": true,
-        "pointer": "<p>Want everything we teach — all three certifications and all three seminars, with lifetime library access? <a href=\"/pages/suf-compare-packages\">Compare every package, including the Qualified Trainer Package →</a></p>",
+        "pointer": "<p>Want all three certifications and all three seminars? <a href=\"/pages/suf-compare-packages\">Compare every package →</a></p>",
         "flush_top": true,
         "seminar_credit": true,
         "events_collection": "seminars",

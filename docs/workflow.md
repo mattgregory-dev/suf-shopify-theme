@@ -265,6 +265,51 @@ all net-new, so `npm run lint:css` should exit clean. Keep it that way.
   both `snippets/pagination-custom.liquid` on the customer templates. See
   [migration.md](migration.md).
 
+## Comments
+
+One test, before writing any comment:
+
+> **Would a competent person reading this code re-break it without the note?**
+
+If no, don't write it. Most of what fails that test is narration.
+
+**Earns its place**
+
+- A trap that gives no error — `text-wrap: balance` on an inline box, `| date:`
+  on a concatenated string, `item.properties.size` reading falsy, a tag
+  delimiter inside a `#` comment.
+- **A rejected alternative that looks obviously better.** The highest-value
+  kind: it is what stops the next person "fixing" it back.
+- An external contract you cannot see from here — Shopify drops blank line item
+  properties, 50 blocks per section, iOS zooms inputs under 16px.
+- A value that looks arbitrary and is not. One line: `// 54ch: centred text has
+  no left edge to return to`.
+
+**Does not**
+
+- **Anything that came from a taste instruction** — "move it 3px", "make it
+  navy", "drop the margin". Somebody decided, the code shows the decision,
+  there is nothing to preserve. This is the common failure.
+- What the code already says.
+- **History.** "This used to be X, changed on 2026-08-31." That is `git log`.
+- The second sentence restating the first.
+
+**Limits**
+
+1. Inline comments: **3 lines**. Longer belongs in `docs/`, or is not worth
+   saying.
+2. File header blocks only where a file has real architecture — `suf-semlist`,
+   `suf-cert`. The header says what the file *is*, not the story of building
+   it.
+
+A comment costs a line of code. Three lines on a one-line change is nearly
+always wrong.
+
+**When trimming an existing block, use a scalpel.** Cut the history, the taste
+notes and the restatement; keep the traps and the rejected alternatives. A big
+block is a pet peeve, not a defect — some of them are load-bearing throughout.
+Less editing is more.
+
 ## Formatting
 
 Prettier + `@shopify/prettier-plugin-liquid`, configured but **deliberately not

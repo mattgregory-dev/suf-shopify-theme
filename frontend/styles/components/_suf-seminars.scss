@@ -157,38 +157,122 @@
   border-top: 1px solid var(--suf-color-border-subtle);
 }
 
+// THE CARD IS THE ROW; THE GRID IS THE LINE INSIDE IT.
+//
+// The row is a <details> now, so the two jobs had to separate. `.suf-semrow`
+// is the surface -- background, shadow, the red edge -- and `.suf-semrow__line`
+// is the five-column line, which renders as a <summary> on a row that opens
+// and a <div> on one that cannot. Leaving the grid on the row itself would
+// have laid the panel out as a sixth column.
 .suf-semrow {
+  border-bottom: 1px solid var(--suf-color-border-subtle);
+  color: inherit;
+
+  // THE ROW LOOKS LIKE A CARD AT REST, not only under the cursor.
+  //
+  // It used to sit flat on the page band and lift only on hover. Two problems
+  // with that, and the second is the real one:
+  //
+  // 1. On a page whose next section is a heavy shadowed panel, a flat row
+  //    reads as background. The thing being sold looked less important than
+  //    the thing describing it.
+  // 2. HOVER IS NOT AVAILABLE TO EVERYONE. On touch there is no resting hover
+  //    state at all, so every visitor on a phone -- the majority here -- only
+  //    ever saw the flat version. A treatment that exists only on hover is a
+  //    treatment half the audience never sees.
+  //
+  // So the card is the default and hover LIFTS it further. The shadow is
+  // deliberately lighter at rest than the old hover value was: it has to read
+  // as a surface without competing with the guarantee panel below, and it has
+  // to leave somewhere for hover to go.
+  position: relative;
+  background: var(--suf-color-surface);
+  box-shadow:
+    inset 4px 0 0 0 var(--suf-red),
+    0 6px 18px rgb(0 32 54 / 8%);
+  transition:
+    box-shadow var(--suf-transition),
+    transform var(--suf-transition);
+
+  // `:has()` rather than `:hover` alone, so an OPEN row keeps the raised
+  // treatment after the cursor leaves it. An open panel that visually drops
+  // back to resting reads as though it closed.
+  &:hover,
+  &:has(> summary:focus-visible),
+  &[open] {
+    // Raised above the neighbouring rows so the larger shadow is not clipped
+    // by the row below, which paints its own background.
+    position: relative;
+    z-index: 1;
+    box-shadow:
+      inset 4px 0 0 0 var(--suf-red),
+      0 18px 38px rgb(0 32 54 / 16%);
+  }
+
+  // The lift is for the closed, hovered row only. Raising a row that has just
+  // grown by 120px moves the panel under the cursor as it opens.
+  &:hover:not([open]) {
+    // A 2px rise. Enough to register as "this one", small enough not to shift
+    // the text under a reading eye.
+    transform: translateY(-2px);
+  }
+
+  &:hover .suf-semrow__cue,
+  &[open] .suf-semrow__cue {
+    color: var(--suf-color-accent);
+    border-color: var(--suf-color-accent);
+  }
+
+  &:hover .suf-semrow__arrow {
+    transform: translateX(5px);
+  }
+
+  &[open] .suf-semrow__chev {
+    transform: rotate(-135deg) translate(-2px, -2px);
+  }
+
+  // The lift is decoration; the shadow and colour change still carry the
+  // meaning without it.
+  @media (prefers-reduced-motion: reduce) {
+    transition: box-shadow var(--suf-transition);
+
+    &:hover:not([open]) {
+      transform: none;
+    }
+  }
+}
+
+// The five-column line: a <summary> when the row opens, a <div> when it does
+// not. Both take the same class so the two shapes cannot drift apart.
+.suf-semrow__line {
   display: grid;
   // city | date | focus | price | cue
   grid-template-columns: 1.1fr 1.2fr 1fr 80px auto;
   gap: var(--suf-space-3);
   align-items: center;
   padding: 26px 18px;
-  border-bottom: 1px solid var(--suf-color-border-subtle);
-  color: inherit;
-  text-decoration: none;
   cursor: pointer;
-  transition:
-    background-color var(--suf-transition),
-    box-shadow var(--suf-transition);
 
-  &:hover,
+  // Both are needed to remove the disclosure triangle: `list-style` is the
+  // standard route and the ::-webkit- pseudo-element is what older WebKit
+  // actually reads. Neither alone clears it everywhere.
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  // The row is one control, so a drag across it should not select the text as
+  // though it were a paragraph. Only on the summary -- the panel below holds
+  // an address someone will want to copy.
+  user-select: none;
+
+  // The focus ring goes on the summary rather than the details, because the
+  // summary is what actually receives focus. Inset so it is not clipped by the
+  // neighbouring row's background.
   &:focus-visible {
-    position: relative;
-    z-index: 1;
-    background: var(--suf-color-surface);
-    box-shadow:
-      inset 4px 0 0 0 var(--suf-red),
-      0 14px 30px rgb(0 32 54 / 12%);
-
-    .suf-semrow__cue {
-      color: var(--suf-color-accent);
-      border-color: var(--suf-color-accent);
-    }
-
-    .suf-semrow__arrow {
-      transform: translateX(5px);
-    }
+    outline: 2px solid var(--suf-color-focus);
+    outline-offset: -4px;
   }
 
   // 820px: five columns become a two-column stack -- details left, price and
@@ -211,6 +295,105 @@
       justify-self: end;
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// THE PANEL
+//
+// The four facts that used to be the only reason to visit the product page:
+// venue, address, map link and hours -- plus the buy button, so the decision
+// and the purchase happen in the same place.
+// ---------------------------------------------------------------------------
+
+.suf-semrow__panel {
+  display: grid;
+  gap: var(--suf-space-4);
+  align-items: start;
+  padding: 0 18px 26px 22px;
+
+  @media (min-width: 641px) {
+    grid-template-columns: 1fr auto;
+  }
+
+  @media (max-width: 820px) {
+    padding: 0 14px 20px 18px;
+  }
+}
+
+.suf-semrow__facts {
+  display: grid;
+  gap: var(--suf-space-3);
+  margin: 0;
+}
+
+.suf-semrow__fact {
+  dt {
+    margin-bottom: 3px;
+    color: var(--suf-color-text-muted);
+    font-size: var(--suf-font-size-micro);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--suf-color-text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+}
+
+// The address sits under the venue name rather than beside it: they are one
+// answer to "where", and a comma between them reads as two.
+.suf-semrow__addr {
+  display: block;
+  color: var(--suf-color-text-muted);
+}
+
+.suf-semrow__map {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--suf-color-link);
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--suf-color-accent);
+  }
+}
+
+// The button holds its own width instead of stretching across a wide panel,
+// where a full-bleed bar would read as a section footer rather than as this
+// row's action.
+.suf-semrow__panel .suf-btn {
+  align-self: end;
+  justify-self: start;
+  white-space: nowrap;
+
+  @media (max-width: 640px) {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.suf-semrow__form {
+  margin: 0;
+}
+
+// A chevron built from two borders rather than a glyph, so it inherits colour
+// and rotates cleanly. -45deg points down; the [open] rule above turns it up.
+.suf-semrow__chev {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  transform: rotate(45deg) translate(-1px, -1px);
+  transition: transform var(--suf-transition);
 }
 
 .suf-semrow__city {

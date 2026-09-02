@@ -1,3 +1,5 @@
+@use '../mixins' as m;
+
 // Study guides: product cards + the guarantee callout.
 //
 // Ported from the mockup, section 11, with one structural change.
@@ -192,6 +194,21 @@
   // margin on top of the wrapper's own.
   p {
     margin: 0;
+  }
+
+  // No gap between paragraphs: cta-link's 2.3 line-height already opens one.
+  //
+  // The mixin on the wrapper rather than .suf-link on the link, because the
+  // copy is a richtext setting and the merchant writes the <a>. Scoped to this
+  // wrapper only -- a prose link in a body paragraph must stay a prose link.
+  a {
+    @include m.cta-link;
+
+    // inline-block is load-bearing: `balance` acts on a block container's own
+    // line boxes, and the mixin sets `display: inline`, which has none. On an
+    // inline box it is silently ignored -- it looks applied in devtools.
+    display: inline-block;
+    text-wrap: balance;
   }
 
   // Both tags, because the copy comes from a richtext setting and Shopify's

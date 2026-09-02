@@ -103,10 +103,12 @@
                 cart, on the order and in the admin -- that is where staff pick
                 it up to enrol someone.
 
-                An EMPTY value is meaningful, not missing: it records "to be
-                scheduled". Shopify hides properties with a blank value from
-                the cart, which is the behaviour we want -- someone who has not
-                chosen sees no half-answered line.
+                IT ALWAYS CARRIES A VALUE. "Choose later" submits an explicit
+                "Credit -- to be booked later" rather than a blank, so every
+                order that includes a seminar says so on its face. Blank would
+                be dropped by Shopify, and a seminar bundle showing no seminar
+                line cannot be told apart from one where the picker failed.
+                The reasoning is in snippets/suf-seminar-options.liquid.
               {%- endcomment -%}
               {%- comment -%}
                 WHAT THE BUYER IS CHOOSING, for a bundle that is "any two of

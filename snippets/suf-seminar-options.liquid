@@ -35,21 +35,34 @@
      date order. The INDEX is carried rather than the handle because
      `all_products` is capped at 20 lookups a page.
 
-  Metafield keys are `custom.custom_seminar_*`. The "custom" is doubled and
-  that is not a typo; see docs/redesign-open-items.md.
+  Metafield keys are `custom.seminar_*`. They were `custom.custom_seminar_*`
+  until 2026-09-02 -- a definition's Name had been typed as "custom.seminar_x"
+  and Shopify slugged the key from it inside the namespace it already had.
+  Renamed at source, so nothing carries the doubling now.
 {% endcomment %}
 
 {%- liquid
   assign today = 'now' | date: '%Y%m%d' | plus: 0
 -%}
 
-<option value="" selected>I'll choose later — use my credit anytime</option>
+{%- comment -%}
+  LABEL is read in the closed select, which clips rather than wraps: keep it
+  under ~36 characters. VALUE goes to the order, where staff read it weeks
+  later, so it names what is outstanding.
+
+  NOT BLANK: Shopify drops a blank property, and a seminar bundle with no
+  Seminar line cannot be told apart from one where the picker failed.
+
+  Cost: with JS blocked, a two-certification order carries this line
+  spuriously. The Selection property above it contradicts it visibly.
+{%- endcomment -%}
+<option value="Credit — to be booked later" selected>Choose later — use my credit</option>
 
 {%- if events != blank -%}
   {%- liquid
     assign keyed = ''
     for p in events.products
-      assign starts = p.metafields.custom.custom_seminar_start.value | date: '%Y%m%d'
+      assign starts = p.metafields.custom.seminar_start.value | date: '%Y%m%d'
       if starts == blank
         assign starts = '99999999'
       endif
@@ -63,8 +76,8 @@
       assign idx = key | split: '~' | last | plus: 0
       assign seminar = events.products[idx]
 
-      assign starts = seminar.metafields.custom.custom_seminar_start.value
-      assign ends = seminar.metafields.custom.custom_seminar_end.value | default: starts
+      assign starts = seminar.metafields.custom.seminar_start.value
+      assign ends = seminar.metafields.custom.seminar_end.value | default: starts
 
       # Judged on the END date, so a two-day seminar is still bookable on its
       # first morning -- same rule the seminars page applies.
@@ -74,7 +87,9 @@
         assign is_past = true
       endif
 
-      assign city = seminar.metafields.custom.custom_seminar_city.value
+      # city_state, not city: this string ends up on an order line, where
+      # "Tampa" alone is ambiguous to whoever is booking the seat.
+      assign city = seminar.metafields.custom.seminar_city_state.value | default: seminar.metafields.custom.seminar_city.value
 
       # Each half formatted on its own line. Chaining them pipes the whole
       # concatenated string into `date`, not the end date.

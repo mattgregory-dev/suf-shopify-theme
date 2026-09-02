@@ -1,62 +1,66 @@
 {% comment %}
   Upcoming events. The buy point of the seminars page.
 
-  TWO SOURCES, and the collection wins when it is set.
+  TWO SOURCES: a collection (one row per product, read from metafields), or
+  hand-authored blocks when none is set. Blocks are the fallback because a
+  typed price does not follow the product it sits beside -- and a dead handle
+  degrades to those typed values silently, which has happened here once.
 
-    collection   one row per product, everything read from metafields
-    blocks       hand-authored rows, used when no collection is chosen
-
-  Blocks are the fallback rather than the primary because a typed price is a
-  lie waiting to happen: it sits next to a real product and does not follow it.
-  A dead product handle behaves the same way -- Liquid returns nothing rather
-  than erroring, so the row silently falls back to typed values and looks
-  perfectly normal. That has already happened once here, when a product was
-  renamed. In collection mode the product is the only source, so a missing one
-  is a missing row.
-
-  THE SETTING IS `events_collection`, NOT `collection`. A setting whose id is
-  `collection` collides with Liquid's global collection drop and reads back
-  EMPTY -- `section.settings.collection` is blank however valid the template
-  JSON is. Nothing errors; the section just falls through to the blocks branch
-  and renders plausible-looking rows from the wrong source. Do not rename it
-  back. The same caution applies to `product`, `cart` and `customer`.
+  THE SETTING IS `events_collection`, NOT `collection`. That id collides with
+  Liquid's global collection drop and reads back EMPTY, so the section falls
+  through to blocks and renders plausible rows from the wrong source. Same for
+  `product`, `cart` and `customer`.
 
   METAFIELDS, all on the product, all namespace `custom`:
 
-    custom_seminar_city    single line text   "Tampa, FL"
-    custom_seminar_start   date               2026-09-25
-    custom_seminar_end     date               2026-09-26
-    custom_seminar_focus   single line text   "Upper Body", blank = TBA
+    seminar_city       single line text  "Tampa"      -- street line only
+    seminar_city_state single line text  "Tampa, FL"  -- the row's city cell
+    seminar_start      date              2026-09-25
+    seminar_end        date              2026-09-26
+    seminar_focus      single line text  "Upper Body", blank = TBA
+    seminar_venue      single line text  "Example Gym Downtown"
+    seminar_address    single line text  "100 Example Avenue" (street)
+    seminar_map        url               the Google Maps link
+    seminar_time_start date and time     only the TIME half is shown
+    seminar_time_end   date and time     only the TIME half is shown
 
-  The displayed date is DERIVED from start and end, so nobody types
-  "September 25 & 26" and nobody can mistype it. Same month collapses to
-  "September 25 & 26"; different months render both.
+  The last six feed the detail panel and are ALL OPTIONAL -- an empty one
+  renders nothing rather than a blank label, and a row with none of them still
+  opens to its buy button.
 
-  SORTING. Liquid cannot sort a collection by a metafield -- `sort` reaches
-  simple properties only. So the rows are ordered by building an array of
-  `YYYYMMDD~index` strings and sorting THAT: the key is zero-padded and
-  fixed-width, which makes a lexical sort chronological. The loop index rather
-  than the handle avoids `all_products`, which is capped at 20 lookups a page.
+  Address is single line, not multi-line: multi-line returns newlines that read
+  as one run-on unless every consumer remembers newline_to_br.
 
-  A product with no start date sorts last on 99999999 rather than jumping to
-  the front on an empty key.
+  HOURS ARE TWO TIMESTAMPS, and only the time halves show. Shopify has no
+  time-only type, so each carries a date duplicating seminar_start -- which on
+  a two-day seminar would contradict the row, since the end time is on day two
+  but the hours line describes both days.
+
+  date_time has NO TIMEZONE: it renders in the store's, not the venue's. 9am
+  entered shows as 9am everywhere, which is wanted -- but only because nothing
+  converts it. Do not "fix" that.
+
+  The displayed date is DERIVED from start and end, so nobody can mistype it.
+  Same month collapses to "September 25 & 26"; different months render both.
+
+  SORTING. Liquid cannot sort a collection by a metafield, so rows are ordered
+  by building `YYYYMMDD~index` strings and sorting those -- zero-padded and
+  fixed-width, so a lexical sort is chronological. The index rather than the
+  handle avoids `all_products`, capped at 20 lookups a page. No start date
+  sorts last on 99999999 rather than first on an empty key.
 
   PAST EVENTS DROP OFF by themselves, judged on the end date so a seminar is
-  still listed on its first morning. Nothing has to be remembered.
+  still listed on its first morning.
 
-  WHERE THE ROW GOES. A row is an <a>, and an <a> cannot contain the <form>
-  that a true "straight to checkout" needs, so there are two honest options:
-  the product page, or /cart/{variant}:1. Neither lands the buyer on checkout.
+  THE PRODUCT PAGE IS NO LONGER IN THE JOURNEY. A row used to be one big <a>,
+  and an <a> cannot hold a <form>, which left only the product page or
+  /cart/{variant}:1 -- neither reaching checkout. The row is now a <details>,
+  and a <summary> carries no such restriction, so the panel holds a real
+  add-to-cart with return_to. The whole-row click target was worth trading once
+  the click bought something: the four facts that page held.
 
-  RESOLVED 2026-08-31 BY CHANGING THE COPY, not the markup. The note under the
-  list used to promise "straight to secure checkout", which the row could not
-  deliver. It now talks about new cities being added, and link_mode is
-  `product` -- so the page no longer says anything the link does not do.
-
-  The alternative was one form per row with a submit styled as the row, which
-  would buy a real checkout jump at the cost of the whole-row click target.
-  Not worth it. Keep the copy honest instead: if anyone reinstates a checkout
-  promise here, this becomes a real problem again.
+  `link_mode` survives for the fallback blocks and for a row whose product is
+  missing. It is no longer the main path.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
@@ -74,7 +78,7 @@
         {%- liquid
           assign keyed = ''
           for p in events.products
-            assign starts = p.metafields.custom.custom_seminar_start.value | date: '%Y%m%d'
+            assign starts = p.metafields.custom.seminar_start.value | date: '%Y%m%d'
             if starts == blank
               assign starts = '99999999'
             endif
@@ -89,8 +93,8 @@
             assign idx = key | split: '~' | last | plus: 0
             assign product = events.products[idx]
 
-            assign starts = product.metafields.custom.custom_seminar_start.value
-            assign ends = product.metafields.custom.custom_seminar_end.value | default: starts
+            assign starts = product.metafields.custom.seminar_start.value
+            assign ends = product.metafields.custom.seminar_end.value | default: starts
 
             # Judged on the end date, so a two-day seminar is still listed on
             # its first morning.
@@ -126,14 +130,67 @@
                 assign when = ''
               endif
 
-              assign city = product.metafields.custom.custom_seminar_city.value | default: product.title
-              assign focus = product.metafields.custom.custom_seminar_focus.value
+              # TWO CITY FIELDS, and the row wants the one WITH the state.
+              # seminar_city is "Tampa"; seminar_city_state is "Tampa, FL".
+              # The bare city exists for the address line in the panel, where
+              # it sits under a street and the state is already implied by the
+              # line above it. Here the city stands alone in a national list,
+              # and "Portland" alone is two different flights.
+              #
+              # ONE LINE. Inside a liquid tag a statement cannot wrap: a
+              # continuation line parses as its own statement and the tag fails
+              # with a LiquidHTMLSyntaxError, taking the section with it.
+              #
+              # And NEVER write a tag delimiter inside one of these comments.
+              # A `#` line is not lexed as a comment -- the delimiter closes
+              # the enclosing tag, and every statement after it renders to the
+              # page as text. That is what happened here.
+              assign city = product.metafields.custom.seminar_city_state.value | default: product.metafields.custom.seminar_city.value | default: product.title
+              assign focus = product.metafields.custom.seminar_focus.value
               assign price = product.price | money_without_trailing_zeros
 
               assign sold_out = false
               unless product.available
                 assign sold_out = true
               endunless
+
+              # HOURS ARE TWO date_time METAFIELDS, joined here rather than in
+              # the snippet, which takes resolved values only.
+              #
+              # Only the TIME half is displayed. The fields carry a full
+              # timestamp because Shopify has no time-only metafield type, so
+              # the date part duplicates seminar_start and would read as
+              # a contradiction on a two-day seminar -- the end time is on day
+              # two, but the hours line describes both days.
+              #
+              # %-l is unpadded 12-hour. %l pads to a leading space, which then
+              # shows up as a gap after the en dash.
+              assign t1 = product.metafields.custom.seminar_time_start.value
+              assign t2 = product.metafields.custom.seminar_time_end.value
+              #
+              # EACH HALF FORMATTED ON ITS OWN LINE, for the third time in this
+              # file. `hours | append: ' – ' | append: t2 | date: ...` pipes the
+              # whole concatenated string into date, not the end time -- and it
+              # does not error, it just renders something plausible and wrong.
+              assign hours = ''
+              if t1 != blank
+                assign from = t1 | date: '%-l:%M %p'
+                assign hours = from
+                if t2 != blank
+                  assign until = t2 | date: '%-l:%M %p'
+                  assign hours = from | append: ' – ' | append: until
+                endif
+              endif
+
+              # The street alone is not an address. seminar_address holds
+              # "100 Example Avenue", which is unusable without the city
+              # -- so the panel line is assembled here rather than asking the
+              # merchant to type the city twice and keep the two in step.
+              assign street = product.metafields.custom.seminar_address.value
+              assign where = street
+              if street != blank and city != blank
+                assign where = street | append: ', ' | append: city
+              endif
 
               if section.settings.link_mode == 'cart'
                 assign vid = product.selected_or_first_available_variant.id
@@ -155,7 +212,12 @@
               price: price,
               target: target,
               sold_out: sold_out,
-              cue: section.settings.cue
+              cue: section.settings.cue,
+              product: product,
+              venue: product.metafields.custom.seminar_venue.value,
+              address: where,
+              map: product.metafields.custom.seminar_map.value,
+              time: hours
             -%}
           {%- endif -%}
         {%- endfor -%}
@@ -185,6 +247,13 @@
             endif
           -%}
 
+          {%- comment -%}
+            No metafields on the fallback branch. A hand-authored block has no
+            product to read them from, and typing a venue and address into
+            theme settings is the same lie the typed price already is -- it
+            sits next to a real event and does not follow it. A block row shows
+            what it can and links out.
+          {%- endcomment -%}
           {%- render 'suf-semrow',
             city: block.settings.city,
             date: block.settings.date,
@@ -236,15 +305,21 @@
     {
       "type": "select",
       "id": "link_mode",
-      "label": "Where Reserve goes",
-      "info": "Collection mode only. Neither lands directly on checkout -- see the section comment.",
+      "label": "Fallback link",
+      "info": "Only used when a row cannot sell in place -- a missing or unavailable product. A normal collection row now opens a panel and buys from there, straight to checkout.",
       "options": [
         { "value": "product", "label": "Product page" },
         { "value": "cart", "label": "Add to cart, then cart" }
       ],
       "default": "product"
     },
-    { "type": "text", "id": "cue", "label": "Link text", "default": "Reserve" },
+    {
+      "type": "text",
+      "id": "cue",
+      "label": "Buy button text",
+      "info": "Labels the button inside the open panel. The row's own control always reads \"Details\", because it opens rather than buys.",
+      "default": "Reserve"
+    },
     { "type": "richtext", "id": "note", "label": "Note under the list" }
   ],
   "blocks": [

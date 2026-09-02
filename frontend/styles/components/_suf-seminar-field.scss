@@ -17,7 +17,12 @@
 %suf-seminar-field {
   display: grid;
   gap: 7px;
-  max-width: 320px;
+  // 380px, up from 320. A <select> clips its closed state rather than wrapping
+  // or ellipsizing, so "Choose later -- use my credit" was being cut mid-word
+  // with nothing to show it had been. The cap still keeps the control from
+  // stretching the width of a card; the option copy is the other half of the
+  // fix and is capped in suf-seminar-options.liquid.
+  max-width: 380px;
   margin-bottom: var(--suf-space-3);
 
   label {

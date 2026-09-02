@@ -154,6 +154,48 @@
                       {%- if plan.settings.go_to_checkout -%}
                         <input type="hidden" name="return_to" value="/checkout">
                       {%- endif -%}
+
+                      {%- comment -%}
+                        A SEMINAR CREDIT, STATED FROM A TABLE CELL THAT CANNOT
+                        ASK.
+
+                        The CE page and the CPT page both offer a picker before
+                        the button, so a buyer there either names a date or
+                        takes the credit, and either way the order says which.
+                        There is no room for a select in a comparison column,
+                        so this path can only ever produce the credit -- and
+                        with no property at all, the order arrived silent.
+
+                        A silent order is the failure mode worth avoiding: a
+                        seminar bundle with no seminar line cannot be told
+                        apart from one where the picker broke. Staff have to
+                        work out from the product title alone that someone is
+                        owed a seat.
+
+                        The value MATCHES suf-seminar-options.liquid exactly.
+                        Two spellings of one state would sort and filter as two
+                        things in the admin, and this is the string staff scan
+                        to find who still needs booking. Change one, change
+                        both.
+                      {%- endcomment -%}
+                      {%- if plan.settings.seminar_credit -%}
+                        {%- comment -%}
+                          The DEFAULT is the shared one-credit string. A column
+                          overrides it only where the count is wrong -- the
+                          Qualified Trainer Package carries three seminars, and
+                          a line reading "Credit" singular would understate an
+                          order by two seats.
+
+                          A setting rather than a second hardcoded branch: the
+                          next package with a different count is a checkbox and
+                          a field, not another `elsif` here.
+                        {%- endcomment -%}
+                        <input
+                          type="hidden"
+                          name="properties[Seminar]"
+                          value="{{ plan.settings.seminar_credit_value | default: 'Credit — to be booked later' | escape }}"
+                        >
+                      {%- endif -%}
                       <button
                         type="submit"
                         class="suf-btn suf-btn--{{ plan_style }}"
@@ -244,6 +286,19 @@
           "label": "Skip the cart",
           "info": "Adds return_to=/checkout, so the button goes straight to checkout instead of the cart. Only applies when a product is set.",
           "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "seminar_credit",
+          "label": "Includes a seminar credit",
+          "info": "Tags the order \"Seminar: Credit -- to be booked later\", because a table column has no room to ask which one. Tick it only where the package actually includes a seminar. Only applies when a product is set.",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "seminar_credit_value",
+          "label": "Credit wording",
+          "info": "Leave empty unless the package carries MORE THAN ONE seminar -- \"Credit -- to be booked later\" would then understate the order. Keep the wording close to the default: this is the text staff scan to find who still needs booking, and two spellings of one state sort as two things."
         },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Buy Now" },
         {

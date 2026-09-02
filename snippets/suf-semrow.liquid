@@ -5,48 +5,166 @@
   blocks -- render identically. Duplicating the markup in both branches is how
   the fallback quietly stops matching the real thing.
 
-  Every value arrives already resolved. The snippet makes no decisions about
-  where a row points or what it costs; it only draws.
-
     city        string, required
     date        string, already formatted for display
     focus       string, blank renders the TBA state
     price       string, already money-formatted
-    target      href. Ignored when sold_out
-    sold_out    boolean. Renders a <div>, not a link
-    cue         link text, defaults to "Reserve"
+    target      href for the fallback link. Ignored when a product is passed
+    sold_out    boolean. Renders a flat row with no panel
+    cue         buy button text, defaults to "Reserve"
     attrs       block.shopify_attributes, or blank in collection mode
+    product     the product object, when there is one
+    venue       string, e.g. "Example Gym -- Example City"
+    address     string, one line
+    map         url
+    time        string, free text -- "Sat 9am-5pm . Sun 9am-3pm"
+
+  THE ROW OPENS INSTEAD OF NAVIGATING, and that is the whole point of it.
+
+  It used to be one big <a> to the product page. The only things that page held
+  that this list does not are the venue, the address, a map link and the time
+  of day -- four facts. Sending someone to a separate page to read four facts,
+  and then back, is a page load and a context switch at the exact moment they
+  have decided to buy.
+
+  <details>/<summary>, NOT a JavaScript accordion. It opens with no script at
+  all, it is keyboard operable and announced as expandable for free, and
+  Ctrl+F on a closed panel scrolls to and opens it in current browsers. An
+  accordion built by hand gets none of that without work, and gets it wrong.
+
+  WHY THE ROW IS NO LONGER A LINK AT ALL. An <a> cannot contain a <form>, which
+  is what forced the old choice between the product page and /cart/{variant}:1
+  -- neither of which lands anyone on checkout. A <summary> has no such
+  restriction, so the panel holds a real add-to-cart form with return_to, and
+  the row finally does what "Reserve" implies. The trade recorded in
+  sections/suf-semlist.liquid -- whole-row click target versus a real checkout
+  jump -- is settled the other way now, because the row buys something for the
+  click it takes: the four facts someone wants before committing to travel.
+
+  PRODUCT IS PASSED AS AN OBJECT, breaking this snippet's usual rule that every
+  value arrives resolved. `{% form 'product' %}` needs the object; there is no
+  scalar to hand it. Everything else is still resolved by the caller.
 {% endcomment %}
 
-{%- if sold_out -%}
-  <div class="suf-semrow" {{ attrs }}>
-{%- else -%}
-  <a class="suf-semrow" href="{{ target | default: '#' }}" {{ attrs }}>
-{%- endif -%}
+{%- liquid
+  assign has_details = false
+  if venue != blank or address != blank or map != blank or time != blank
+    assign has_details = true
+  endif
 
-<span class="suf-semrow__city">{{ city | escape }}</span>
-<span class="suf-semrow__date">{{ date | escape }}</span>
+  assign can_buy = false
+  if product != blank and sold_out != true
+    assign can_buy = true
+  endif
+-%}
 
 {%- comment -%}
-  Cities are announced before their focus is decided, so an empty value is a
-  normal state rather than a missing one. Left bare it rendered as a blank cell
-  in the middle of the row, which reads as broken rather than as pending.
+  A row with nothing to reveal and nothing to sell must not render a control
+  that opens onto an empty box. It falls back to the flat row, which is also
+  what a sold-out event gets.
 {%- endcomment -%}
-{%- if focus != blank -%}
-  <span class="suf-semrow__focus">{{ focus | escape }}</span>
+{%- if sold_out or has_details == false and can_buy == false -%}
+  <div class="suf-semrow suf-semrow--flat" {{ attrs }}>
+    <div class="suf-semrow__line">
+      {%- render 'suf-semcells', city: city, date: date, focus: focus, price: price -%}
+      {%- if sold_out -%}
+        <span class="suf-semrow__focus suf-semrow__focus--tba">Sold out</span>
+      {%- elsif target != blank -%}
+        <a class="suf-semrow__cue" href="{{ target }}">
+          {{- cue | default: 'Reserve' | escape }}
+          <span class="suf-semrow__arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      {%- else -%}
+        <span></span>
+      {%- endif -%}
+    </div>
+  </div>
 {%- else -%}
-  <span class="suf-semrow__focus suf-semrow__focus--tba">Focus TBA</span>
+  <details class="suf-semrow" {{ attrs }}>
+    <summary class="suf-semrow__line">
+      {%- render 'suf-semcells', city: city, date: date, focus: focus, price: price -%}
+      {%- comment -%}
+        The chevron is the only thing in the row that changes on open, so it is
+        what tells someone the control is stateful. aria-hidden because
+        <summary> already announces expanded/collapsed itself -- naming it
+        again would have a screen reader say the state twice.
+      {%- endcomment -%}
+      {%- comment -%}
+        "Details", not the `cue` setting. The cue is the BUY word and it now
+        labels the button inside the panel; using it here too would put
+        "Reserve" on a control that reserves nothing, which is the same broken
+        promise the old row made by linking to a product page.
+      {%- endcomment -%}
+      <span class="suf-semrow__cue">
+        Details
+        <span class="suf-semrow__chev" aria-hidden="true"></span>
+      </span>
+    </summary>
+
+    <div class="suf-semrow__panel">
+      {%- if has_details -%}
+        <dl class="suf-semrow__facts">
+          {%- if venue != blank -%}
+            <div class="suf-semrow__fact">
+              <dt>Where</dt>
+              <dd>
+                {{ venue | escape }}
+                {%- if address != blank -%}
+                  <span class="suf-semrow__addr">{{ address | escape }}</span>
+                {%- endif -%}
+                {%- comment -%}
+                  The map opens in a new tab deliberately. Someone checking how
+                  far the gym is from an airport is mid-purchase, and taking
+                  the page away from them is how a considered buy becomes an
+                  abandoned one. rel is not optional on target=_blank: without
+                  noopener the opened page gets a handle on this one.
+                {%- endcomment -%}
+                {%- if map != blank -%}
+                  <a
+                    class="suf-semrow__map"
+                    href="{{ map }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open in Maps
+                    <span class="suf-visually-hidden">(opens in a new tab)</span>
+                  </a>
+                {%- endif -%}
+              </dd>
+            </div>
+          {%- endif -%}
+
+          {%- if time != blank -%}
+            <div class="suf-semrow__fact">
+              <dt>Hours</dt>
+              <dd>{{ time | escape }}</dd>
+            </div>
+          {%- endif -%}
+        </dl>
+      {%- endif -%}
+
+      {%- if can_buy -%}
+        {%- comment -%}
+          A REAL add-to-cart, straight to checkout. The date is not a choice
+          here -- this row IS the date -- so unlike the bundles there is no
+          seminar property to carry: the variant says which seminar it is.
+        {%- endcomment -%}
+        {%- form 'product', product, class: 'suf-semrow__form' -%}
+          <input
+            type="hidden"
+            name="id"
+            value="{{ product.selected_or_first_available_variant.id }}"
+          >
+          <input type="hidden" name="return_to" value="/checkout">
+          <button type="submit" class="suf-btn suf-btn--primary" name="add">
+            {{- cue | default: 'Reserve' | escape }} &middot; {{ price -}}
+          </button>
+        {%- endform -%}
+      {%- elsif target != blank -%}
+        <a class="suf-btn suf-btn--primary" href="{{ target }}">
+          {{- cue | default: 'Reserve' | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </details>
 {%- endif -%}
-
-<span class="suf-semrow__price">{{ price }}</span>
-
-{%- if sold_out -%}
-  <span class="suf-semrow__focus">Sold out</span>
-{%- else -%}
-  <span class="suf-semrow__cue">
-    {{- cue | default: 'Reserve' | escape }}
-    <span class="suf-semrow__arrow" aria-hidden="true">&rarr;</span>
-  </span>
-{%- endif -%}
-
-{%- if sold_out -%}</div>{%- else -%}</a>{%- endif -%}

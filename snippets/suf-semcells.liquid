@@ -1,0 +1,29 @@
+{% comment %}
+  The four scannable cells of an event row: city, date, focus, price.
+
+  Split out of suf-semrow because the row now renders in two shapes -- a
+  <summary> that opens a panel, and a flat <div> for a sold-out or detail-less
+  event -- and the cells must be identical in both. That is exactly the drift
+  suf-semrow itself was extracted to prevent, one level down.
+
+    city    string, required
+    date    string, already formatted for display
+    focus   string, blank renders the TBA state
+    price   string, already money-formatted
+{% endcomment %}
+
+<span class="suf-semrow__city">{{ city | escape }}</span>
+<span class="suf-semrow__date">{{ date | escape }}</span>
+
+{%- comment -%}
+  Cities are announced before their focus is decided, so an empty value is a
+  normal state rather than a missing one. Left bare it rendered as a blank cell
+  in the middle of the row, which reads as broken rather than as pending.
+{%- endcomment -%}
+{%- if focus != blank -%}
+  <span class="suf-semrow__focus">{{ focus | escape }}</span>
+{%- else -%}
+  <span class="suf-semrow__focus suf-semrow__focus--tba">Focus TBA</span>
+{%- endif -%}
+
+<span class="suf-semrow__price">{{ price }}</span>
