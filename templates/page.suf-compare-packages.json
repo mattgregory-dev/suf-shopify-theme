@@ -25,9 +25,10 @@
             "desc": "Get certified on your budget, at your pace.",
             "price": "$XXX",
             "button_label": "Buy Now",
-            "button_url": "/products/show-up-fitness-level-1-coach",
             "button_style": "primary",
-            "micro": "Straight to secure checkout"
+            "micro": "Straight to secure checkout",
+            "product": "show-up-fitness-level-1-coach",
+            "go_to_checkout": true
           }
         },
         "p2": {
@@ -40,9 +41,10 @@
             "featured": true,
             "flag": "Most Popular",
             "button_label": "Buy Now",
-            "button_url": "/products/show-up-fitness-qualified-personal-trainer-package",
             "button_style": "primary",
-            "micro": "Straight to secure checkout"
+            "micro": "Straight to secure checkout",
+            "product": "show-up-fitness-qualified-personal-trainer-package",
+            "go_to_checkout": true
           }
         },
         "p3": {
@@ -53,9 +55,10 @@
             "price": "$X,XXX",
             "was": "$X,XXX+ bought separately",
             "button_label": "Buy Now",
-            "button_url": "/products/show-up-fitness-qualified-personal-trainer-package",
             "button_style": "primary",
-            "micro": "Straight to secure checkout"
+            "micro": "Straight to secure checkout",
+            "product": "show-up-fitness-qualified-personal-trainer-package",
+            "go_to_checkout": true
           }
         },
         "r1": {
@@ -141,41 +144,58 @@
         "p1": {
           "type": "plan",
           "settings": {
-            "name": "Any One",
+            "name": "Nutrition Coach",
+            "desc": "Coach nutrition without stepping outside your scope.",
             "price": "$XXX",
-            "button_label": "Choose Yours",
-            "button_url": "/pages/suf-continuing-education",
-            "button_style": "ghost",
-            "micro": "Pick your certification or seminar"
+            "button_label": "Buy Now",
+            "button_style": "primary",
+            "product": "suf-nutrition-course",
+            "go_to_checkout": true
           }
         },
         "p2": {
+          "type": "plan",
+          "settings": {
+            "name": "Soft Tissue Mobilization",
+            "desc": "Assessment and hands-on soft tissue work.",
+            "price": "$XXX",
+            "button_label": "Buy Now",
+            "button_style": "primary",
+            "product": "show-up-fitness-certification-soft-tissue-mobilization",
+            "go_to_checkout": true
+          }
+        },
+        "p3": {
           "type": "plan",
           "settings": {
             "name": "Continuing Education Bundle",
             "desc": "Any two — your pick.",
             "price": "$XXX",
             "was": "$X,XXX bought separately",
-            "button_label": "Buy Now",
-            "button_url": "/products/show-up-fitness-qualified-personal-trainer-package",
+            "featured": true,
+            "flag": "Best Value",
+            "button_label": "Choose Your Two",
             "button_style": "primary",
-            "micro": "Straight to secure checkout — pick your two at checkout"
+            "micro": "Pick any two certifications or seminars",
+            "button_url": "/pages/suf-continuing-education"
           }
         },
         "r1": {
           "type": "row",
           "settings": {
-            "label": "Your pick of: Soft Tissue Mobilization Certification, Nutrition Coach Certification, or a Weekend Seminar",
-            "value_1": "1",
-            "value_2": "2"
+            "label": "What you get",
+            "value_1": "Nutrition Coach Certification",
+            "value_2": "Soft Tissue Mobilization Certification",
+            "value_3": "Any two — either certification, or a weekend seminar"
           }
         },
         "r2": {
           "type": "row",
           "settings": {
             "label": "CEUs earned (continuing education credits)",
-            "value_1": "1.1–2.0",
-            "value_2": "3.1–4.0"
+            "value_1": "2",
+            "value_2": "2",
+            "value_3": "3.1–4.0"
           }
         },
         "r3": {
@@ -183,13 +203,15 @@
           "settings": {
             "label": "SUF Library + weekly live calls",
             "value_1": "3 months",
-            "value_2": "3–6 months"
+            "value_2": "3 months",
+            "value_3": "3–6 months"
           }
         }
       },
       "block_order": [
         "p1",
         "p2",
+        "p3",
         "r1",
         "r2",
         "r3"
@@ -198,7 +220,7 @@
         "anchor": "continuing-ed",
         "heading": "Already Certified",
         "aside": "Certified through NASM, ACE, ISSA — or with us? Level up from here.",
-        "note": "<p>Want the full path anyway? The <b>Qualified Trainer Package</b> includes all three certifications, all three seminars — Upper Body, Lower Body, and Nutrition — and lifetime library access. <a href=\"#new-trainers\">See it above →</a></p>"
+        "note": "<p>A weekend seminar is also $XXX on its own and counts toward the bundle — see <a href=\"/pages/suf-seminars\">upcoming dates and cities</a>. Want the full path instead? The <b>Qualified Trainer Package</b> includes all three certifications, all three seminars — Upper Body, Lower Body, and Nutrition — and lifetime library access. <a href=\"#new-trainers\">See it above →</a></p>"
       }
     },
     "cta": {

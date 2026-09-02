@@ -264,3 +264,16 @@
     font-weight: 700;
   }
 }
+
+// The buy form, when a column sells in place rather than linking out.
+//
+// A <form> is a block element and browsers give it no margin, but the base
+// layer's form-control rules are not the only thing in play on this page --
+// declaring it is the cheaper half of the "an undeclared property is a gap"
+// lesson in architecture.md.
+//
+// The button inside inherits the full-width sizing from .suf-ctable__cta
+// .suf-btn above, so a form column and a link column are the same shape.
+.suf-ctable__cta .suf-ctable__form {
+  margin: 0;
+}

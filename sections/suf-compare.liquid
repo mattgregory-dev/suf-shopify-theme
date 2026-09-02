@@ -123,7 +123,49 @@
             <td></td>
             {%- for plan in plans -%}
               <td class="suf-ctable__cta">
-                {%- if plan.settings.button_label != blank and plan.settings.button_url != blank -%}
+                {%- comment -%}
+                  SELLS IN PLACE WHEN A PRODUCT IS PICKED, exactly as suf-cert
+                  and suf-guides do. A column that names a price and says "Buy
+                  Now" should buy the thing, not route to a product page that
+                  says it again.
+
+                  The column stays a LINK when no product is set. That is not a
+                  fallback for tidiness -- some columns genuinely are not one
+                  purchasable item ("pick your two at checkout", or a package
+                  whose price is quoted rather than transacted), and those need
+                  somewhere to send people instead.
+
+                  A <form> cannot live inside an <a>, which is why this is a
+                  branch rather than a link wrapping a button -- the same
+                  constraint written up for the product cards in
+                  docs/redesign-open-items.md.
+                {%- endcomment -%}
+                {%- assign plan_product = plan.settings.product -%}
+
+                {%- if plan_product != blank -%}
+                  {%- if plan_product.available -%}
+                    {%- assign plan_style = plan.settings.button_style | default: 'primary' -%}
+                    {%- form 'product', plan_product, class: 'suf-ctable__form' -%}
+                      <input
+                        type="hidden"
+                        name="id"
+                        value="{{ plan_product.selected_or_first_available_variant.id }}"
+                      >
+                      {%- if plan.settings.go_to_checkout -%}
+                        <input type="hidden" name="return_to" value="/checkout">
+                      {%- endif -%}
+                      <button
+                        type="submit"
+                        class="suf-btn suf-btn--{{ plan_style }}"
+                        name="add"
+                      >
+                        {{- plan.settings.button_label | default: 'Buy Now' | escape -}}
+                      </button>
+                    {%- endform -%}
+                  {%- else -%}
+                    <p class="suf-btn-micro">Currently unavailable.</p>
+                  {%- endif -%}
+                {%- elsif plan.settings.button_label != blank and plan.settings.button_url != blank -%}
                   <a
                     class="suf-btn suf-btn--{{ plan.settings.button_style | default: 'primary' }}"
                     href="{{ plan.settings.button_url }}"
@@ -190,8 +232,26 @@
           "default": false
         },
         { "type": "text", "id": "flag", "label": "Flag text", "default": "Most Popular" },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Set this and the column SELLS IN PLACE -- the button becomes a real add-to-cart form, as on the certification rows and study guide cards. Leave empty for a column that is not one purchasable item, and it falls back to the link below. The price shown is still the typed one above, not the product's."
+        },
+        {
+          "type": "checkbox",
+          "id": "go_to_checkout",
+          "label": "Skip the cart",
+          "info": "Adds return_to=/checkout, so the button goes straight to checkout instead of the cart. Only applies when a product is set.",
+          "default": true
+        },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Buy Now" },
-        { "type": "url", "id": "button_url", "label": "Button link" },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button link",
+          "info": "Used ONLY when no product is set above."
+        },
         {
           "type": "select",
           "id": "button_style",
