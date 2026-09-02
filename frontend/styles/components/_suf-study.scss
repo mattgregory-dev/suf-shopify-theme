@@ -2,26 +2,13 @@
 
 // Study guides: product cards + the guarantee callout.
 //
-// Ported from the mockup, section 11, with one structural change.
+// THE CARD IS NOT A LINK. A <form> cannot live inside an <a>, and these are
+// real products, so the add-to-cart button is the only action on the card.
 //
-// The mockup makes each card a whole-card <a> containing a faux
-// <span class="btn">Add to Cart</span>. These are real products, so the button
-// is a real submit inside a real <form> -- and a <form> cannot live inside an
-// <a>. The card is therefore a plain container with no link of its own: the
-// add-to-cart button is the only action on it.
-//
-// The mockup's card-hover elevation IS ported, but the original objection had
-// to be answered first. That objection stands on its own: the mockup's hover
-// signalled "the whole card is the target", and this card is not a target --
-// it holds no link, only the add-to-cart button. A card that lights up and
-// then ignores the click is promising something it does not accept.
-//
-// What answers it is that the card's hover also lifts the BUTTON, exactly as
-// the mockup's does. The highlight therefore points at the one thing that is
-// clickable rather than implying the whole card is. That rule lives on
-// .suf-btn--primary in _suf-components.scss, so there is one copy of the lift
-// and one reduced-motion guard over it. Remove the button lift and this hover
-// should go with it.
+// The card hover therefore also lifts the BUTTON, so the highlight points at
+// the one clickable thing rather than promising a whole-card target that would
+// ignore the click. That lift lives on .suf-btn--primary in
+// _suf-components.scss -- remove it and this hover should go with it.
 
 .suf-guidegrid {
   display: grid;
@@ -350,23 +337,13 @@
   }
 }
 
-// The featured card, per the updated mockup: it is no longer a navy slab but
-// a white card marked out by a blue border and a resting elevation.
+// The featured card: a white card marked by a blue border and a resting
+// elevation. The border is a real 2px rather than a simulated inset ring --
+// the extra weight IS the signal, so the card is 1px larger on every side.
 //
-// The border is 2px against the plain card's 1px, so the featured card is 1px
-// larger on every side. That is deliberate and it is why the border is not
-// simulated with an inset shadow the way the hover ring is -- here the extra
-// weight IS the signal.
-// THE BORDER DOES NOT CHANGE ON HOVER, and it takes the lighter blue at rest.
-//
-// It used to be --suf-blue at rest and --suf-blue-light on hover, with an
-// inset 1px ring stacked on top -- so hovering appeared to thicken the border
-// from 2px to 3px AND shift its hue at the same time. Two changes at once on
-// the card's most prominent edge, which read as the card twitching rather than
-// responding.
-//
-// Hover is now carried entirely by the shadow. The border is a permanent mark
-// of which card is featured, not a hover affordance, so it holds still.
+// THE BORDER DOES NOT CHANGE ON HOVER. Shifting its width and its hue at once
+// on the card's most prominent edge read as twitching rather than responding.
+// Hover is carried entirely by the shadow.
 .suf-gcard--featured {
   border: 2px solid var(--suf-blue-light);
   // NO RESTING SHADOW, matching the plain card beside it.

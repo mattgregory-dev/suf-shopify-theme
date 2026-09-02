@@ -155,20 +155,11 @@
 // ---------------------------------------------------------------------------
 // FEATURED COLUMN
 //
-// Navy header cell only. The mockup also outlines the column top to bottom in
-// 2px navy, and that is deliberately NOT ported.
-//
-// The outline never read as one continuous column, and border-collapse is
-// why. Collapse does not draw both borders at a shared edge, it picks one,
-// and the WIDEST wins. So the 2px navy beat the 1px cell rule on every edge
-// it touched -- including the bottom of the header row, which then rendered
-// 2px navy for the width of one column and 1px grey either side of it. It
-// read as a broken double border rather than as emphasis, with a matching
-// stub under the last cell.
-//
-// Removing it also reads better: the navy panel and the flag are emphasis
-// enough, and a heavy rule around a column inside an already-ruled table is
-// one grid too many.
+// Navy header cell only. The mockup's full-column 2px outline is NOT ported:
+// border-collapse picks ONE border at a shared edge and the WIDEST wins, so
+// the 2px navy beat the 1px cell rule everywhere it touched -- rendering as
+// 2px navy for one column's width and 1px grey either side, which reads as a
+// broken double border rather than emphasis.
 // ---------------------------------------------------------------------------
 
 .suf-ctable__plan--featured {
@@ -253,32 +244,14 @@
   line-height: 1.45;
 }
 
-// BODY SIZE AND BODY COLOUR, not fine print.
+// BODY SIZE AND COLOUR, not fine print: this note carries something a buyer
+// needs before deciding. If it ever reads too loud, take the colour back to
+// --suf-color-text-muted before touching the size.
 //
-// It was 14px and muted grey, which made it quiet twice over -- and on the
-// packages table it carries something a buyer needs before deciding: that a
-// seminar is chosen AFTER purchase and a credit can be held until one suits.
-// A reader who misses that reads "1 seminar" and expects to pick a date at
-// checkout.
-//
-// Size does more of the work than colour here, but both were pulling the same
-// direction. If this ever reads too loud beside the table, take the colour
-// back to --suf-color-text-muted before touching the size.
-// 54ch, and the number is lower than it looks like it should be on purpose.
-//
-// The familiar ~66-character measure is for LEFT-ALIGNED text, where the eye
-// returns to a fixed edge on every line. This block is centred, so there is no
-// edge to return to and the comfortable measure drops -- 45-60 is the usual
-// range for centred or short blocks. 54 was picked by reading it at several
-// widths, not derived; 67 and 74 were both tried and read wider than they
-// should.
-//
-// It also reads as a deliberate aside rather than runoff from the very wide
-// table above it, which is worth having now that the note carries something a
-// buyer needs before deciding.
-//
-// NOT text-wrap: balance -- tried, and it flattens the block into even lines
-// that lose the shape a hard measure produces. The cap breaks more naturally.
+// 54ch, not the familiar ~66. That measure is for LEFT-ALIGNED text, where the
+// eye returns to a fixed edge; centred text has no edge to return to and wants
+// 45-60. NOT text-wrap: balance -- it flattens the block into even lines and
+// loses the shape a hard measure gives it.
 .suf-body .suf-tnote {
   max-width: 54ch;
   margin: var(--suf-space-3) auto 0;

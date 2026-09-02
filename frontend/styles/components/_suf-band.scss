@@ -16,21 +16,13 @@
   background: var(--suf-navy);
   color: var(--suf-color-ink-on-dark);
 
-  // THE BAND'S HALF OF THE GAP BELOW IT.
+  // THE BAND'S HALF OF THE GAP BELOW IT. Every .suf-section pads half the gap
+  // top and bottom, so two neighbours make one full gap. The band's padding is
+  // INSIDE the navy, so it never took part and every page opened with its
+  // first section sitting too close.
   //
-  // Every .suf-section pads half the gap it needs, top and bottom, so two
-  // neighbours together make one full gap. The band never took part: its
-  // padding is INSIDE the navy, so the first section after it supplied one
-  // half and nothing supplied the other. Every page therefore opened with its
-  // first section closer to the band than any later section sits to its
-  // neighbour.
-  //
-  // A margin, not more padding -- padding would extend the navy. This gap
-  // belongs outside the coloured box.
-  //
-  // It does not double against a full-bleed section that uses margin-block
-  // instead of padding: adjacent margins collapse to the larger of the two
-  // rather than summing.
+  // A margin, not padding -- padding would extend the navy. It cannot double
+  // against a full-bleed neighbour either: adjacent margins collapse.
   margin-bottom: var(--suf-space-section);
   // The red base rule is the design's edge treatment: contrast by edges, never
   // by fades. It is dropped only when something overlaps the band instead.

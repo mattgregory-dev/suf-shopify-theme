@@ -9,50 +9,28 @@
 // so it has to be styled on both layouts. It reads the --suf-* tokens
 // directly, since those are declared on :root and suf.css is served on both.
 //
-// PORTED FROM the #cookie-consent-overrides block in
-// ~/projects/suf/mockups/blog.html, but NOT copied. That block was written
-// against assumed markup, and the real DOM differs in five ways that each
-// break a rule:
+// THE REAL DOM IS NOT WHAT THE MOCKUP ASSUMED. Four differences that each
+// break a rule written against it:
 //
-//   1. #shopify-pc__banner IS the dialog. It carries
-//      class="shopify-pc__banner__dialog" itself -- they are one element, not
-//      a wrapper around a card. The mockup styles them separately, and its ID
-//      rule (background:none, padding:0, margin:0) beats its own class rule on
-//      the same element, so the white card never appears.
+//   1. #shopify-pc__banner IS the dialog -- it carries
+//      .shopify-pc__banner__dialog itself. Styling them separately lets the ID
+//      rule beat the class rule on the same element and the card never shows.
 //   2. The banner title is an <h2>, not the first <p>.
-//   3. There is no .shopify-pc__prefs__header, __scroll, __body or
-//      __option-title. The real names are a bare <header>, and
-//      .shopify-pc__prefs__scrollable.
-//   4. .shopify-pc__prefs__header-accept is an ID, not a class.
-//   5. There is no .is-toggle, and the checkbox is not a bare input: Shopify
-//      renders a <label> containing the input plus a <span> holding TWO svgs,
-//      checked and unchecked, and switches them with an inline display style.
+//   3. No __header / __scroll / __body / __option-title. The real names are a
+//      bare <header> and .shopify-pc__prefs__scrollable.
+//   4. The checkbox is a <label> wrapping the input plus a <span> holding TWO
+//      svgs, switched with an inline display style.
 //
-// THE ONE THING NOT TO OVERRIDE: `display` on #shopify-pc__prefs. Shopify
-// shows and hides the dialog with an inline style="display: block" / "none" on
-// that element. An !important display here would pin it open forever, and
-// without !important an inline style wins anyway -- so the dialog is centred
-// by positioning its own child instead.
+// NEVER OVERRIDE `display` ON #shopify-pc__prefs. Shopify shows and hides it
+// with an inline style, so !important would pin it open forever and anything
+// less loses to the inline style anyway. The dialog is centred by positioning
+// its child instead.
 
-// ---------------------------------------------------------------------------
-// THE FONT, ON LEGACY TEMPLATES
-//
-// layout/theme.liquid renders snippets/suf-fonts.liquid with no family, which
-// applies
-//
-//     p, li, a, body, footer, aside, nav, section, article, div, span,
-//     input, button, textarea, label { font-family: Arial !important }
-//
-// deliberately -- the legacy templates stay on Arial, permanently. But this
-// dialog is not a legacy template. It is chrome that appears on every page of
-// the site, and it should look the same on all of them.
-//
-// The banner's root is a <section> and everything inside it is a div, span, p,
-// button or heading, so every element is caught. !important is the only
-// instrument that answers an !important; the universal selector after an ID
-// gives it the specificity to win.
-//
-// Same reasoning, and the same shape, as the font block in _suf-nav.scss.
+// THE FONT, ON LEGACY TEMPLATES. theme.liquid renders `suf-fonts` with no
+// family, pinning legacy templates to `Arial !important`. This dialog is not a
+// legacy template -- it is chrome on every page. !important is the only thing
+// that answers an !important; the universal selector after an ID wins the
+// specificity. Same shape as the font block in _suf-nav.scss.
 
 #shopify-pc__banner,
 #shopify-pc__banner *,
@@ -86,25 +64,15 @@
   font-family: var(--suf-font-body);
   text-align: left;
 
-  // A FULL-BLEED TRAY BELOW 600px, not a floating card.
+  // A FULL-BLEED TRAY BELOW 600px. A card needs room around it to read as one;
+  // at phone width the margins leave a sliver either side and it reads as a
+  // mis-sized bar. 600 is a fact about this component, not the page grid.
   //
-  // The card shape needs room around it to read as a card. On a phone the
-  // 20px margins leave a sliver of page either side of something that already
-  // spans nearly the whole width -- so it reads as a mis-sized bar rather than
-  // as a deliberate card, and the text measure gets squeezed for nothing.
-  // Dropped to the bottom edge it becomes a tray, which is the conventional
-  // mobile shape for this and buys back 40px of measure.
-  //
-  // 600 rather than a token: this is about the width at which the 360px card
-  // stops having room around it, which is a fact about this component and not
-  // about the page grid. Same reasoning as the nav's hardcoded 900.
-  //
-  // LEFT: 0 IS DOING THE WORK, and is easy to miss. With `left: auto` a fixed
-  // box shrink-to-fits its content however wide the max-width allows, so
-  // clearing width and max-width alone gets close to full bleed on a long
-  // string and visibly short of it on a short one -- it would look right in
-  // English and wrong the first time the copy changed. Anchoring both edges
-  // makes the width a fact rather than a consequence of the text.
+  // LEFT: 0 IS DOING THE WORK. A fixed box with `left: auto` shrink-to-fits, so
+  // clearing width alone lands near full bleed on a long string and short of
+  // it on a short one -- right in English, wrong the first time the copy
+  // changes. Anchoring both edges makes the width a fact, not a consequence of
+  // the text.
   @media (max-width: 600px) {
     left: 0;
     width: auto;
@@ -170,24 +138,15 @@
   align-items: center;
   margin-top: 18px;
 
-  // STACKED AND FULL WIDTH BELOW 480px.
+  // STACKED AND FULL WIDTH BELOW 480px. Wrapped onto separate lines each
+  // button sits at its own label width, centred -- two small islands in a
+  // full-width tray. align-items: stretch is what widens them.
   //
-  // Above this the two buttons share a line on `flex: 1 1 0`. Once the tray is
-  // this narrow they wrap onto separate lines and each sits at its own label
-  // width, centred -- two small islands in a full-width tray, which reads as
-  // unfinished rather than as a choice. Stretched, each is a full-width target,
-  // which is also the easier thing to hit with a thumb.
-  //
-  // `display: flex` IS RESTATED DELIBERATELY, not by accident. We do not own
-  // this markup and cannot see Shopify's own stylesheet from here; their CSS
-  // is injected at runtime and may well carry its own narrow breakpoint on
-  // these same class names. If it switches the row to `display: block`, a lone
-  // `flex-direction` here would be a declaration on a box that is no longer a
-  // flex container -- silently inert, and the symptom would be exactly what is
-  // on screen now. Restating it costs one line and removes the guess.
-  //
-  // align-items: stretch is what does the widening -- it replaces the `center`
-  // above, which is what was sizing each button to its own label.
+  // `display: flex` IS RESTATED DELIBERATELY. Shopify's own CSS is injected at
+  // runtime and may carry its own breakpoint on these class names; if it
+  // switches this row to `display: block`, a lone `flex-direction` is inert on
+  // a box that is no longer a flex container -- and the symptom looks exactly
+  // like the bug being fixed.
   @media (max-width: 480px) {
     display: flex;
     flex-direction: column;
@@ -219,30 +178,18 @@
 // without touching markup we do not control: accept first, decline second,
 // manage-prefs last on its own row.
 //
-// ACCEPT LEADS, which reverses the earlier arrangement here -- that put the
-// destructive choice first on the reasoning that it is the convention. Changed
-// 2026-08-31 on the client's call.
+// `order` IS THE ONLY REORDERING MECHANISM HERE. `flex-direction: row-reverse`
+// reaches the same arrangement but would COMPOSE with these values rather than
+// replace them, so the result would be two transforms pointing opposite ways.
+// To rearrange, move these numbers and add nothing.
 //
-// `order` IS THE ONLY REORDERING MECHANISM IN THIS ROW, deliberately.
-// `flex-direction: row-reverse` reaches the same arrangement and was
-// considered; it was rejected because it would compose with these `order`
-// values rather than replace them, and the rendered result would then be the
-// product of two transforms pointing opposite ways. Anyone changing this later
-// would have to hold both in their head to predict what renders. If this needs
-// rearranging again, move these numbers and add nothing.
+// Tab order follows the DOM regardless, so it stays manage-prefs, accept,
+// decline. Inherent to reordering markup we cannot edit.
 //
-// Not an accessibility improvement either way: tab order follows the DOM, so
-// it stays manage-prefs, accept, decline whatever these say. That mismatch is
-// inherent to reordering markup we cannot edit and predates this change.
-//
-// BOTH BUTTONS ARE NAVY, and the pair is deliberately quiet. The site's reds
-// and blues are for actions the visitor came here to take; this is a consent
-// choice they did not ask for, and neither answer should be sold to them.
-// Filled versus outline is the only hierarchy left, which is enough.
-//
-// It also keeps the banner out of a fight with whatever is behind it -- it
-// floats over page content, so a red or a blue button lands on top of the
-// design's own accents at unpredictable moments.
+// BOTH BUTTONS ARE NAVY. The site's reds and blues are for actions the visitor
+// came to take; this is a choice they did not ask for, and neither answer
+// should be sold. It also keeps the banner out of a fight with the page
+// content it floats over.
 #shopify-pc__banner button.shopify-pc__banner__btn-decline {
   order: 2;
   flex: 1 1 0;
@@ -285,20 +232,11 @@
 
 // Third and full width: a tertiary choice, so it reads as a link rather than
 // competing with the two buttons above it.
-// FULL WIDTH, AND NO max-width. An earlier version clamped this with
-// `max-width: fit-content` to stop the focus ring drawing across the whole
-// card, and that broke the row.
-//
-// max-width does not only constrain the painted box: it clamps the flex
-// item's HYPOTHETICAL MAIN SIZE, which is what the line-breaking step
-// measures. Clamped to its text, this button stopped being too wide to sit
-// beside the other two, so all three shared one line and Decline and Accept
-// were squeezed to about 50px each. dt-framework's reset puts
-// `word-break: break-word` on <html>, so the squeezed labels then broke
-// mid-word into "DE CLI NE".
-//
-// The ring is drawn on the inner <span> instead -- see the focus block at the
-// end of this file. That is the element whose size actually matches the text.
+// FULL WIDTH, AND NO max-width. max-width clamps a flex item's HYPOTHETICAL
+// MAIN SIZE, which is what line-breaking measures -- so `max-width: fit-content`
+// here stopped this being too wide to share a line, all three collapsed onto
+// one, and dt-framework's `word-break: break-word` broke the labels into
+// "DE CLI NE". The focus ring is drawn on the inner <span> instead.
 #shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs {
   order: 3;
   flex: 1 1 100%;

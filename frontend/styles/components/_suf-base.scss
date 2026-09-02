@@ -11,17 +11,11 @@
 // reset there would restyle all ~30 legacy templates. Scoping is what keeps
 // this file additive.
 //
-// WHY :where(). Scoping costs specificity: `.suf-body p` is a class AND an
-// element, (0,1,1), while a plain component class is (0,1,0) -- so the base
-// layer BEAT every component that styled a <p>, an <a>, a <button> or a
-// heading, regardless of source order. That produced roughly a dozen bugs
-// before it was understood: blue text on red buttons, footer headings at
-// heading size, a price that would not pin, margins that silently came back.
-//
-// :where() contributes ZERO specificity, so these rules become (0,0,x). The
-// scoping still applies -- they match only inside .suf-body, so legacy
-// templates stay untouched -- but the base layer now sits UNDER the components
-// instead of competing with them, which is what a base layer is for.
+// WHY :where(). Scoping costs specificity: `.suf-body p` is (0,1,1) against a
+// component class at (0,1,0), so the base layer BEAT every component that
+// styled a <p>, <a>, <button> or heading, whatever the source order -- a dozen
+// bugs before it was understood. :where() contributes ZERO specificity, so the
+// scoping still applies but the base layer sits UNDER the components.
 //
 // The link-decoration block at the bottom of this file is deliberately NOT
 // wrapped in :where(). It is the remnant of a legacy-compatibility block that
@@ -339,34 +333,13 @@
 // ---------------------------------------------------------------------------
 // LINK DECORATION
 //
-// All that survives of the LEGACY BASE COMPATIBILITY block, deleted alongside
-// sections/suf-header.liquid on 2026-08-31. Everything else in it existed for
-// the forked header's inherited markup and had nothing left to match once that
-// section went: the .container grid, the .dt-sc-flex utilities, the list reset
-// on header and .mobile-menu lists, .menu-trigger's label, and the positioning
-// rule on section elements inside a header.
+// NOT LEGACY COMPATIBILITY, despite having lived in that block. Browsers
+// underline links by default and this design does not, except in prose.
+// Deleting these underlines every link on every suf page.
 //
-// Also gone with it: the .shopify-section display rule, and with that the
-// :not(.sufnav-section) exemption it forced. Shopify's section wrapper is a
-// div and stacks as a block on its own.
-//
-// THESE TWO ARE NOT LEGACY COMPATIBILITY, despite having lived in that block.
-// Browsers underline links by default and this design does not, except in
-// prose. Deleting them underlines every link on every suf page.
-//
-// WRAPPED IN :where() ON 2026-08-31, which is what the rest of the base layer
-// already does and what this should have done from the start -- it was left
-// unwrapped only because it lived inside the legacy compatibility block, which
-// genuinely needed the weight. Once that block went, this kept a specificity
-// it had no reason to have.
-//
-// `.suf-body a` is (0,1,1), which beats a plain component class at (0,1,0).
-// So .suf-link setting its own `text-decoration: underline` lost to a base
-// rule saying `none`, silently -- exactly the collision written up in
-// architecture.md, and the reason the base layer is :where()-wrapped
-// everywhere else. At (0,0,1) it still beats the browser default and still
-// only matches inside .suf-body, so nothing about its JOB changed; it just
-// stopped competing with the components above it.
+// :where()-WRAPPED like the rest of the base layer. Unwrapped, `.suf-body a`
+// is (0,1,1) and beat .suf-link's own `text-decoration: underline` at (0,1,0),
+// silently -- the collision written up in architecture.md.
 // ---------------------------------------------------------------------------
 
 :where(.suf-body) {

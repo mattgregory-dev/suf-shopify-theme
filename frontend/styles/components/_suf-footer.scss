@@ -1,29 +1,15 @@
 // sections/suf-footer.liquid
 //
-// Ported from `.footerbar` / `.footer-copyright` in
-// ~/projects/suf/mockups/index.html on 2026-08-31.
-//
 // NOT SCOPED UNDER .suf-body. Like _suf-nav.scss, this section is written so
-// it could be rendered by layout/theme.liquid as well, and .suf-body exists on
-// only one of the two layouts. Everything scopes to .suf-footer, a class the
-// section itself emits.
+// theme.liquid could render it too, and .suf-body exists on only one layout.
 //
-// SPECIFICITY: children are written `& &__x`, not `&__x`.
+// CHILDREN ARE `& &__x`, NOT `&__x`. The concatenated form compiles to a single
+// class at (0,1,0), which LOSES to the scoped base rules -- `.suf-body h2` was
+// overriding the title's size and `.suf-body p` was reinstating margins these
+// rules set to 0. `& &__x` is (0,2,0) and wins.
 //
-// `&__x` CONCATENATES -- it compiles to `.suf-footer__x`, a single class at
-// (0,1,0), which loses to the scoped base rules. `.suf-body h2` was overriding
-// the title's font-size with full heading size, and `.suf-body p` / `ul` were
-// reinstating margins these rules explicitly set to 0.
-//
-// `& &__x` compiles to `.suf-footer .suf-footer__x` at (0,2,0), which wins.
-// That also happens to be the depth _suf-nav.scss needed against
-// dt-framework's attribute selectors, so this is already braced for a shared
-// footer. See docs/migration.md.
-//
-// Colour lives here, not in section settings. The legacy footer exposes 30+
-// colour pickers because the theme had no tokens; overriding a --suf-* token
-// is the replacement for that, and it changes every component at once instead
-// of one section.
+// Colour lives here, not in section settings: overriding a --suf-* token
+// changes every component at once instead of one section.
 
 .suf-footer {
   background: var(--suf-color-surface);

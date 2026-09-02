@@ -32,18 +32,12 @@
 
 // Used as a heading INSIDE another section, not as a section of its own.
 //
-// The :last-child rule above is right for a standalone statement: what follows
-// is the next section, and that section's own top padding is the gap. It is
-// wrong here, because what follows is a sibling in the SAME section with no
-// padding between them -- the FAQ accordion sat flush against its heading.
+// The :last-child rule above assumes what follows is the next section, whose
+// top padding is the gap. Here what follows is a sibling in the SAME section
+// with no padding, so the FAQ accordion sat flush against its heading.
 //
-// Written as a modifier rather than detected with :has(+ .suf-faq), so the
-// intent is stated in the markup that has it and any other section can reuse
-// it.
-//
-// One step tighter than .suf-section__head's --suf-space-5: that head carries
-// a rule under it, which needs room either side to read as a divider. This one
-// is bare type, and at space-5 the heading floated away from its own list.
+// A modifier rather than :has(+ .suf-faq), so the intent is stated in the
+// markup and any section can reuse it.
 .suf-statement--head {
   margin-bottom: var(--suf-space-4);
 }

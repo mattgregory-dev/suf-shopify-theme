@@ -1,18 +1,11 @@
 // The optional "which seminar" picker on bundles that carry a seminar credit.
 //
-// TWO SURFACES, ONE TREATMENT. It renders inside suf-guides' buy cards on the
-// page background, and inside suf-cert's band, which is navy on the CE page.
-// Sharing a base and overriding only the colours is what keeps them the same
-// control rather than two that drifted.
+// TWO SURFACES, ONE TREATMENT -- suf-guides' cards on the page background and
+// suf-cert's navy band. A shared base with only the colours overridden is what
+// keeps them one control. Matched to .suf-gcard__variants in _suf-study.scss.
 //
-// Matched to .suf-gcard__variants in _suf-study.scss, which is the study
-// guides' English/Spanish select. A merchant meets these in the same flow and
-// they should not look like different systems.
-//
-// 16px on the select is a HARD FLOOR, not a size choice: iOS Safari zooms the
-// viewport on focus for anything smaller and does not zoom back out on blur.
-// The same rule is on the contact form and the search input, and the write-up
-// of what it costs when missed is in docs/redesign-open-items.md.
+// 16px on the select is a HARD FLOOR, not a size choice: iOS Safari zooms on
+// focus below it and does not zoom back out. See docs/redesign-open-items.md.
 
 %suf-seminar-field {
   display: grid;

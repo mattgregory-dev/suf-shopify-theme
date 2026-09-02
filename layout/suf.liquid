@@ -13,23 +13,11 @@
   templates/password.json already uses the JSON form for layout/password.liquid,
   which is the proof this works on a Vintage theme.
 
-  WHAT THIS LAYOUT LOADS, AND WHY
-  -------------------------------
-  Net-new:  suf.css, suf.js.
-  Legacy:   NONE. As of 2026-08-23 this layout loads no inherited CSS and no
-            inherited JavaScript. Everything it serves is suf.css and suf.js.
-
-            The last to go were dt-framework.css and dt-custom.css. By then
-            they were supplying a reset rather than component styles, so
-            frontend/styles/components/_suf-base.scss carries a small
-            compatibility block standing in for the parts the forked header's
-            markup depends on. That block is deleted with the header.
-
-  NOT loaded, deliberately: jQuery, dt-framework.css, dt-custom.css,
-  dt-plugins.js (Swiper), dt-theme.js, handlebars, select2 and its stylesheet,
-  ajax-cart, lazysizes, swiper-bundle.min.css, dT_main.js and dT_main_app.js.
-  That is roughly 850 KB that theme.liquid loads on every page and this layout
-  does not.
+  IT LOADS suf.css AND suf.js, AND NO INHERITED CSS OR JAVASCRIPT AT ALL.
+  Not loaded, deliberately: jQuery, dt-framework.css, dt-custom.css,
+  dt-plugins.js (Swiper), dt-theme.js, handlebars, select2, ajax-cart,
+  lazysizes, swiper-bundle.min.css, dT_main.js, dT_main_app.js -- roughly
+  850 KB that theme.liquid serves on every page.
 
   Consequences, all intended:
 
@@ -62,28 +50,15 @@
     {% render 'social-meta-tags' %}
 
     {% comment %}
-      TWO of the five faces, not all five. snippets/suf-fonts.liquid declares
-      400, 600, 700, 800 and 900; @font-face is lazy, so the other three cost
-      nothing until a page actually renders something at that weight.
+      TWO of the five faces. @font-face is lazy, so the other three cost
+      nothing until something renders at that weight -- but PRELOADING IS NOT
+      LAZY. It fetches at high priority before the browser knows the file is
+      needed, so only what paints on first load belongs here: 400 for body,
+      800 for every heading.
 
-      Preloading is not lazy -- it fetches at high priority before the browser
-      knows whether anything needs the file -- so only what paints on first
-      load belongs here:
-
-        400  body copy.
-        800  every heading, and 51 of the 67 weight declarations in suf.css.
-
-      Deliberately NOT preloaded, and each verified rather than assumed:
-
-        600  mega-menu column headings and the mobile drawer's nav links.
-             Both render only after a menu is opened.
-        700  8 uses, all below the fold -- the result chip, a dark-band <em>,
-             table cells, contact, seminars.
-        900  2 uses, on two pages.
-
-      Preloading those three cost ~41 KB of contended bandwidth on every page
-      and earned Chrome's "preloaded but not used within a few seconds"
-      warning on most of them. 27 KB for the pair that is genuinely needed.
+      600 renders only after a menu opens, 700 is 8 uses below the fold, 900 is
+      2 uses on 2 pages. Preloading those three cost ~41 KB of contended
+      bandwidth per page and earned Chrome's "preloaded but not used" warning.
     {% endcomment %}
     {{ 'hanken-grotesk-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
     {{ 'hanken-grotesk-800.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
@@ -94,10 +69,6 @@
     {% comment %}
       Theme-editor values -> custom properties, after suf.css so they override
       the fallbacks compiled into it.
-
-      There used to be a second set here, suf-legacy-tokens, bridging the OLD
-      theme-editor pickers for the forked header. It went with the header on
-      2026-08-31.
     {% endcomment %}
     {% render 'suf-tokens' %}
 
@@ -105,35 +76,27 @@
       Enables the scroll-in accents. See
       frontend/styles/components/_suf-motion.scss.
 
-      INLINE, AND IN THE HEAD, deliberately. The resting state of an animated
-      accent is opacity 0, so the stylesheet only applies it on a page that can
-      undo it -- no script, no hiding, and a JS failure costs the animation
-      rather than the content.
+      INLINE AND IN THE HEAD. The resting state of an accent is opacity 0, so
+      the stylesheet applies it only on a page that can undo it -- a JS failure
+      then costs the animation rather than the content. It cannot live in the
+      deferred assets/suf.js, which would paint them visible, hide them, then
+      animate them back.
 
-      It cannot live in assets/suf.js. That is a deferred module: the browser
-      would paint the eyebrows visible, run the module, hide them, then animate
-      them back in. A flicker on first paint is worse than no animation.
-
-      One line, and it stays one line. Anything that needs more than an
-      attribute belongs in assets/suf-motion.js.
+      One line, and it stays one line.
     {% endcomment %}
     <script>
       document.documentElement.dataset.sufMotion = '';
     </script>
 
     {% comment %}
-      Hanken Grotesk is applied on this layout only. theme.liquid stays on
-      Arial permanently -- that is a settled decision, not a pending task, and
-      the reasoning is in snippets/suf-fonts.liquid. The legacy templates have
-      rendered in Arial for years and are being replaced rather than restyled;
-      the header opts back in for itself because it is shared.
+      Hanken Grotesk on this layout only. theme.liquid stays on Arial
+      permanently -- a settled decision, reasoning in snippets/suf-fonts.liquid.
 
-      set_weights: false because this layout supplies its own weights from
-      suf.css. The snippet's `h1, h2, ...` rule is (0,0,1); the suf base layer
-      is `:where(.suf-body) h1`, which is ALSO (0,0,1) since :where() adds
-      nothing -- and this renders after suf.css, so the tie went to the
-      snippet and held every heading at 700 while the stylesheet asked for
-      800. The family rules keep their !important; those still do real work.
+      set_weights: false because this layout supplies its own. The snippet's
+      `h1, h2, ...` is (0,0,1) and the base layer's `:where(.suf-body) h1` is
+      ALSO (0,0,1), since :where() adds nothing -- and this renders after
+      suf.css, so the TIE went to the snippet and held every heading at 700
+      while the stylesheet asked for 800.
     {% endcomment %}
     {% render 'suf-fonts', apply: true, set_weights: false, family: "'Hanken Grotesk', Arial, Helvetica, sans-serif" %}
 

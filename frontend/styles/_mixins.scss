@@ -36,21 +36,11 @@ $bp-xl: 1280px;
 // than typed into the copy -- so they cannot be forgotten, doubled, or typed
 // as straight quotes.
 //
-// ONE definition, because three surfaces use it: .suf-bigquote,
-// .suf-qcard__quote and .suf-mini__quote. Three copies of a glyph and its
-// spacing drift, and the drift is exactly what is hard to see.
-//
-// THE SPACING IS ASYMMETRIC AND PER-SURFACE, both deliberately.
-//
-// Asymmetric: the closing mark sits tight against the last word, and only the
-// opening mark takes space. A gap on the closing side reads as a stray
-// character rather than punctuation.
-//
-// Per-surface: the value does NOT scale with the type. Smaller text needs MORE
-// em space, not the same amount -- the glyph's own sidebearing shrinks below
-// perception at 14.5px while the visual join between mark and letter stays
-// just as tight. So the mini quotes take 0.2em and the 36px display quote
-// takes 0.1em, and a single shared constant would be wrong on both.
+// THE SPACING DOES NOT SCALE WITH THE TYPE -- smaller text needs MORE em
+// space, because the glyph's sidebearing drops below perception at 14.5px
+// while the join stays as tight. Mini quotes take 0.2em, the 36px display
+// quote 0.1em; one shared constant is wrong on both. Asymmetric because a gap
+// on the closing side reads as a stray character.
 //
 // Literal characters, not C escapes -- a backslash escape did not survive
 // being written through a shell heredoc once. See docs/wsl-tooling.md.
@@ -77,25 +67,13 @@ $bp-xl: 1280px;
 // Distinct from a prose link on purpose: this is a call to action, so it is
 // uppercase and tracked.
 // THE UNDERLINE IS A TEXT DECORATION, NOT A BORDER, AND THE BOX IS INLINE.
+// inline-flex with a border-bottom is fine on one line and wrong on two: the
+// box takes the full width once the string cannot fit, and the border draws
+// under the BOX -- one full-width rule under two short centred lines. `inline`
+// hugs the text per line and a decoration underlines each line.
 //
-// It was `display: inline-flex` with a `border-bottom`, which is fine on one
-// line and wrong on two. An inline-flex box shrink-wraps to its max-content
-// width -- the whole string on ONE line -- and when that exceeds the space
-// available it takes the full width instead. A border then draws under the
-// BOX, so a wrapped link got one full-width rule under two short centred
-// lines, reading as a broken button rather than a link.
-//
-// `display: inline` makes the box hug its text per line, and a text decoration
-// underlines each line rather than the box, so this now looks deliberate at
-// any length. Identical on one line, which is every other use of it.
-//
-// The flex was vestigial: `gap` and `align-items` only matter with an element
-// child, and both links using this contain text only -- the arrow is a typed →
-// in merchant copy, not an icon. If an icon is ever added here, it wants to be
-// an inline SVG with a margin, NOT a return to flex.
-//
-// text-decoration-color is left to follow currentColor, so the hover below
-// recolours the rule without restating it.
+// If an icon is ever added here it wants an inline SVG with a margin, NOT a
+// return to flex.
 @mixin cta-link {
   display: inline;
   color: var(--suf-color-link);
@@ -103,22 +81,13 @@ $bp-xl: 1280px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  // 2.3, and it is the WRAPPED case this is for. Every line of a wrapped link
-  // now carries its own rule, and at the default leading the first line's
-  // underline sits almost against the caps of the second -- two lines of text
-  // with a rule jammed between them, which reads as cramped rather than as one
-  // link.
+  // 2.3 is for the WRAPPED case. Each line carries its own rule, and the 8px
+  // underline offset eats most of what the leading adds -- so the usable gap
+  // is far smaller than the figure suggests, and 1.8 and 2 both still read as
+  // cramped. TIED TO THE OFFSET BELOW: change one, revisit the other.
   //
-  // The number is high because it is doing two jobs at once: it has to clear
-  // the 8px underline offset BELOW the first line as well as leave a readable
-  // gap above the second. 1.8 and 2 were both tried on a phone and both still
-  // read as tight -- the offset eats most of what the leading adds, so the
-  // usable gap is far smaller than the figure suggests. If the offset ever
-  // changes, this needs revisiting with it.
-  //
-  // It has to be leading rather than a margin: the space needed is BETWEEN the
-  // line boxes, and there is only one box to put a margin on. Costs a little
-  // height on the single-line uses, which is invisible there.
+  // Leading rather than a margin, because the space is needed BETWEEN line
+  // boxes and there is only one box to put a margin on.
   line-height: 2.3;
   text-decoration: underline;
   // 2px matches the border this replaced. 8px is the offset used by the other

@@ -2,16 +2,12 @@
   Wraps every "SUF-CPT" in the nowrap span, so the hyphenated mark never breaks
   across two lines.
 
-  This is done in Liquid rather than in the copy because richtext and
-  inline_richtext settings permit NO attributes -- `<span class="...">` is
-  rejected by template validation, so a merchant cannot type it even if they
-  wanted to.
+  In Liquid rather than in the copy because richtext settings permit NO
+  attributes -- `<span class="...">` is rejected by template validation, so a
+  merchant cannot type it even if they wanted to.
 
   Usage, on already-escaped or already-HTML text:
     {% render 'suf-nb', text: section.settings.heading %}
-
-  Takes the text as a string and returns it with the spans inserted. Safe to
-  run on text with no occurrences.
 {% endcomment %}
 {%- assign nb = '<span class="suf-nb">SUF-CPT</span>' -%}
 {{- text | replace: 'SUF-CPT', nb -}}

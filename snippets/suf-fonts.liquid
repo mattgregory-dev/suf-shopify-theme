@@ -11,82 +11,50 @@
   Grotesk is live on layout/suf.liquid while layout/theme.liquid stays on
   Arial.
 
-  THEME.LIQUID STAYS ON ARIAL. SETTLED, not pending. Decided 2026-08-30.
+  THEME.LIQUID STAYS ON ARIAL. SETTLED, not pending -- the Indivisible faces
+  have been corrupt for years, so those ~30 templates have rendered in Arial
+  for their whole life. That IS the legacy site. The direction is to migrate
+  templates onto layout/suf.liquid and let this shrink; do not "fix" it by
+  passing a family here.
 
-  This was once phrased as "until the legacy templates have been reviewed",
-  which read as a task someone would finish. Nobody will. The Indivisible
-  faces have been corrupt for years (see below), so those ~30 templates have
-  rendered in Arial for their whole life -- that IS what the legacy site looks
-  like, and restyling every one of them to make a font consistent is work
-  spent on pages the redesign is replacing.
-
-  The direction is to migrate templates onto layout/suf.liquid, where Hanken
-  Grotesk already applies, and let this shrink. Do not "fix" it by passing a
-  family here.
-
-  ONE EXCEPTION, and it is deliberate: sections/suf-nav.liquid opts back into
-  Hanken Grotesk for itself. It is the same section on both layouts and has to
-  look identical on both. See the font block in _suf-nav.scss.
+  ONE EXCEPTION: sections/suf-nav.liquid opts back in for itself, being the
+  same section on both layouts. See the font block in _suf-nav.scss.
 
   The applying rules carry !important because both layouts load
-  dt-framework.css, which sets font-family on the same elements at higher
-  specificity.
+  dt-framework.css, which sets font-family at higher specificity.
 
-  ---------------------------------------------------------------------------
-  WHY NOT INDIVISIBLE
-  ---------------------------------------------------------------------------
-  All four Indivisible files -- both .woff and both .woff2, in this repo AND in
-  the live theme, byte-identical -- were destroyed by a UTF-8 text round trip.
-  Every byte >= 0x80 became U+FFFD (EF BF BD), inflating each file ~75% past
-  the length its own header declares. A structural decode finds 0 of 15 WOFF
-  tables readable: tags read "=o?=" and "Nloc" rather than "cmap" and "glyf".
-  No browser can parse them, and the substitution is lossy, so they cannot be
-  repaired. The site rendered in Arial for years as a result.
+  WHY NOT INDIVISIBLE. All four files, in this repo AND the live theme and
+  byte-identical, were destroyed by a UTF-8 round trip: every byte >= 0x80
+  became U+FFFD, inflating each ~75% past its declared length. 0 of 15 WOFF
+  tables decode. The substitution is lossy, so they cannot be repaired.
 
-  Hanken Grotesk replaces it: OFL-licensed, self-hosted, 400/600/700/800/900,
-  woff2, latin subset, ~68 KB for the five. Self-hosted rather than linked
-  from Google's CDN -- two fewer origins on the critical path, and Google Fonts
-  sends visitor IPs to Google. See docs/migration.md.
+  Hanken Grotesk replaces it: OFL, self-hosted, 400/600/700/800/900, ~68 KB.
+  Self-hosted rather than Google's CDN -- two fewer origins on the critical
+  path, and Google Fonts sends visitor IPs to Google.
 
-  ---------------------------------------------------------------------------
-  WHY 800 IS A REAL FACE
-  ---------------------------------------------------------------------------
-  The design asks for font-weight 800 in ~50 places -- every heading, figure,
-  eyebrow and label. With only a 700 face declared, a browser has two bad
-  options and takes both depending on the engine: render 700 and ignore the
-  difference, or synthesise a faux-bold by smearing the 700 outlines. Neither
-  is the typeface's own 800, and the smeared version is visibly worse at
-  display sizes, which is exactly where this design uses it.
+  WHY 800 IS A REAL FACE. The design asks for it in ~50 places. With only 700
+  declared, engines either render 700 or synthesise a faux-bold by smearing the
+  outlines -- visibly worse at exactly the display sizes this design uses.
 
-  ---------------------------------------------------------------------------
-  DECLARING A FACE IS FREE; PRELOADING ONE IS NOT
-  ---------------------------------------------------------------------------
-  All five faces are declared here unconditionally. @font-face is lazy: the
-  browser downloads a file only when something on the page actually computes
-  to that family AND weight, so declaring a weight no page uses costs five
-  lines of CSS and zero bytes.
+  DECLARING A FACE IS FREE; PRELOADING ONE IS NOT. @font-face is lazy -- a file
+  downloads only when something computes to that family AND weight, so an
+  unused weight costs five lines of CSS and zero bytes.
 
   `preload_tag` in the layout is the opposite -- it fetches at high priority
   before the browser knows whether anything needs it. Only the weights that
   paint on first load belong there. See layout/suf.liquid for which two, and
   why the other three are deliberately left to load on demand.
 
-  ---------------------------------------------------------------------------
-  set_weights
-  ---------------------------------------------------------------------------
-  The applying rules set a font-weight as well as a family, to normalise the
-  legacy templates. That is wrong for layout/suf.liquid: `h1, h2, ...` is
-  (0,0,1), the suf base layer is `:where(.suf-body) h1` which is ALSO (0,0,1)
-  because :where() contributes nothing, and this snippet renders AFTER
-  suf.css -- so the tie went to whichever came last, and every suf heading was
-  rendering at 700 while the stylesheet asked for 800.
+  set_weights. The applying rules set a weight as well as a family, to
+  normalise the legacy templates -- wrong for layout/suf.liquid, where `h1, h2`
+  at (0,0,1) TIES with the base layer's `:where(.suf-body) h1` (:where()
+  contributes nothing) and this renders after suf.css, so the tie went here and
+  held every heading at 700 while the stylesheet asked for 800. Pass
+  `set_weights: false` on a layout that supplies its own.
 
-  Pass `set_weights: false` on a layout that supplies its own weights. The
-  family rules keep their !important; those are still doing real work.
-
-  Both files were verified before being committed: signature wOF2, declared
-  length equal to actual byte length, zero U+FFFD sequences. Do that check on
-  any font added here.
+  VERIFY ANY FONT ADDED HERE: signature wOF2, declared length equal to actual
+  byte length, zero U+FFFD sequences. That check is what the corruption above
+  would have caught.
 
   Licence: SIL OFL 1.1, see OFL.txt in the repo root. The OFL requires the
   licence text to travel with the font, so keep them together.

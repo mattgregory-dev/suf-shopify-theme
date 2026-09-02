@@ -157,34 +157,17 @@
   border-top: 1px solid var(--suf-color-border-subtle);
 }
 
-// THE CARD IS THE ROW; THE GRID IS THE LINE INSIDE IT.
-//
-// The row is a <details> now, so the two jobs had to separate. `.suf-semrow`
-// is the surface -- background, shadow, the red edge -- and `.suf-semrow__line`
-// is the five-column line, which renders as a <summary> on a row that opens
-// and a <div> on one that cannot. Leaving the grid on the row itself would
-// have laid the panel out as a sixth column.
+// THE CARD IS THE ROW; THE GRID IS THE LINE INSIDE IT. `.suf-semrow` is the
+// surface and `.suf-semrow__line` is the five-column line. Leaving the grid on
+// the row would lay the panel out as a sixth column.
 .suf-semrow {
   border-bottom: 1px solid var(--suf-color-border-subtle);
   color: inherit;
 
-  // THE ROW LOOKS LIKE A CARD AT REST, not only under the cursor.
-  //
-  // It used to sit flat on the page band and lift only on hover. Two problems
-  // with that, and the second is the real one:
-  //
-  // 1. On a page whose next section is a heavy shadowed panel, a flat row
-  //    reads as background. The thing being sold looked less important than
-  //    the thing describing it.
-  // 2. HOVER IS NOT AVAILABLE TO EVERYONE. On touch there is no resting hover
-  //    state at all, so every visitor on a phone -- the majority here -- only
-  //    ever saw the flat version. A treatment that exists only on hover is a
-  //    treatment half the audience never sees.
-  //
-  // So the card is the default and hover LIFTS it further. The shadow is
-  // deliberately lighter at rest than the old hover value was: it has to read
-  // as a surface without competing with the guarantee panel below, and it has
-  // to leave somewhere for hover to go.
+  // THE CARD IS THE RESTING STATE, and hover lifts from it. TOUCH HAS NO
+  // RESTING HOVER, so a treatment that only exists on hover is one most of
+  // this page's traffic never sees. The resting shadow is lighter than the old
+  // hover value: it has to leave somewhere for hover to go.
   position: relative;
   background: var(--suf-color-surface);
   box-shadow:

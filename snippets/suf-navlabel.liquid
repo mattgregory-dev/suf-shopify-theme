@@ -11,22 +11,14 @@
 
       The SUF-CPT<span class="suf-navsub">start here — Level 1</span>
 
-  WHY THE TITLE AND NOT A THEME SETTING. The alternative is header section
-  blocks pairing a handle to a subtitle, which gives the merchant proper fields
-  but two lists to keep in step: rename a menu item and its subtitle silently
-  orphans. Here the label and its subtext are one string, edited in the same
-  place, and they cannot drift apart.
+  THE TITLE, NOT A THEME SETTING. Header blocks pairing a handle to a subtitle
+  would give proper fields but two lists to keep in step -- rename a menu item
+  and its subtitle silently orphans. The cost is a pipe visible in the admin.
 
-  The cost is a pipe visible in the admin menu editor. That is the whole cost.
-
-  NO PIPE, NO SPAN. A title without one renders exactly as before, so every
-  existing menu item is unaffected and the subtext is opt-in per link.
+  NO PIPE, NO SPAN, so the subtext is opt-in per link.
 
   `contains` is tested first because `split` always returns at least one part
   -- parts.size can never distinguish "has a subtitle" from "does not".
-
-  Everything is escaped. The merchant is typing into a menu field, and the pipe
-  is the only markup this snippet lets through.
 
   Usage:
     {% render 'suf-navlabel', title: child_link.title %}

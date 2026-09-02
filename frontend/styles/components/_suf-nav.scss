@@ -5,38 +5,22 @@
 // the section itself emits. Every other partial here can assume suf.liquid;
 // this one cannot assume anything but its own markup.
 //
-// Ported from VARIANT 1 -- BASELINE in ~/projects/suf/mockups/blog.html, with
-// two deliberate departures:
+// Departures from the mockup: cqi -> vw (a real header's container IS the
+// viewport, and neither layout has a container-type ancestor), and the logo
+// clamps continuously rather than stepping at the sticky state.
 //
-//   * cqi -> vw. The mockup renders each header inside a narrow demo frame, so
-//     it needs container queries. A real header's container IS the viewport,
-//     and neither layout has a `container-type` ancestor to query.
-//   * the logo height clamps too, rather than only stepping at the sticky
-//     state. It shrinks continuously, which buys width before the hamburger
-//     has to take over.
-//   * the logo is sized for a SQUARE mark. The mockup's placeholder is a wide
-//     horizontal lockup, for which 60px tall is unremarkable; the real logo is
-//     about 1:1, so height is the expensive dimension. See the logo block.
-//
-// ONE BREAKPOINT: 900px, the hamburger takeover. Everything above it narrows
-// continuously. That is the whole point of clamping here -- the alternative is
-// a ladder of breakpoints, each of which is a place for the layout to jump.
+// ONE BREAKPOINT: 900px, the hamburger takeover. Everything above narrows
+// continuously -- the alternative is a ladder of breakpoints, each a place for
+// the layout to jump.
 
-// THE SECTION WRAPPER HAS TO BE ERASED FOR STICKY TO WORK.
+// THE SECTION WRAPPER HAS TO BE ERASED FOR STICKY TO WORK. {% section %} wraps
+// this in a div that is exactly as tall as the header, so a sticky child has
+// zero travel inside it and never moves. The rule applies; it just cannot do
+// anything, and the header looks correct while not being sticky.
 //
-// {% section %} wraps everything in <div id="shopify-section-suf-nav">, and
-// that div is .sufnav-wrap's containing block. It is exactly as tall as the
-// header, so a sticky child has zero travel inside it and never moves -- the
-// rule applies, it just can never do anything. The symptom is a header that
-// looks correct and simply is not sticky.
-//
-// `display: contents` removes the wrapper's box from the tree entirely, so
-// .sufnav-wrap's containing block becomes the body and it can travel the whole
-// page. The class comes from "class": "sufnav-section" in the schema.
-//
-// The alternative -- making the section wrapper itself sticky -- would drag
-// .sufnav__sentinel along with it, so the sentinel would never leave the
-// viewport and the compressed state could never fire.
+// Making the section wrapper itself sticky instead would drag
+// .sufnav__sentinel with it, so the sentinel would never leave the viewport
+// and the compressed state could never fire.
 .sufnav-section {
   display: contents;
 }
@@ -61,21 +45,14 @@
   pointer-events: none;
 }
 
-// EVERYTHING BELOW IS NESTED INSIDE .sufnav-wrap, ON PURPOSE.
-//
-// Not for tidiness -- for specificity. dt-framework.css, loaded on
-// theme.liquid, styles buttons with an attribute selector on type="button".
-// That is (0,1,1), and it beats a bare .sufnav__* class at (0,1,0) -- it
+// EVERYTHING BELOW IS NESTED INSIDE .sufnav-wrap FOR SPECIFICITY, not
+// tidiness. dt-framework.css on theme.liquid styles buttons with an attribute
+// selector at (0,1,1), which beats a bare .sufnav__* class at (0,1,0) -- it
 // painted the dropdown parents, hamburger and search toggle black the first
-// time this section rendered on a legacy template.
+// time this rendered on a legacy template. Nesting makes every rule (0,2,0).
 //
-// Nesting makes every rule here (0,2,0) or more, so the section survives the
-// legacy stylesheet without restating a dozen properties by hand.
-//
-// _suf-search.scss is scoped the same way and never had this problem.
-//
-// The three rules above stay outside: .sufnav-wrap cannot be nested in
-// itself, and .sufnav__sentinel is its SIBLING, not its child.
+// The three rules above stay outside: .sufnav-wrap cannot nest in itself, and
+// .sufnav__sentinel is its SIBLING.
 .sufnav-wrap {
   .sufnav {
     display: flex;
@@ -90,38 +67,21 @@
   // ---------------------------------------------------------------------------
   // LOGO
 
-  // SIZED FOR A SQUARE MARK, which is what this shop's logo is. That is not a
-  // detail -- it inverts which dimension is scarce.
+  // SIZED FOR A SQUARE MARK, which inverts which dimension is scarce: a 1:1
+  // mark at 60px tall buys 60px of presence where a wide lockup buys 200px.
   //
-  // A wide lockup at 60px tall costs 60px of bar height and buys 200px of
-  // presence. A 1:1 mark at the same height costs the same 60px and buys 60px,
-  // so it reads as small while making the bar as tall as the wide one would.
-  // The logo, not the nav labels, is what sets the bar height here: 56 + 18 of
-  // padding is 74px, against 61px for a label row.
-  //
-  // TARGET: an 80px MARK at full size, which makes the bar 98px -- 80 plus 9px
-  // of padding either side.
-  //
-  // The label row is only 61-66px across the whole range, so it is never what
-  // sets the bar height. The logo is, always. Change the clamp below or the
-  // padding and the bar moves; change the type size and it does not.
+  // THE LOGO SETS THE BAR HEIGHT, always -- the label row is only 61-66px
+  // across the whole range. Change the clamp or the padding and the bar moves;
+  // change the type size and it does not.
   .sufnav__logo {
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    // WIDTH IS RESERVED, and this is what keeps the nav from drifting.
-    //
-    // The mark is square, so compressing it 80px -> 62px gives back 18px of
-    // WIDTH as well as height. .sufnav__menu is flex: 1 with
-    // justify-content: center, so it re-centres in the larger space and the
-    // whole menu slides 9px left at the moment the header goes sticky --
-    // subtle, but it lands on top of the pin and reads as instability.
-    //
-    // Holding the box at the resting mark's width means the flex row never
-    // re-measures: only the artwork inside changes size. min-width rather than
-    // width so a wide lockup can still make the box bigger.
-    //
-    // Matches the img height clamp exactly, because the mark is 1:1.
+    // WIDTH IS RESERVED so the nav does not drift. The mark is square, so
+    // compressing it on sticky gives back width as well as height, and the
+    // centred menu re-centres into it -- sliding sideways at the exact moment
+    // the header pins. Holding the box means only the artwork resizes.
+    // min-width, not width, so a wide lockup can still enlarge it.
     min-width: clamp(70px, 5.33vw, 80px);
     padding: 9px 0;
     text-decoration: none;
@@ -313,26 +273,13 @@
     }
   }
 
-  // THE CURRENT PAGE, INSIDE A PANEL.
+  // TWO INDICATORS, DELIBERATELY DIFFERENT SHAPES: a red bar marks the BRANCH
+  // (on the top-level item), fill+weight marks the PAGE. A red bar on both
+  // would be the same mark at two indents, which stacked on mobile reads as
+  // one claim made twice rather than section-then-page.
   //
-  // Two indicators with two different jobs, and they are deliberately not the
-  // same shape:
-  //
-  //   red bar   -- the BRANCH you are in. Stays on the top-level item, which
-  //                is also lit when one of its children is current.
-  //   fill+weight -- the PAGE you are actually on.
-  //
-  // A red bar on the child as well would put two identical marks at two
-  // indents, and stacked on mobile they read as the same claim made twice
-  // rather than as section-then-page. A different shape reads as a different
-  // meaning immediately; a different indent does not.
-  //
-  // It also costs nothing new: these rows already tint on hover, so the
-  // current row is speaking the vocabulary the panel already has. It simply
-  // does not go away.
-  //
-  // Hooked on aria-current, which the section already emits -- no extra class,
-  // and the styling cannot drift from the semantics.
+  // Hooked on aria-current, which the section already emits, so the styling
+  // cannot drift from the semantics.
   .sufnav__drop a[aria-current='page'] {
     background: var(--suf-color-border-faint);
     color: var(--suf-navy);
@@ -535,18 +482,13 @@
   // ---------------------------------------------------------------------------
   // SEARCH PANEL
   //
-  // AT EVERY WIDTH, not just stacked. The old forked header rendered this panel
-  // ABOVE the bar, where pushing the whole page down was the only thing it
-  // could do. This section renders it inside .sufnav-wrap, below the bar, so it
-  // now opens from the bar the way the dropdowns do -- and having it shove the
-  // page down while the dropdown beside it floats over reads as a bug.
+  // ABSOLUTE AT EVERY WIDTH. It opens from the bar the way the dropdowns do;
+  // having it shove the page down while the dropdown beside it floats over
+  // reads as a bug.
   //
-  // top: 100% is measured from .sufnav-wrap, which is only as tall as the bar
-  // once this element is out of flow -- so the panel lands directly under it.
-  //
-  // This beats `position: relative` in _suf-search.scss on source order alone:
-  // both are (0,2,0), and main.scss loads suf-nav after suf-search for exactly
-  // this reason.
+  // This beats `position: relative` in _suf-search.scss on SOURCE ORDER alone
+  // -- both are (0,2,0), and main.scss loads suf-nav after suf-search for
+  // exactly this reason.
   .suf-search {
     position: absolute;
     top: 100%;
@@ -558,12 +500,9 @@
     //     65  .sufnav__drop    desktop dropdowns, which open over it
     //     70  .sufnav__menu    the stacked drawer, over everything
     //
-    // The drawer and this panel are mutually exclusive -- suf-nav.js closes
-    // the drawer when search opens -- but if that ever fails, the menu being
-    // on top is the recoverable way round.
-    //
-    // The dropdowns are NOT exclusive with it: on desktop you can hover a nav
-    // item while the search panel is down, and the menu has to win.
+    // The drawer and this panel are mutually exclusive, but if that fails the
+    // menu being on top is the recoverable way round. The dropdowns are NOT
+    // exclusive: a nav item can be hovered while the panel is down.
     z-index: 60;
     box-shadow: 0 24px 40px -12px rgb(0 10 20 / 40%);
 
@@ -777,49 +716,27 @@
   // ---------------------------------------------------------------------------
   // DEFENCE AGAINST THE LEGACY RESET
   //
-  // Only reachable on layout/theme.liquid, which loads dt-framework.css. None of
-  // this does anything on the suf layout -- it exists so the section survives
-  // being pointed at the legacy one.
+  // Only reachable on layout/theme.liquid, which loads dt-framework.css.
+  // Nothing here does anything on the suf layout.
   //
-  // The rules being defended against are (0,0,1) bare element selectors, so they
-  // lose to any .sufnav__* class. That is exactly why they are dangerous: they
-  // only reach properties this file leaves UNDECLARED, which makes them
-  // invisible in review. Declaring the property is the whole fix.
+  // The rules defended against are (0,0,1) bare elements, so they lose to any
+  // .sufnav__* class -- which is exactly what makes them dangerous. They only
+  // reach properties this file leaves UNDECLARED, so they are invisible in
+  // review. Declaring the property is the whole fix.
   //
-  // Audited against assets/dt-framework.css.liquid on 2026-08-30.
+  // Specificity is computed PER SELECTOR in a list, so dt-framework's
+  // `button[type="button"]` is (0,1,1), not the bare `button` it looks like.
+  // Every button here carries type="button", so it beat .sufnav__* at (0,1,0)
+  // and painted the dropdown parents, hamburger and search toggle black.
+
+  // THE FONT, ON LEGACY TEMPLATES. theme.liquid renders `suf-fonts` with no
+  // family, which pins ~30 legacy templates to `Arial !important` until they
+  // are reviewed. The header is not one of them -- it is the same section on
+  // both layouts and has to match.
   //
-  // Its button rule is NOT the bare `button` it looks like. The selector list is
-  //
-  //     input[type="submit"], ..., button[type="button"], *[role="button"],
-  //     button, .button, a.button, .dt-sc-btn, ...
-  //
-  // and specificity is computed PER SELECTOR in a list. `button[type="button"]`
-  // is (0,1,1) -- an element plus an attribute -- and every button in this
-  // section carries type="button". That beat every .sufnav__* class at (0,1,0)
-  // and painted the dropdown parents, the hamburger and the search toggle black.
-  //
-  // Which is why the whole partial is nested one level deeper: see the top of
-  // the file. These few rules mop up properties nothing else here declares.
-  // THE FONT, ON LEGACY TEMPLATES.
-  //
-  // layout/theme.liquid renders `suf-fonts` with no family, which applies
-  //
-  //     p, li, a, nav, div, span, button, ... { font-family: Arial !important }
-  //
-  // deliberately -- the ~30 legacy templates stay on Arial until they have
-  // been reviewed. But the header is no longer a legacy template; it is the
-  // same section both layouts render, and it has to look the same on both.
-  //
-  // !important is not a shortcut here, it is the only instrument that works:
-  // specificity cannot beat an !important declaration, only a more specific
-  // !important can. `.sufnav-wrap *` is (0,1,0) against the snippet's (0,0,1).
-  //
-  // The faces are already declared on both layouts -- @font-face is lazy, so
-  // theme.liquid was carrying the declarations and downloading nothing. This
-  // is what makes it fetch them.
-  //
-  // Scoped to the wrapper, so it changes the header and the search panel and
-  // NOTHING else on a legacy page.
+  // !important is the only instrument that works: specificity cannot beat an
+  // !important declaration, only a more specific !important can. Scoped to the
+  // wrapper so nothing else on a legacy page moves.
   &,
   & * {
     font-family: var(--suf-font-body) !important;

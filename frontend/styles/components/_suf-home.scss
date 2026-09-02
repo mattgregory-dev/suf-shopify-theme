@@ -356,21 +356,11 @@
 .suf-body .suf-pkg-more {
   margin: var(--suf-space-4) 0 0;
   text-align: center;
-  // ON THE WRAPPER, NOT THE LINK, and it has to be. text-wrap governs how a
-  // BLOCK CONTAINER breaks its lines; setting it on the inline <a> inside
-  // would inherit down to nothing that makes the decision. It is an inherited
-  // property, so declaring it here reaches the <p> the richtext produces,
-  // which is the box that actually does the breaking.
-  //
-  // This is the only link on the site long enough to wrap: at 320px "Compare
-  // every package side by side →" cannot fit one line at any type size that
-  // still looks like this element. Balance evens the two lines instead of
-  // filling the first, which also keeps the → off a line of its own.
-  //
-  // Degrades to normal wrapping where it is unsupported -- Safari only got it
-  // in 17.5 -- and there the arrow can orphan again. A non-breaking space in
-  // snippets/suf-nb.liquid is the fix if that ever shows up on a device; it
-  // was built and reverted as too much machinery for a fallback.
+  // ON THE WRAPPER, NOT THE LINK. text-wrap governs how a BLOCK CONTAINER
+  // breaks its lines, so on the inline <a> it would be ignored. Declared here
+  // it inherits to the <p> the richtext produces, which is the box that
+  // actually breaks. (_suf-study.scss solves the same problem the other way,
+  // by making its link inline-block.)
   text-wrap: balance;
 
   // The link inside is a richtext setting, so the merchant writes the <a> and

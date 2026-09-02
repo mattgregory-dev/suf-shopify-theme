@@ -54,21 +54,10 @@
 
 // In-page anchor jumps land under the sticky header without this.
 //
-// POSITIONAL, so no section has to opt in. Shopify wraps every section in its
-// own <section class="shopify-section">, and our section roots are the direct
-// child, so this reaches any root carrying an anchor id -- whatever component
-// it is, light or dark.
-//
-// That matters because the class-based rules below do NOT cover every case.
-// A full-bleed dark band carries its own rhythm and deliberately does not take
-// .suf-section, so `#bundle` on the continuing-education page -- a dark
-// suf-cert -- had no offset and landed under the header. suf-guides and
-// suf-agenda work around the same gap by hand-adding .suf-anchor-target, which
-// is one file remembering what another is doing, and only works for as long as
-// somebody remembers.
-//
-// The two class selectors are kept: they cost nothing and they still apply on
-// anything not rendered as a section root.
+// POSITIONAL, so no section has to opt in. The class rules alone do NOT cover
+// every case: a full-bleed dark band deliberately does not take .suf-section,
+// so #bundle on the CE page had no offset and landed under the header. The two
+// class selectors are kept for anything not rendered as a section root.
 .suf-main > .shopify-section > [id],
 .suf-section[id],
 .suf-anchor-target {
@@ -274,27 +263,15 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
     box-shadow: none;
   }
 
-  // THE FOCUS RING.
+  // THE FOCUS RING is a pseudo-element because it must do two things at once
+  // that neither an outline nor a box-shadow can: sit OFF the button with a
+  // gap (a shadow can only paint a solid rect, so the gap would need the
+  // surface colour, which differs per band), and be ASYMMETRIC (buttons shift
+  // up-left 2px and throw a shadow 4px down-right, so a uniform ring clips the
+  // corner of the shape actually on screen).
   //
-  // A pseudo-element, not an outline and not a box-shadow, because it has to
-  // do two things at once that neither can:
-  //
-  //   1. Sit OFF the button, with a visible gap. An outline does this with
-  //      outline-offset; a box-shadow cannot -- it can only paint a solid
-  //      rect behind the button, so any "gap" would have to be filled with
-  //      the surface colour, which differs per band.
-  //   2. Be ASYMMETRIC. Every button here shifts up-left 2px on focus and
-  //      throws a hard shadow 4px down-right, so a uniform ring clips the
-  //      bottom-right corner of the shape the user actually sees. An outline
-  //      is the same on all four sides by definition.
-  //
-  // Hence: 5px of gap on the top and left, and 4px past the 4px shadow on the
-  // right and bottom -- 7px and 10px once the ring's own 2px is included.
-  //
-  // ONE colour for every button, primary and ghost, on light bands and dark:
-  // --suf-color-focus. A focus ring is a system affordance, not decoration --
-  // a keyboard user learns its colour once and should then recognise it
-  // anywhere on the site, so it does not vary per component.
+  // ONE colour for every button on every band. A focus ring is a system
+  // affordance -- learned once, recognised everywhere -- not decoration.
   //
   // It clears 3:1 against both surfaces it lands on -- roughly 3.2:1 on the
   // page background and 3.9:1 on the navy bands -- which is the threshold for

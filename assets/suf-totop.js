@@ -1,22 +1,12 @@
 // Back to top: reveal on scroll.
 //
-// The ECMAScript equivalent of the jQuery in dt-theme.js.liquid, which showed
-// #to-top past 800px of scroll and animated the jump over 900ms. Both halves
-// are replaced, and only one of them needs JavaScript:
+// ONLY THE REVEAL NEEDS JAVASCRIPT. The jump is `scroll-behavior: smooth` in
+// _suf-base.scss, which is guarded by prefers-reduced-motion and leaves the
+// browser's focus handling intact, unlike an animated scrollTop.
 //
-//   REVEAL   here, with an IntersectionObserver.
-//   SCROLL   not here. `scroll-behavior: smooth` does it natively, guarded by
-//            prefers-reduced-motion, and unlike an animated scrollTop it
-//            leaves the browser's own focus handling intact. See
-//            _suf-base.scss.
-//
-// Why an observer rather than a scroll listener: the legacy version ran a
-// jQuery selector and a style write on EVERY scroll event for the whole life
-// of the page. This fires twice -- crossing the threshold going down, and
-// again coming back -- and does its intersection work off the main thread.
-//
-// docs/migration.md records the header's scroll handler leaking a listener per
-// event. Nothing here binds to scroll at all, so that bug cannot recur.
+// An observer rather than a scroll listener: this fires twice rather than on
+// every scroll event, and nothing here binds to scroll at all -- so the
+// listener leak recorded in docs/migration.md cannot recur.
 
 const button = document.querySelector(".suf-totop");
 

@@ -294,13 +294,30 @@ If no, don't write it. Most of what fails that test is narration.
 - **History.** "This used to be X, changed on 2026-08-31." That is `git log`.
 - The second sentence restating the first.
 
-**Limits**
+**One idea, one statement**
 
-1. Inline comments: **3 lines**. Longer belongs in `docs/`, or is not worth
-   saying.
-2. File header blocks only where a file has real architecture — `suf-semlist`,
-   `suf-cert`. The header says what the file *is*, not the story of building
-   it.
+This is the rule that matters. What makes a block enormous is not facts, it is
+saying one thing three ways — assert it, restate it, then explain the
+restatement. Cutting the repetition is where nearly all the length goes, and no
+fact is lost with it.
+
+**Budget by what is being explained**, not a flat cap:
+
+| | |
+|---|---|
+| A value or a small decision | 1–2 lines |
+| A trap that fails silently | up to ~8 |
+| A file header, where there is real architecture | ~15 |
+| Longer | it belongs in `docs/` |
+
+A trap gets the larger budget because it has to **name the symptom** — that is
+what someone greps for when they hit it, and it is the part that saves the
+hour. "The panel looks too wide" finds the iOS zoom note; "font-size" does not.
+
+**The check that catches drift: comments should not run past roughly a quarter
+of a file.** `_suf-motion.scss` reached 64% and `_suf-instance.scss` 73% before
+anyone objected. A ratio flags the problem months before it becomes annoying,
+and no per-comment rule does.
 
 A comment costs a line of code. Three lines on a one-line change is nearly
 always wrong.

@@ -2,23 +2,11 @@
 
 // snippets/suf-search.liquid
 //
-// Ported from the inline <style> that lived in snippets/dT_top-search.liquid,
-// rewritten against the design tokens. The old rules read --DTTertiaryColor,
-// --DTColor_Border, --DT_Button_Border_Radius and --DTRadius; those come from
-// the legacy theme and are not what a rebuilt component should follow.
-//
-// SCOPED TO .sufnav-wrap, NOT .suf-body -- unlike every other partial here.
-//
-// This panel is rendered by sections/suf-nav.liquid, which is built to run on
-// BOTH layouts. .suf-body is set only by layout/suf.liquid, so scoping there
-// would leave the panel completely unstyled on legacy templates: the markup
-// renders, not one rule matches, and it degrades to a bare form.
-//
-// .sufnav-wrap is emitted by the section itself, so it is present wherever the
-// panel is. Same reasoning as _suf-nav.scss being unscoped.
-//
-// The legacy header renders its own panel from snippets/dT_top-search.liquid
-// and is unaffected either way.
+// SCOPED TO .sufnav-wrap, NOT .suf-body, unlike every other partial here.
+// suf-nav.liquid runs on BOTH layouts and .suf-body is set only by suf.liquid,
+// so scoping there would leave the panel completely unstyled on legacy
+// templates -- markup renders, no rule matches, it degrades to a bare form.
+// .sufnav-wrap is emitted by the section itself.
 
 .sufnav-wrap {
   .suf-search {
@@ -66,32 +54,15 @@
     background: none;
     padding: var(--suf-space-sm);
     font: inherit;
-    // 16px IS A HARD FLOOR ON iOS, and this input was under it. Same rule as
-    // the contact form, which already carries this comment -- see
-    // _suf-contact.scss.
+    // 16px IS A HARD FLOOR ON iOS, and `font: inherit` put this one pixel
+    // under it. THAT ZOOM IS WHY THE PANEL LOOKS TOO WIDE: Safari zooms in on
+    // focus and does not zoom back out on blur, so one tap leaves the layout
+    // viewport narrower than the visual one for the session -- panel
+    // overhanging, cards cut off, close button past the edge. Three symptoms,
+    // one event, and none of them reproduce in the devtools emulator.
     //
-    // --suf-font-size-base is clamp(15px, 1.1vw, 17px), so on a 390px phone
-    // 1.1vw is about 4px and the clamp floors at 15. `font: inherit` brought
-    // that down here, one pixel under the threshold at which iOS Safari zooms
-    // the viewport on focus.
-    //
-    // THAT ZOOM IS WHY THE PANEL LOOKS TOO WIDE, and it is worth being explicit
-    // because the symptom does not look like a type-size bug. Safari zooms in
-    // on focus and DOES NOT zoom back out on blur, so one tap in the field
-    // leaves the layout viewport permanently narrower than the visual one for
-    // the rest of the session: the panel overhangs, the result cards are cut
-    // off at the right, and the close button sits near or past the edge. All
-    // three are one event, and they persist long after the keyboard is gone --
-    // which is why the panel looks wrong even "before" anything happens.
-    //
-    // It cannot reproduce in the devtools emulator: the emulator resizes a
-    // desktop viewport and has no iOS focus-zoom behaviour to emulate. A
-    // difference between the emulator and the device is itself the tell here.
-    //
-    // max() rather than a flat 16px so the desktop end still tracks the token
-    // -- the base clamps up to 17px on a wide screen and this follows it.
-    // Placed AFTER the shorthand deliberately: `font: inherit` resets
-    // font-size, so declaring it above would be overwritten.
+    // max() so the desktop end still tracks the token. AFTER the shorthand,
+    // which resets font-size.
     font-size: max(16px, var(--suf-font-size-base));
     color: var(--suf-color-text);
 

@@ -83,30 +83,16 @@
   // is an image-led device; dropping the photo below the copy on a phone turns
   // it into a wall of text with a picture nobody scrolls to.
   //
-  // ---------------------------------------------------------------------
-  // THE STACKED-MEDIA RULE. This is the canonical copy; the other stacked
-  // images point here rather than restating it.
+  // THE STACKED-MEDIA RULE, canonical copy -- the other stacked images point
+  // here. Every two-column image is CAPPED and CENTRED once it stacks, from
+  // --suf-stack-media-tall / --wide chosen by the crop. Do not add a
+  // per-component number: there are two decisions here, not one per section.
   //
-  // Every two-column section's image is CAPPED and CENTRED once the columns
-  // stack. Both halves matter and they were previously applied at random --
-  // five components had five different caps and only this one centred, so a
-  // 440px image sat hard against the left edge of a 960px container and read
-  // as a layout bug.
-  //
-  // The cap comes from --suf-stack-media-tall / --wide, chosen by the crop.
-  // Do not introduce a per-component number: the whole point is that there
-  // are two decisions here, not one per section. See _tokens.scss.
-  // ---------------------------------------------------------------------
-  // `width: 100%` IS LOAD-BEARING, and every capped-and-centred grid item
-  // below needs it. A grid item stretches to its area only while its inline
-  // margins are not auto; the moment `margin-inline: auto` is set, stretch is
-  // switched off and the item falls back to shrink-to-fit -- so it sizes to
-  // its own CONTENT and the cap never applies. Cards then come out at
-  // different widths down the page, each one centred, which looks like a
-  // stagger rather than like a missing width.
-  //
-  // width:100% restores the stretch; max-width caps it; the auto margins then
-  // centre what is left. All three are required.
+  // `width: 100%` IS LOAD-BEARING for every capped-and-centred grid item. A
+  // grid item stretches to its area only while its inline margins are not
+  // auto -- setting `margin-inline: auto` switches stretch off and it
+  // shrink-to-fits its CONTENT, so the cap never applies and cards come out at
+  // different widths down the page. All three declarations are required.
   @media (max-width: 1000px) {
     order: -1;
     width: 100%;

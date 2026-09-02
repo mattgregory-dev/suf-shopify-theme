@@ -1,21 +1,14 @@
 // Bundle selection: reveal the seminar picker only when the chosen
 // combination includes a seminar.
 //
-// The CE bundle is "any two of three", and one of the three is a weekend
-// seminar. Asking which seminar when the buyer picked two certifications is
-// noise; not asking when they did pick one loses the answer.
+// THE DIRECTION MATTERS. The field is rendered VISIBLE by suf-cert.liquid and
+// hidden here, so a blocked script leaves both fields showing and the buyer
+// can still answer. The other way round, it would silently remove a choice
+// from a $XXX purchase.
 //
-// PROGRESSIVE ENHANCEMENT, and the direction matters. The seminar field is
-// rendered VISIBLE by sections/suf-cert.liquid and hidden here. With no
-// JavaScript -- a blocked asset, an error in an unrelated module -- both
-// fields simply show and the buyer can still say what they want. The other way
-// round, a failed script would silently remove a choice from a $XXX purchase.
-// Same principle as the [data-suf-motion] gate on the scroll accents.
-//
-// `disabled` as well as `hidden`, because hidden alone is not enough: a
-// disabled control is not submitted, so switching from "Nutrition + Seminar"
-// to "Nutrition + Soft Tissue" cannot leave a stale seminar riding along on an
-// order that has no seminar in it.
+// `disabled` as well as `hidden`: a hidden control is still submitted, so
+// switching combinations would leave a stale seminar on an order that has
+// none.
 
 function bindPicker(picks) {
   const form = picks.closest('form');

@@ -101,26 +101,18 @@ function init() {
   });
 
   nav.querySelectorAll('.sufnav__item--has').forEach((item) => {
-    // Hover is driven from here rather than from CSS, so that opening a panel
-    // and saying it is open are the same action. See the .is-open comment in
-    // _suf-nav.scss.
+    // Hover is driven from here, not CSS, so opening a panel and saying it is
+    // open are one action. See the .is-open comment in _suf-nav.scss.
     //
-    // POINTER EVENTS, AND A pointerType TEST, because of touch devices wide
-    // enough to still be showing the desktop nav -- a tablet in landscape.
+    // THE pointerType TEST IS FOR TOUCH DEVICES WIDE ENOUGH TO SHOW THE
+    // DESKTOP NAV. Browsers emulate hover on tap and fire pointerenter BEFORE
+    // click, so a plain mouseenter listener opened the panel and the click
+    // shut it again -- the menu flashed and appeared to need two taps.
     //
-    // Browsers emulate hover on tap: a tap fires pointerenter BEFORE click. So
-    // with a plain mouseenter listener the first tap opened the panel and the
-    // click that followed toggled it straight back shut -- a visible flash of
-    // the panel, and the menu appearing to need two taps. The second tap
-    // worked only because no fresh enter event fired.
-    //
-    // Testing event.pointerType is per-INTERACTION, not per-device, so a
-    // laptop with a touchscreen still opens on hover with the mouse and
-    // toggles on tap with a finger. A `(hover: hover)` media query would have
-    // to pick one for the whole device and get one of them wrong.
-    //
-    // Guarded on the breakpoint too: stacked, these are tap-to-expand
-    // accordions, and a stray enter event would spring them open.
+    // Testing per-INTERACTION rather than per-device means a laptop with a
+    // touchscreen opens on hover with the mouse and toggles on tap with a
+    // finger; `(hover: hover)` would have to pick one and be wrong for the
+    // other.
     item.addEventListener('pointerenter', (event) => {
       if (MOBILE.matches || event.pointerType !== 'mouse') return;
       setPanel(item, true);
