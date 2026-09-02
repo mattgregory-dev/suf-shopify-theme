@@ -1,0 +1,116 @@
+// The optional "which seminar" picker on bundles that carry a seminar credit.
+//
+// TWO SURFACES, ONE TREATMENT. It renders inside suf-guides' buy cards on the
+// page background, and inside suf-cert's band, which is navy on the CE page.
+// Sharing a base and overriding only the colours is what keeps them the same
+// control rather than two that drifted.
+//
+// Matched to .suf-gcard__variants in _suf-study.scss, which is the study
+// guides' English/Spanish select. A merchant meets these in the same flow and
+// they should not look like different systems.
+//
+// 16px on the select is a HARD FLOOR, not a size choice: iOS Safari zooms the
+// viewport on focus for anything smaller and does not zoom back out on blur.
+// The same rule is on the contact form and the search input, and the write-up
+// of what it costs when missed is in docs/redesign-open-items.md.
+
+%suf-seminar-field {
+  display: grid;
+  gap: 7px;
+  max-width: 320px;
+  margin-bottom: var(--suf-space-3);
+
+  label {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 0;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: var(--suf-color-focus);
+    box-shadow: 0 0 0 3px rgb(2 146 219 / 14%);
+  }
+
+  // A box-shadow ring is not rendered in forced-colours mode, so without this
+  // the focused select would have no visible indicator at all for those users.
+  @media (forced-colors: active) {
+    select:focus {
+      outline: 2px solid;
+      outline-offset: 1px;
+    }
+  }
+}
+
+// On the page surface -- suf-guides cards.
+.suf-gcard__seminar {
+  @extend %suf-seminar-field;
+
+  label {
+    color: var(--suf-color-heading);
+  }
+
+  select {
+    color: var(--suf-color-heading);
+    background: var(--suf-color-bg);
+    border: 1px solid var(--suf-color-input-border);
+  }
+
+  select:focus {
+    background: var(--suf-color-surface);
+  }
+}
+
+// The combination picker, on navy. Same control as the seminar one below it,
+// and they stack -- which is why both take the shared treatment rather than
+// one being styled as a special case of the other.
+//
+// [hidden] needs restating because the placeholder sets `display: grid`, and a
+// display value beats the browser's default `[hidden] { display: none }`. The
+// seminar field is hidden by assets/suf-bundle.js when the chosen combination
+// has no seminar in it, and without this it would stay visible.
+.suf-cert__picks {
+  @extend %suf-seminar-field;
+
+  label {
+    color: var(--suf-color-heading-on-dark);
+  }
+
+  select {
+    color: var(--suf-color-heading);
+    background: var(--suf-color-surface);
+    border: 1px solid var(--suf-color-surface);
+  }
+}
+
+.suf-cert__seminar[hidden] {
+  display: none;
+}
+
+// On navy -- suf-cert's band.
+//
+// The select stays a LIGHT control on the dark band rather than becoming a
+// navy-on-navy one. A form field that recedes into its background reads as
+// decoration, and this is the one thing on that band a buyer might need to
+// touch before paying.
+.suf-cert__seminar {
+  @extend %suf-seminar-field;
+
+  label {
+    color: var(--suf-color-heading-on-dark);
+  }
+
+  select {
+    color: var(--suf-color-heading);
+    background: var(--suf-color-surface);
+    border: 1px solid var(--suf-color-surface);
+  }
+}

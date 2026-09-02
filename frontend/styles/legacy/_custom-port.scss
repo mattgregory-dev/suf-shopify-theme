@@ -1311,6 +1311,37 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
   }
 }
 
+// LINE ITEM PROPERTIES under the cart title -- what a bundle buyer chose.
+//
+// dt-framework already lays each pair out with
+// `.cart .cart__row .product-info .product-option { display: flex; flex-wrap:
+// wrap }`, so the row shape is inherited. What it does not do is anything
+// about the <dl> and <dd>, and both carry browser defaults that ruin this:
+// a <dl> has block margins, and a <dd> has 40px of inline start indent, which
+// would push every value away from its own label.
+//
+// That is the "an undeclared property is a gap" lesson again -- nothing here
+// is competing with dt-framework, it simply never mentioned these elements.
+.cart_table .cart-properties {
+  margin: 6px 0 0;
+}
+
+.cart_table .cart-properties .product-option {
+  gap: 5px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.cart_table .cart-properties dt {
+  font-weight: 700;
+  color: var(--suf-color-heading);
+}
+
+.cart_table .cart-properties dd {
+  margin: 0;
+  color: var(--suf-color-text-muted);
+}
+
 // Shopify's own accelerated-checkout custom properties. They are not ours to
 // rename, so the suf- prefix rule is switched off for this block only.
 /* stylelint-disable custom-property-pattern */

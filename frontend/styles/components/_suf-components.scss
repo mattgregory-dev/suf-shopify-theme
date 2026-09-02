@@ -53,6 +53,23 @@
 }
 
 // In-page anchor jumps land under the sticky header without this.
+//
+// POSITIONAL, so no section has to opt in. Shopify wraps every section in its
+// own <section class="shopify-section">, and our section roots are the direct
+// child, so this reaches any root carrying an anchor id -- whatever component
+// it is, light or dark.
+//
+// That matters because the class-based rules below do NOT cover every case.
+// A full-bleed dark band carries its own rhythm and deliberately does not take
+// .suf-section, so `#bundle` on the continuing-education page -- a dark
+// suf-cert -- had no offset and landed under the header. suf-guides and
+// suf-agenda work around the same gap by hand-adding .suf-anchor-target, which
+// is one file remembering what another is doing, and only works for as long as
+// somebody remembers.
+//
+// The two class selectors are kept: they cost nothing and they still apply on
+// anything not rendered as a section root.
+.suf-main > .shopify-section > [id],
 .suf-section[id],
 .suf-anchor-target {
   scroll-margin-top: 80px;

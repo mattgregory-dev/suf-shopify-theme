@@ -88,6 +88,86 @@
               {%- if section.settings.go_to_checkout -%}
                 <input type="hidden" name="return_to" value="/checkout">
               {%- endif -%}
+
+              {%- comment -%}
+                SEMINAR CREDIT. Optional by design -- see the snippet for why
+                the default is "choose later".
+
+                A line item PROPERTY rather than a variant: every combination
+                costs the same, and variants exist to vary price, inventory or
+                SKU. Putting a running list of seminars into variants would
+                also mean editing this product every time one is added or
+                retired, which is the maintenance this avoids.
+
+                The property is named "Seminar" so it reads as itself in the
+                cart, on the order and in the admin -- that is where staff pick
+                it up to enrol someone.
+
+                An EMPTY value is meaningful, not missing: it records "to be
+                scheduled". Shopify hides properties with a blank value from
+                the cart, which is the behaviour we want -- someone who has not
+                chosen sees no half-answered line.
+              {%- endcomment -%}
+              {%- comment -%}
+                WHAT THE BUYER IS CHOOSING, for a bundle that is "any two of
+                three". One option per line in a textarea; a line ending in
+                `|seminar` marks a combination that includes one, which is what
+                reveals the seminar picker below.
+
+                A PROPERTY, NOT VARIANTS. Every combination costs $XXX, and
+                variants exist to vary price, inventory or SKU. Variants would
+                also mean the merchant maintaining a matrix in admin for
+                something that is really one question with three answers.
+
+                The pipe convention matches the list blocks in suf-legal, so a
+                merchant meets the same idea twice rather than two syntaxes.
+              {%- endcomment -%}
+              {%- assign picks = section.settings.picks | strip | newline_to_br | split: '<br />' -%}
+              {%- if section.settings.picks != blank -%}
+                <div class="suf-cert__picks">
+                  <label for="suf-picks-{{ section.id }}">
+                    {{- section.settings.picks_label | default: 'Your two' | escape -}}
+                  </label>
+                  <select id="suf-picks-{{ section.id }}" name="properties[Selection]" data-suf-picks>
+                    {%- for line in picks -%}
+                      {%- assign clean = line | strip -%}
+                      {%- if clean != blank -%}
+                        {%- assign has_seminar = false -%}
+                        {%- if clean contains '|seminar' -%}
+                          {%- assign has_seminar = true -%}
+                        {%- endif -%}
+                        {%- assign text = clean | split: '|' | first | strip -%}
+                        <option value="{{ text | escape }}" data-seminar="{{ has_seminar }}">
+                          {{- text -}}
+                        </option>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endif -%}
+
+              {%- comment -%}
+                RENDERED VISIBLE, HIDDEN BY SCRIPT. assets/suf-bundle.js hides
+                this when the chosen combination has no seminar in it, and
+                disables the select so a stale value cannot ride along on an
+                order it does not belong to.
+
+                Written this way round on purpose: with no JavaScript the field
+                simply shows, and someone can still say which seminar they
+                want. Hiding it in markup and revealing it with script would
+                mean a failed asset silently removes the choice. Same reasoning
+                as the [data-suf-motion] gate in _suf-motion.scss.
+              {%- endcomment -%}
+              {%- if section.settings.seminar_credit and section.settings.events_collection != blank -%}
+                <div class="suf-cert__seminar" data-suf-seminar-field>
+                  <label for="suf-seminar-{{ section.id }}">
+                    {{- section.settings.seminar_label | default: 'Your seminar' | escape -}}
+                  </label>
+                  <select id="suf-seminar-{{ section.id }}" name="properties[Seminar]">
+                    {%- render 'suf-seminar-options', events: section.settings.events_collection -%}
+                  </select>
+                </div>
+              {%- endif -%}
               <button type="submit" class="suf-btn suf-btn--primary" name="add">
                 {{- section.settings.button_label | default: 'Buy Now' | escape -}}
               </button>
@@ -152,6 +232,39 @@
       "label": "Go straight to checkout",
       "info": "Skips the cart. Right for a single high-value purchase; wrong on a page that sells more than one thing, where it kills the second sale.",
       "default": false
+    },
+    { "type": "header", "content": "What the buyer chooses" },
+    {
+      "type": "textarea",
+      "id": "picks",
+      "label": "Combinations",
+      "info": "One per line, for a bundle that is \"any two of three\". End a line with |seminar to mark a combination that includes a seminar -- that is what reveals the seminar picker. Leave empty if there is nothing to choose."
+    },
+    {
+      "type": "text",
+      "id": "picks_label",
+      "label": "Combinations label",
+      "default": "Your two"
+    },
+    { "type": "header", "content": "Seminar credit" },
+    {
+      "type": "checkbox",
+      "id": "seminar_credit",
+      "label": "Includes a seminar",
+      "info": "Adds an OPTIONAL seminar picker above the button, defaulting to \"I'll choose later\". The seminar is sold as a credit and booked afterwards -- asking someone to commit to a travel date at checkout costs conversions and cannot be answered at all for a package carrying several. Needs the collection below.",
+      "default": false
+    },
+    {
+      "type": "collection",
+      "id": "events_collection",
+      "label": "Seminars collection",
+      "info": "Past seminars are dropped automatically, on the same end-date rule the seminars page uses."
+    },
+    {
+      "type": "text",
+      "id": "seminar_label",
+      "label": "Picker label",
+      "default": "Your seminar"
     },
     {
       "type": "text",

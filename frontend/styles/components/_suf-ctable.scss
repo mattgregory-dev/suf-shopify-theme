@@ -253,11 +253,37 @@
   line-height: 1.45;
 }
 
+// BODY SIZE AND BODY COLOUR, not fine print.
+//
+// It was 14px and muted grey, which made it quiet twice over -- and on the
+// packages table it carries something a buyer needs before deciding: that a
+// seminar is chosen AFTER purchase and a credit can be held until one suits.
+// A reader who misses that reads "1 seminar" and expects to pick a date at
+// checkout.
+//
+// Size does more of the work than colour here, but both were pulling the same
+// direction. If this ever reads too loud beside the table, take the colour
+// back to --suf-color-text-muted before touching the size.
+// 54ch, and the number is lower than it looks like it should be on purpose.
+//
+// The familiar ~66-character measure is for LEFT-ALIGNED text, where the eye
+// returns to a fixed edge on every line. This block is centred, so there is no
+// edge to return to and the comfortable measure drops -- 45-60 is the usual
+// range for centred or short blocks. 54 was picked by reading it at several
+// widths, not derived; 67 and 74 were both tried and read wider than they
+// should.
+//
+// It also reads as a deliberate aside rather than runoff from the very wide
+// table above it, which is worth having now that the note carries something a
+// buyer needs before deciding.
+//
+// NOT text-wrap: balance -- tried, and it flattens the block into even lines
+// that lose the shape a hard measure produces. The cap breaks more naturally.
 .suf-body .suf-tnote {
-  max-width: 72ch;
+  max-width: 54ch;
   margin: var(--suf-space-3) auto 0;
-  color: var(--suf-color-text-muted);
-  font-size: var(--suf-font-size-small);
+  color: var(--suf-color-text);
+  font-size: var(--suf-font-size-base);
   text-align: center;
 
   a {

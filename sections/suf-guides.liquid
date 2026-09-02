@@ -130,6 +130,27 @@
                 {%- if block.settings.go_to_checkout -%}
                   <input type="hidden" name="return_to" value="/checkout">
                 {%- endif -%}
+
+                {%- comment -%}
+                  SEMINAR CREDIT. Optional, defaulting to "choose later" -- the
+                  reasoning is in snippets/suf-seminar-options.liquid.
+
+                  Per BLOCK here, not per section: this section sells several
+                  cards side by side and only the bundle carries a seminar. The
+                  collection is a section setting, since it is the same
+                  collection for every card that needs one.
+                {%- endcomment -%}
+                {%- if block.settings.seminar_credit and section.settings.events_collection != blank -%}
+                  <div class="suf-gcard__seminar">
+                    <label for="suf-seminar-{{ block.id }}">
+                      {{- block.settings.seminar_label | default: 'Your seminar' | escape -}}
+                    </label>
+                    <select id="suf-seminar-{{ block.id }}" name="properties[Seminar]">
+                      {%- render 'suf-seminar-options', events: section.settings.events_collection -%}
+                    </select>
+                  </div>
+                {%- endif -%}
+
                 <button type="submit" class="suf-btn suf-btn--primary" name="add">
                   {{- block.settings.button_label | default: 'Add to Cart' | escape -}}
                 </button>
@@ -201,6 +222,12 @@
       "type": "text",
       "id": "heading",
       "label": "Section heading"
+    },
+    {
+      "type": "collection",
+      "id": "events_collection",
+      "label": "Seminars collection",
+      "info": "Only needed if a card below includes a seminar. Past seminars are dropped automatically, on the same end-date rule the seminars page uses."
     },
     {
       "type": "text",
@@ -296,6 +323,19 @@
           "label": "Go straight to checkout",
           "info": "Skips the cart. Right for a single high-value purchase; wrong on a page that sells more than one thing.",
           "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "seminar_credit",
+          "label": "Includes a seminar",
+          "info": "Adds an OPTIONAL seminar picker above the button, defaulting to \"I'll choose later\". The seminar is sold as a credit and booked afterwards. Needs the Seminars collection set on the section.",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "seminar_label",
+          "label": "Picker label",
+          "default": "Your seminar"
         },
         { "type": "image_picker", "id": "image", "label": "Card image" },
         { "type": "text", "id": "image_alt", "label": "Image alt text" },

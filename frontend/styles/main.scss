@@ -31,6 +31,9 @@
 @use 'components/suf-ctable';
 @use 'components/suf-seminars';
 @use 'components/suf-cpt';
+// The seminar-credit picker. Shared by suf-guides cards and suf-cert's band,
+// which is why it is its own file rather than living in either.
+@use 'components/suf-seminar-field';
 // NOT scoped under .suf-body -- it is built to render on both layouts. See the
 // file.
 // AFTER suf-search, deliberately. The nav restyles the shared search panel

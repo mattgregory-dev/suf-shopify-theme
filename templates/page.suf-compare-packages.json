@@ -27,7 +27,7 @@
             "button_label": "Buy Now",
             "button_style": "primary",
             "micro": "Straight to secure checkout",
-            "product": "show-up-fitness-level-1-coach",
+            "product": "suf-cpt-certification",
             "go_to_checkout": true
           }
         },
@@ -43,7 +43,7 @@
             "button_label": "Buy Now",
             "button_style": "primary",
             "micro": "Straight to secure checkout",
-            "product": "show-up-fitness-qualified-personal-trainer-package",
+            "product": "suf-cpt-plus-seminar-bundle",
             "go_to_checkout": true
           }
         },
@@ -57,7 +57,7 @@
             "button_label": "Buy Now",
             "button_style": "primary",
             "micro": "Straight to secure checkout",
-            "product": "show-up-fitness-qualified-personal-trainer-package",
+            "product": "qualified-trainer-package",
             "go_to_checkout": true
           }
         },
@@ -92,7 +92,7 @@
           "type": "row",
           "settings": {
             "label": "Weekend Seminar",
-            "value_2": "1 — your choice",
+            "value_2": "1 — any upcoming date",
             "value_3": "All 3 — Upper, Lower, Nutrition"
           }
         },
@@ -135,7 +135,7 @@
         "anchor": "new-trainers",
         "heading": "Become a Trainer",
         "aside": "One certification. Three ways to get it. Every package includes the full SUF-CPT.",
-        "note": "<p>Seminars are held at Life Time Fitness locations nationwide — you pick the city and date that work for you. Travel and lodging are not included.</p>"
+        "note": "<p>Seminars are held at Life Time Fitness locations nationwide. <b>Choose after purchase</b> — book any upcoming date, or save your credit for later. Travel and lodging are not included.</p>"
       }
     },
     "ce": {
@@ -149,7 +149,7 @@
             "price": "$XXX",
             "button_label": "Buy Now",
             "button_style": "primary",
-            "product": "suf-nutrition-course",
+            "product": "nutrition-coach-certification",
             "go_to_checkout": true
           }
         },
@@ -161,7 +161,7 @@
             "price": "$XXX",
             "button_label": "Buy Now",
             "button_style": "primary",
-            "product": "show-up-fitness-certification-soft-tissue-mobilization",
+            "product": "soft-tissue-mobilization-certification",
             "go_to_checkout": true
           }
         },
@@ -177,7 +177,7 @@
             "button_label": "Choose Your Two",
             "button_style": "primary",
             "micro": "Pick any two certifications or seminars",
-            "button_url": "/pages/suf-continuing-education"
+            "button_url": "/pages/suf-continuing-education#bundle"
           }
         },
         "r1": {
@@ -220,7 +220,7 @@
         "anchor": "continuing-ed",
         "heading": "Already Certified",
         "aside": "Certified through NASM, ACE, ISSA — or with us? Level up from here.",
-        "note": "<p>A weekend seminar is also $XXX on its own and counts toward the bundle — see <a href=\"/pages/suf-seminars\">upcoming dates and cities</a>. Want the full path instead? The <b>Qualified Trainer Package</b> includes all three certifications, all three seminars — Upper Body, Lower Body, and Nutrition — and lifetime library access. <a href=\"#new-trainers\">See it above →</a></p>"
+        "note": "<p>A weekend seminar on its own is $XXX and counts toward the bundle &mdash; <a href=\"/pages/suf-seminars#upcoming\">see upcoming dates and cities</a>.</p>"
       }
     },
     "cta": {

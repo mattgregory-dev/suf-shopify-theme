@@ -27,9 +27,21 @@
       assign classes = classes | append: ' suf-section--flush-bottom'
     endif
   endif
+  assign anchor = section.settings.anchor | handle
 -%}
 
-<div class="{{ classes }}">
+{%- comment -%}
+  The anchor belongs on the INTRO, not on the thing it introduces.
+
+  This section is often the heading above a list or grid -- "Upcoming
+  Seminars", "Seminar Schedule". A link that targets the list lands the reader
+  mid-content with the heading scrolled off above it, so they arrive without
+  the label that tells them what they are looking at.
+
+  The scroll offset is handled positionally in _suf-components.scss, so this
+  works on the dark variant too, which does not carry .suf-section.
+{%- endcomment -%}
+<div class="{{ classes }}" {% if anchor != blank %}id="{{ anchor }}"{% endif %}>
   <div class="suf-wrap">
     {%- if section.settings.eyebrow != blank -%}
       <p class="suf-eyebrow">{% render 'suf-nb', text: section.settings.eyebrow %}</p>
@@ -50,6 +62,12 @@
   "name": "Statement (SUF)",
   "tag": "section",
   "settings": [
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "info": "Lets a link elsewhere jump here, e.g. \"upcoming\". Put it on the intro rather than on the list below it, so the reader lands on the heading."
+    },
     {
       "type": "text",
       "id": "eyebrow",

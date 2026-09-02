@@ -366,10 +366,22 @@
         "b13": {
           "type": "heading",
           "settings": {
-            "text": "Section 26 - Contact Information"
+            "text": "Section 26 - Seminar Credits"
           }
         },
         "b14": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Some packages include one or more weekend seminars. You may choose your seminar at the time of purchase, or leave the choice open and book later. A seminar you have paid for but not yet attended is referred to here as a credit.</p><p>Credits are valid for <strong>12 months from the date of purchase</strong>. To use a credit, contact us and we will enrol you in an upcoming seminar. Enrolment is subject to availability: seminars have limited seats and are scheduled at our discretion, and we cannot guarantee that a seminar will be held in any particular city or on any particular date.</p><p>Credits are non-transferable and have no cash value. Consistent with Section 21, credits are not refundable.</p><p>If we are unable to offer you a seminar before your credit expires, contact us and we will work with you to find a resolution.</p>"
+          }
+        },
+        "b15": {
+          "type": "heading",
+          "settings": {
+            "text": "Section 27 - Contact Information"
+          }
+        },
+        "b16": {
           "type": "text",
           "settings": {
             "text": "<p>Questions about these Terms of Service should be sent to us at <a href=\"mailto:email@example.com\">email@example.com</a>.</p><p>Our contact information is:</p><p><strong>Show Up Fitness</strong><br>123 Example Street<br>Example City, CA 00000<br>Email: <a href=\"mailto:email@example.com\">email@example.com</a><br>Phone: <a href=\"tel:0000000000\">(000) 000-0000</a></p>"
@@ -390,7 +402,9 @@
         "b11",
         "b12",
         "b13",
-        "b14"
+        "b14",
+        "b15",
+        "b16"
       ],
       "settings": {
         "continues": true

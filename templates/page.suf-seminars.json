@@ -163,7 +163,8 @@
         "heading": "Upcoming Seminars",
         "body": "<p>Every seminar is $XXX and held at a Life Time Fitness. Pick your city and date — travel and lodging are up to you, and most attendees make a weekend of it.</p>",
         "dark": false,
-        "intro": true
+        "intro": true,
+        "anchor": "upcoming"
       }
     },
     "upcoming": {
@@ -205,7 +206,6 @@
         "e3"
       ],
       "settings": {
-        "anchor": "upcoming",
         "note": "<p>New cities are added on a rolling basis — <a href=\"/pages/suf-contact\">get first access to new dates</a>.</p>",
         "limit": 6,
         "link_mode": "product",

@@ -260,7 +260,7 @@
             "heading": "SUF-CPT Certification",
             "meta": "Study at Your Own Pace",
             "body": "The complete certification: full study materials, 3 months of SUF Library access with daily live calls (recorded if you miss one), and your live exam in front of SUF coaches — plus resume help, mock interviews, and the SUF trainer network that gets members hired.",
-            "product": "show-up-fitness-level-1-coach",
+            "product": "suf-cpt-certification",
             "button_label": "Buy Now",
             "go_to_checkout": true,
             "micro": "Straight to secure checkout",
@@ -274,14 +274,15 @@
             "heading": "SUF-CPT + Seminar Bundle",
             "meta": "Certification + 2-Day Hands-On Weekend",
             "body": "Everything in the certification, plus a weekend seminar at a Life Time Fitness near you — and your library access extends to 6 months. The seminar alone is $XXX. Buy now, pick your city and date whenever you’re ready.",
-            "product": "show-up-fitness-qualified-personal-trainer-package",
+            "product": "suf-cpt-plus-seminar-bundle",
             "button_label": "Buy Now",
             "go_to_checkout": true,
             "micro": "Straight to secure checkout",
             "image": "shopify://shop_images/photo-06.jpg",
             "image_alt": "Show Up Fitness seminar group inside a Life Time gym",
             "featured": true,
-            "flag": "Most Popular"
+            "flag": "Most Popular",
+            "seminar_credit": true
           }
         }
       },
@@ -296,7 +297,8 @@
         "strip_label": "Renewal Fees — Ever",
         "strip_body": "<p><strong>Pay once. Stay certified forever.</strong> NASM, ACE, and ISSA charge renewal fees every 2–3 years — thousands of dollars over a career. The SUF-CPT certifies you for life: no renewals, no mandatory continuing-education purchases.</p>",
         "strip_rows": "NASM · ACE · ISSA|renew every 2–3 years\nSUF-CPT|<em>never</em>",
-        "note": "<p>Want the Level 2 certifications and every seminar too? <a href=\"/pages/suf-compare-packages\">Compare every package side by side →</a></p>"
+        "note": "<p>Want the Level 2 certifications and every seminar too? <a href=\"/pages/suf-compare-packages\">Compare every package side by side →</a></p>",
+        "events_collection": "seminars"
       }
     },
     "steps": {

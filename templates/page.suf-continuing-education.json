@@ -77,7 +77,7 @@
         "eyebrow": "Soft Tissue Mobilization Certification",
         "heading": "Help Clients Get Out of Pain — and Keep Them Longer",
         "body": "<p>Most trainers lose clients when pain shows up, because they were never taught how to work with it. This certification teaches you 11 proven soft tissue techniques to assess pain, address movement restrictions, and keep clients progressing safely. It’s one of the most in-demand skills in high-end gym environments.</p>",
-        "product": "show-up-fitness-certification-soft-tissue-mobilization",
+        "product": "soft-tissue-mobilization-certification",
         "button_label": "Buy Now",
         "go_to_checkout": true,
         "micro": "<p>Straight to secure checkout</p>",
@@ -148,7 +148,7 @@
         "eyebrow": "Nutrition Coach Certification",
         "heading": "Train Their Workouts. Coach Their Nutrition.",
         "body": "<p>Clients don’t just want to move better — they want to look and feel better. This certification gives you the other half: evidence-based nutrition science, behavior change strategies, and the practical coaching tools to use them in real sessions. Led by a Registered Dietitian (RD), and built to turn nutrition into a second revenue stream.</p>",
-        "product": "suf-nutrition-course",
+        "product": "nutrition-coach-certification",
         "button_label": "Buy Now",
         "go_to_checkout": true,
         "micro": "<p>Straight to secure checkout</p>",
@@ -191,7 +191,7 @@
         "eyebrow": "The Smart Buy",
         "heading": "Continuing Education Bundle — Any Two for $XXX",
         "body": "<p>Pick any two: the Soft Tissue Mobilization Certification, the Nutrition Coach Certification, or a weekend seminar at a Life Time Fitness near you. Bought separately, any two run $X,XXX — the bundle saves you $XXX. And your SUF Library access extends from 3 months to 6.</p>",
-        "product": "show-up-fitness-qualified-personal-trainer-package",
+        "product": "continuing-education-bundle",
         "button_label": "Buy Now",
         "go_to_checkout": true,
         "compare_note": "$X,XXX bought separately",
@@ -202,7 +202,11 @@
         "frame": "red",
         "dark": true,
         "pointer": "<p>Want everything we teach — all three certifications and all three seminars, with lifetime library access? <a href=\"/pages/suf-compare-packages\">Compare every package, including the Qualified Trainer Package →</a></p>",
-        "flush_top": true
+        "flush_top": true,
+        "seminar_credit": true,
+        "events_collection": "seminars",
+        "picks_label": "Choose your two",
+        "picks": "Nutrition Coach + Soft Tissue Mobilization\nNutrition Coach + a weekend seminar|seminar\nSoft Tissue Mobilization + a weekend seminar|seminar"
       }
     },
     "skill": {

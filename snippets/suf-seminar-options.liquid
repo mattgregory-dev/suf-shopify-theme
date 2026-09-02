@@ -1,0 +1,101 @@
+{% comment %}
+  <option> list of UPCOMING seminars, for a bundle's "which seminar" select.
+
+  Usage:
+    {% render 'suf-seminar-options', events: section.settings.events_collection %}
+
+  Takes a collection. Emits nothing at all if it is blank or empty, so a caller
+  can test for that and skip rendering the whole field.
+
+  THE FIRST OPTION IS "I'll choose later", AND IT IS THE DEFAULT. That is the
+  point of the field rather than a fallback for an empty list.
+
+  A seminar is a trip: flights, a hotel, a free weekend. Asking someone to
+  commit to a date at the moment they finally decide to buy inserts a
+  travel-planning decision into a checkout, and the likely outcome is not a
+  wrong date -- it is a closed tab. So the seminar is sold as a CREDIT and
+  booked afterwards; picking now is an affordance for people who already know.
+
+  It also makes the field work unchanged for a package carrying three seminar
+  credits, where asking up front is not merely awkward but unanswerable.
+
+  SHARES ITS FILTERING WITH sections/suf-semlist.liquid, deliberately, because
+  the two must never disagree: a seminar offered here that the seminars page
+  has dropped is a booking nobody can honour.
+
+  Two things in that logic are load-bearing and are the reason this is a
+  snippet rather than copied Liquid:
+
+  1. `| plus: 0` on BOTH sides of the date comparison. Liquid compares strings
+     with `<` by silently returning false, so an unconverted filter never drops
+     anything and looks correct right up until a date passes.
+  2. The `YYYYMMDD~index` sort key. Liquid cannot sort a collection by a
+     metafield -- `sort` reaches simple properties only -- so the order is
+     built by sorting zero-padded fixed-width strings, which sort lexically in
+     date order. The INDEX is carried rather than the handle because
+     `all_products` is capped at 20 lookups a page.
+
+  Metafield keys are `custom.custom_seminar_*`. The "custom" is doubled and
+  that is not a typo; see docs/redesign-open-items.md.
+{% endcomment %}
+
+{%- liquid
+  assign today = 'now' | date: '%Y%m%d' | plus: 0
+-%}
+
+<option value="" selected>I'll choose later — use my credit anytime</option>
+
+{%- if events != blank -%}
+  {%- liquid
+    assign keyed = ''
+    for p in events.products
+      assign starts = p.metafields.custom.custom_seminar_start.value | date: '%Y%m%d'
+      if starts == blank
+        assign starts = '99999999'
+      endif
+      assign keyed = keyed | append: starts | append: '~' | append: forloop.index0 | append: ','
+    endfor
+    assign keys = keyed | split: ',' | sort
+  -%}
+
+  {%- for key in keys -%}
+    {%- liquid
+      assign idx = key | split: '~' | last | plus: 0
+      assign seminar = events.products[idx]
+
+      assign starts = seminar.metafields.custom.custom_seminar_start.value
+      assign ends = seminar.metafields.custom.custom_seminar_end.value | default: starts
+
+      # Judged on the END date, so a two-day seminar is still bookable on its
+      # first morning -- same rule the seminars page applies.
+      assign over = ends | date: '%Y%m%d' | plus: 0
+      assign is_past = false
+      if ends != blank and over < today
+        assign is_past = true
+      endif
+
+      assign city = seminar.metafields.custom.custom_seminar_city.value
+
+      # Each half formatted on its own line. Chaining them pipes the whole
+      # concatenated string into `date`, not the end date.
+      assign m1 = starts | date: '%B'
+      assign m2 = ends | date: '%B'
+      assign first_half = starts | date: '%B %-d'
+      if m1 == m2
+        assign second_half = ends | date: '%-d'
+      else
+        assign second_half = ends | date: '%B %-d'
+      endif
+    -%}
+
+    {%- unless is_past -%}
+      {%- capture label -%}
+        {{- city | default: seminar.title -}}
+        {%- if starts != blank %} · {{ first_half }}
+          {%- if second_half != blank and second_half != first_half %}–{{ second_half }}{% endif -%}
+        {%- endif -%}
+      {%- endcapture -%}
+      <option value="{{ label | strip | escape }}">{{ label | strip }}</option>
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endif -%}
