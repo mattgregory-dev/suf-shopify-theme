@@ -78,8 +78,7 @@
         "body": "<p>Most study guides are written by people who read the textbook once. These were built by Show Up Fitness instructors, led by a founder who spent over a decade teaching trainers, and they focus on what the exams actually test instead of making you memorize all 700 pages. It's the same reason thousands of students find us on YouTube searching “how to pass NASM”: we make this material make sense.</p>",
         "image": "shopify://shop_images/photo-02.jpg",
         "image_alt": "Chris holding up an NASM textbook in front of the Where Great Trainers Are Made wall",
-        "image_side": "right",
-        "frame": "red"
+        "image_side": "right"
       }
     },
     "proof": {

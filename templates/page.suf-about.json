@@ -37,8 +37,7 @@
         "image": "shopify://shop_images/instructor-01.webp",
         "image_alt": "Chris Hitchko, founder of Show Up Fitness",
         "uncropped": true,
-          "image_side": "left",
-        "frame": "blue"
+          "image_side": "left"
       }
     },
     "why_exist": {
@@ -59,7 +58,6 @@
         "image": "shopify://shop_images/online-education.jpg",
         "image_alt": "Coaches guiding a client through a hands-on assessment at a Life Time studio",
         "image_side": "right",
-        "frame": "red",
         "button_label": "See the SUF-CPT",
         "button_url": "/pages/suf-cpt",
         "button_style": "ghost",
@@ -75,7 +73,6 @@
         "image": "shopify://shop_images/photo-01.jpg",
         "image_alt": "Show Up Fitness trainees posing together in a Life Time studio",
         "image_side": "right",
-        "frame": "none",
         "wide": true,
         "button_label": "Meet the Team",
         "button_url": "/pages/suf-meet-the-team",

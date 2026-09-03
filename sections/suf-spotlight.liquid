@@ -1,15 +1,8 @@
 {% comment %}
-  Two-column text/image split with an offset frame.
+  Two-column text/image split.
 
-  One section for what the mockup writes four times (.whyZ, .founder, .teaser,
-  .certrow). Image side, frame colour and crop are settings.
-
-  FRAME COLOUR ALTERNATES. Per the design notes the red and blue frames swap
-  down a page so two adjacent spotlights never share one. Nothing can enforce
-  that across sections, so check the page, not just this section.
-
-  The frame's SIDE is not configurable: it always sits on the inner edge,
-  facing the text, and CSS derives that from the image side.
+  One section for four shapes that differ only in image side, column ratio and
+  crop, all of them settings.
 
   ORDER. The markup is always text-then-image; putting the image first is done
   with CSS order, so reading and tab order stay correct regardless of the
@@ -27,9 +20,6 @@
   assign classes = 'suf-section suf-spotlight'
   if section.settings.image_side == 'left'
     assign classes = classes | append: ' suf-spotlight--image-left'
-  endif
-  if section.settings.frame != 'none'
-    assign classes = classes | append: ' suf-spotlight--frame-' | append: section.settings.frame
   endif
   if section.settings.wide
     assign classes = classes | append: ' suf-spotlight--wide'
@@ -193,18 +183,6 @@
         { "value": "left", "label": "Left" }
       ],
       "default": "right"
-    },
-    {
-      "type": "select",
-      "id": "frame",
-      "label": "Offset frame",
-      "info": "BLUE when the image is on the left, RED when it is on the right. Follow the image side, not the section above -- that is the convention across the site.",
-      "options": [
-        { "value": "red", "label": "Red" },
-        { "value": "blue", "label": "Blue" },
-        { "value": "none", "label": "None" }
-      ],
-      "default": "red"
     },
     {
       "type": "checkbox",

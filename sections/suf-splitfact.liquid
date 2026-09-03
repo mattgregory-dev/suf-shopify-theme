@@ -1,9 +1,9 @@
 {% comment %}
   Two columns: an argument, and the evidence for it.
 
-  One section for the mockup's .darkspot AND .inner2 -- identical structure on
-  navy or on the page surface. The dark variant is full-bleed and supplies its
-  own rhythm, so it does not take .suf-section.
+  One section, identical structure on navy or on the page surface. The dark
+  variant is full-bleed and supplies its own rhythm, so it does not take
+  .suf-section.
 
   ORDER. The markup is always text-then-panel; putting the panel first is done
   with CSS `order`, so reading and tab order stay correct. Below 1000px the
@@ -13,7 +13,7 @@
 
     figure  a big number, a caption, optional comparison rows, and optionally
             a split bar. Covers "90% quit" and "$X renewal fees".
-    bars    labelled comparison bars. Covers "months to a full book".
+    bars    labeled comparison bars. Covers "months to a full book".
     image   a photograph or screenshot.
 
   Charts are drawn with the design's own slanted geometry -- the same
@@ -47,9 +47,6 @@
   # so a chart cannot be configured to outrank the argument it supports.
   if section.settings.panel == 'image'
     assign classes = classes | append: ' suf-splitfact--panel-image'
-  endif
-  if section.settings.frame != 'none'
-    assign classes = classes | append: ' suf-splitfact--frame-' | append: section.settings.frame
   endif
   assign anchor = section.settings.anchor | handle
   assign dark = section.settings.dark
@@ -101,7 +98,7 @@
         {%- endif -%}
       </div>
 
-      <div class="suf-splitfact__media{% if section.settings.panel == 'image' and section.settings.frame != 'none' %} suf-splitfact__media--framed{% endif %}">
+      <div class="suf-splitfact__media">
         {%- case section.settings.panel -%}
           {%- when 'figure' -%}
             <div class="suf-factpanel{% if section.settings.jumbo %} suf-factpanel--jumbo{% endif %}">
@@ -178,7 +175,7 @@
               {%- comment -%}
                 No image picked yet. The panel is half the layout, so leaving
                 it empty collapses the grid and the section reads as broken
-                rather than unfinished. Striped and labelled, the same device
+                rather than unfinished. Striped and labeled, the same device
                 as a team member with no photo, so it is obvious on sight that
                 an asset is outstanding.
 
@@ -294,18 +291,6 @@
         { "value": "left", "label": "Left" }
       ],
       "default": "right"
-    },
-    {
-      "type": "select",
-      "id": "frame",
-      "label": "Offset frame",
-      "info": "Image panels only. BLUE when the image is on the left, RED when it is on the right -- follow the image side, not the section above.",
-      "options": [
-        { "value": "red", "label": "Red" },
-        { "value": "blue", "label": "Blue" },
-        { "value": "none", "label": "None" }
-      ],
-      "default": "red"
     },
     { "type": "text", "id": "figure", "label": "Figure", "info": "e.g. \"90%\" or \"$X\"." },
     {

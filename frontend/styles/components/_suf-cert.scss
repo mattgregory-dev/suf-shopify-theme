@@ -1,8 +1,8 @@
 // Certification row: image beside a feature list and a price.
 //
-// One component for the mockup's .certrow AND .bundle. They are the same shape
-// -- image, eyebrow, heading, lead, feature list, price, buy button -- and
-// differ only in surface, column ratio and image crop. Those are modifiers.
+// One component for the certification row and the bundle: same shape -- image,
+// eyebrow, heading, lead, feature list, price, buy button -- differing only in
+// surface, column ratio and crop. Those are modifiers.
 //
 // The dark variant is a full-bleed band and carries its own vertical rhythm,
 // so like .suf-statement--dark it does NOT take .suf-section.
@@ -51,11 +51,10 @@
 }
 
 .suf-cert__media {
-  position: relative;
   aspect-ratio: 4 / 5;
   max-height: 560px;
 
-  // Capped and centred when stacked -- the shared rule, and a 4:5 crop, so the
+  // Capped and centered when stacked -- the shared rule, and a 4:5 crop, so the
   // tall cap. See the note on .suf-spotlight__media.
   @media (max-width: 1020px) {
     width: 100%;
@@ -64,52 +63,10 @@
   }
 
   img {
-    position: relative;
-    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-
-  &::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    bottom: -14px;
-    left: -14px;
-    width: 60%;
-    height: 60%;
-    border: 3px solid var(--suf-frame-color, transparent);
-
-    // Pulled in on small screens, matching .suf-spotlight__media::after. The
-    // 14px overhang is drawn against a desktop image; on a phone it is a
-    // larger share of the frame and crowds the container's padding.
-    @media (max-width: 600px) {
-      bottom: -9px;
-      left: -10px;
-    }
-  }
-}
-
-// Frame on the inner edge, facing the text -- same rule as the spotlight, and
-// derived from the image side so the two cannot disagree.
-.suf-cert--image-right .suf-cert__media::after {
-  left: auto;
-  right: -14px;
-
-  // Mirrors the small-screen inset above. `left: auto` still applies, so only
-  // the right offset needs restating.
-  @media (max-width: 600px) {
-    right: -10px;
-  }
-}
-
-.suf-cert--frame-red {
-  --suf-frame-color: var(--suf-red);
-}
-
-.suf-cert--frame-blue {
-  --suf-frame-color: var(--suf-blue);
 }
 
 .suf-cert__text {
@@ -195,7 +152,7 @@
 }
 
 // Closing pointer under the band -- a route out to a bigger package, so it is
-// centred and quieter than the band's own copy.
+// centered and quieter than the band's own copy.
 .suf-cert__pointer {
   max-width: 72ch;
   margin: var(--suf-space-5) auto 0;

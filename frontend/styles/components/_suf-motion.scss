@@ -2,9 +2,8 @@
 
 // Scroll-triggered accents.
 //
-// Ported from EFFECT A in ~/projects/suf/mockups/motion-accents-demo.html: the
-// eyebrow's red slash scales up from nothing while the caps label slides in
-// beside it. One shot, on the way in, never replayed.
+// The eyebrow's red slash scales up from nothing while the caps label slides
+// in beside it. One shot, on the way in, never replayed.
 //
 // [data-suf-motion] GATES ALL OF IT because the resting state here is
 // INVISIBLE. Written unconditionally it is a stylesheet that hides content and
@@ -17,35 +16,30 @@
 // being overridden inside it, so that reader never gets the hidden state and
 // never depends on the observer either.
 
-// THE OFFSET FRAME REVEAL IS OFF BY DECISION -- built, lived with, rejected.
-// Not a toggle awaiting a preference.
-//
-// The eyebrow reveal fires on nearly every section, so it IS the motion
-// budget. Where a section carries both, the eyebrow arrives from the LEFT
-// while the frame rises from BELOW: two gestures in one viewport, competing
-// rather than compounding. TURN THIS ON ONLY IF THE EYEBROW REVEAL IS DROPPED
-// -- the frames were never the problem alone, the total was.
-//
-// `false` emits nothing rather than overriding, so no dead CSS ships.
-// suf-motion.js still observes the media elements and adds .is-in to something
-// with no rules attached; a second switch in another language, kept in step by
-// hand, is the more expensive mistake.
-$suf-frame-reveal: false !default;
-
 @media (prefers-reduced-motion: no-preference) {
-  // EYEBROW -- 1024px UP ONLY. On a narrow measure the eyebrow already sits
-  // hard against the gutter, so the 8px arrival has nowhere to travel and
-  // reads as a jitter rather than a reveal.
+  // THE EYEBROW ANIMATES ON DESKTOP ONLY -- 1024px and up.
   //
-  // 1024 not 768: a phone in landscape is ~844 and would sit above it. Not 900
-  // either -- that is the nav's hamburger takeover, and reusing it would imply
-  // the eyebrow is tied to the nav's layout.
+  // Below that the eyebrow sits hard against the left gutter, so an 8px slide
+  // has nowhere to travel and reads as a jitter instead of a reveal.
   //
-  // GATING BOTH RULES TOGETHER IS WHAT MAKES THIS SAFE. The resting state is
-  // the invisible one, so a query dropping only the `.is-in` half would hide
-  // every eyebrow on every phone permanently. The observer still adds .is-in
-  // below 1024, to a class with no rules -- filtering by width in JS would put
-  // the breakpoint in two files and let them disagree on resize.
+  // 1024, not 768, because a phone in landscape is around 844 wide -- the same
+  // device and the same problem. Not 900 either, which is where the nav
+  // switches to a hamburger: borrowing that number would suggest the eyebrow
+  // depends on the nav's layout, and it does not.
+  //
+  // BOTH RULES BELOW MUST STAY INSIDE THIS QUERY -- the hidden state and the
+  // .is-in state that reveals it.
+  //
+  // The hidden state is the dangerous one. If only the reveal were gated,
+  // phones would get `opacity: 0` with nothing left to undo it, and every
+  // eyebrow on every phone would be invisible for good. Gating both means a
+  // phone gets neither, so the eyebrow is simply a normal eyebrow.
+  //
+  // The observer in suf-motion.js still adds .is-in below 1024. That is
+  // deliberate: it lands on a class with no rules attached, which costs
+  // nothing. The alternative -- checking the width in JS too -- would put the
+  // same breakpoint in two files, and they would drift apart on the first
+  // resize.
   @include m.from(m.$bp-lg) {
     // (0,2,0) against `.suf-body .suf-eyebrow` at (0,1,1), so these win without
     // needing to restate the component's own scoping.
@@ -137,14 +131,13 @@ $suf-frame-reveal: false !default;
     width: var(--suf-bar-pct, 100%);
   }
 
-  // EACH ROW TAKES LONGER THAN THE ONE ABOVE IT. At a fixed duration a long
-  // bar travels further in the same time, so it moves visibly faster and the
-  // pair reads as two unrelated animations.
+  // EACH ROW TAKES LONGER THAN THE ONE ABOVE IT, so the bars move at similar
+  // speeds. At one fixed duration the longer bar covers more ground in the
+  // same time and reads as a separate animation.
   //
-  // This ASSUMES rows get longer going down -- true of the one section using
-  // it, and the usual shape of a comparison. If one ever puts the longest bar
-  // first, emit a duration per bar from the same percentage that sets its
-  // width in suf-splitfact.liquid rather than inferring it from position.
+  // ASSUMES ROWS GET LONGER GOING DOWN. If one ever leads with the longest
+  // bar, set the duration per bar from the percentage that already sets its
+  // width, in suf-splitfact.liquid.
   @for $i from 1 through 6 {
     [data-suf-motion] .suf-bars.is-in .suf-bars__row:nth-child(#{$i}) .suf-bars__bar {
       transition-delay: #{($i - 1) * 0.14}s;
@@ -206,47 +199,14 @@ $suf-frame-reveal: false !default;
     }
   }
 
-  @if $suf-frame-reveal {
-    // ---------------------------------------------------------------------------
-    // OFFSET FRAMES -- BUILT, THEN SWITCHED OFF.
-    //
-    // See $suf-frame-reveal at the top of this file for why, and for the one
-    // condition that would bring it back. Nothing below is emitted while that
-    // is false, which is its current state.
-    //
-    // TRANSFORM, NOT bottom. The frame's offsets change at 600px and flip on
-    // --image-left, so animating them would mean restating all four variants
-    // and keeping them in step. A transform composes on top of whatever the
-    // layout resolved to.
-    //
-    // The observer watches .suf-spotlight__media, not the frame: a ::after
-    // cannot be observed and cannot carry a class, so the state lives on the
-    // parent. All three framed components draw the same frame and share one
-    // reveal rather than three rules that would drift.
-    [data-suf-motion] .suf-spotlight__media::after,
-    [data-suf-motion] .suf-cert__media::after,
-    [data-suf-motion] .suf-splitfact__media--framed::after {
-      opacity: 0;
-      transform: translateY(12px);
-      // Delayed slightly. The frame is anchored to the photo, so it should look
-      // like it settles after the photo rather than with it.
-      transition: opacity 0.55s ease 0.1s, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)
-        0.1s;
-    }
-
-    [data-suf-motion] .suf-spotlight__media.is-in::after,
-    [data-suf-motion] .suf-cert__media.is-in::after,
-    [data-suf-motion] .suf-splitfact__media--framed.is-in::after {
-      opacity: 1;
-      transform: none;
-    }
-  }
+  
 
   // ---------------------------------------------------------------------------
   // THE TOP SECTION NEVER ANIMATES
   //
-  // An entrance animation on content already on screen at load plays to
-  // nobody. Below the fold the reveal is genuinely caused by scrolling.
+  // The first section is on screen before anyone scrolls, so an entrance there
+  // has already played by the time it is looked at. Everything below the fold
+  // is revealed by the scroll that brings it into view, which is the point.
   //
   // POSITIONAL, NOT BY COMPONENT: naming suf-hero and suf-page-band would also
   // exempt one used halfway down a page, and would need editing the first time
@@ -262,22 +222,6 @@ $suf-frame-reveal: false !default;
     opacity: 1;
     transform: none;
     transition: none;
-  }
-
-  // The frames' exemption is behind the switch too, so turning the effect off
-  // emits nothing about frames at all rather than leaving three no-op rules
-  // undoing a state that was never applied.
-  @if $suf-frame-reveal {
-    [data-suf-motion] .suf-main > .shopify-section:first-child .suf-spotlight__media::after,
-    [data-suf-motion] .suf-main > .shopify-section:first-child .suf-cert__media::after,
-    [data-suf-motion]
-      .suf-main
-      > .shopify-section:first-child
-      .suf-splitfact__media--framed::after {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
   }
 
   // THE SLASH IS RESET SEPARATELY, and must be. Nested as `&::before`, Sass

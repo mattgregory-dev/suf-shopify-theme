@@ -126,8 +126,7 @@
         "image": "shopify://shop_images/photo-04.jpg",
         "image_alt": "Trainees flexing together in an Equinox studio",
         "dark": false,
-        "image_side": "left",
-        "frame": "blue"
+        "image_side": "left"
       }
     },
     "exam": {
@@ -184,7 +183,6 @@
         "panel": "image",
         "image": "shopify://shop_images/uscreen-01.webp",
         "image_alt": "The SUF Library playing on a laptop and a phone, showing the course can be watched on any device",
-        "frame": "none",
         "dark": false
       }
     },

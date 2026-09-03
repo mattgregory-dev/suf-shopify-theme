@@ -4,8 +4,7 @@
 // SPLIT FACT
 //
 // Two columns: an argument on the left, the evidence for it on the right. One
-// component for the mockup's .darkspot AND .inner2 -- the same structure on
-// navy or on the page surface.
+// component, rendering on navy or on the page surface.
 //
 // The dark variant is full-bleed and carries its own rhythm, so it does NOT
 // take .suf-section. The light one does.
@@ -131,14 +130,13 @@
   height: auto;
 }
 
-// Capped and centred when stacked -- the shared rule. The wide cap: this is
+// Capped and centered when stacked -- the shared rule. The wide cap: this is
 // the one media block that sets NO aspect-ratio, so its images render at their
 // natural ratio.
 //
-// It previously had no cap at all and went full width. That looked fine only
-// because both images in use happen to be landscape; a portrait photo in this
-// slot would have run to a full screen of height. The cap makes the section
-// safe against its own settings rather than against today's content.
+// Without a cap a portrait photo in this slot runs to a full screen of
+// height. Both images in use today are landscape, so the cap is protecting
+// the section against its own settings rather than against current content.
 //
 // Scoped to the photo variant. A .suf-factpanel is capped by its own rule
 // above, and capping the wrapper as well would compound the two.
@@ -148,56 +146,6 @@
     max-width: var(--suf-stack-media-wide);
     margin-inline: auto;
   }
-}
-
-// Offset frame, same device and same rule as the spotlight: it sits on the
-// INNER edge, facing the text, and the side is derived from the image side so
-// the two cannot disagree.
-.suf-splitfact__media--framed {
-  position: relative;
-
-  img {
-    position: relative;
-    z-index: 1;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    bottom: -14px;
-    left: -14px;
-    width: 60%;
-    height: 60%;
-    border: 3px solid var(--suf-frame-color, transparent);
-
-    // Pulled in on small screens, matching .suf-spotlight__media::after. The
-    // 14px overhang is drawn against a desktop image; on a phone it is a
-    // larger share of the frame and crowds the container's padding.
-    @media (max-width: 600px) {
-      bottom: -9px;
-      left: -10px;
-    }
-  }
-}
-
-.suf-splitfact--image-left .suf-splitfact__media--framed::after {
-  left: auto;
-  right: -14px;
-
-  // Mirrors the small-screen inset above. `left: auto` still applies, so only
-  // the right offset needs restating.
-  @media (max-width: 600px) {
-    right: -10px;
-  }
-}
-
-.suf-splitfact--frame-red {
-  --suf-frame-color: var(--suf-red);
-}
-
-.suf-splitfact--frame-blue {
-  --suf-frame-color: var(--suf-blue);
 }
 
 // ---------------------------------------------------------------------------
@@ -210,7 +158,7 @@
   background: var(--suf-color-surface);
   text-align: center;
 
-  // Capped and centred when stacked -- the shared rule. Not an image, but it
+  // Capped and centered when stacked -- the shared rule. Not an image, but it
   // is the other column of a two-column section and stretches the same way.
   // See the note on .suf-spotlight__media.
   @media (max-width: 1000px) {
@@ -284,7 +232,7 @@
   inset: 0;
 }
 
-// The muted segment defaults to the LIGHT-surface grey. The dark band
+// The muted segment defaults to the LIGHT-surface gray. The dark band
 // overrides it below. That direction round rather than the reverse: navy on
 // white is not "slightly wrong", it reads as a second highlight.
 .suf-quitbar__seg--muted {
@@ -308,7 +256,7 @@
 }
 
 // Both segments step up a shade on navy: the mid blue loses contrast against
-// it, and the light grey reads as white.
+// it, and the light gray reads as white.
 .suf-splitfact--dark {
   .suf-quitbar__seg--muted {
     background: #2c4a5e;
@@ -563,7 +511,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// CENTRED HEAD -- eyebrow, headline and one supporting line, all centred
+// CENTERED HEAD -- eyebrow, headline and one supporting line, all centered
 //
 // Distinct from .suf-section__head, which is a left-aligned rule with an
 // optional aside. This one introduces something that follows it directly, so

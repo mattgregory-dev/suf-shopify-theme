@@ -84,7 +84,6 @@
         "image": "shopify://shop_images/online-education.jpg",
         "image_alt": "Coaches guiding a client through a hands-on assessment on a mat",
         "image_side": "left",
-        "frame": "blue",
         "dark": false
       }
     },
@@ -155,7 +154,6 @@
         "image": "shopify://shop_images/exercise-01.webp",
         "image_alt": "Two coaches working through a plan together in a gym",
         "image_side": "right",
-        "frame": "red",
         "dark": false
       }
     },
@@ -199,7 +197,6 @@
         "image": "shopify://shop_images/photo-06.jpg",
         "image_alt": "Trainers holding Become a Personal Trainer books in front of a Lifetime University sign",
         "image_side": "right",
-        "frame": "red",
         "dark": true,
         "pointer": "<p>Want all three certifications and all three seminars? <a href=\"/pages/suf-compare-packages\">Compare every package →</a></p>",
         "flush_top": true,

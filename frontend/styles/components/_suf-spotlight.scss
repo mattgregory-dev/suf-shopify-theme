@@ -1,13 +1,7 @@
-// Spotlight: a two-column text/image split with an offset frame.
+// Spotlight: a two-column text/image split.
 //
-// One component for what the mockup writes four times -- .whyZ, .founder,
-// .teaser and .certrow are the same shape with the image on a different side,
-// a different frame colour and a slightly different column ratio. Those are
-// modifiers here, not separate components.
-//
-// The offset frame is an IN-PAGE spotlight device only. Per the mockup's notes
-// it is never a hero device, and the red/blue frames alternate down a page so
-// two adjacent spotlights never share a colour.
+// One component for four shapes that differ only in image side, column ratio
+// and crop. Those are modifiers here, not separate components.
 
 .suf-spotlight__inner {
   display: grid;
@@ -15,7 +9,7 @@
   gap: var(--suf-space-6);
   align-items: center;
 
-  // 1000px is where the text column stops holding a readable measure beside
+  // 1000px is where the text column stops holding a readable line length beside
   // the image -- earlier than the card grids break, because this column has
   // long-form prose in it rather than short card copy.
   @media (max-width: 1000px) {
@@ -52,17 +46,19 @@
     color: var(--suf-color-text);
 
     // ---------------------------------------------------------------------
-    // THE STACKED-MEASURE RULE. Canonical copy; the other two-column sections
-    // point here.
+    // THE STACKED LINE-LENGTH RULE. Canonical copy; the other two-column
+    // sections point here.
     //
-    // The measure is released once the columns stack. Beside an image the cap
-    // is doing real work -- it keeps the text column from running to the
-    // gutter. Stacked, there is no second column, so the same cap leaves the
-    // copy ending well short of the image above it and reads as a ragged
-    // half-column rather than a deliberate measure.
+    // The 58ch cap above is a line length -- roughly 58 characters, which is a
+    // comfortable read. It is released once the columns stack.
     //
-    // `none`, not a larger number: a second cap would be a second decision to
-    // keep in step with the first.
+    // Beside an image the cap does real work: it keeps the text from running
+    // to the gutter. Stacked, there is no second column, so the same cap
+    // leaves the copy ending well short of the image above it and reads as a
+    // half-width block rather than a deliberate choice.
+    //
+    // `none`, not a larger number: a second cap is a second decision to keep
+    // in step with the first.
     // ---------------------------------------------------------------------
     @media (max-width: 1000px) {
       max-width: none;
@@ -75,7 +71,6 @@
 }
 
 .suf-spotlight__media {
-  position: relative;
   aspect-ratio: 4 / 5;
   max-height: 520px;
 
@@ -84,11 +79,11 @@
   // it into a wall of text with a picture nobody scrolls to.
   //
   // THE STACKED-MEDIA RULE, canonical copy -- the other stacked images point
-  // here. Every two-column image is CAPPED and CENTRED once it stacks, from
+  // here. Every two-column image is CAPPED and CENTERED once it stacks, from
   // --suf-stack-media-tall / --wide chosen by the crop. Do not add a
   // per-component number: there are two decisions here, not one per section.
   //
-  // `width: 100%` IS LOAD-BEARING for every capped-and-centred grid item. A
+  // `width: 100%` IS LOAD-BEARING for every capped-and-centered grid item. A
   // grid item stretches to its area only while its inline margins are not
   // auto -- setting `margin-inline: auto` switches stretch off and it
   // shrink-to-fits its CONTENT, so the cap never applies and cards come out at
@@ -100,65 +95,11 @@
     margin-inline: auto;
   }
 
-  // z-index 1 against the frame's 0, rather than the frame using -1.
-  //
-  // A negative z-index escapes the parent and paints behind the SECTION
-  // background, so on any section with a background the frame vanishes. Giving
-  // the image a positive index keeps both inside this element's stacking
-  // context and works on every surface.
   img {
-    position: relative;
-    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-
-  &::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    bottom: -14px;
-    // Default: image on the right, so the frame reaches LEFT toward the text.
-    left: -14px;
-    width: 60%;
-    height: 60%;
-    border: 3px solid var(--suf-frame-color, transparent);
-
-    // Pulled in on small screens. The 14px offset is drawn against a desktop
-    // image; on a phone the same overhang is a larger share of the frame and
-    // starts crowding the container's own padding.
-    @media (max-width: 600px) {
-      bottom: -9px;
-      left: -10px;
-    }
-  }
-}
-
-// The frame sits on the INNER edge -- the side facing the text -- so it reads
-// as tying the image to the copy rather than pushing away from it. Verified
-// against the mockup: .whyZ is text-left/image-right and frames LEFT;
-// .founder is image-left/text-right and frames RIGHT.
-//
-// Derived from the image side in CSS rather than set by a Liquid variable, so
-// the two cannot disagree. There is no way to configure it wrongly.
-.suf-spotlight--image-left .suf-spotlight__media::after {
-  left: auto;
-  right: -14px;
-
-  // Mirrors the small-screen inset above. `left: auto` still applies, so only
-  // the right offset needs restating.
-  @media (max-width: 600px) {
-    right: -10px;
-  }
-}
-
-.suf-spotlight--frame-red {
-  --suf-frame-color: var(--suf-red);
-}
-
-.suf-spotlight--frame-blue {
-  --suf-frame-color: var(--suf-blue);
 }
 
 // Landscape variant, for a photo that does not crop well to 4:5.
@@ -228,13 +169,13 @@
   }
 
   // An italic title inside the heading -- a book title, set as the design's
-  // navy rather than inheriting the heading colour wholesale.
+  // navy rather than inheriting the heading color wholesale.
   h4 em {
     color: var(--suf-navy);
     font-style: italic;
   }
 
-  // 640px is where the cover and the text stop sitting comfortably centred
+  // 640px is where the cover and the text stop sitting comfortably centered
   // against each other: the title wraps to three lines and the cover floats.
   @media (max-width: 640px) {
     align-items: flex-start;

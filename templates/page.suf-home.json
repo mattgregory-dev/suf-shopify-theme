@@ -268,7 +268,6 @@
         "image": "shopify://shop_images/hero.webp",
         "image_alt": "Coach cueing a trainee’s push-up on the seminar floor",
         "image_side": "right",
-        "frame": "red",
         "button_label": "See What’s Different",
         "button_url": "/pages/suf-cpt",
         "button_style": "ghost"
@@ -283,7 +282,6 @@
         "image": "shopify://shop_images/IMG_5337.webp",
         "image_alt": "Chris kneeling and teaching a group on the studio floor",
         "image_side": "left",
-        "frame": "blue",
         "button_label": "Read Chris’s Story",
         "button_url": "/pages/suf-about",
         "button_style": "ghost"

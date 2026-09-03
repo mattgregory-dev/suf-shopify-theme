@@ -1,22 +1,17 @@
 {% comment %}
   A certification row: image, feature list, price, buy button.
 
-  One section for the mockup's .certrow AND .bundle -- the same shape, differing
-  only in surface, column ratio and crop. The bundle is this with `dark` on.
+  One section for the certification row and the bundle -- the same shape,
+  differing only in surface, column ratio and crop. The bundle is this with
+  `dark` on.
 
   ORDER. Markup is always text-then-image; the visual swap is CSS `order`, so
   reading and tab order stay correct. Below 1020px the image always follows the
   text.
 
-  CHECKOUT. `go_to_checkout` posts a return_to of /checkout, so the buyer lands
-  on checkout rather than the cart. The mockup specifies this for these items
-  ("Straight to secure checkout") and it suits them: single high-value
-  purchases with nothing to cross-sell alongside. It is the wrong default for
-  small items on a page that sells two things -- see the study guides, which
-  deliberately go to cart.
-
-  FEATURES are blocks so the list can change without a developer. They are the
-  substance of the offer and they churn.
+  CHECKOUT. `go_to_checkout` skips the cart -- right here, because a
+  certification is a single high-value purchase. See docs/architecture.md for
+  when it is not.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
@@ -34,9 +29,6 @@
 
   assign classes = classes | append: ' suf-cert--image-' | append: section.settings.image_side
 
-  if section.settings.frame != 'none'
-    assign classes = classes | append: ' suf-cert--frame-' | append: section.settings.frame
-  endif
 
   assign product = section.settings.product
   assign anchor = section.settings.anchor | handle
@@ -90,39 +82,12 @@
               {%- endif -%}
 
               {%- comment -%}
-                SEMINAR CREDIT. Optional by design -- see the snippet for why
-                the default is "choose later".
+                Both selects submit line item properties -- see
+                docs/architecture.md for why these are not variants.
 
-                A line item PROPERTY rather than a variant: every combination
-                costs the same, and variants exist to vary price, inventory or
-                SKU. Putting a running list of seminars into variants would
-                also mean editing this product every time one is added or
-                retired, which is the maintenance this avoids.
-
-                The property is named "Seminar" so it reads as itself in the
-                cart, on the order and in the admin -- that is where staff pick
-                it up to enrol someone.
-
-                IT ALWAYS CARRIES A VALUE. "Choose later" submits an explicit
-                "Credit -- to be booked later" rather than a blank, so every
-                order that includes a seminar says so on its face. Blank would
-                be dropped by Shopify, and a seminar bundle showing no seminar
-                line cannot be told apart from one where the picker failed.
-                The reasoning is in snippets/suf-seminar-options.liquid.
-              {%- endcomment -%}
-              {%- comment -%}
-                WHAT THE BUYER IS CHOOSING, for a bundle that is "any two of
-                three". One option per line in a textarea; a line ending in
-                `|seminar` marks a combination that includes one, which is what
-                reveals the seminar picker below.
-
-                A PROPERTY, NOT VARIANTS. Every combination costs $XXX, and
-                variants exist to vary price, inventory or SKU. Variants would
-                also mean the merchant maintaining a matrix in admin for
-                something that is really one question with three answers.
-
-                The pipe convention matches the list blocks in suf-legal, so a
-                merchant meets the same idea twice rather than two syntaxes.
+                `picks` is one combination per line; a line ending `|seminar`
+                marks one that includes a seminar, which is what reveals the
+                picker below it.
               {%- endcomment -%}
               {%- assign picks = section.settings.picks | strip | newline_to_br | split: '<br />' -%}
               {%- if section.settings.picks != blank -%}
@@ -288,18 +253,6 @@
       ],
       "default": "left"
     },
-    {
-      "type": "select",
-      "id": "frame",
-      "label": "Offset frame",
-      "info": "BLUE when the image is on the left, RED when it is on the right. Follow the image side, not the section above -- that is the convention across the site.",
-      "options": [
-        { "value": "red", "label": "Red" },
-        { "value": "blue", "label": "Blue" },
-        { "value": "none", "label": "None" }
-      ],
-      "default": "red"
-    },
     { "type": "header", "content": "Surface" },
     {
       "type": "checkbox",
@@ -319,7 +272,7 @@
       "type": "richtext",
       "id": "pointer",
       "label": "Closing note",
-      "info": "Centred line under the row, for a route out to a bigger package."
+      "info": "Centered line under the row, for a route out to a bigger package."
     }
   ],
   "blocks": [
