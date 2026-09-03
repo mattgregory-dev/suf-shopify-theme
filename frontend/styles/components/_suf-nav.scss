@@ -412,7 +412,8 @@
       display: block;
       width: 24px;
       height: 2.5px;
-      background: var(--suf-white);
+      // Not white: in this bar white means current or hovered.
+      background: var(--suf-color-text-on-dark);
       transition: 0.22s;
     }
   }
@@ -618,6 +619,13 @@
       max-height: calc(100dvh - 100%);
       overflow-y: auto;
       overscroll-behavior: contain;
+      // RESETTING THE DESKTOP `justify-content: center` IS LOAD-BEARING.
+      // Centred content that overflows a scroll container spills equally from
+      // both ends, and the overflow at the START is unreachable -- scrollTop
+      // cannot go below zero. With two accordions open the menu passed the cap
+      // and Home was pushed behind the header with no way to scroll back.
+      // Renders fine until the content is tall enough to overflow.
+      justify-content: flex-start;
     }
 
     .sufnav.is-open .sufnav__menu {
