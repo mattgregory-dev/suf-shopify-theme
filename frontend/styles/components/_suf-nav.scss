@@ -5,9 +5,8 @@
 // the section itself emits. Every other partial here can assume suf.liquid;
 // this one cannot assume anything but its own markup.
 //
-// Departures from the mockup: cqi -> vw (a real header's container IS the
-// viewport, and neither layout has a container-type ancestor), and the logo
-// clamps continuously rather than stepping at the sticky state.
+// Sized in vw, not cqi: a header's container IS the viewport, and neither
+// layout has a container-type ancestor to query.
 //
 // ONE BREAKPOINT: 900px, the hamburger takeover. Everything above narrows
 // continuously -- the alternative is a ladder of breakpoints, each a place for
@@ -79,7 +78,7 @@
     align-items: center;
     // WIDTH IS RESERVED so the nav does not drift. The mark is square, so
     // compressing it on sticky gives back width as well as height, and the
-    // centred menu re-centres into it -- sliding sideways at the exact moment
+    // centered menu re-centers into it -- sliding sideways at the exact moment
     // the header pins. Holding the box means only the artwork resizes.
     // min-width, not width, so a wide lockup can still enlarge it.
     min-width: clamp(70px, 5.33vw, 80px);
@@ -92,13 +91,10 @@
     img {
       display: block;
       width: auto;
-      // Continuous rather than the mockup's fixed 60px: see the header comment.
-      // 70px floor, 80px ceiling -- a narrow range on purpose. 80px is already
-      // lean for this mark next to the production site's, and below about 70 a
-      // square logo stops carrying the wordmark legibly, so there is very little
-      // room to trade height for width here.
-      //
-      // 5.33vw reaches 80px at 1500 and holds the 70px floor below 1313.
+      // A narrow range on purpose: 80px is already lean for this mark, and
+      // below about 70 a square logo stops carrying the wordmark legibly, so
+      // there is little room to trade height for width. 5.33vw reaches 80px at
+      // 1500 and holds the floor below 1313.
       height: clamp(70px, 5.33vw, 80px);
       // A guard, not a look. Height alone sizes a square mark correctly, but a
       // merchant who swaps in a wide lockup would otherwise push the nav out of
@@ -154,13 +150,9 @@
     background: none;
     color: var(--suf-color-text-on-dark);
     font-family: inherit;
-    // 13px at the 900px takeover, 18px from 1500px up. The mockup's 11.5-13px
-    // was sized for a demo frame; at real viewport widths it read as fine print.
-    //
-    // The floor is the OLD ceiling deliberately: 13px is what six uppercase
-    // items plus the logo and icons will fit in at 900px, and below that the
-    // hamburger has taken over anyway. Raising the floor with the ceiling would
-    // overflow the bar in the 900-1050px band instead.
+    // 13px at the 900px takeover, 18px from 1500px up. The FLOOR is the tight
+    // one: 13px is what six uppercase items plus the logo and icons fit in at
+    // 900px, so raising it would overflow the bar in the 900-1050px band.
     font-size: clamp(13px, 0.83vw + 5.5px, 18px);
     font-weight: 700;
     line-height: 1;
@@ -261,7 +253,11 @@
     padding: 12px 20px;
     color: var(--suf-navy);
     font-size: 15px;
-    font-weight: 600;
+    // 700, matching the bar's labels, so the whole nav is one weight with 800
+    // as the current-page mark. It was 600, which is a face this layout does
+    // not preload -- so opening the menu fetched it and the panel reflowed as
+    // it swapped in.
+    font-weight: 700;
     line-height: 1.25;
     text-decoration: none;
     transition: background 0.14s, color 0.14s;
@@ -305,12 +301,9 @@
   // ---------------------------------------------------------------------------
   // ICONS
 
-  // 6px, not the 18px this had before the icons became circles.
-  //
-  // The gap is measured between the CIRCLES, and each one adds 11px of its own
-  // padding either side of a 20px glyph. At 18px the glyphs ended up 40px
-  // apart -- more than twice their old spacing. 6px puts them at 28px, near
-  // where they were, with the circles still clearly separate when two are lit.
+  // Measured between the CIRCLES, and each adds 11px either side of its glyph
+  // -- so 6px here puts the glyphs 28px apart, with the discs still clearly
+  // separate when two are lit.
   .sufnav__icons {
     display: flex;
     flex-shrink: 0;
@@ -340,17 +333,10 @@
     cursor: pointer;
     transition: background var(--suf-transition), color 0.16s;
 
-    // A near-solid white disc with a navy glyph -- the icon inverts rather
-    // than merely brightening.
-    //
-    // 75% rather than flat white: enough of the navy reads through that the
-    // disc still belongs to the bar instead of looking like a hole punched in
-    // it, and it stays correct if the navy is ever retuned.
-    //
-    // Raised from 68% after the mobile pass -- on a phone screen, outdoors and
-    // at a glance, the disc was reading as grey rather than as an inverted
-    // icon. The ceiling is flat white, which is the point at which it stops
-    // belonging to the bar at all.
+    // The icon INVERTS rather than merely brightening. 75% not flat white:
+    // enough navy reads through that the disc belongs to the bar instead of
+    // looking like a hole punched in it, and it holds if the navy is retuned.
+    // Below about 70% it reads as a gray disc on a phone screen outdoors.
     &:hover,
     &:focus-visible {
       background: rgb(255 255 255 / 75%);
@@ -367,9 +353,8 @@
   .sufnav__badge {
     display: flex;
     position: absolute;
-    // Anchored to the 42px circle, not the 20px glyph it used to hang off.
-    // The glyph is centred, so it starts 11px in on both axes -- these offsets
-    // put the badge back in the same place relative to the cart it marks.
+    // Anchored to the 42px circle. The glyph is centered inside it and starts
+    // 11px in on both axes, which is what these offsets are measured against.
     top: 2px;
     right: 3px;
     align-items: center;
@@ -439,16 +424,13 @@
   // ---------------------------------------------------------------------------
   // FOCUS
   //
-  // Every interactive thing in the navy bar. Until this existed the only
-  // keyboard feedback was a colour change from #c3d2da to white, which is a
-  // contrast step most people will not notice and nobody can rely on.
+  // Every interactive thing in the navy bar takes a ring. A color change alone
+  // is not keyboard feedback anyone can rely on.
   //
-  // White rather than --suf-color-focus: the focus blue is a mid-tone against
-  // navy, and this ring has to read instantly on the darkest surface here.
-  //
-  // Negative offset so the ring sits INSIDE the element. The labels run the
-  // full height of the bar, and a ring outside them would be clipped at the
-  // top and bottom edges.
+  // White rather than --suf-color-focus, which is a mid-tone against navy and
+  // has to read instantly on the darkest surface here. Negative offset so the
+  // ring sits INSIDE the element: the labels run the full height of the bar,
+  // and a ring outside them is clipped top and bottom.
   .sufnav__label:focus-visible,
   .sufnav__icon:focus-visible,
   .sufnav__burger:focus-visible {
@@ -541,13 +523,9 @@
       padding-block: 7px;
     }
 
-    // 62px: the smallest this mark is allowed to go anywhere, shared with the
-    // stacked bar below.
-    //
-    // Compression therefore buys less than it used to -- 98px down to 80px
-    // rather than to 62px. That is the cost of a legibility floor on a square
-    // logo, and it is the right trade: a scrolled header that is 18px shorter
-    // beats one carrying a mark too small to read.
+    // 62px is the smallest this mark goes anywhere, shared with the stacked
+    // bar below. It caps what compression can buy -- a legibility floor on a
+    // square logo is worth more than a shorter scrolled header.
     .sufnav__logo img {
       height: 62px;
     }
@@ -620,7 +598,7 @@
       overflow-y: auto;
       overscroll-behavior: contain;
       // RESETTING THE DESKTOP `justify-content: center` IS LOAD-BEARING.
-      // Centred content that overflows a scroll container spills equally from
+      // Centered content that overflows a scroll container spills equally from
       // both ends, and the overflow at the START is unreachable -- scrollTop
       // cannot go below zero. With two accordions open the menu passed the cap
       // and Home was pushed behind the header with no way to scroll back.
@@ -722,29 +700,21 @@
   }
 
   // ---------------------------------------------------------------------------
-  // DEFENCE AGAINST THE LEGACY RESET
+  // DEFENSE AGAINST THE LEGACY RESET -- everything below this point is inert
+  // on the suf layout, and goes when the legacy templates do.
   //
-  // Only reachable on layout/theme.liquid, which loads dt-framework.css.
-  // Nothing here does anything on the suf layout.
+  // AN UNDECLARED PROPERTY IS A GAP. The legacy rules are bare elements at
+  // (0,0,1) and lose to any class here, so they only reach what this file
+  // leaves unset -- which makes them invisible in review. Declaring the
+  // property is the whole fix.
   //
-  // The rules defended against are (0,0,1) bare elements, so they lose to any
-  // .sufnav__* class -- which is exactly what makes them dangerous. They only
-  // reach properties this file leaves UNDECLARED, so they are invisible in
-  // review. Declaring the property is the whole fix.
+  // Specificity is computed PER SELECTOR in a list, so `button[type="button"]`
+  // is (0,1,1), not the bare `button` it looks like, and it beats .sufnav__*
+  // at (0,1,0).
   //
-  // Specificity is computed PER SELECTOR in a list, so dt-framework's
-  // `button[type="button"]` is (0,1,1), not the bare `button` it looks like.
-  // Every button here carries type="button", so it beat .sufnav__* at (0,1,0)
-  // and painted the dropdown parents, hamburger and search toggle black.
-
-  // THE FONT, ON LEGACY TEMPLATES. theme.liquid renders `suf-fonts` with no
-  // family, which pins ~30 legacy templates to `Arial !important` until they
-  // are reviewed. The header is not one of them -- it is the same section on
-  // both layouts and has to match.
-  //
-  // !important is the only instrument that works: specificity cannot beat an
-  // !important declaration, only a more specific !important can. Scoped to the
-  // wrapper so nothing else on a legacy page moves.
+  // The font needs !important because the legacy sheet uses one, and only a
+  // more specific !important beats that. Scoped to the wrapper so nothing else
+  // on a legacy page moves.
   &,
   & * {
     font-family: var(--suf-font-body) !important;
@@ -757,13 +727,11 @@
     margin: 0;
     float: none;
     border-radius: 0;
-    // NO `outline: none` HERE. It was listed as a gap to close and it was a
-    // mistake: dt-framework already sets it, so this added nothing except
-    // stripping the browser's default ring from every button in the header.
-    // Focus is drawn explicitly below instead.
-    // The label already sets white-space: nowrap, but the reset's `flex-wrap:
-    // wrap` would still let the caret drop to a second line if a label ever
-    // grew a third child.
+    // NO `outline: none` HERE. It only strips the browser's default ring;
+    // focus is drawn explicitly below.
+    //
+    // flex-wrap because the reset's `wrap` would let the caret drop to a
+    // second line if a label ever grew a third child.
     flex-wrap: nowrap;
   }
 
@@ -776,7 +744,7 @@
   // This matches that (0,2,1) exactly and wins on source order, since
   // theme.liquid links suf.css after dt-framework.css.
   //
-  // COLOUR IS DELIBERATELY ABSENT. The real hover colour comes from
+  // COLOR IS DELIBERATELY ABSENT. The real hover color comes from
   // .sufnav__item:hover > .sufnav__label at (0,3,0) and from
   // .sufnav__icon:hover, and declaring it here would beat the icon rule on
   // source order -- this block sits at the end of the file.

@@ -294,6 +294,11 @@ If no, don't write it. Most of what fails that test is narration.
 - **History.** "This used to be X, changed on 2026-08-31." That is `git log`.
 - The second sentence restating the first.
 
+**American English**, in comments, commit messages and docs alike — color,
+behavior, centered, gray. The CSS property is `color` either way, so a comment
+spelling it `colour` two lines above is just noise. Watch the token
+`--suf-grey`, which is a name and does not change.
+
 **One idea, one statement**
 
 This is the rule that matters. What makes a block enormous is not facts, it is
@@ -313,6 +318,21 @@ fact is lost with it.
 A trap gets the larger budget because it has to **name the symptom** — that is
 what someone greps for when they hit it, and it is the part that saves the
 hour. "The panel looks too wide" finds the iOS zoom note; "font-size" does not.
+
+**Keeping them current**
+
+When you change behavior, re-read the comments on it. A stale comment is worse
+than none: two comments in one file describing the same control differently
+leaves the reader working out which one is lying. This is the failure the rest
+of the policy does not catch, because the comment was correct when written.
+
+State the decision, not the derivation — superseded values are history too.
+"6px, not the 18px it was" and "raised from 68% after the mobile pass" are
+both changelog. Give the number that is there and why it is right now.
+
+For anything transitional, say what kills it. "Inert on the suf layout, goes
+when the legacy templates do" beats a paragraph explaining the legacy
+behavior, and it tells the next person what to do with the block.
 
 **The check that catches drift: comments should not run past roughly a quarter
 of a file.** `_suf-motion.scss` reached 64% and `_suf-instance.scss` 73% before
