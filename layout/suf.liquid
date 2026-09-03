@@ -13,22 +13,10 @@
   templates/password.json already uses the JSON form for layout/password.liquid,
   which is the proof this works on a Vintage theme.
 
-  IT LOADS suf.css AND suf.js, AND NO INHERITED CSS OR JAVASCRIPT AT ALL.
-  Not loaded, deliberately: jQuery, dt-framework.css, dt-custom.css,
-  dt-plugins.js (Swiper), dt-theme.js, handlebars, select2, ajax-cart,
-  lazysizes, swiper-bundle.min.css, dT_main.js, dT_main_app.js -- roughly
-  850 KB that theme.liquid serves on every page.
-
-  Consequences, all intended:
-
-  * NO CART DRAWER. The header cart icon falls back to its own href and goes to
-    the cart page. New pages link straight to checkout, so the drawer is not
-    wanted. The header supplies its own nav drawer, in sections/suf-nav.liquid.
-  * NO LAZYSIZES. Use native loading="lazy", not class="lazyload".
-  * NO COOKIE BANNER yet. See docs/migration.md — resolve before any suf page
-    is assigned to a live page handle.
-  * Legacy sections render only as well as dt-framework.css happens to style
-    them, and this layout does not load it. Prefer suf-* sections here.
+  IT LOADS suf.css AND suf.js, AND NOTHING ELSE. No inherited CSS or
+  JavaScript at all -- roughly 850 KB less than theme.liquid serves on every
+  page. Keep it that way: if something new needs a library, port the thing
+  that needs it.
 {% endcomment %}
 <html lang="{{ request.locale.iso_code }}">
   <head>
@@ -50,17 +38,19 @@
     {% render 'social-meta-tags' %}
 
     {% comment %}
-      TWO of the five faces. @font-face is lazy, so the other three cost
-      nothing until something renders at that weight -- but PRELOADING IS NOT
-      LAZY. It fetches at high priority before the browser knows the file is
-      needed, so only what paints on first load belongs here: 400 for body,
-      800 for every heading.
+      THREE of the five faces. @font-face is lazy, so an unused weight costs
+      nothing -- but PRELOADING IS NOT LAZY, so only what paints on first load
+      belongs here: 400 for body, 700 for the nav labels, 800 for headings.
 
-      600 renders only after a menu opens, 700 is 8 uses below the fold, 900 is
-      2 uses on 2 pages. Preloading those three cost ~41 KB of contended
-      bandwidth per page and earned Chrome's "preloaded but not used" warning.
+      Unpreloaded, a weight that IS above the fold paints in Arial and swaps a
+      moment later, which is the visible jump. RE-CHECK THIS LIST when
+      something above the fold changes weight; nothing warns you.
+
+      600 needs a menu opened and 900 is two uses on two pages, so both stay
+      lazy -- preloading them earned Chrome's "preloaded but not used" warning.
     {% endcomment %}
     {{ 'hanken-grotesk-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'hanken-grotesk-700.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
     {{ 'hanken-grotesk-800.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
 
@@ -98,14 +88,11 @@
     {%- endunless -%}
 
     {% comment %}
-      Hanken Grotesk on this layout only. theme.liquid stays on Arial
-      permanently -- a settled decision, reasoning in snippets/suf-fonts.liquid.
-
       set_weights: false because this layout supplies its own. The snippet's
-      `h1, h2, ...` is (0,0,1) and the base layer's `:where(.suf-body) h1` is
-      ALSO (0,0,1), since :where() adds nothing -- and this renders after
-      suf.css, so the TIE went to the snippet and held every heading at 700
-      while the stylesheet asked for 800.
+      `h1, h2, ...` and the base layer's `:where(.suf-body) h1` are BOTH
+      (0,0,1) -- :where() adds nothing -- and this renders after suf.css, so
+      the tie went to the snippet and held every heading at 700 while the
+      stylesheet asked for 800.
     {% endcomment %}
     {% render 'suf-fonts', apply: true, set_weights: false, family: "'Hanken Grotesk', Arial, Helvetica, sans-serif" %}
 
@@ -123,19 +110,17 @@
     <a class="suf-skip-link" href="#suf-main">Skip to content</a>
 
     {% comment %}
-      The back-to-top link's target. A real element rather than href="#",
-      which scrolls the viewport but leaves keyboard focus at the bottom of
-      the page -- the next Tab then resumes in the footer, which is the
-      opposite of what the control promises. tabindex="-1" makes it focusable
-      by the fragment jump without putting it in the tab order.
+      The back-to-top target. A real element rather than href="#", which
+      scrolls the viewport but leaves focus at the bottom of the page, so the
+      next Tab resumes in the footer. tabindex="-1" makes it focusable by the
+      fragment jump without adding a tab stop.
     {% endcomment %}
     <span id="suf-top" tabindex="-1"></span>
 
     {% comment %}
-      The reveal threshold, as an element. assets/suf-totop.js watches it with
-      an IntersectionObserver: while it is in view the page is inside the first
-      800px and the button stays hidden. Its height is the threshold, so the
-      distance is set once in CSS rather than duplicated in JS.
+      The reveal threshold, as an element: its HEIGHT is the distance, so the
+      number lives once in CSS rather than being duplicated in JS. While it is
+      in view, suf-totop.js keeps the button hidden.
     {% endcomment %}
     <span class="suf-totop__sentinel" aria-hidden="true"></span>
 
@@ -152,13 +137,9 @@
     {% section 'suf-footer' %}
 
     {% comment %}
-      Back to top. Always visible, as in the mockup -- the legacy snippet
-      revealed it on scroll with jQuery, which this layout does not load. If it
-      should be revealed rather than persistent, that is a few lines in suf.js,
-      not a reason to keep the old snippet.
-
-      Styled provisionally: it takes the CTA colour so it moves with the rest
-      of the chrome when the header and footer are rebuilt.
+      Back to top. Hidden until the sentinel above scrolls out of view, which
+      assets/suf-totop.js watches; the jump itself is CSS smooth scrolling, not
+      script.
     {% endcomment %}
     <a class="suf-totop" href="#suf-top">
       <span class="suf-totop__arrow" aria-hidden="true">&uarr;</span>
