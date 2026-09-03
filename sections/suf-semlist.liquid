@@ -13,8 +13,8 @@
 
   METAFIELDS, all on the product, all namespace `custom`:
 
-    seminar_city       single line text  "Tampa"      -- street line only
-    seminar_city_state single line text  "Tampa, FL"  -- the row's city cell
+    seminar_city       single line text  "Tampa"
+    seminar_state      choice list       "Florida" -- 50 states plus DC
     seminar_start      date              2026-09-25
     seminar_end        date              2026-09-26
     seminar_focus      single line text  "Upper Body", blank = TBA
@@ -111,6 +111,16 @@
           -%}
 
           {%- if is_past == false and shown < section.settings.limit -%}
+            {%- comment -%}
+              Captured OUTSIDE the liquid tag below, because a snippet cannot
+              return a value -- render writes to output, so the only way to
+              hold it is to capture what it prints.
+            {%- endcomment -%}
+            {%- capture place -%}
+              {%- render 'suf-seminar-place', product: product -%}
+            {%- endcapture -%}
+            {%- assign place = place | strip -%}
+
             {%- liquid
               assign shown = shown | plus: 1
 
@@ -130,22 +140,17 @@
                 assign when = ''
               endif
 
-              # TWO CITY FIELDS, and the row wants the one WITH the state.
-              # seminar_city is "Tampa"; seminar_city_state is "Tampa, FL".
-              # The bare city exists for the address line in the panel, where
-              # it sits under a street and the state is already implied by the
-              # line above it. Here the city stands alone in a national list,
-              # and "Portland" alone is two different flights.
+              # `place` is captured below the liquid tag, from
+              # snippets/suf-seminar-place.liquid, and falls back to the
+              # product title when a seminar has neither city nor state.
               #
-              # ONE LINE. Inside a liquid tag a statement cannot wrap: a
-              # continuation line parses as its own statement and the tag fails
-              # with a LiquidHTMLSyntaxError, taking the section with it.
-              #
-              # And NEVER write a tag delimiter inside one of these comments.
-              # A `#` line is not lexed as a comment -- the delimiter closes
-              # the enclosing tag, and every statement after it renders to the
-              # page as text. That is what happened here.
-              assign city = product.metafields.custom.seminar_city_state.value | default: product.metafields.custom.seminar_city.value | default: product.title
+              # ONE LINE per statement inside a liquid tag: a continuation line
+              # parses as its own statement and fails with a
+              # LiquidHTMLSyntaxError, taking the section with it. And never
+              # write a tag delimiter inside a `#` comment here -- it is not
+              # lexed as a comment, so the delimiter closes the enclosing tag
+              # and every statement after it renders to the page as text.
+              assign city = place | default: product.title
               assign focus = product.metafields.custom.seminar_focus.value
               assign price = product.price | money_without_trailing_zeros
 

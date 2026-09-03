@@ -87,10 +87,6 @@
         assign is_past = true
       endif
 
-      # city_state, not city: this string ends up on an order line, where
-      # "Tampa" alone is ambiguous to whoever is booking the seat.
-      assign city = seminar.metafields.custom.seminar_city_state.value | default: seminar.metafields.custom.seminar_city.value
-
       # Each half formatted on its own line. Chaining them pipes the whole
       # concatenated string into `date`, not the end date.
       assign m1 = starts | date: '%B'
@@ -104,6 +100,16 @@
     -%}
 
     {%- unless is_past -%}
+      {%- comment -%}
+        Same "Tampa, FL" the event row shows, from the same snippet. This
+        string ends up on the ORDER, so a picker naming a city the seminars
+        page names differently would be two names for one booking.
+      {%- endcomment -%}
+      {%- capture city -%}
+        {%- render 'suf-seminar-place', product: seminar -%}
+      {%- endcapture -%}
+      {%- assign city = city | strip -%}
+
       {%- capture label -%}
         {{- city | default: seminar.title -}}
         {%- if starts != blank %} · {{ first_half }}
