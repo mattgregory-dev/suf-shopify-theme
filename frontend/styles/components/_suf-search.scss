@@ -30,7 +30,9 @@
   .suf-search__form {
     display: flex;
     align-items: center;
-    gap: var(--suf-space-sm);
+    // md, not sm: submit and close do opposite things, and at sm it was easy
+    // to catch the wrong one.
+    gap: var(--suf-space-md);
   }
 
   // The visible placeholder is enough for sighted users; the label stays for
@@ -45,7 +47,10 @@
     flex: 1 1 auto;
     border: 1px solid var(--suf-color-border);
     border-radius: var(--suf-radius);
-    padding-inline: var(--suf-space-sm);
+    // No padding on the end, so the submit sits flush against the border.
+    padding-inline: var(--suf-space-sm) 0;
+    // Clips the submit's square corners to the field's radius.
+    overflow: hidden;
   }
 
   .suf-search__input {
@@ -139,9 +144,41 @@
   // beside a text field rather than in the navy bar, and at a full 42 it
   // competed with the field for weight. Still comfortably over the 24px
   // minimum target size.
+
+  // ---------------------------------------------------------------------------
+  // SUBMIT -- a filled block, flush to the end of the field
   //
-  // The submit stays a bare glyph: it sits INSIDE the field's border, and a
-  // second bordered shape in there reads as two controls.
+  // Square where the close is round: this one is part of the field it sits
+  // inside, so it takes the field's shape. Rounding it would put a second
+  // floating shape inside a border and read as two controls in one box.
+  //
+  // Navy, not red -- red here means the action a visitor came to take, and a
+  // red block would outrank the Reserve buttons further down the page. Grey
+  // reads as disabled, which is the one thing a submit must not.
+  .suf-search__submit {
+    align-self: stretch;
+    width: 52px;
+    flex: 0 0 auto;
+    padding: 0;
+    background: var(--suf-navy);
+    color: var(--suf-white);
+    transition: background var(--suf-transition);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--suf-color-link);
+      // Restated: the shared rule above turns the glyph red on hover.
+      color: var(--suf-white);
+    }
+
+    // Inset, because the field clips its overflow and a positive offset would
+    // be cut off.
+    &:focus-visible {
+      outline: 2px solid var(--suf-white);
+      outline-offset: -4px;
+    }
+  }
+
   .suf-search__close {
     width: 38px;
     height: 38px;
@@ -150,23 +187,16 @@
     flex: 0 0 auto;
     transition: background var(--suf-transition), color 0.16s;
 
-    // THE GREY IS THE MID ONE, NOT --suf-grey, and that is a deliberate
-    // departure from "light grey" as asked.
+    // Navy, matching the submit. The two never light at once, so they read as
+    // one vocabulary rather than competing.
     //
-    // --suf-grey is #dadada. A white glyph on it lands around 1.4:1, which is
-    // not a judgement call about taste -- it is below the point where the X is
-    // reliably visible, and this is the only control that closes the panel.
-    // --suf-color-text-muted is the grey in this palette that can carry white,
-    // at about 4.6:1, and still reads as a grey chip rather than a coloured
-    // button.
-    //
-    // If the lighter disc is wanted, the way to have it is to keep #dadada and
-    // DROP the white glyph -- a dark X on a light grey chip is the same idea
-    // and clears contrast comfortably. What does not work is light grey plus
-    // white.
+    // NOT A LIGHT GREY: --suf-grey is #dadada and a white glyph on it lands
+    // around 1.4:1. If a light disc is wanted, keep #dadada and DROP the white
+    // glyph -- a dark X on a light chip clears contrast. Light grey plus white
+    // does not.
     @media (hover: hover) {
       &:hover {
-        background: var(--suf-color-text-muted);
+        background: var(--suf-navy);
         color: var(--suf-white);
       }
     }
@@ -180,7 +210,7 @@
     // longer see. :active is the honest equivalent -- it lasts exactly as long
     // as the finger is down.
     &:active {
-      background: var(--suf-color-text-muted);
+      background: var(--suf-navy);
       color: var(--suf-white);
     }
 
@@ -236,24 +266,28 @@
     // The panel behind these rows is --suf-color-bg, so without this the cards
     // were the same colour as the surface under them and only their border
     // said they were cards.
-    //
-    // Safe under the hover state below: that is a color-mix against
-    // `transparent`, so it composites OVER whatever is behind it rather than
-    // replacing it. It was relying on the panel showing through before, and it
-    // reads the same way over white.
     background: var(--suf-color-surface);
+
+    transition: border-color 0.16s, box-shadow var(--suf-transition);
 
     // Keyboard highlight, hover and focus are the same affordance
     // deliberately: arrow keys, the pointer and Tab should all look like
     // pointing at a row.
+    //
+    // THE CARD DOES NOT TINT. The title is --suf-color-link, so washing that
+    // same blue across the card put blue text on a blue ground and cost the
+    // legibility the highlight was drawing attention to.
+    //
+    // Edges instead -- the design's own rule. The inset ring thickens the 1px
+    // border to a crisp 2px without resizing the card and shifting the row
+    // under the pointer, the same trick .suf-gcard uses.
     &.is-active,
     &:hover,
     &:has(.suf-search__result-link:focus-visible) {
       border-color: var(--suf-color-link);
-      // 12%, up from 6%. The rows now sit on white rather than letting the
-      // off-white panel through, so the tint has a lighter ground to register
-      // against and 6% had stopped being a state you would notice.
-      background: color-mix(in srgb, var(--suf-color-link) 12%, transparent);
+      box-shadow:
+        inset 0 0 0 1px var(--suf-color-link),
+        0 8px 20px rgb(0 32 54 / 10%);
     }
 
     // THE FOCUS RING GOES ON THE ROW, NOT THE TITLE.
