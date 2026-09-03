@@ -82,11 +82,20 @@
       deferred assets/suf.js, which would paint them visible, hide them, then
       animate them back.
 
+      NOT IN THE THEME EDITOR. Selecting or editing a block re-renders its
+      section, and the observer in assets/suf-motion.js never sees the replaced
+      nodes -- so every accent it would have revealed stays at opacity 0 and a
+      merchant edits a block they cannot see. Without the attribute nothing is
+      hidden in the first place, which is the same escape hatch a blocked
+      script gets.
+
       One line, and it stays one line.
     {% endcomment %}
-    <script>
-      document.documentElement.dataset.sufMotion = '';
-    </script>
+    {%- unless request.design_mode -%}
+      <script>
+        document.documentElement.dataset.sufMotion = '';
+      </script>
+    {%- endunless -%}
 
     {% comment %}
       Hanken Grotesk on this layout only. theme.liquid stays on Arial
