@@ -1233,15 +1233,11 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 /* stylelint-enable custom-property-pattern */
 
 
-// Product title, matching the cart page: the link colour, lightening on hover
-// rather than going red like a prose link.
+// Heading colour, not link blue, and no hover: the title stopped being a link
+// when the cart templates dropped their product-page links. Blue text that
+// lights up under the pointer promises a click that does nothing.
 #CartDrawer .ajaxcart__product-name {
-  color: var(--suf-blue) !important;
-
-  &:hover,
-  &:focus-visible {
-    color: var(--suf-blue-light) !important;
-  }
+  color: var(--suf-color-heading) !important;
 }
 
 // Quantity steppers hover in the brand blue, on ALL THREE surfaces.
@@ -1298,17 +1294,11 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
   border-radius: 0;
 }
 
-// Product title. A link to the product, and the only link in the row -- it
-// takes the link colour rather than the body colour dt-framework gives it,
-// and lightens on hover rather than going red like a prose link.
-.cart_table .cart-title a,
+// Product title. Heading colour and no hover: it stopped being a link when the
+// cart templates dropped their product-page links, and blue text that lights up
+// under the pointer promises a click that does nothing.
 .cart_table .cart-title .product-name {
-  color: var(--suf-blue) !important;
-
-  &:hover,
-  &:focus-visible {
-    color: var(--suf-blue-light) !important;
-  }
+  color: var(--suf-color-heading) !important;
 }
 
 // LINE ITEM PROPERTIES under the cart title -- what a bundle buyer chose.
