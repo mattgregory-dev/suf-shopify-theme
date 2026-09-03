@@ -354,12 +354,35 @@ history.
 
 - **Do not add a `Co-Authored-By` trailer.** Omit it entirely.
 - Subject line, imperative mood, conventional-commit prefix.
-- **Write a body only when there is a trap or a non-obvious consequence** —
-  something a dev acting on the commit needs and cannot get from the diff.
-- Skip the body entirely when the subject says it all.
-- Background and architecture belong in `docs/`, not in `git log`. But note
-  these docs are the only versioned record, so a body must be self-contained:
-  do not write "see the docs" in place of the fact itself.
+- **Most commits are a subject line and nothing else.**
+
+The comment rules above mostly transfer — one idea one statement, no
+restatement, a body only when it earns one. Three differences:
+
+**History inverts.** In a comment, "this used to be X" is noise because git
+has it. In a commit body that is the whole job: this is *where* git has it.
+
+**Do not repeat what the code says.** The commonest failure here. A body that
+re-explains a constraint already written in the file stores the same content
+twice, and the copy in the commit is the one nobody maintains. The body says
+**why this happened**; the code says **how it works**.
+
+| In the body | Not in the body |
+|---|---|
+| What forced the change | Mechanism |
+| What was rejected, and why | Trap explanations already commented in the file |
+| What the diff cannot show | Anything restating the subject line |
+
+**It is read by a stranger.** At most one ALL-CAPS line per body — it scans
+well in a comment and reads as shouting at a commit body's width. Someone
+skimming twenty commits is looking for judgment, and a wall of text hides it.
+
+Budget: subject only for most; one to three short paragraphs where there is a
+real decision; longer only for something genuinely load-bearing, which in this
+repo has been about three commits.
+
+Background and architecture belong in `docs/`, not in `git log` — but a body
+must still be self-contained. Do not write "see the docs" in place of a fact.
 
 ## Assistant context files are not tracked
 
