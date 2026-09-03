@@ -356,33 +356,35 @@ history.
 - Subject line, imperative mood, conventional-commit prefix.
 - **Most commits are a subject line and nothing else.**
 
-The comment rules above mostly transfer — one idea one statement, no
-restatement, a body only when it earns one. Three differences:
+**`git log` is read as a story arc**, scrolled through to see how the work
+moved. That is the job a body has to serve. The moment it stops being
+scannable it has failed at the only thing it was for, however good the prose.
 
-**History inverts.** In a comment, "this used to be X" is noise because git
-has it. In a commit body that is the whole job: this is *where* git has it.
+**THE BODY IS THE LAST PLACE TO PUT ANYTHING.** Check in order — is it in the
+code comment, in `docs/`, or visible in the diff? If yes, the body says
+nothing about it. All three sit nearer the code and stay current; the commit
+copy is the one that goes stale and the one nobody opens. This is what lets
+the body collapse, and it is the rule the rest depends on.
 
-**Do not repeat what the code says.** The commonest failure here. A body that
-re-explains a constraint already written in the file stores the same content
-twice, and the copy in the commit is the one nobody maintains. The body says
-**why this happened**; the code says **how it works**.
+**Default to no body.** Most commits are a subject line. Aim for ~70%.
 
-| In the body | Not in the body |
-|---|---|
-| What forced the change | Mechanism |
-| What was rejected, and why | Trap explanations already commented in the file |
-| What the diff cannot show | Anything restating the subject line |
+**When there is one: one idea, one paragraph, about four lines.** Not a
+summary of the change — the single thing a reader cannot get from the subject
+or the diff. Usually why it happened, or what was rejected.
 
-**It is read by a stranger.** At most one ALL-CAPS line per body — it scans
-well in a comment and reads as shouting at a commit body's width. Someone
-skimming twenty commits is looking for judgment, and a wall of text hides it.
+**Longer has to be UBER-EARNED**, and the test is narrow: the information
+exists nowhere else in the repo, AND someone acting without it loses real time
+or money. That is roughly one commit in twenty here. Some genuinely qualify —
+a decision that will look wrong later and get reverted, a constraint discovered
+by a failure nobody would repeat, a correction to something this history
+already asserts. Write those properly. Everything else gets four lines.
 
-Budget: subject only for most; one to three short paragraphs where there is a
-real decision; longer only for something genuinely load-bearing, which in this
-repo has been about three commits.
+**Always cut:** "also fixed on the way" lists, verification counts, mechanism,
+provenance, and restatement of the subject. A trap goes in the CODE, where
+someone hits it — not here.
 
-Background and architecture belong in `docs/`, not in `git log` — but a body
-must still be self-contained. Do not write "see the docs" in place of a fact.
+At most one ALL-CAPS line per body. It scans well in a comment and reads as
+shouting at a body's width.
 
 ## Assistant context files are not tracked
 
