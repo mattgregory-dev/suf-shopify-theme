@@ -126,6 +126,7 @@
   }
 
   input,
+  select,
   textarea {
     width: 100%;
     padding: 12px 14px;
@@ -147,6 +148,7 @@
   // :focus, not :focus-visible -- a text field should show focus however it
   // was reached, including by click. That differs from buttons deliberately.
   input:focus,
+  select:focus,
   textarea:focus {
     outline: none;
     background: var(--suf-color-surface);
@@ -159,6 +161,7 @@
   // indicator at all for those users.
   @media (forced-colors: active) {
     input:focus,
+    select:focus,
     textarea:focus {
       outline: 2px solid;
       outline-offset: 1px;

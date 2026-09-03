@@ -2,10 +2,14 @@
   Contact details + form, in one card that overlaps the band above.
 
   THE FORM IS REAL. The mockup's is a dead <button type="button">; this uses
-  Shopify's {% form 'contact' %}, which posts to the store and emails the
-  address in Settings > Store details > Sender email. Nothing here needs an
-  app, and there is no JavaScript: on submit Shopify redirects back with
-  ?contact_posted=true, which is what drives the success message.
+  Shopify's {% form 'contact' %}. It posts to the store and Shopify sends the
+  mail itself, to SETTINGS > GENERAL > STORE CONTACT DETAILS > STORE EMAIL
+  (shop.email) -- established by test, not by the docs. Not Sender email, which
+  is a different field under Notifications and only sets the From address on
+  customer-facing mail.
+
+  Nothing here needs an app and there is no JavaScript for the submit: Shopify
+  redirects back with ?contact_posted=true, which drives the success message.
 
   That redirect is also why the success note carries tabindex="-1" and is
   focused on load -- after a full page reload a screen reader user would
@@ -123,6 +127,39 @@
               </div>
             </div>
 
+            {%- comment -%}
+              A REASON, FOR TRIAGE. The visitor gains nothing -- they know why
+              they are writing. It exists so "I want to get certified" and "my
+              order never arrived" stop landing in one undifferentiated pile,
+              since those need different people and different urgency.
+
+              So every option has to change what the merchant DOES. "Feedback"
+              and "feature request" both resolve to "read when there is time",
+              which is one behaviour, and two labels for one behaviour just
+              makes the list longer to read.
+
+              NOT REQUIRED. Shopify drops a blank value rather than sending an
+              empty line, so leaving it alone costs nothing.
+
+              `contact[Reason]` is capitalised because the key is the label
+              Shopify prints in the email.
+            {%- endcomment -%}
+            {%- assign reasons = section.settings.reasons | newline_to_br | split: '<br />' -%}
+            {%- if reasons.size > 0 -%}
+              <div class="suf-field">
+                <label for="suf-cf-reason">{{ section.settings.reason_label | default: "What's this about?" | escape }}</label>
+                <select id="suf-cf-reason" name="contact[Reason]">
+                  <option value="">Choose one</option>
+                  {%- for reason in reasons -%}
+                    {%- assign clean = reason | strip -%}
+                    {%- if clean != blank -%}
+                      <option value="{{ clean | escape }}">{{ clean }}</option>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endif -%}
+
             <div class="suf-field">
               <label for="suf-cf-message">Message</label>
               <textarea id="suf-cf-message" name="contact[body]" rows="6" required>{{ form.body }}</textarea>
@@ -157,6 +194,19 @@
       "label": "Heading above the form",
       "info": "Shown once the columns stack; read by screen readers at every width.",
       "default": "Send a Message"
+    },
+    {
+      "type": "text",
+      "id": "reason_label",
+      "label": "Reason field label",
+      "default": "What's this about?"
+    },
+    {
+      "type": "textarea",
+      "id": "reasons",
+      "label": "Reasons",
+      "info": "One per line, and they arrive on the email as \"Reason: ...\". Keep the list to four or five: every option should change what YOU do when it arrives, or it is a label for its own sake. Leave empty to drop the field.",
+      "default": "I'm interested in getting certified\nQuestion about a seminar\nQuestion about my order\nSomething else"
     },
     {
       "type": "text",
