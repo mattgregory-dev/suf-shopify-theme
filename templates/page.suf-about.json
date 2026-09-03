@@ -63,7 +63,7 @@
         "button_label": "See the SUF-CPT",
         "button_url": "/pages/suf-cpt",
         "button_style": "ghost",
-        "micro": "<p>Prefer to start hands-on? <a href=\"/pages/suf-seminars\">Browse seminar cities</a></p>"
+        "micro": "<p>Prefer to start hands-on? <a href=\"/pages/suf-seminars#upcoming\">Browse seminar cities</a></p>"
       }
     },
     "team_teaser": {

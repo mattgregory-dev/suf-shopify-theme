@@ -206,7 +206,7 @@
         "e3"
       ],
       "settings": {
-        "note": "<p>New cities are added on a rolling basis — <a href=\"/pages/suf-contact\">get first access to new dates</a>.</p>",
+        "note": "<p>New cities are added on a rolling basis.</p>",
         "limit": 6,
         "link_mode": "product",
         "cue": "Reserve",
@@ -220,7 +220,7 @@
         "heading": "The SUF-CPT + Seminar Bundle — $XXX",
         "body": "<p>The seminar is $XXX on its own. The bundle gets you the full certification <em>and</em> your seminar seat for $XXX — the whole certification for $XXX more. Pick your city and date when you buy, or save your credit for any upcoming seminar.</p>",
         "button_label": "See the Bundle — $XXX",
-        "button_url": "/pages/suf-cpt",
+        "button_url": "/pages/suf-cpt#get-started",
         "button_style": "primary"
       }
     },
