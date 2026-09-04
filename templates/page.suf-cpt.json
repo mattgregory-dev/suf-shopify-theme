@@ -276,8 +276,8 @@
             "button_label": "Buy Now",
             "go_to_checkout": true,
             "micro": "Straight to secure checkout",
-            "image": "shopify://shop_images/photo-06.jpg",
-            "image_alt": "Show Up Fitness seminar group inside a Life Time gym",
+            "image": "shopify://shop_images/photo-01.jpg",
+            "image_alt": "Show Up Fitness trainees flexing and posing together in a Life Time studio",
             "featured": true,
             "flag": "Most Popular",
             "seminar_credit": true
