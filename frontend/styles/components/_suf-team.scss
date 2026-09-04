@@ -14,10 +14,14 @@
 .suf-teamgrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  // Equal rows, so every portrait fills the same box. Left to content, a long
+  // bio makes its own row taller and the photo beside it larger.
+  grid-auto-rows: 1fr;
   gap: var(--suf-space-3);
 
   @media (max-width: 980px) {
     grid-template-columns: 1fr;
+    grid-auto-rows: auto;
   }
 }
 
