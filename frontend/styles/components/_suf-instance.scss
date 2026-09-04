@@ -41,6 +41,28 @@
   }
 }
 
+// page.suf-cpt -- the library band, where the screenshot is the point.
+//
+// The measure moves onto the TRACK so the image takes whatever the copy does
+// not need. Capping the copy inside a proportional column instead leaves the
+// slack stranded in the text column, which is what the component does for
+// every other instance.
+[id$='__library'] {
+  .suf-splitfact__inner {
+    grid-template-columns: minmax(0, 56ch) 1fr;
+
+    // The component's stack still has to win below its breakpoint.
+    @media (max-width: 1000px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Ties the component's own (0,2,0) cap and wins on load order.
+  .suf-splitfact__body {
+    max-width: none;
+  }
+}
+
 // page.suf-cpt -- the live exam centered head, left-aligned on narrow screens.
 //
 // A centered heading over a centered sub reads as a title on a wide line. At
