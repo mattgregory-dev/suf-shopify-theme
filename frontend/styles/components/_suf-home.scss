@@ -7,7 +7,7 @@
 //
 // Was numbered ledger rows until the homepage re-flow. The block moved from
 // directly under the stat bar to between the Why section and the dark proof
-// band, where a row of text rules had no weight against its neighbours.
+// band, where a row of text rules had no weight against its neighbors.
 //
 // A whole tile is one link. The cue is a <span>, not a nested anchor, so each
 // tile carries exactly one tab stop and one accessible name.
@@ -19,7 +19,7 @@
   gap: var(--suf-space-3);
   margin-top: var(--suf-space-4);
 
-  // 900px: four tiles stop giving their descriptions a readable measure.
+  // 900px: four tiles stop giving their descriptions a readable line length.
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -46,7 +46,7 @@
     box-shadow: 0 16px 34px rgb(0 32 54 / 14%);
 
     // The zoom is on the IMAGE, not the tile: scaling the tile would nudge
-    // its neighbours in the grid.
+    // its neighbors in the grid.
     .suf-ptile__media img {
       transform: scale(1.045);
     }
@@ -135,7 +135,7 @@
   transition: transform var(--suf-transition);
 }
 
-// The zoom and the arrow nudge are decorative; the border and colour change
+// The zoom and the arrow nudge are decorative; the border and color change
 // carry the hover on their own.
 @media (prefers-reduced-motion: reduce) {
   .suf-ptile__media img,
@@ -155,7 +155,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// PACKAGES -- 3-up, blue-bordered centre card
+// PACKAGES -- 3-up, blue-bordered center card
 // ---------------------------------------------------------------------------
 
 .suf-pkgrow {
@@ -278,16 +278,16 @@
   line-height: 1.55;
 }
 
-// Matched to the SUF-CPT buy card: no longer a navy slab, but a white card
-// marked out by a blue border, a resting elevation and the extra padding.
+// Matched to the SUF-CPT buy card: a white card marked out by a blue border, a
+// resting elevation and extra padding.
 //
 // The border is 2px against the plain cards' 1px, which is deliberate -- the
 // extra weight IS part of the signal, so it is a real border rather than the
-// inset shadow used for the hover ring. Its neighbours already drop their
+// inset shadow used for the hover ring. Its neighbors already drop their
 // inner borders, so this is the only edge at each seam and nothing doubles.
 //
-// The mockup still shows this one navy. It is the buy card that was updated,
-// and this follows it so the two featured cards on the site do not disagree.
+// Matched to the featured buy card, so the two featured cards on the site do
+// not disagree.
 .suf-pkg--featured {
   z-index: 2;
   padding: 56px 32px;
@@ -298,7 +298,7 @@
   box-shadow: 0 16px 39px rgb(0 32 54 / 14%);
 
   // The heading and description are dropped: with a white surface they take
-  // the same colours as every other card, which is the point of the change.
+  // the same colors as every other card, which is the point of the change.
   .suf-pkg__price {
     color: var(--suf-blue);
   }
@@ -321,10 +321,10 @@
   // out of the row -- 24px of offset under a 60px blur, deliberately heavy.
   // Stacked, the card directly below is within that reach, so the same shadow
   // is cast onto ANOTHER CARD and darkens its whole top edge. It stops reading
-  // as elevation and starts reading as the next card being greyed out.
+  // as elevation and starts reading as the next card being grayed out.
   //
   // Shortened rather than removed: the featured card still has to look lifted,
-  // it just has to stay inside the gap above its neighbour.
+  // it just has to stay inside the gap above its neighbor.
   @media (max-width: 900px) {
     box-shadow: 0 10px 26px rgb(0 32 54 / 16%);
 
@@ -511,7 +511,7 @@
 // ---------------------------------------------------------------------------
 // GYM LOGO ROW
 //
-// Logos are single-colour SVGs tinted with a CSS mask. The mask URL comes from
+// Logos are single-color SVGs tinted with a CSS mask. The mask URL comes from
 // an inline custom property set in Liquid, because suf.css is compiled and
 // cannot call asset_url.
 // ---------------------------------------------------------------------------
@@ -547,10 +547,10 @@
   }
 
   // 710px: the marks no longer fill a line, so a left-aligned row leaves a
-  // ragged tail of empty space on the last one. Centred, the wrap looks
+  // ragged tail of empty space on the last one. Centered, the wrap looks
   // deliberate at any count.
   //
-  // The label is centred too -- it is full-width by now, so text-align is what
+  // The label is centered too -- it is full-width by now, so text-align is what
   // moves it; justify-content only places the marks.
   @media (max-width: 710px) {
     justify-content: center;
@@ -596,12 +596,12 @@
   color: var(--suf-color-heading-on-dark);
   font-size: 17px;
 
-  // Centred with the logo row above it -- see the note on .suf-gymline. The
+  // Centered with the logo row above it -- see the note on .suf-gymline. The
   // note is that row's caption; left alone it would sit hard left under a
-  // centred set of marks.
+  // centered set of marks.
   //
   // margin-inline AND text-align: the max-width makes this a block narrower
-  // than its container, so the box has to be centred as well as the text
+  // than its container, so the box has to be centered as well as the text
   // inside it.
   @media (max-width: 710px) {
     margin-inline: auto;
@@ -640,7 +640,7 @@
   line-height: 1.6;
 
   // Released at 980 -- see the note on .suf-spotlight__lead. This section is
-  // single-column at every width, so the cap is a measure rather than a column
+  // single-column at every width, so the cap is a line length rather than a column
   // constraint; it is released anyway to match the two-column sections it sits
   // between on About, which would otherwise step in and out down the page.
   @media (max-width: 980px) {
@@ -668,7 +668,7 @@
   color: var(--suf-color-text);
   font-size: 15px;
 
-  // Centred with the logo row above it, as on the proof band.
+  // Centered with the logo row above it, as on the proof band.
   @media (max-width: 710px) {
     margin-inline: auto;
     text-align: center;

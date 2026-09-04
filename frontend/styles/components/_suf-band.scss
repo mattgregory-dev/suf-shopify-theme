@@ -1,10 +1,10 @@
 // Page band -- the dark opener on every interior page.
 //
-// Ported from the mockup, section 5. Two tiers, and which one a page gets is a
-// design decision recorded in the mockup's CLAUDE.md, not a free choice:
+// Two tiers, and which one a page gets is a design decision rather than a free
+// choice:
 //
 //   tier 2  .suf-band              sales pages. Display-size h1, optional photo.
-//   tier 3  .suf-band--compact     utility pages. h2-size h1, centred.
+//   tier 3  .suf-band--compact     utility pages. h2-size h1, centered.
 //
 // The homepage is tier 1 (full-bleed photo hero) and is NOT this component.
 //
@@ -17,12 +17,12 @@
   color: var(--suf-color-ink-on-dark);
 
   // THE BAND'S HALF OF THE GAP BELOW IT. Every .suf-section pads half the gap
-  // top and bottom, so two neighbours make one full gap. The band's padding is
+  // top and bottom, so two neighbors make one full gap. The band's padding is
   // INSIDE the navy, so it never took part and every page opened with its
   // first section sitting too close.
   //
   // A margin, not padding -- padding would extend the navy. It cannot double
-  // against a full-bleed neighbour either: adjacent margins collapse.
+  // against a full-bleed neighbor either: adjacent margins collapse.
   margin-bottom: var(--suf-space-section);
   // The red base rule is the design's edge treatment: contrast by edges, never
   // by fades. It is dropped only when something overlaps the band instead.
@@ -107,14 +107,14 @@
 
     // Released when the columns stack -- see the note on .suf-spotlight__lead.
     // Scoped to --split: a plain band is single-column at every width, so its
-    // 56ch is a real measure rather than a column constraint.
+    // 56ch is a real line-length cap rather than a column constraint.
     .suf-band__subhead {
       max-width: none;
     }
 
     // DELIBERATELY EXEMPT from the stacked-media cap on
     // .suf-spotlight__media. The band is the page's opener and bleeds to its
-    // own edges by design; a centred 560px photo inside a full-bleed navy
+    // own edges by design; a centered 560px photo inside a full-bleed navy
     // band reads as an image dropped into a gap rather than as part of the
     // band. The 3:2 crop keeps it to a reasonable height at full width, which
     // is what the cap exists to prevent elsewhere.
@@ -199,7 +199,7 @@
 //
 // A tier-2 band is left-aligned with its copy capped at 56ch, so the panel
 // overlapping it comes up beside the text as much as under it. A tier-3 band
-// is centred and full width, so the overlap lands directly on the last line
+// is centered and full width, so the overlap lands directly on the last line
 // of the subhead -- at 4-6px it cut through it on Meet the Team.
 //
 // (0,2,0) against the rule above, so it wins wherever both apply.

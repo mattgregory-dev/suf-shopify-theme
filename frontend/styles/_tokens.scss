@@ -2,8 +2,8 @@
 //
 // Three layers, and the separation is the point:
 //
-//   1. PALETTE   what a colour IS.        --suf-navy, --suf-red, ...
-//   2. SEMANTIC  what a colour is FOR.    --suf-color-link, --suf-cta-bg, ...
+//   1. PALETTE   what a color IS.        --suf-navy, --suf-red, ...
+//   2. SEMANTIC  what a color is FOR.    --suf-color-link, --suf-cta-bg, ...
 //   3. LEGACY    what the forked header needs to keep looking like itself.
 //
 // Components reference layer 2 only. Never write --suf-navy in a component:
@@ -16,10 +16,10 @@
 
 :root {
   // ==========================================================================
-  // 1. PALETTE -- the brand colours
+  // 1. PALETTE -- the brand colors
   // ==========================================================================
   // Overridden at runtime by snippets/suf-tokens.liquid, bound to the SUF
-  // colour pickers in the theme editor. The values here are the fallbacks.
+  // color pickers in the theme editor. The values here are the fallbacks.
   //
   // From the client brand guide, via the Claude Design canvas.
 
@@ -27,7 +27,7 @@
   --suf-blue: #0292db; // Biology Blue   -- links, icons, stats
   --suf-red: #c1121f; // Fitness Red    -- CTAs, underlines
   --suf-red-dark: #780000; // deep red       -- CTA hover / pressed
-  --suf-grey: #dadada; // Universal Grey -- rules, dividers
+  --suf-grey: #dadada; // Universal Gray -- rules, dividers
 
   --suf-white: #ffffff;
 
@@ -39,7 +39,7 @@
   --suf-navy-deep: #022338;
   --suf-navy-deepest: #01192a;
 
-  // Lightened brand colours, for use ON navy only. The base blue and red both
+  // Lightened brand colors, for use ON navy only. The base blue and red both
   // fail contrast against navy; these are the design's answers to that and are
   // never correct on a light surface.
   --suf-blue-light: #4db8ee;
@@ -51,16 +51,10 @@
 
   // Surface and ink.
   //
-  // Body copy is a desaturated navy, #33505f -- the mockup's value, adopted
-  // 2026-08-28 after seeing it in place.
+  // Body copy is a desaturated navy, #33505f, not a neutral near-black. A
+  // neutral looks defensible in isolation and reads as a foreign color against
+  // the off-white surface and navy headings.
   //
-  // This REVERSES an earlier call to keep body copy a neutral near-black. The
-  // neutral was defensible in the abstract, but against the off-white surface
-  // and navy headings it read as a foreign colour rather than a quieter one.
-  //
-  // --suf-color-ink stays neutral and is now used only by the forked header.
-  // Keeping the two separate is the whole point of the semantic layer: this
-  // change was one line precisely because no component names a colour.
   // The page is off-white, not white; cards and panels sit ON it in white.
   // That difference is the design's only separation between a card and the
   // page, so --suf-color-surface is not interchangeable with --suf-color-bg.
@@ -68,14 +62,14 @@
   --suf-color-surface: var(--suf-white);
   --suf-color-ink: #1a1a1a;
   --suf-color-text: #33505f;
-  // Navy-tinted, not a neutral grey: it has to sit beside --suf-color-text
-  // without reading as a different family. A pure grey next to #33505f looks
+  // Navy-tinted, not a neutral gray: it has to sit beside --suf-color-text
+  // without reading as a different family. A pure gray next to #33505f looks
   // dirty rather than quiet.
   --suf-color-text-muted: #5b7280;
   --suf-color-heading: var(--suf-navy);
   --suf-color-border: var(--suf-grey);
 
-  // Hairline rules. Both are blue-tinted rather than neutral grey, which is
+  // Hairline rules. Both are blue-tinted rather than neutral gray, which is
   // what keeps a 1px line from reading as dirt against the off-white page.
   //   subtle  section heads, card edges, FAQ dividers -- the default rule
   //   faint   dividers INSIDE an already-bordered box
@@ -168,23 +162,25 @@
   --suf-space-7: clamp(96px, 8vw, 144px);
 
   // Section rhythm. Each section pads HALF the gap it needs, top and bottom,
-  // so two neighbours together produce the ~100px desktop gap. Do not add
+  // so two neighbors together produce the ~100px desktop gap. Do not add
   // margins between sections as well -- they will not collapse against this.
   --suf-space-section: clamp(32px, 3.5vw, 50px);
 
   // Layout.
   //
-  // 1200px, not the 1400px this file used to carry: the design's grid, line
-  // lengths and image crops are all drawn against 1200 and look thin at 1400.
+  // 1200px: the grid, the line lengths and the image crops are all drawn
+  // against it, and they look thin if the container is widened.
   --suf-container: 1200px;
   --suf-container-padding: 40px;
-  --suf-measure: 68ch;
+  // How long a line of body text is allowed to get, in characters. Much past
+  // 70 and the eye loses its place coming back to the left edge.
+  --suf-text-cap: 68ch;
 
   // Stacked media caps.
   //
   // How wide a two-column section's image is allowed to get once the columns
   // stack. Two values, chosen by the CROP rather than by the component, and
-  // every stacked image is also centred -- see the shared note in
+  // every stacked image is also centered -- see the shared note in
   // _suf-spotlight.scss.
   //
   // Why a cap is needed at all: these sections force an aspect-ratio, so an

@@ -2,14 +2,12 @@
 
 // Testimonial cards.
 //
-// THE SECTION THAT ONCE OWNED THESE IS GONE. `sections/suf-quotes.liquid` was
-// deleted in the 2026-08 re-flow, when every page folded its testimonials into
-// a dark proof band instead of running them as a standalone light section.
+// THERE IS NO suf-quotes SECTION -- this file is named for one that does not
+// exist, so it looks deletable and is not.
 //
-// The CARDS survive and are still the only testimonial card in the codebase:
-// suf-splitfact and suf-qspot both render .suf-qcard inside their proof rows,
-// and .suf-quotegrid is what lays them out. Do not delete this file with its
-// section -- grep for .suf-qcard before touching it.
+// .suf-qcard is the only testimonial card in the codebase, and .suf-quotegrid
+// lays them out. Both are rendered by suf-splitfact and suf-qspot inside their
+// proof rows. Grep for .suf-qcard before touching this file.
 
 .suf-quotegrid {
   display: grid;
@@ -21,8 +19,8 @@
   }
 }
 
-// Two-up, centred and narrower -- otherwise two cards on a 1200px grid give
-// the quotes an uncomfortably long measure.
+// Two-up, centered and narrower -- otherwise two cards on a 1200px grid give
+// the quotes an uncomfortably long line.
 .suf-quotegrid--two {
   grid-template-columns: repeat(2, 1fr);
   max-width: 980px;

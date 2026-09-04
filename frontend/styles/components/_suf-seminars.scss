@@ -3,9 +3,9 @@
 // ---------------------------------------------------------------------------
 // LIST CARDS
 //
-// One component for the mockup's .focuscard and .daycard. Both are a card with
-// a heading and a feature list; they differ in column count and in how the card
-// is labelled -- a blue top rule with a tagline, or a navy badge.
+// One component for both card grids: a heading and a feature list, differing
+// in column count and in how the card is labeled -- a blue top rule with a
+// tagline, or a navy badge.
 // ---------------------------------------------------------------------------
 
 .suf-listcards {
@@ -21,9 +21,9 @@
   @media (max-width: 980px) {
     grid-template-columns: 1fr;
 
-    // Capped and CENTRED, the same pairing as the stacked media caps -- see
+    // Capped and CENTERED, the same pairing as the stacked media caps -- see
     // the note on .suf-spotlight__media. The cap was here already; without the
-    // centring each card sat hard against the left edge of the container.
+    // centering each card sat hard against the left edge of the container.
     .suf-listcard {
       width: 100%;
       max-width: 560px;
@@ -54,7 +54,7 @@
   }
 }
 
-// Labelled by a slash beside the heading rather than a rule or a badge, for a
+// Labeled by a slash beside the heading rather than a rule or a badge, for a
 // card that is a single idea with no list under it.
 //
 // Written `.suf-listcard.suf-listcard--slash` (0,2,1), not the bare modifier
@@ -107,7 +107,7 @@
   }
 }
 
-// Labelled by a coloured top rule and a tagline.
+// Labeled by a colored top rule and a tagline.
 .suf-listcard--rule {
   border-top: 3px solid var(--suf-blue);
 }
@@ -127,7 +127,7 @@
   text-transform: uppercase;
 }
 
-// Labelled by a badge instead. Heavier weight than the tagline: it is an
+// Labeled by a badge instead. Heavier weight than the tagline: it is an
 // ordinal ("Day 1"), not a description.
 .suf-listcard__badge {
   display: inline-block;
@@ -166,8 +166,8 @@
 
   // THE CARD IS THE RESTING STATE, and hover lifts from it. TOUCH HAS NO
   // RESTING HOVER, so a treatment that only exists on hover is one most of
-  // this page's traffic never sees. The resting shadow is lighter than the old
-  // hover value: it has to leave somewhere for hover to go.
+  // this page's traffic never sees. The resting shadow stays light enough to
+  // leave hover somewhere to go.
   position: relative;
   background: var(--suf-color-surface);
   box-shadow:
@@ -183,7 +183,7 @@
   &:hover,
   &:has(> summary:focus-visible),
   &[open] {
-    // Raised above the neighbouring rows so the larger shadow is not clipped
+    // Raised above the neighboring rows so the larger shadow is not clipped
     // by the row below, which paints its own background.
     position: relative;
     z-index: 1;
@@ -214,7 +214,7 @@
     transform: rotate(-135deg) translate(-2px, -2px);
   }
 
-  // The lift is decoration; the shadow and colour change still carry the
+  // The lift is decoration; the shadow and color change still carry the
   // meaning without it.
   @media (prefers-reduced-motion: reduce) {
     transition: box-shadow var(--suf-transition);
@@ -252,7 +252,7 @@
 
   // The focus ring goes on the summary rather than the details, because the
   // summary is what actually receives focus. Inset so it is not clipped by the
-  // neighbouring row's background.
+  // neighboring row's background.
   &:focus-visible {
     outline: 2px solid var(--suf-color-focus);
     outline-offset: -4px;
@@ -283,9 +283,8 @@
 // ---------------------------------------------------------------------------
 // THE PANEL
 //
-// The four facts that used to be the only reason to visit the product page:
-// venue, address, map link and hours -- plus the buy button, so the decision
-// and the purchase happen in the same place.
+// Venue, address, map link and hours, plus the buy button -- so the decision
+// and the purchase happen in the same place rather than on a product page.
 // ---------------------------------------------------------------------------
 
 .suf-semrow__panel {
@@ -367,7 +366,7 @@
   margin: 0;
 }
 
-// A chevron built from two borders rather than a glyph, so it inherits colour
+// A chevron built from two borders rather than a glyph, so it inherits color
 // and rotates cleanly. -45deg points down; the [open] rule above turns it up.
 .suf-semrow__chev {
   display: inline-block;
@@ -398,7 +397,7 @@
   text-transform: uppercase;
 }
 
-// Muted, not the link blue: this is the absence of a focus, and colouring it
+// Muted, not the link blue: this is the absence of a focus, and coloring it
 // like the real ones makes three rows look equally decided.
 .suf-semrow__focus--tba {
   color: var(--suf-color-text-muted);
@@ -516,7 +515,7 @@
   position: relative;
   aspect-ratio: 4 / 3;
 
-  // Stacked, the photo leads, capped and centred -- the shared rule. A 4:3
+  // Stacked, the photo leads, capped and centered -- the shared rule. A 4:3
   // crop, so the wide cap. See the note on .suf-spotlight__media.
   @media (max-width: 900px) {
     order: -1;
@@ -604,10 +603,9 @@
   text-transform: uppercase;
 }
 
-// A <dt>, not an <h3>. The mockup uses a heading, but a day divider inside a
-// list of sessions is a label for the rows under it rather than a new section
-// of the page -- and adding two more headings here would sit them between the
-// section's own h2 and nothing else, which reads as structure that is not
+// A <dt>, NOT an <h3>. A day divider labels the rows under it rather than
+// opening a new section of the page, and two more headings here would sit
+// between the section's own h2 and nothing else -- structure that is not
 // there.
 .suf-agenda__dayname {
   color: var(--suf-color-heading);
@@ -645,7 +643,7 @@
   line-height: 1.5;
 }
 
-// Centred on the ledger's own 900px measure, not the container's, so the
+// Centered on the ledger's own 900px width, not the container's, so the
 // button sits under the middle of the list rather than the middle of the page.
 .suf-agenda__action {
   max-width: 900px;

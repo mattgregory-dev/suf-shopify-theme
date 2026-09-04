@@ -20,7 +20,7 @@
   background: var(--suf-color-surface);
   border: 1px solid var(--suf-color-border-subtle);
 
-  // 760px is where the copy column stops holding a readable measure beside the
+  // 760px is where the copy column stops holding a readable line length beside the
   // thumbnail.
   @media (max-width: 760px) {
     grid-template-columns: 1fr;

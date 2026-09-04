@@ -1,11 +1,9 @@
 // Legal document body -- Privacy Policy and Terms & Conditions.
 //
-// Ported from the mockup's .legal (section 15 of css/styles.css).
-//
-// The measure is 72ch and the column is 820px, which is narrower than any
+// The text caps at 72ch and the column at 820px, which is narrower than any
 // other body copy on the site. That is the point: this is the only content
 // here that anyone reads top to bottom rather than scanning, and a long
-// measure is what makes a policy unreadable.
+// line is what makes a policy unreadable.
 //
 // The section's own headings are element selectors -- h2, h3 -- rather than
 // classes, because the merchant writes this document in the theme editor and
@@ -112,9 +110,9 @@
     }
   }
 
-  // Underlined rather than colour-only: inside a wall of body copy a link
+  // Underlined rather than color-only: inside a wall of body copy a link
   // distinguished by hue alone is easy to miss and fails on its own against
-  // the surrounding text for anyone who cannot separate the two colours.
+  // the surrounding text for anyone who cannot separate the two colors.
   p a {
     border-bottom: 1px solid currentcolor;
   }

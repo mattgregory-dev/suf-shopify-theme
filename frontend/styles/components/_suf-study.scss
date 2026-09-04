@@ -15,7 +15,7 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--suf-space-4);
 
-  // 900px is where two cards stop giving the body copy a readable measure.
+  // 900px is where two cards stop giving the body copy a readable line length.
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
   }
@@ -24,23 +24,18 @@
 .suf-gcard {
   display: flex;
   flex-direction: column;
-  // NOT align-items: flex-start. That was here so a button would not stretch,
-  // but it shrinks EVERY flex child to its content width -- including the
-  // image, which then stops short of the card edge and lets the card's own
-  // background show as a sliver down the right. The border hid it.
+  // NO align-items HERE. flex-start stops a button stretching, but it shrinks
+  // EVERY flex child to its content width -- including the image, which then
+  // stops short of the card edge and lets the card's background show as a
+  // sliver down the right. Easy to miss: the border hides it.
   //
-  // The button alignment lives on .suf-gcard__inner now, which is where it
-  // belongs: it is about the content, not the card.
-  //
-  // No padding either -- that also moved to __inner, so an image can reach the
-  // card's edges.
+  // Button alignment belongs on .suf-gcard__inner, which is about the content
+  // rather than the card.
   position: relative;
   background: var(--suf-color-surface);
   border: 1px solid var(--suf-color-border-subtle);
 
   h3 {
-    // The mockup's 6px reads tighter here because the base layer gives
-    // headings a 1.18 line-height the mockup did not have.
     margin: 0 0 var(--suf-space-2);
     font-size: var(--suf-font-size-h3);
   }
@@ -329,8 +324,8 @@
   padding: var(--suf-space-4);
 }
 
-// The image makes the card taller, so the body copy no longer needs the larger
-// gap that separates it from a bottom-pinned button on a short card.
+// A card with an image is tall enough already, so the body copy takes a
+// smaller gap than the one a short card needs above its bottom-pinned button.
 .suf-gcard--media {
   .suf-gcard__body {
     margin-bottom: var(--suf-space-3);
@@ -357,9 +352,9 @@
   // The 2px light-blue border and the red flag carry that signal on their own.
   box-shadow: none;
 
-  // NO scale(1.03). The mockup has one; it is deliberately not ported. The
-  // border, the blue and the elevation already mark this card out, and scaling
-  // it makes both cards' type render at different sizes for the same content.
+  // NO scale() ON THIS CARD. The border, the blue and the elevation already
+  // mark it out, and scaling makes the two cards render the same content at
+  // different type sizes.
   .suf-gcard__price {
     color: var(--suf-blue);
   }
@@ -396,8 +391,8 @@
   transform: translate(-50%, -50%);
 }
 
-// Capped variant. Two cards carrying an image and a price look stretched at the
-// full 1200px container; the mockup pins them to 1000.
+// Capped variant. Two cards carrying an image and a price look stretched at
+// the full 1200px container.
 .suf-guidegrid--narrow {
   max-width: 1000px;
   margin-inline: auto;

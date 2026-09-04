@@ -41,15 +41,15 @@
   }
 }
 
-// page.suf-cpt -- the live exam centred head, left-aligned on narrow screens.
+// page.suf-cpt -- the live exam centered head, left-aligned on narrow screens.
 //
-// A centred heading over a centred sub reads as a title on a wide measure. At
-// phone width the same block becomes several short ragged lines centred against
+// A centered heading over a centered sub reads as a title on a wide line. At
+// phone width the same block becomes several short ragged lines centered against
 // a left-aligned page, which reads as a mistake rather than as emphasis.
 //
 // All three parts have to move together: the text alignment, the eyebrow's own
-// flex centring, and the sub's max-width -- which exists to hold a centred line
-// to a readable measure and only narrows the column once the text is ranged
+// flex centering, and the sub's max-width -- which exists to hold a centered line
+// to a readable line length and only narrows the column once the text is ranged
 // left.
 @media (max-width: 700px) {
   [id$='__exam'] .suf-centerhead {

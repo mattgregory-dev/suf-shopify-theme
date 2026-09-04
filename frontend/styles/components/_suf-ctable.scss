@@ -144,7 +144,7 @@
 // are the thing being compared rather than a value.
 // Nested: color, font-size and text-align are all in the shared `th, td` rule
 // at (0,1,1), so left-alignment never took and the feature names rendered
-// centred like the values.
+// centered like the values.
 .suf-ctable .suf-ctable__feature {
   color: var(--suf-color-heading);
   font-size: 14.5px;
@@ -155,11 +155,11 @@
 // ---------------------------------------------------------------------------
 // FEATURED COLUMN
 //
-// Navy header cell only. The mockup's full-column 2px outline is NOT ported:
-// border-collapse picks ONE border at a shared edge and the WIDEST wins, so
-// the 2px navy beat the 1px cell rule everywhere it touched -- rendering as
-// 2px navy for one column's width and 1px grey either side, which reads as a
-// broken double border rather than emphasis.
+// Navy header cell only. DO NOT OUTLINE THE WHOLE COLUMN: border-collapse
+// picks ONE border at a shared edge and the WIDEST wins, so a 2px outline
+// beats the 1px cell rule everywhere it touches -- rendering as 2px navy for
+// one column's width and 1px gray either side, which reads as a broken double
+// border rather than emphasis.
 // ---------------------------------------------------------------------------
 
 .suf-ctable__plan--featured {
@@ -202,9 +202,12 @@
 // VALUES
 //
 // The tick is the same slash-parallelogram as the eyebrow and the feature
-// bullets, so "included" reads in the design's own vocabulary rather than as a
-// borrowed checkmark glyph. Both marks are aria-hidden; the meaning is carried
-// by visually hidden text beside them.
+// bullets, so a cell marked as having a feature is drawn in the design's own
+// vocabulary rather than with a borrowed checkmark glyph.
+//
+// Both marks are empty spans and aria-hidden -- a shape carries no meaning to
+// a screen reader. The section renders real "Included" / "Not included" text
+// beside them, visually hidden.
 // ---------------------------------------------------------------------------
 
 .suf-ctable__yes {
@@ -244,14 +247,14 @@
   line-height: 1.45;
 }
 
-// BODY SIZE AND COLOUR, not fine print: this note carries something a buyer
-// needs before deciding. If it ever reads too loud, take the colour back to
+// BODY SIZE AND COLOR, not fine print: this note carries something a buyer
+// needs before deciding. If it ever reads too loud, take the color back to
 // --suf-color-text-muted before touching the size.
 //
-// 54ch, not the familiar ~66. That measure is for LEFT-ALIGNED text, where the
-// eye returns to a fixed edge; centred text has no edge to return to and wants
+// 54ch, not the familiar ~66. That cap is for LEFT-ALIGNED text, where the
+// eye returns to a fixed edge; centered text has no edge to return to and wants
 // 45-60. NOT text-wrap: balance -- it flattens the block into even lines and
-// loses the shape a hard measure gives it.
+// loses the shape a hard cap gives it.
 .suf-body .suf-tnote {
   max-width: 54ch;
   margin: var(--suf-space-3) auto 0;
