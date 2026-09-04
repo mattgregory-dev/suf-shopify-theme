@@ -179,7 +179,7 @@
       "settings": {
         "eyebrow": "Your Study Home Base",
         "heading": "Inside the SUF Library",
-        "body": "<p>Every SUF-CPT includes the SUF Library — the full Level 1 course, daily live calls, a programming and exercise library, and replays of every past call. Study on your schedule, then show up live when you want real trainers answering your real questions.</p><p>Your certification includes 3 months of access. The Seminar Bundle extends it to 6. The Qualified Trainer Package extends it to <strong>lifetime</strong>.</p>",
+        "body": "<p>Every SUF-CPT includes the SUF Library — the full Level 1 course, daily live calls, a programming and exercise library, and replays of every past call. Study on your schedule, then show up live when you want real trainers answering your real questions.</p><p>Your certification includes 3 months of access. The Qualified Trainer Package extends it to <strong>lifetime</strong>.</p>",
         "panel": "image",
         "image": "shopify://shop_images/uscreen-01.webp",
         "image_alt": "The SUF Library playing on a laptop and a phone, showing the course can be watched on any device",
@@ -271,7 +271,7 @@
           "settings": {
             "heading": "SUF-CPT + Seminar Bundle",
             "meta": "Certification + 2-Day Hands-On Weekend",
-            "body": "Everything in the certification, plus a weekend seminar at a Life Time Fitness near you — and your library access extends to 6 months. The seminar alone is $XXX. Buy now and pick your city and date below, or save your credit for any upcoming seminar.",
+            "body": "Everything in the certification, plus a weekend seminar at a Life Time Fitness near you. The seminar alone is $XXX — the bundle gets you the whole certification for $XXX more. Buy now and pick your city and date below, or save your credit for any upcoming seminar.",
             "product": "suf-cpt-plus-seminar-bundle",
             "button_label": "Buy Now",
             "go_to_checkout": true,
@@ -389,7 +389,7 @@
           "type": "question",
           "settings": {
             "question": "What if I need more than 3 months?",
-            "answer": "<p>Your access window is 3 months. Most students who add a seminar go with the 6-month bundle for exactly this reason. Need longer? You can keep your SUF Library access going month-to-month right from your library — renew whenever you want more time with the live calls and new content.</p>",
+            "answer": "<p>Your access window is 3 months, and most students finish in about two. Need longer? You can keep your SUF Library access going month-to-month right from your library — renew whenever you want more time with the live calls and new content.</p>",
             "open": false
           }
         },
