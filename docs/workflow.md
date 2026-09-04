@@ -37,7 +37,8 @@ like quoting errors — is catalogued in [wsl-tooling.md](wsl-tooling.md).
 |---|---|
 | `npm run dev` | `sass --watch` → `assets/suf.css` |
 | `npm run css:build` | One-off compressed build |
-| `npm run deploy` | `css:build` then push to **Sporto - Redesign** (#000000000000) — **the LIVE theme since 2026-09-01** |
+| `npm run pull` | Pull merchant edits down — templates and settings only |
+| `npm run deploy` | `css:build` then push to **Sporto - Redesign** (#000000000000) |
 | `npm run lint` | Theme Check |
 | `npm run lint:css` | Stylelint over `frontend/styles` |
 | `npm run lint:css:fix` | Same, auto-fixing what it can |
@@ -46,7 +47,39 @@ like quoting errors — is catalogued in [wsl-tooling.md](wsl-tooling.md).
 
 Normal loop is two terminals: `npm run dev` alongside `shopify theme dev`.
 
-### `npm run deploy` PUSHES TO THE LIVE SITE
+### PULL BEFORE YOU PUSH
+
+**The merchant's work only exists on the theme.** Editor changes — text, images,
+added blocks — are written to that theme's `templates/*.json` and
+`config/settings_data.json`. Nothing sends them to the repo. A push overwrites
+them with whatever is on disk, silently and with no record.
+
+```
+git status              # must be clean, or the pull buries your own work
+npm run pull            # merchant edits land in the working tree
+git diff                # THIS is their work, now visible
+git commit              # content: pull merchant edits from the theme
+```
+
+The pull is **scoped to templates and settings** on purpose. A blanket pull
+would also drop the theme's compiled `suf.css` over the local one and overwrite
+sections and snippets — the merchant cannot edit those, so there is nothing to
+gain and a working tree to lose.
+
+**A clean tree before pulling is the whole safety net.** Pull writes over local
+files; if the tree was clean, `git diff` is exactly what came down and you can
+keep or revert it line by line. If it was dirty, your own uncommitted work is
+gone with no way to tell what was yours.
+
+**A pull also restores anything the theme still has that you deleted locally.**
+Deleted templates come back until a deploy removes them from the theme. That is
+correct behavior, and it means checking `git status` for restored files after
+every pull, not just changed ones.
+
+**Recovering a clobbered edit:** Online Store → Themes → ⋯ → *Version history*.
+Shopify snapshots on save and keeps roughly 30 days.
+
+### `npm run deploy` PUSHES TO THE THEME
 
 It was called `preview` until 2026-09-01, and the rename is not cosmetic. The
 script has always pushed to Sporto - Redesign (#000000000000); what changed is
@@ -293,6 +326,11 @@ If no, don't write it. Most of what fails that test is narration.
 - What the code already says.
 - **History.** "This used to be X, changed on 2026-08-31." That is `git log`.
 - The second sentence restating the first.
+- **The mockup.** Never cite it — not as a reason, not as a source, not as
+  something the code was "ported from" or "departs from". It is an example
+  somebody drew, not a specification: it was wrong about the markup, the type
+  sizes, the frame and the checkout, and the code is the source of truth. A
+  comment that appeals to it teaches the next reader to go and check it.
 
 **American English**, in comments, commit messages and docs alike — color,
 behavior, centered, gray. The CSS property is `color` either way, so a comment

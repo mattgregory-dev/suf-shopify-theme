@@ -4,6 +4,8 @@
     "dev": "npm run css:watch",
     "css:watch": "sass --watch frontend/styles/main.scss:assets/suf.css --style=expanded --embed-sources",
     "css:build": "sass frontend/styles/main.scss:assets/suf.css --style=compressed --no-source-map",
+    "pull": "shopify theme pull --theme 000000000000 --only \"templates/*.json\" --only \"config/settings_data.json\"",
+    "predeploy": "echo '\\n  Did you npm run pull first? A push overwrites merchant edits.\\n'",
     "deploy": "npm run css:build && shopify theme push --theme 000000000000 --allow-live",
     "lint": "shopify theme check",
     "lint:json": "shopify theme check --output json",

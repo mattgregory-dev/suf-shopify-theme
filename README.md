@@ -58,7 +58,7 @@ page.
 
 | Read | For |
 |---|---|
-| [docs/architecture.md](docs/architecture.md) | Why new code is additive, the front-end stack, the `suf` naming rule |
+| [docs/architecture.md](docs/architecture.md) | Pull before you push, why new code is additive, the front-end stack, the `suf` naming rule |
 | [docs/workflow.md](docs/workflow.md) | Environment setup, linting policy, formatting, commit conventions |
 | [docs/wsl-tooling.md](docs/wsl-tooling.md) | Traps when driving the WSL toolchain from Windows — read if a command fails in a way that makes no sense |
 | [docs/migration.md](docs/migration.md) | Production divergence, page cutover, in-flight rebuild state |

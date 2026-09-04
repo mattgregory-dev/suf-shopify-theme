@@ -1,5 +1,27 @@
 # Architecture
 
+## Pull before you push
+
+**The merchant's work exists only on the theme.** Text, images and blocks added
+in the theme editor are written to that theme's `templates/*.json` and
+`config/settings_data.json`. Nothing sends them to the repo, and a push
+overwrites them silently.
+
+```
+git status      # clean, or the pull buries your own work
+npm run pull    # merchant edits land in the working tree
+git diff        # this is their work, now visible
+git commit
+npm run deploy
+```
+
+Two files, two owners: they own `templates/` and `config/settings_data.json`,
+we own everything else. The clean tree is what makes it safe — `git diff` is
+then exactly what came down, and you can keep or revert any of it.
+
+Details, and how to recover an edit already lost, in
+[workflow.md](workflow.md).
+
 ## The core rule: new code is ADDITIVE
 
 Do not refactor, reformat, or "modernize" the inherited theme. New work goes in
@@ -275,6 +297,64 @@ the JS to maintain the attribute, not just markup.
 **How to check:** tab through the page and confirm every stop is visible and
 announces something meaningful, then inspect the accessibility tree in DevTools.
 Both take a minute and catch nearly everything at this level.
+
+## Commerce: sections sell in place
+
+**A section that shows a price sells from where it stands.** It renders a real
+`{% form 'product' %}` posting a variant id, not a link to the product page.
+The legacy product templates are not being rebuilt, so sending a buyer there
+takes them from a page that works to one that does not.
+
+**`go_to_checkout` adds `return_to=/checkout`, skipping the cart.** It is a
+per-section or per-block checkbox, defaulting to off. When to turn it on:
+
+| | |
+|---|---|
+| Skip the cart | one high-value purchase, nothing else on the page to add to it |
+| Go to the cart | a page selling several things, or a small item someone may pair with another |
+
+Certifications and bundles skip it. The study guides deliberately do not —
+that page sells two things and the cart is where a second one gets added.
+
+**A `<form>` cannot live inside an `<a>`.** This is why a card that sells in
+place is not a whole-card link, and why sections that sell have a branch: a
+product set renders the form, no product renders a link. Any section that
+gains a buy button inherits that constraint.
+
+### What the buyer chooses travels as a line item property, never a variant
+
+Bundles ask questions — which two certifications, which seminar. Those answers
+are `properties[Name]` inputs inside the buy form.
+
+**Variants exist to vary price, inventory or SKU.** None of these do: every
+combination of a bundle costs the same. Using variants would also put a matrix
+in the merchant's admin and mean editing every bundle product each time a
+seminar is added or retired.
+
+Properties are pure theme output — nothing is configured in Shopify — and they
+ride through to the cart, checkout, the order, the confirmation email and
+exports.
+
+**Name the key as the label you want to read.** The key IS what Shopify prints,
+so `properties[Seminar]` reads as "Seminar:" on the order, which is where staff
+pick it up.
+
+**Two Shopify behaviors these lean on:**
+
+| | |
+|---|---|
+| A blank value is DROPPED, not shown empty | so an unanswered question leaves no line |
+| An `_`-prefixed key is hidden from the customer | but kept on the order |
+
+**Prefer an explicit value to a blank one where the blank is meaningful.** A
+seminar bundle whose Seminar line is simply absent cannot be told apart from
+one where the picker failed to render, so "choose later" submits
+`Credit — to be booked later` rather than an empty string.
+
+**The `|` convention in textarea settings.** Where a section takes a list one
+item per line, a pipe adds a second field to the line — `suf-legal`'s list
+blocks and `suf-cert`'s combinations both use it. Reuse it rather than
+inventing a second syntax.
 
 ## Naming: the `suf` prefix marks new work
 
