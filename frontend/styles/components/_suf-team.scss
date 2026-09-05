@@ -1,15 +1,13 @@
 // Team cards.
 //
-// Ported from the mockup, section 7. Used by the team page and, as a teaser,
-// by the about page.
+// Used by the team page and, as a teaser, by the about page.
 //
-// Breakpoints here are 980px and 600px, which are neither of the project's
-// Sass breakpoints. That is deliberate and is the mockup's stated policy:
-// break where the CONTENT breaks, not at canonical device widths. 980 is where
-// two cards side by side squeeze the bio into a column too narrow to read; 600
-// is where the photo and body can no longer sit side by side inside one card.
-// Using m.$bp-lg (1024) instead would break the grid while it still looked
-// fine, and m.$bp-md (768) would leave it broken for 200px.
+// Breakpoints are 980px and 600px, neither of the project's Sass breakpoints,
+// because these break where the CONTENT breaks: 980 is where two cards side by
+// side squeeze the bio into a column too narrow to read, and 600 is where the
+// photo and body can no longer sit side by side inside one card. m.$bp-lg
+// (1024) would break the grid while it still looks fine, and m.$bp-md (768)
+// would leave it broken for 200px.
 
 .suf-teamgrid {
   display: grid;
@@ -77,8 +75,7 @@ a.suf-tcard {
     }
   }
 
-  // No separate 600px rule: the mockup restates the ratio there as
-  // aspect-ratio 4/5, which is the same 125% already set above.
+  // No separate 600px rule -- 4:5 is the 125% already set above.
 }
 
 .suf-tcard__body {
@@ -123,7 +120,7 @@ a.suf-tcard {
 // ONE definition, for the same reason as $card-hover in _suf-components.scss:
 // the cue is shared by the team cards and the homepage package cards, and a
 // second copy of "blue becomes red" in _suf-home.scss would drift from this
-// one the first time the colour changed.
+// one the first time the color changed.
 //
 // Both card types are <a>, so both take :focus-visible as well -- a keyboard
 // user reaches the card directly and should see what a mouse user sees.

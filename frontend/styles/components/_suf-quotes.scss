@@ -2,12 +2,9 @@
 
 // Testimonial cards.
 //
-// THERE IS NO suf-quotes SECTION -- this file is named for one that does not
-// exist, so it looks deletable and is not.
-//
-// .suf-qcard is the only testimonial card in the codebase, and .suf-quotegrid
-// lays them out. Both are rendered by suf-splitfact and suf-qspot inside their
-// proof rows. Grep for .suf-qcard before touching this file.
+// The name is a leftover -- sections/suf-quotes.liquid was deleted and this
+// was not, because .suf-qcard is still the only testimonial card in the
+// codebase. suf-splitfact and suf-qspot both render it in their proof rows.
 
 .suf-quotegrid {
   display: grid;

@@ -1,48 +1,19 @@
-// FontAwesome is RETIRED. Completed 2026-08-31. This file is what keeps it
-// that way, permanently -- it is not scaffolding and it does not expire.
+// FontAwesome is retired, and this file is what keeps it that way. Not
+// scaffolding: it does not expire.
 //
-// FontAwesome is declared inside assets/font-all.min.css.liquid, which ALSO
-// carries animate.css and two other webfonts -- so that file cannot simply be
-// unlinked. Instead this overrides everything that resolves to the font.
+// The @font-face sits in font-all.min.css.liquid alongside animate.css and two
+// other webfonts, so that file cannot be unlinked. Overriding everything that
+// resolves to the font is what stops the download -- a browser fetches a
+// @font-face file only when an element needs it to render.
 //
-// Why this stops the download: a browser only fetches a @font-face file when
-// an element actually needs it to render. Once nothing resolves to
-// `font-family: FontAwesome`, the font is never requested and the unused
-// @font-face rule can stay where it is, free.
+// Both routes must stay covered: the `.fa fa-*` classes, and `font-family:
+// FontAwesome` set directly on pseudo-elements. Covering only the classes
+// leaves the font downloading. !important throughout, because the legacy rules
+// use it.
 //
-// There are TWO ways this theme applies FontAwesome and both must be covered:
-//   1. `.fa fa-*` classes         -- 71 usages across sections/snippets
-//   2. `font-family: FontAwesome` set directly on pseudo-elements -- 12 places
-//      in dt-framework.css.liquid and 8 section files
-// Covering only (1) leaves the font downloading. Everything here uses
-// !important because the legacy rules do.
-//
-// ---------------------------------------------------------------------------
-// THE AUDIT IS OVER, AND THE ~58 REMAINING fa-* CLASSES STAY IN THE MARKUP
-// ---------------------------------------------------------------------------
-//
-// An AUDIT MODE block used to sit here, painting a labelled orange marker in
-// place of every icon so the sweep could find them. It was deleted on
-// 2026-08-31 when the sweep finished. If you need it again, it is in the
-// history of this file -- do not rewrite it from memory, it had a real trap in
-// it (see the $fa-after note in that commit: `#{$fa}::after` binds the
-// pseudo-element to the LAST selector only).
-//
-// About 58 `fa-*` classes are still in sections/ and snippets/, across 18
-// files. They are NOT being removed, and that is the decision, not an
-// oversight:
-//
-//   * They render nothing. Rule (1) above suppresses them, and the font files
-//     were deleted -- there is no path back to a glyph.
-//   * Every one is in a legacy template the redesign either replaces or never
-//     touches. Editing 18 files to strip a decorative attribute is churn with
-//     a breakage risk and no user-visible gain.
-//
-// THE RULE THAT MATTERS: fix an icon only where it carried MEANING and its
-// absence leaves a control unlabelled. Those are done and each is fixed at the
-// point of use, not here -- pagination's arrows are CSS `content` in
-// _custom-port.scss, back-to-top and the drawer close were restyled outright.
-// If another turns up, do the same: replace the glyph where it lives.
+// Leftover fa-* classes in the legacy templates are left alone -- they render
+// nothing and the font files are gone. If an icon carried meaning, replace the
+// glyph where it lives rather than adding a case here.
 
 // ---------------------------------------------------------------------------
 // 1. Class-based icons

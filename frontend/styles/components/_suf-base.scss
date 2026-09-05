@@ -109,12 +109,9 @@
     margin: 0;
   }
 
-  // The default link colour, and nothing more.
-  //
-  // This used to carry a :not(:where(...)) list naming every component that
-  // renders as an <a> -- a standing obligation to remember, in this file, what
-  // other files were doing. At (0,0,1) it is unnecessary: any component that
-  // sets its own colour beats it automatically.
+  // The default link color, and nothing more. No :not(:where(...)) list
+  // naming the components that render as an <a>: at (0,0,1) any component
+  // setting its own color already beats this.
   a {
     color: var(--suf-color-link);
     text-decoration-thickness: 1px;
@@ -138,10 +135,10 @@
     vertical-align: middle;
   }
 
-  // Form controls do not inherit type or colour from their ancestor by
+  // Form controls do not inherit type or color from their ancestor by
   // default, so these put both back.
   //
-  // No exclusion needed at (0,0,1): .suf-btn declares its own font and colour
+  // No exclusion needed at (0,0,1): .suf-btn declares its own font and color
   // and wins on its own.
   button,
   input,
@@ -185,15 +182,15 @@
 
 // Back to top.
 //
-// Provisional styling. It matches the mockup's .to-top -- a 40px red square,
-// fixed bottom-right -- and takes the CTA tokens rather than a literal red so
-// it moves with the rest of the chrome in the header/footer rebuild.
+// A 40px square, fixed bottom-right. It takes the CTA tokens rather than a
+// literal red so it moves with the rest of the chrome.
 //
 // Hidden until the page has scrolled past the sentinel below, which
 // assets/suf-totop.js watches. Hidden is the resting state, so the button
 // never flashes on a first paint that happens before the module runs.
-// The reveal threshold, expressed as a height. 800px matches the legacy
-// jQuery, which showed #to-top past a scrollTop of 800.
+//
+// The sentinel's HEIGHT is the reveal threshold: 800px, roughly a screen and a
+// half, so the button arrives once scrolling back is a real cost.
 //
 // Absolutely positioned and 1px wide so it takes no space and cannot widen the
 // page. It is inside <body>, which is not positioned, so it resolves against
@@ -250,7 +247,7 @@
   //
   // The background does NOT change on hover, exactly as on --primary: the
   // shadow is --suf-red-dark, so darkening the face to the same red would
-  // paint the shadow onto its own colour and the effect would vanish.
+  // paint the shadow onto its own color and the effect would vanish.
   &:hover,
   &:focus-visible {
     background: var(--suf-cta-bg);
@@ -281,7 +278,7 @@
     }
   }
 
-  // Forced-colors modes drop borders on pseudo-elements but honour outline.
+  // Forced-colors modes drop borders on pseudo-elements but honor outline.
   @media (forced-colors: active) {
     &:focus-visible {
       outline: 2px solid;
@@ -333,13 +330,12 @@
 // ---------------------------------------------------------------------------
 // LINK DECORATION
 //
-// NOT LEGACY COMPATIBILITY, despite having lived in that block. Browsers
-// underline links by default and this design does not, except in prose.
-// Deleting these underlines every link on every suf page.
+// Browsers underline links by default and this design does not, except in
+// prose. Deleting these underlines every link on every suf page.
 //
 // :where()-WRAPPED like the rest of the base layer. Unwrapped, `.suf-body a`
-// is (0,1,1) and beat .suf-link's own `text-decoration: underline` at (0,1,0),
-// silently -- the collision written up in architecture.md.
+// is (0,1,1) and silently beats .suf-link's own `text-decoration: underline`
+// at (0,1,0) -- the collision written up in architecture.md.
 // ---------------------------------------------------------------------------
 
 :where(.suf-body) {

@@ -1,12 +1,12 @@
 // Closing call-to-action band.
 //
-// Ported from the mockup, section 4. Full-bleed navy, centred, the last thing
-// on almost every page. Mirrors .suf-band: that one opens a page with a red
-// rule below it, this one closes a page with a red rule above it.
+// Full-bleed navy, centered, the last thing on almost every page. Mirrors
+// .suf-band: that one opens a page with a red rule below it, this one closes a
+// page with a red rule above it.
 //
 // The __ children are NESTED rather than written as top-level classes. They
 // are <p> elements, and .suf-body p is (0,1,1) -- a bare .suf-cta__subhead is
-// (0,1,0) and loses to it, so its centring margin silently does nothing.
+// (0,1,0) and loses to it, so its centering margin silently does nothing.
 // Nesting makes them (0,2,0), which wins. Same reason in _suf-band.scss and
 // _suf-team.scss.
 
@@ -52,7 +52,7 @@
 
   // The band's own link sits on navy, so it takes the on-dark blue and
   // resolves to white rather than red -- red on navy is the CTA button's
-  // colour, and the link must not compete with it.
+  // color, and the link must not compete with it.
   .suf-link {
     color: var(--suf-color-link-on-dark);
     border-color: var(--suf-color-link-on-dark);
@@ -71,10 +71,9 @@
 
   // Opts out of the full-width phone rule on .suf-btn.
   //
-  // That rule exists because a label-width button adrift in a wide left-
-  // aligned column is a small target with no edge to anchor it. Neither is
-  // true here: this band is centred, so the buttons are already the focal
-  // point of a short centred stack, and stretching them edge to edge turns a
+  // That rule exists because a label-width button adrift in a wide
+  // left-aligned column is a small target with no edge to anchor it. Neither
+  // is true in a centered band, and stretching them edge to edge turns a
   // deliberate closing statement into two blocks of red and navy.
   //
   // (0,2,0) against the base rule's (0,1,0), so it wins wherever it applies.

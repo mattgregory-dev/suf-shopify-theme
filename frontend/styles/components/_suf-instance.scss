@@ -1,9 +1,9 @@
 // PER-INSTANCE OVERRIDES. One section on one page, never a component.
 //
 // What varies is the CONTENT, not the component: a spotlight holding a tall
-// portrait and one holding a wide chart want different room around them. Fixing
-// that in the component moves every other instance, so the tuning never
-// converges. A rule here says "this section, on this page, at this width".
+// portrait and one holding a wide chart want different room around them.
+// Fixing that in the component moves every other instance, so the tuning never
+// converges.
 //
 // TARGETING. Shopify's section id is `shopify-section-template--<id>__<key>`,
 // and THE NUMBER IS NOT STABLE -- it differs between dev, preview and
@@ -26,8 +26,7 @@
 // SPLIT FACT GAPS, once the section stacks.
 //
 // The component's stacked gap floors at 64px, which is right for suf-cpt's
-// dense panels and too much for these two. Changing it there was tried and
-// reverted -- see _suf-cpt.scss.
+// dense panels and too much for these two.
 //
 // 1000 matches the component's own stacking breakpoint, so the gap changes as
 // the layout does rather than reflowing twice on a slow resize.
@@ -44,9 +43,8 @@
 // page.suf-cpt -- the library band, where the screenshot is the point.
 //
 // The measure moves onto the TRACK so the image takes whatever the copy does
-// not need. Capping the copy inside a proportional column instead leaves the
-// slack stranded in the text column, which is what the component does for
-// every other instance.
+// not need. The component caps the copy inside a proportional column instead,
+// which strands the slack in the text column.
 [id$='__library'] {
   .suf-splitfact__inner {
     grid-template-columns: minmax(0, 56ch) 1fr;
@@ -66,13 +64,12 @@
 // page.suf-cpt -- the live exam centered head, left-aligned on narrow screens.
 //
 // A centered heading over a centered sub reads as a title on a wide line. At
-// phone width the same block becomes several short ragged lines centered against
-// a left-aligned page, which reads as a mistake rather than as emphasis.
+// phone width it becomes several short ragged lines centered against a
+// left-aligned page, which reads as a mistake rather than as emphasis.
 //
 // All three parts have to move together: the text alignment, the eyebrow's own
-// flex centering, and the sub's max-width -- which exists to hold a centered line
-// to a readable line length and only narrows the column once the text is ranged
-// left.
+// flex centering, and the sub's max-width, which only narrows the column once
+// the text is ranged left.
 @media (max-width: 700px) {
   [id$='__exam'] .suf-centerhead {
     text-align: left;

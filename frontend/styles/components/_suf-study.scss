@@ -58,18 +58,17 @@
 
 // Body copy carries its own class rather than being matched as `.suf-gcard > p`.
 //
-// That selector is (0,1,1) and every other line in the card -- __meta, __price,
-// __soldout -- is a <p> at (0,1,0), so the "generic" rule silently won and
-// flattened all three. The child combinator does not help: the price IS a
-// direct child.
+// That selector is (0,1,1), and __meta, __price and __soldout are all <p> at
+// (0,1,0), so the "generic" rule silently wins and flattens them. The child
+// combinator does not help: the price IS a direct child.
 //
-// The lesson generalises past the base layer: ANY rule mixing a class with an
-// element out-specifies a plain class, including one inside a component.
+// All four card children are therefore `.suf-gcard .suf-gcard__x` at (0,2,0).
+// A bare class also loses to the base `.suf-body p` margin, which discards the
+// price's `margin-top: auto` -- the thing pinning both cards' prices to the
+// same line.
 //
-// All four card children are therefore `.suf-gcard .suf-gcard__x` (0,2,0), not
-// `.suf-gcard__x` (0,1,0). A bare class still loses to the base `.suf-body p`
-// margin -- which was silently discarding the price's `margin-top: auto`, the
-// thing that pins both cards' prices to the same line.
+// Any rule mixing a class with an element out-specifies a plain class, inside
+// a component as much as in the base layer. See architecture.md.
 .suf-gcard .suf-gcard__body {
   margin: 0 0 var(--suf-space-4);
   color: var(--suf-color-text);
@@ -229,11 +228,8 @@
   // spent on inset -- on all four sides, so it reads as a heavy frame around a
   // short paragraph rather than as breathing room. space-4 floors at 24px.
   //
-  // SAFE TO CHANGE ON THE COMPONENT, unlike most of this pass: suf-guarantee
-  // is used by exactly one template, page.suf-study-guides.json. Verified
-  // against the templates rather than assumed -- if it is ever added to a
-  // second page, this stops being a component default and becomes a decision
-  // about both.
+  // Safe as a component default because suf-guarantee renders on exactly one
+  // template, page.suf-study-guides.json.
   //
   // 480 rather than the 900 above: the stack and the inset are separate
   // problems. At 900 the padding is still proportionate.
@@ -242,15 +238,12 @@
   }
 
   // The button is a GRID ITEM, and a grid item stretches to its area by
-  // default -- `display: inline-block` on .suf-btn does not survive that.
+  // default -- `display: inline-block` on .suf-btn does not survive that. It
+  // goes unnoticed until the grid stacks: the button's column is `auto`, so
+  // until then the area is already the button's own width.
   //
-  // It goes unnoticed on the two-column layout because the button's column is
-  // `auto`, so the area is already the button's own width. The moment the
-  // grid stacks, the area becomes the full row and the button grows into a
-  // full-width block.
-  //
-  // justify-self, not a width: the button should size to its label at every
-  // width, which is what `start` does without naming a number.
+  // justify-self, not a width: `start` sizes the button to its label at every
+  // width without naming a number.
   .suf-btn {
     justify-self: start;
   }
@@ -341,15 +334,10 @@
 // Hover is carried entirely by the shadow.
 .suf-gcard--featured {
   border: 2px solid var(--suf-blue-light);
-  // NO RESTING SHADOW, matching the plain card beside it.
-  //
-  // This card carried a permanent elevation -- originally 24/60/22%, then a
-  // dialled-back 16/39/14% -- on the theory that being lifted off the page is
-  // part of saying "this is the one". In practice the two cards sat side by
-  // side with different depths and it read as the plain card being pushed
-  // back rather than this one coming forward.
-  //
-  // The 2px light-blue border and the red flag carry that signal on their own.
+  // NO RESTING SHADOW, matching the plain card beside it. A permanent
+  // elevation here reads as the plain card being pushed back rather than this
+  // one coming forward. The 2px light-blue border and the red flag carry the
+  // signal on their own.
   box-shadow: none;
 
   // NO scale() ON THIS CARD. The border, the blue and the elevation already

@@ -1,12 +1,13 @@
 {% comment %}
   Contact details + form, in one card that overlaps the band above.
 
-  THE FORM IS REAL. The mockup's is a dead <button type="button">; this uses
-  Shopify's {% form 'contact' %}. It posts to the store and Shopify sends the
-  mail itself, to SETTINGS > GENERAL > STORE CONTACT DETAILS > STORE EMAIL
-  (shop.email) -- established by test, not by the docs. Not Sender email, which
-  is a different field under Notifications and only sets the From address on
-  customer-facing mail.
+  The form posts through Shopify, via {% form 'contact' %}. Shopify sends the
+  mail itself, to Settings > General > Store contact details > Store email
+  (shop.email), verified by test.
+
+  Sender email is a different field, under Notifications, and only sets the
+  From address on customer-facing mail. Changing it does not move where this
+  form lands.
 
   Nothing here needs an app and there is no JavaScript for the submit: Shopify
   redirects back with ?contact_posted=true, which drives the success message.
@@ -67,11 +68,10 @@
             first field arrives straight after the address with nothing to say
             a form has started.
 
-            It is not hidden with display:none above the breakpoint but
-            visually hidden, so it stays in the accessibility tree at every
-            width -- a heading before a form is worth more to someone
-            navigating by headings than it is to someone who can see the
-            layout.
+            Visually hidden above the breakpoint rather than display:none, so
+            it stays in the accessibility tree at every width -- a heading
+            before a form is worth more to someone navigating by headings than
+            to someone who can see the layout.
           {%- endcomment -%}
           {%- if section.settings.form_heading != blank -%}
             <h2 class="suf-contact-form__head">{{ section.settings.form_heading | escape }}</h2>
@@ -135,7 +135,7 @@
 
               So every option has to change what the merchant DOES. "Feedback"
               and "feature request" both resolve to "read when there is time",
-              which is one behaviour, and two labels for one behaviour just
+              which is one behavior, and two labels for one behavior just
               makes the list longer to read.
 
               NOT REQUIRED. Shopify drops a blank value rather than sending an

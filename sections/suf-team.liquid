@@ -8,10 +8,8 @@
   The "Read more" cue inside a linked card is a <span>, not a nested anchor:
   one link per card keeps the tab order honest and the accessible name whole.
 
-  IMAGES. Blocks use image_picker, so Shopify serves the file from its CDN and
-  `image_url` sizes it. The mockup hard-codes ?v= CDN URLs; those are the same
-  files, but going through image_picker is what makes them swappable in the
-  editor and gives us srcset.
+  IMAGES. Blocks use image_picker, so Shopify serves the file, `image_url`
+  sizes it, and the photo is swappable in the editor with srcset for free.
 
   ELEMENT. The root here is a <div>, not a <section>: the schema's
   `"tag": "section"` already makes Shopify wrap this in
@@ -134,7 +132,7 @@
           "type": "image_picker",
           "id": "photo",
           "label": "Photo",
-          "info": "Portrait crop. Leave empty to show a labelled placeholder."
+          "info": "Portrait crop. Leave empty to show a labeled placeholder."
         },
         {
           "type": "text",

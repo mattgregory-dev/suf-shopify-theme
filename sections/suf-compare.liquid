@@ -3,10 +3,9 @@
 
   A REAL <table>, with <th scope="col"> on the plans and <th scope="row"> on
   the feature names. That is what lets a screen reader announce a cell as
-  "SUF-CPT + Seminar Bundle, CEUs earned, 1.1" rather than reading out a bare
-  "1.1" with no idea which plan or which feature it belongs to. The mockup's
-  markup is presentational -- all <td> and a header row of <th> with no scope --
-  and that difference is the whole reason to build it as a table at all.
+  "SUF-CPT + Seminar Bundle, CEUs earned, 1.1" rather than a bare "1.1" with no
+  idea which plan or which feature it belongs to. Without the scopes there is
+  no reason to build this as a table at all.
 
   THE SCROLL CONTAINER IS FOCUSABLE. It scrolls horizontally on narrow screens,
   and a scrollable region that cannot be reached by keyboard is unreachable
@@ -19,10 +18,9 @@
       anything -> printed as written ("3 months", "1.1", "<b>Lifetime</b>")
   The two marks are aria-hidden; the meaning is in the hidden text beside them.
 
-  NOT PORTED: the mockup's column-hover JavaScript, which tinted a whole column
-  on mouseover. It is a hover-only affordance, so keyboard and touch users
-  never get it, and the featured column is already marked permanently. A script
-  that helps only mouse users scan is not worth the script.
+  No column-hover script, deliberately. Tinting a column on mouseover is a
+  hover-only affordance that keyboard and touch users never get, and the
+  featured column is already marked permanently.
 
   ELEMENT. The root is a <div>: `"tag": "section"` already wraps this.
 {% endcomment %}
@@ -249,7 +247,7 @@
       "type": "richtext",
       "id": "note",
       "label": "Note under the table",
-      "info": "Centred fine print, e.g. what the price does not cover."
+      "info": "Centered fine print, e.g. what the price does not cover."
     }
   ],
   "blocks": [

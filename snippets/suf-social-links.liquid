@@ -6,14 +6,13 @@
   hidden from assistive tech.
 {% endcomment %}
 {%- liquid
-  # Order follows the footer mockup: YouTube, Spotify, then the rest. Only
-  # links that are set render, so an order longer than the shop's actual list
-  # costs nothing.
+  # YouTube and Spotify lead. Only links that are set render, so an order
+  # longer than the shop's actual list costs nothing.
   #
-  # Spotify is the podcast. It is NOT one of the theme's inherited networks --
-  # social_spotify_link was added to config/settings_schema.json on 2026-08-31
-  # and the glyph to suf-icon.liquid, so it will not appear until a URL is
-  # entered under Theme settings > Social.
+  # Spotify is the podcast, and NOT one of the theme's inherited networks --
+  # social_spotify_link lives in config/settings_schema.json and its glyph in
+  # suf-icon.liquid, so it will not appear until a URL is entered under Theme
+  # settings > Social.
   assign networks = 'youtube,spotify,instagram,facebook,twitter,linkedin,pinterest' | split: ','
 -%}
 <ul class="suf-social" role="list">

@@ -334,8 +334,15 @@ If no, don't write it. Most of what fails that test is narration.
 
 **American English**, in comments, commit messages and docs alike — color,
 behavior, centered, gray. The CSS property is `color` either way, so a comment
-spelling it `colour` two lines above is just noise. Watch the token
-`--suf-grey`, which is a name and does not change.
+spelling it `colour` two lines above is just noise.
+
+Two things it does not touch: `--suf-grey`, which is a name, and any Liquid
+that compares against merchant-entered text — `contains 'colour'` in
+`snippets/swatch.liquid` and `snippets/variant-tag-color.liquid` matches option
+names a merchant typed, so "fixing" it breaks swatches.
+
+The conversion is incomplete, so fix the whole file when you open one. See
+**the file pass** below.
 
 **One idea, one statement**
 
@@ -368,6 +375,18 @@ State the decision, not the derivation — superseded values are history too.
 "6px, not the 18px it was" and "raised from 68% after the mobile pass" are
 both changelog. Give the number that is there and why it is right now.
 
+**Speak from now.** The commonest form of this is not a date, it is defining
+the code by what it is not: "the mockup's card is a whole-card `<a>`", "not a
+dead `<button>`", "100px, not the mockup's 72". Each needs the reader to know
+something that is gone before the sentence resolves. Say what the code does
+and why it is right — "the button is the card's only action, because a
+`<form>` cannot live inside an `<a>`".
+
+A contrast is fine when the alternative is one someone would actually reach
+for TODAY: `display:none` where `visually-hidden` is meant, `unset` where
+`clip` is meant, "no column-hover script, deliberately". Those stop a change.
+A contrast with something deleted only stops comprehension.
+
 For anything transitional, say what kills it. "Inert on the suf layout, goes
 when the legacy templates do" beats a paragraph explaining the legacy
 behavior, and it tells the next person what to do with the block.
@@ -384,6 +403,34 @@ always wrong.
 notes and the restatement; keep the traps and the rejected alternatives. A big
 block is a pet peeve, not a defect — some of them are load-bearing throughout.
 Less editing is more.
+
+**Sparing caps.** A shout is for a trap that costs an hour, not for every
+paragraph heading. Several in a row cancel each other out and the file starts
+reading as though everything is urgent. Sentence case is the default; earn the
+caps.
+
+### The file pass
+
+**Editing one comment in a file means reading all of them.** Not rewriting
+them — reading them, and fixing what the rules above already condemn:
+
+- British spellings anywhere in the file, not just the line being changed
+- References to the mockup
+- Dates, and anything phrased as a changelog
+- Comments that describe a past state instead of the present one
+- The same fact explained twice in one file — make one canonical, point the
+  other at it
+- A block that says one thing three ways
+
+The same applies to a commit body being edited. The point is that the
+conversions are incomplete and none of them will ever get their own pass;
+they only get done when someone is already in the file.
+
+**What survives a pass, always:** a trap that fails silently, a rejected
+alternative still reachable today, an external contract, and a value that
+looks arbitrary and is not. When a cut is borderline, keep it — the cost of a
+line that did not need to be there is a line. The cost of deleting a trap is
+the hour it was written to save.
 
 ## Formatting
 
@@ -441,8 +488,13 @@ already asserts. Write those properly. Everything else gets four lines.
 provenance, and restatement of the subject. A trap goes in the CODE, where
 someone hits it — not here.
 
-At most one ALL-CAPS line per body. It scans well in a comment and reads as
-shouting at a body's width.
+At most one ALL-CAPS line per body, and usually none.
+
+**Bodies wrap at 72 columns.** `git log` indents by four, so anything wider
+wraps raggedly in a default terminal.
+
+**Editing a body means the file pass applies to it too** — American English,
+no dates, no mockup, present tense. Same rules as a comment.
 
 ## Assistant context files are not tracked
 

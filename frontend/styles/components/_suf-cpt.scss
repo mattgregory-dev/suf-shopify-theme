@@ -25,10 +25,8 @@
 
   // 1000px: the fact panel stops being readable beside the argument.
   //
-  // The gap does NOT change with the stack: --suf-space-6 was tried at
-  // --suf-space-4 here and the panel ended up too close to the copy above it.
-  // The full gap is what keeps the chart reading as its own element rather
-  // than as part of the paragraph.
+  // The gap does NOT tighten with the stack. The full gap is what keeps the
+  // chart reading as its own element rather than as part of the paragraph.
   @media (max-width: 1000px) {
     grid-template-columns: 1fr;
   }

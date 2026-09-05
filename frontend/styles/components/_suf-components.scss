@@ -1,13 +1,12 @@
 // Shared component vocabulary.
 //
-// Ported from the Claude Design mockup (~/projects/suf/mockups, section 3 of
-// css/styles.css). Everything here is used by two or more pages; anything used
-// by exactly one page belongs in that page's own partial, not this file.
+// Everything here is used by two or more pages; anything used by exactly one
+// page belongs in that page's own partial, not this file.
 //
-// The mockup names these classes bare -- .btn, .section, .link. They are
-// prefixed here because suf.css is loaded by layout/theme.liquid as well, where
-// a bare .section or .link would restyle ~30 inherited templates. See
-// docs/architecture.md, "Naming: the suf prefix marks new work".
+// The classes carry the suf- prefix because suf.css is loaded by
+// layout/theme.liquid as well, where a bare .section or .link would restyle
+// ~30 inherited templates. See docs/architecture.md, "Naming: the suf prefix
+// marks new work".
 
 @use '../mixins' as m;
 
@@ -43,7 +42,7 @@
 // ---------------------------------------------------------------------------
 // SECTION RHYTHM
 //
-// Each section pads HALF the gap it needs, top and bottom, so two neighbours
+// Each section pads HALF the gap it needs, top and bottom, so two neighbors
 // together make the ~100px desktop gap. Do NOT add margins between sections as
 // well: they will not collapse against this padding, and the rhythm doubles.
 // ---------------------------------------------------------------------------
@@ -67,7 +66,7 @@
 // For a section that introduces the one below it rather than standing alone.
 //
 // The rhythm above works because each section pads HALF the gap: two
-// neighbours make one ~100px gap between separate ideas. An intro and the
+// neighbors make one ~100px gap between separate ideas. An intro and the
 // thing it introduces are not separate ideas, so the full gap reads as a
 // disconnection -- the heading stops looking like it belongs to the cards
 // under it.
@@ -133,8 +132,8 @@
 // hold the heading off its own rule. With the rule gone that padding is
 // holding the heading off nothing -- 18px of dead space above whatever the
 // section opens with, which is exactly the gap this modifier exists to close.
-// It was missed originally because the border and the margin are the visible
-// half of the pair and the padding is not.
+// The border and the margin are the visible half of the pair; the padding is
+// the half that gets forgotten.
 //
 // The general shape, since it is not specific to this modifier: a modifier
 // that removes a border has to remove the padding that positioned the element
@@ -187,7 +186,7 @@
 // Square corners, uppercase. --primary is the red fill and means ACTION: at
 // most one per section. --ghost is the navy outline.
 //
-// Hover is a 2px lift onto a hard offset shadow; the colour never changes,
+// Hover is a 2px lift onto a hard offset shadow; the color never changes,
 // which is what keeps the red reading as "action" rather than "hovered".
 // ---------------------------------------------------------------------------
 
@@ -200,9 +199,9 @@
 
 // Cards that lift their own button.
 //
-// The mockup gets this free -- its cards are one big <a>, so the button
-// inherits the hover. Ours cannot always be: a buy card holds a real <form>,
-// and a <form> cannot live inside an <a>. So the relationship is stated here.
+// A card cannot always be one big <a>, which would let the button inherit the
+// hover: a buy card holds a real <form>, and a <form> cannot live inside an
+// <a>. So the relationship is stated here instead.
 //
 // ONE definition, interpolated into every rule that needs it, because it is
 // used in three places -- the primary hover, the ghost hover, and the
@@ -220,8 +219,8 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
   position: relative;
   padding: 16px 32px;
   border: 2px solid transparent;
-  // The modifiers own the colour (--primary white, --ghost navy); this only
-  // stops a modifier-less button falling through to the base link colour.
+  // The modifiers own the color (--primary white, --ghost navy); this only
+  // stops a modifier-less button falling through to the base link color.
   // Stated here rather than as an exclusion in _suf-base.scss, so the rule
   // lives with the component it describes.
   color: inherit;
@@ -245,7 +244,7 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
   // target adrift in a wide column, and two of them in a row wrap to different
   // widths, which reads as one being more important than the other.
   //
-  // text-align comes with it: the label is centred by the shrink-to-fit box at
+  // text-align comes with it: the label is centered by the shrink-to-fit box at
   // every other width, and without this it would sit hard left once the box is
   // full width.
   //
@@ -266,12 +265,12 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
   // THE FOCUS RING is a pseudo-element because it must do two things at once
   // that neither an outline nor a box-shadow can: sit OFF the button with a
   // gap (a shadow can only paint a solid rect, so the gap would need the
-  // surface colour, which differs per band), and be ASYMMETRIC (buttons shift
+  // surface color, which differs per band), and be ASYMMETRIC (buttons shift
   // up-left 2px and throw a shadow 4px down-right, so a uniform ring clips the
   // corner of the shape actually on screen).
   //
-  // ONE colour for every button on every band. A focus ring is a system
-  // affordance -- learned once, recognised everywhere -- not decoration.
+  // ONE color for every button on every band. A focus ring is a system
+  // affordance -- learned once, recognized everywhere -- not decoration.
   //
   // It clears 3:1 against both surfaces it lands on -- roughly 3.2:1 on the
   // page background and 3.9:1 on the navy bands -- which is the threshold for
@@ -291,7 +290,7 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
     }
   }
 
-  // Forced-colors modes drop borders on pseudo-elements and honour outline, so
+  // Forced-colors modes drop borders on pseudo-elements and honor outline, so
   // the ring above would simply vanish for the users who most need it. A real
   // outline goes back, offset to clear the same shadow.
   @media (forced-colors: active) {
@@ -324,15 +323,11 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
   color: var(--suf-cta-text);
 
   // `.suf-gcard:hover &` is the product card reaching in to lift its own
-  // button. The mockup gets this free -- its card is one big <a>, so the
-  // button inherits the hover. Ours cannot be: the card holds a real <form>,
-  // and a <form> cannot live inside an <a>. So the relationship is stated
-  // here instead.
+  // button -- see the $card-hover note above.
   //
   // It belongs on the button rather than in _suf-study.scss so there is ONE
   // copy of the lift. Duplicated, the two drift and only one of them gets the
-  // reduced-motion guard -- which is what happened to the base rule below
-  // before this selector was added to it as well.
+  // reduced-motion guard.
   &:hover,
   &:focus-visible,
   #{$card-hover} {
@@ -539,7 +534,7 @@ $card-hover: '.suf-gcard:hover &, .suf-pkg--featured:hover &, .suf-pkg--featured
 // ---------------------------------------------------------------------------
 
 // Fills its box; the box does the cropping. Pair with object-position when the
-// subject is off-centre.
+// subject is off-center.
 .suf-photo {
   width: 100%;
   height: 100%;

@@ -106,16 +106,16 @@
 // there.
 //
 // Safari below 16 (September 2022) drops `clip` as invalid and keeps the
-// reset's `hidden`, so those users get exactly today's behaviour. The
+// reset's `hidden`, so those users get exactly today's behavior. The
 // degradation is a header that does not stick, not a broken page.
 //
 // ---------------------------------------------------------------------------
 // DO NOT REMOVE THE CONTAINMENT. Tested 2026-08-30, and it failed.
 //
-// This was tried as `unset` first -- overflow-x is not inherited, so that
-// computes to `visible` and is a true removal. The legacy templates came
-// apart: the viewport dragged sideways and the pages read as unmoored. The
-// reset is holding back real overflow, not doing nothing.
+// `unset` is not a substitute -- overflow-x is not inherited, so it computes
+// to `visible` and is a true removal. The legacy templates come apart: the
+// viewport drags sideways and the pages read as unmoored. The reset is holding
+// back real overflow, not doing nothing.
 //
 // So `clip` is the answer and not a compromise. It contains exactly what
 // `hidden` contained; it just does not establish a scroll container, which is
@@ -292,7 +292,7 @@ body:not(.suf-body) {
 // every img inside .grid-banner sizes them all to a 53x67 icon. That is right
 // for the icon grids these sections were built for, and wrong for any banner
 // that holds a photograph -- it would be squashed rather than cropped. It is
-// production's behaviour on the same sections, so it goes in as-is, but it is
+// production's behavior on the same sections, so it goes in as-is, but it is
 // worth a look at one of those pages before trusting it.
 // ---------------------------------------------------------------------------
 
@@ -605,7 +605,7 @@ body:not(.suf-body) .product-tab {
 // Links in the description read as links.
 //
 // The tab panel is merchant-authored rich text, and dt-framework gives its
-// anchors the body colour -- so a link inside the copy is distinguishable only
+// anchors the body color -- so a link inside the copy is distinguishable only
 // by an underline the theme also removes. Scoped to .product-tab so it reaches
 // the description and nothing else on the page.
 //
@@ -614,8 +614,8 @@ body:not(.suf-body) .product-tab {
 .product-tab a {
   color: var(--suf-blue) !important;
   // Underlined, the old-fashioned way. This is prose, not chrome: inside a
-  // paragraph a link distinguished by colour alone is easy to miss, and it
-  // fails outright for anyone who cannot separate the two colours.
+  // paragraph a link distinguished by color alone is easy to miss, and it
+  // fails outright for anyone who cannot separate the two colors.
   text-decoration: underline !important;
 
   &:hover,
@@ -959,7 +959,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 // The --DT* names below are dt-framework's own, and stylelint's naming rule is
 // disabled for exactly that reason: renaming them to --suf-* would unbind them
 // from the variables the legacy theme actually sets, and the drawer would lose
-// its colours and radii entirely.
+// its colors and radii entirely.
 // ---------------------------------------------------------------------------
 
 /* stylelint-disable custom-property-pattern -- inherited dt-framework names */
@@ -1070,10 +1070,10 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
   overflow-y: auto;
 }
 
-// Written against a BARE class in the original, with no .drawer ancestor,
-// which is why it was missed on the first pass through header.liquid and the
-// remove control rendered as a full-width grey bar. It is meant to be a small
-// overlay pinned to the corner of the row and revealed on hover -- see
+// Written against a BARE class in the original, with no .drawer ancestor, so
+// it is easy to miss -- unscoped, the remove control renders as a full-width
+// gray bar. It is meant to be a small overlay pinned to the corner of the row
+// and revealed on hover -- see
 // `.drawer .ajaxcart__product:hover .remove-btn` below, which is the only
 // thing that raises its opacity.
 .remove-btn {
@@ -1233,7 +1233,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 /* stylelint-enable custom-property-pattern */
 
 
-// Heading colour, not link blue, and no hover: the title stopped being a link
+// Heading color, not link blue, and no hover: the title stopped being a link
 // when the cart templates dropped their product-page links. Blue text that
 // lights up under the pointer promises a click that does nothing.
 #CartDrawer .ajaxcart__product-name {
@@ -1252,7 +1252,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 // They inherit dt-framework's generic button hover, so the fill goes to
 // --DT_Button_BG_Hover_Color (#D8000C) and the border to
 // --DT_Button_hover_border_Color (also #D8000C). Red is the design's action
-// colour and belongs to buying, not to nudging a number up and down.
+// color and belongs to buying, not to nudging a number up and down.
 //
 // If a fourth stepper turns up, add it here rather than writing a second rule.
 .qty-box-set .qtyminus1,
@@ -1284,7 +1284,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 // No !important, unlike the drawer rule above. dt-framework's `a img` is
 // (0,0,2) and declares no !important -- checked, it appears three times in
 // that file and is plain every time -- so a single class clears it. The
-// neighbour's flag looks defensive rather than earned; it is left alone rather
+// neighbor's flag looks defensive rather than earned; it is left alone rather
 // than tested on a live cart, but do not copy it into new rules here.
 //
 // NOTE THE DRAWER AND THE PAGE NOW DISAGREE: 10px there, 0 here. That was a
@@ -1294,7 +1294,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
   border-radius: 0;
 }
 
-// Product title. Heading colour and no hover: it stopped being a link when the
+// Product title. Heading color and no hover: it stopped being a link when the
 // cart templates dropped their product-page links, and blue text that lights up
 // under the pointer promises a click that does nothing.
 .cart_table .cart-title .product-name {
@@ -1343,7 +1343,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 }
 /* stylelint-enable custom-property-pattern */
 
-// Shop Pay purple. A brand colour owned by Shopify, so it is a literal rather
+// Shop Pay purple. A brand color owned by Shopify, so it is a literal rather
 // than a token -- it must not move when ours do.
 .shopify-payment-button {
   padding: 5px !important;
@@ -1473,7 +1473,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
   border-left: 3px solid #afafaf;
 }
 
-// The comment form. Centred, with the submit button centred rather than
+// The comment form. Centered, with the submit button centered rather than
 // floated, and the field hints in flow instead of absolutely positioned.
 #dt-sc-comments .comment-form p {
   margin-bottom: 18px;
@@ -1515,7 +1515,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 // The markup is `<span class="fa fa-angle-left">` -- an icon with no text.
 // FontAwesome is retired, and _fontawesome-retire.scss is in audit mode, so
 // every .fa element renders an orange marker showing its own class name. That
-// is correct behaviour for finding icons; it is not something to ship, and
+// is correct behavior for finding icons; it is not something to ship, and
 // these two are the only .fa usages on a page a customer paginates.
 //
 // The audit marker is the ::after, so this overrides ::after rather than
@@ -1580,7 +1580,7 @@ form[class*='shopify-product'] > div.product_payments_btns > *,
 //
 // DISPLAY IS NOT SET HERE. dt-theme.js toggles `style="display:block"` and
 // `display:none` inline as the page scrolls, and an inline style beats any
-// rule. So the arrow is centred with line-height rather than flexbox, which
+// rule. So the arrow is centered with line-height rather than flexbox, which
 // works whatever display value the script writes.
 // ---------------------------------------------------------------------------
 

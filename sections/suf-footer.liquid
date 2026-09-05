@@ -1,13 +1,9 @@
 {% comment %}
-  The footer, rebuilt from the mockup on 2026-08-31.
+  The site footer.
 
-  Ported from `.footerbar` / `.footer-copyright` in
-  ~/projects/suf/mockups/index.html. It replaced a generic block-based footer
-  that predated that design: four repeatable column types, each a heading plus
-  arbitrary content. The mockup is not generic -- it is a brand column, two
-  link columns and a partners column, in that order -- so the section now
-  describes that shape directly. Fewer knobs, and the layout cannot be
-  arranged into something the CSS was never drawn for.
+  The shape is fixed: a brand column, two link columns and a partners column,
+  in that order. Few enough knobs that the layout cannot be arranged into
+  something the CSS was never drawn for.
 
   WRITTEN TO SURVIVE BOTH LAYOUTS, like sections/suf-nav.liquid, even though
   only layout/suf.liquid renders it today. Nothing here depends on `.suf-body`,
@@ -17,9 +13,8 @@
   leaves undeclared.
 
   LINK SUBTEXT reuses snippets/suf-navlabel.liquid, the same `Label | subtext`
-  convention the nav uses. The mockup's "Swag / tees, hoodies & more" is that
-  pattern, and a second mechanism for the same thing would be one more thing to
-  remember.
+  convention the nav uses. A second mechanism for the same thing would be one
+  more thing to remember.
 
   SOCIAL LINKS come from the theme settings the legacy footer already reads, so
   there is one place to change a URL.
@@ -158,8 +153,7 @@
       {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
         {%- comment -%}
           Native Shopify payment SVGs. No asset files, no icon font, and the
-          list follows whatever the merchant has actually enabled -- the mockup
-          drew six grey placeholders.
+          list follows whatever the merchant has actually enabled.
         {%- endcomment -%}
         <ul class="suf-footer__payment" role="list">
           {%- for type in shop.enabled_payment_types -%}
@@ -181,7 +175,7 @@
       "type": "image_picker",
       "id": "logo",
       "label": "Logo",
-      "info": "The full-colour mark -- this footer is on a white surface, not the navy bar."
+      "info": "The full-color mark -- this footer is on a white surface, not the navy bar."
     },
     { "type": "text", "id": "phone", "label": "Phone" },
     { "type": "text", "id": "location", "label": "Location" },

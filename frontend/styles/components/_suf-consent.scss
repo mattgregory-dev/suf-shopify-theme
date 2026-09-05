@@ -9,22 +9,18 @@
 // so it has to be styled on both layouts. It reads the --suf-* tokens
 // directly, since those are declared on :root and suf.css is served on both.
 //
-// THE REAL DOM IS NOT WHAT THE MOCKUP ASSUMED. Four differences that each
-// break a rule written against it:
-//
-//   1. #shopify-pc__banner IS the dialog -- it carries
-//      .shopify-pc__banner__dialog itself. Styling them separately lets the ID
-//      rule beat the class rule on the same element and the card never shows.
-//   2. The banner title is an <h2>, not the first <p>.
-//   3. No __header / __scroll / __body / __option-title. The real names are a
-//      bare <header> and .shopify-pc__prefs__scrollable.
-//   4. The checkbox is a <label> wrapping the input plus a <span> holding TWO
-//      svgs, switched with an inline display style.
+// #shopify-pc__banner IS the dialog -- it carries .shopify-pc__banner__dialog
+// itself, so styling the two separately lets the ID rule beat the class rule
+// on the same element and the card never shows.
 //
 // NEVER OVERRIDE `display` ON #shopify-pc__prefs. Shopify shows and hides it
 // with an inline style, so !important would pin it open forever and anything
-// less loses to the inline style anyway. The dialog is centred by positioning
+// less loses to the inline style anyway. The dialog is centered by positioning
 // its child instead.
+//
+// Shopify's own margins and padding fight the flex gaps here. Every `margin:
+// 0` and `padding: 0` in this file is declaring one of theirs away, not
+// tidying -- the value each replaces is noted at the rule.
 
 // THE FONT, ON LEGACY TEMPLATES. theme.liquid renders `suf-fonts` with no
 // family, pinning legacy templates to `Arial !important`. This dialog is not a
@@ -79,23 +75,19 @@
     max-width: none;
     margin: 0;
     // The side and bottom borders now sit ON the viewport edges, where they
-    // read as a rendering artefact rather than as an edge. The red top border
+    // read as a rendering artifact rather than as an edge. The red top border
     // stays: it is the only one still bounding anything.
     border-inline: 0;
     border-block-end: 0;
   }
 }
 
-// THE THREE !important FLAGS IN THIS FILE ARE ALL THE SAME BUG.
-//
-// On legacy templates _custom-port.scss sets `body:not(.suf-body) h2` to 50px
-// and h3 to 34px, both !important -- legacy typography for legacy CONTENT,
-// which a Shopify-injected dialog is not. An !important cannot be answered by
-// specificity, only by a more specific !important, and an ID selector is as
-// specific as this gets.
-//
-// Without them the consent banner rendered its title at 50px on every legacy
-// page while looking correct on the suf ones.
+// THE THREE font-size !important FLAGS IN THIS FILE ARE ALL THE SAME BUG. On
+// legacy templates _custom-port.scss sets `body:not(.suf-body)` h2 to 50px and
+// h3 to 34px, both !important -- legacy typography for legacy CONTENT, which a
+// Shopify-injected dialog is not. Only a more specific !important answers an
+// !important. Without them the title renders at 50px on every legacy page and
+// correctly on every suf one.
 #shopify-pc__banner__body-title {
   margin: 0 0 6px;
   color: var(--suf-navy);
@@ -105,8 +97,7 @@
   letter-spacing: 0.01em;
 }
 
-// Shopify adds a 10px bottom margin here, which stacks with the button row's
-// own 18px top margin below it.
+// Theirs is 10px bottom, stacking with the button row's 18px top below it.
 #shopify-pc__banner .shopify-pc__banner__body {
   margin: 0;
 }
@@ -139,7 +130,7 @@
   margin-top: 18px;
 
   // STACKED AND FULL WIDTH BELOW 480px. Wrapped onto separate lines each
-  // button sits at its own label width, centred -- two small islands in a
+  // button sits at its own label width, centered -- two small islands in a
   // full-width tray. align-items: stretch is what widens them.
   //
   // `display: flex` IS RESTATED DELIBERATELY. Shopify's own CSS is injected at
@@ -155,8 +146,7 @@
 }
 
 #shopify-pc__banner .shopify-pc__banner__btns button {
-  // Shopify sets `margin: 15px 20px 0 0` here. The flex gap already spaces
-  // these, and their top margin pushed the row away from the copy above it.
+  // Theirs is `15px 20px 0 0`, whose top margin pushes the row off the copy.
   margin: 0;
   border-radius: 0;
   font-family: var(--suf-font-body);
@@ -199,10 +189,10 @@
 
   // A TINT, NOT A FILL, and this is the one hover that could not be obvious.
   //
-  // Filling this navy -- which is what it used to do -- now paints it into
-  // exactly the accept button's resting state sitting right beside it. The
-  // hovered secondary would be indistinguishable from the unhovered primary,
-  // which is worse than no hover at all on a choice like this one.
+  // Filling this navy would paint it into exactly the accept button's resting
+  // state sitting right beside it -- the hovered secondary indistinguishable
+  // from the unhovered primary, which is worse than no hover at all on a
+  // choice like this one.
   //
   // 8% of the same navy reads as "this one is live" without borrowing the
   // other button's appearance. The border darkens with it so the edge does not
@@ -233,10 +223,9 @@
 // Third and full width: a tertiary choice, so it reads as a link rather than
 // competing with the two buttons above it.
 // FULL WIDTH, AND NO max-width. max-width clamps a flex item's HYPOTHETICAL
-// MAIN SIZE, which is what line-breaking measures -- so `max-width: fit-content`
-// here stopped this being too wide to share a line, all three collapsed onto
-// one, and dt-framework's `word-break: break-word` broke the labels into
-// "DE CLI NE". The focus ring is drawn on the inner <span> instead.
+// MAIN SIZE, which is what line-breaking measures -- `max-width: fit-content`
+// here stops this being too wide to share a line and collapses all three onto
+// one. The focus ring is drawn on the inner <span> instead.
 #shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs {
   order: 3;
   flex: 1 1 100%;
@@ -318,9 +307,7 @@
 }
 
 #shopify-pc__prefs .shopify-pc__prefs__header-actions button {
-  // Shopify's own stylesheet sets `margin: 0 20px 0 0` here. Spacing is the
-  // flex gap's job, and their right margin adds 20px on top of it -- so it is
-  // declared away rather than left as a gap for their rule to fill.
+  // Theirs is `0 20px 0 0`, adding 20px on top of the flex gap.
   margin: 0;
   border: 1px solid var(--suf-navy);
   border-radius: 0;
@@ -345,7 +332,7 @@
 // Targeted by ID: these three buttons carry no classes at all.
 //
 // Navy, matching the banner's accept -- see the note there. This is the SAME
-// choice offered twice, so the two have to agree: an Accept in one colour here
+// choice offered twice, so the two have to agree: an Accept in one color here
 // and another there would read as two different actions.
 #shopify-pc__prefs__header-accept {
   border-color: var(--suf-navy);
@@ -403,9 +390,7 @@
   border-bottom: 1px solid var(--suf-color-border-subtle);
 }
 
-// Shopify pads this inner wrapper 20px from the top. The scrollable region
-// already supplies the padding above it, so theirs reads as a gap rather than
-// as separation.
+// Theirs is 20px top, on top of the scrollable region's own padding.
 #shopify-pc__prefs .shopify-pc__prefs__intro-main {
   padding: 0;
 }
@@ -425,9 +410,8 @@
   line-height: 1.5;
 }
 
-// Shopify pads the options list 32px on each side, on top of the 20px the
-// scrollable region already provides -- so the options sat inset from the
-// intro directly above them.
+// Theirs is 32px each side, on top of the scrollable region's 20px, which
+// insets the options from the intro directly above them.
 #shopify-pc__prefs .shopify-pc__prefs__options {
   padding: 0;
 }
@@ -476,7 +460,7 @@
 }
 
 // Shopify swaps between two svgs with an inline display style, so only the
-// colour is ours to set. The paths carry a hardcoded hsl() fill attribute,
+// color is ours to set. The paths carry a hardcoded hsl() fill attribute,
 // which any CSS declaration outranks.
 #shopify-pc__prefs .shopify-pc__prefs__option > label svg {
   width: 20px;
@@ -522,16 +506,12 @@
   white-space: nowrap;
 }
 
-// FOCUS. The input itself is clipped, so the indicator goes on the span that
-// holds the svg beside it.
+// FOCUS. The input is clipped, so the indicator goes on the span holding the
+// svg beside it, with their halo cleared first -- see the focus block below.
 //
-// Shopify decorates focus with a pale tinted halo of its own, which does not
-// match anything else on the site -- so it is cleared first and replaced with
-// the ring used everywhere else here.
-//
-// :focus, not :focus-visible. The input is clipped and can only be reached by
-// keyboard or by clicking its label, and a label click should show which
-// control it moved focus to.
+// :focus, not :focus-visible: the input can only be reached by keyboard or by
+// clicking its label, and a label click should show which control it moved
+// focus to.
 #shopify-pc__prefs .shopify-pc__prefs__option > label > span {
   background: none;
   box-shadow: none;
@@ -562,14 +542,12 @@
 // first. Cleared on :focus so a mouse click does not leave one behind, ring
 // added on :focus-visible so only the keyboard gets it.
 //
-// `background` is deliberately not reset here: the accept buttons carry a
-// fill -- blue since the swap, red before it -- and clearing it would strip
-// them on focus. The colour is not the point; having one is.
-
-// !important on box-shadow only, and it is earned: without it two rings drew
-// at once -- their box-shadow tight to the button, our outline 2px outside it.
-// This selector is already (1,2,2), so specificity was not the problem and
-// theirs must be flagged too. Nothing else here needs it.
+// `background` is deliberately not reset: the accept buttons carry a fill, and
+// clearing it would strip them on focus.
+//
+// !important on box-shadow only, and it is earned. This selector is already
+// (1,2,2), so specificity is not the problem -- theirs is flagged too, and
+// only a flag answers a flag. Nothing else here needs it.
 #shopify-pc__banner .shopify-pc__banner__btns button:focus,
 #shopify-pc__prefs .shopify-pc__prefs__header-actions button:focus,
 #shopify-pc__prefs__header-close:focus {
@@ -578,13 +556,8 @@
 }
 
 // THE INNER SPAN. Only the manage-prefs button wraps its label in a <span>,
-// and it is the right place for this button's ring: the button is full width
-// so the ring would otherwise stretch across the whole card, while the span is
-// exactly the width of the text.
-//
-// Shopify already outlines this span on :focus, in a pale blue that matches
-// nothing here -- so theirs is cleared and ours drawn on :focus-visible, the
-// same swap made for every other control in this file.
+// and it is the right place for this button's ring: the button is full width,
+// so the ring would otherwise stretch across the whole card.
 //
 // Not !important: this is (1,2,2) against their (0,3,2), so the ID wins.
 #shopify-pc__banner button.shopify-pc__banner__btn-manage-prefs:focus span {

@@ -8,7 +8,7 @@
 // overriding the title's size and `.suf-body p` was reinstating margins these
 // rules set to 0. `& &__x` is (0,2,0) and wins.
 //
-// Colour lives here, not in section settings: overriding a --suf-* token
+// Color lives here, not in section settings: overriding a --suf-* token
 // changes every component at once instead of one section.
 
 .suf-footer {
@@ -98,7 +98,7 @@
 }
 
 // Emitted by snippets/suf-navlabel.liquid, shared with the nav -- hence the
-// unprefixed class. The mockup calls it .sub.
+// unprefixed class.
 //
 // INLINE HERE, unlike the nav's dropdown, where it is a block on its own line.
 // Footer links are short and the subtext is a qualifier -- "Swag, tees,
@@ -124,10 +124,10 @@
   text-align: center;
 }
 
-// 100px, not the mockup's 72. Same reasoning as the partner seal above and the
-// nav's mark: this logo is close to square, so height is what it has to spend
-// to get any presence, and 72px left it looking incidental next to the column
-// headings.
+// 100px. Same reasoning as the partner seal above and the nav's mark: this
+// logo is close to square, so height is what it has to spend to get any
+// presence, and anything much under 100 reads as incidental next to the
+// column headings.
 .suf-footer .suf-footer__logo img {
   display: block;
   width: auto;
@@ -196,10 +196,8 @@
 // ---------------------------------------------------------------------------
 // PARTNER BADGES
 
-// NO BORDER, NO PADDING. The mockup drew a bordered box because it had no
-// artwork -- the box WAS the placeholder, standing in for a logo with the
-// words "[ MyCPR Now badge ]" inside it. Real partner logos come with their
-// own shape and whitespace, and a border round them reads as a second frame.
+// NO BORDER, NO PADDING. Real partner logos come with their own shape and
+// whitespace, so a border around them reads as a second frame.
 //
 // The border and padding survive only for the text fallback below, which is
 // what renders when a block has a name but no image.
@@ -215,9 +213,9 @@
 .suf-footer a.suf-footer__badge {
   transition: opacity var(--suf-transition);
 
-  // Opacity rather than a border colour, now that there is no border to
-  // change. It is the only hover affordance a bare logo can take without
-  // recolouring someone else's artwork.
+  // Opacity rather than a border color, since there is no border. It is the
+  // only hover affordance a bare logo can take without recoloring someone
+  // else's artwork.
   &:hover,
   &:focus-visible {
     opacity: 0.75;

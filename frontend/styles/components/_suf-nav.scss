@@ -449,8 +449,6 @@
   // sits outside, as it does everywhere else on a light surface.
   @media (max-width: 900px) {
     .sufnav__label:focus-visible,
-    // Both states of this row are an <a> now. It used to be a POST form when
-    // signed in, whose label was a submit button and needed its own ring.
     .sufnav__acct:focus-visible {
       outline: 2px solid var(--suf-color-focus);
       outline-offset: -2px;
@@ -489,24 +487,17 @@
     z-index: 60;
     box-shadow: 0 24px 40px -12px rgb(0 10 20 / 40%);
 
-    // THE SAME CAP THE DRAWER TAKES, AND FOR THE SAME REASON. A handful of
-    // results is taller than a phone, and because this panel is absolutely
-    // positioned it does not extend the page -- so the document has nothing
-    // extra to scroll and everything past the fold is simply unreachable. Four
-    // results already overflow at 390px.
+    // Capped, because an absolutely positioned panel does not extend the page.
+    // The document has nothing extra to scroll, so anything past the fold is
+    // unreachable -- four results already overflow at 390px.
     //
-    // `100%` resolves against .sufnav-wrap, which is only as tall as the bar,
-    // so this is "the viewport minus the header" without naming a header
-    // height that would then need maintaining in two places. It follows the
-    // bar's own compression for free.
+    // `100%` resolves against .sufnav-wrap, only as tall as the bar, so this
+    // is "the viewport minus the header" with no header height to maintain in
+    // two places. dvh, not vh: vh is the LARGEST viewport on mobile Safari, so
+    // the last row would sit under the browser chrome.
     //
-    // dvh, not vh: on mobile Safari, vh is the LARGEST viewport, so the last
-    // row would sit under the browser chrome and be exactly as unreachable as
-    // it is now.
-    //
-    // overscroll-behavior stops the page behind from taking over the scroll
-    // once the list hits its end -- without it, continuing to drag scrolls the
-    // document under the panel, which reads as the panel being broken.
+    // overscroll-behavior stops the document behind from taking over once the
+    // list hits its end, which reads as the panel being broken.
     max-height: calc(100dvh - 100%);
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -560,10 +551,9 @@
     }
 
     // NO LOGO OVERRIDE HERE, deliberately. The clamp's 70px floor already holds
-    // everywhere below 1313px, so a fixed height at this breakpoint would be a
-    // duplicate of the value the clamp produces anyway -- and, being fixed, it
-    // would silently win and make the clamp dead code. It did exactly that at
-    // 62px before this was removed.
+    // everywhere below 1313px, so a fixed height at this breakpoint duplicates
+    // the value the clamp produces anyway -- and, being fixed, it silently wins
+    // and makes the clamp dead code.
 
     // The nav has left the flex row, so the icons take the space it vacated and
     // sit against the burger.
@@ -584,16 +574,14 @@
       z-index: 70;
       flex-direction: column;
       gap: 0;
-      // Flush to the bar. Every item carries its own border-top, so the mockup's
-      // 8px of panel padding showed as a strip of bare background above the
-      // first row rather than as spacing.
+      // Flush to the bar. Every item carries its own border-top, so panel
+      // padding shows as a strip of bare background above the first row rather
+      // than as spacing.
       padding: 0;
       background: var(--suf-color-border-faint);
       box-shadow: 0 24px 40px -12px rgb(0 10 20 / 40%);
-      // With every panel expanded this menu is taller than a phone. Without a
-      // cap the overflow is simply unreachable -- the panel is absolutely
-      // positioned, so it does not extend the page and the document has nothing
-      // extra to scroll. dvh, not vh, or mobile browser chrome eats the last row.
+      // With every panel expanded this menu is taller than a phone. Capped for
+      // the same reason as the search panel above.
       max-height: calc(100dvh - 100%);
       overflow-y: auto;
       overscroll-behavior: contain;

@@ -7,16 +7,15 @@
   the product page would only add a step. The product is still picked, because
   price, variants and availability come from it.
 
-  The mockup's card is a whole-card <a> around a faux
-  <span class="btn">Add to Cart</span>. That could not survive either way: a
-  <form> cannot be nested inside an <a>.
+  The button is the card's only action. The add-to-cart is a real form, and a
+  <form> cannot live inside an <a>, so the card itself cannot be a link.
 
   Copy falls back to the product's own fields, so a card renders sensibly the
   moment a product is picked and the overrides exist only for when the
-  marketing copy should differ from the catalogue.
+  marketing copy should differ from the catalog.
 
   VARIANTS. A product with one variant posts a hidden id. A product with
-  several renders a labelled <select name="id">, which is the whole variant
+  several renders a labeled <select name="id">, which is the whole variant
   picker -- no JavaScript, because price is not per-variant on either of these
   products. If a future product prices variants differently, this needs a
   price-updating script; it does not have one.
@@ -252,7 +251,7 @@
       "type": "richtext",
       "id": "note",
       "label": "Note under the cards",
-      "info": "Centred fine print, e.g. the refund policy."
+      "info": "Centered fine print, e.g. the refund policy."
     },
     { "type": "header", "content": "Strip under the cards" },
     {

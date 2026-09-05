@@ -102,7 +102,7 @@
   }
 
   // The ring above is a box-shadow, and box-shadows are not rendered in forced
-  // colours mode -- so without this the focused field would have no visible
+  // colors mode -- so without this the focused field would have no visible
   // indicator at all for those users.
   @media (forced-colors: active) {
     .suf-search__field:focus-within {
@@ -126,24 +126,14 @@
       color: var(--suf-color-accent);
     }
 
-    // These two sit between the input and the first result in the tab order,
-    // and with no focus style they read as two presses of Tab where nothing
-    // happens before the results finally light up. Focus was landing on them
-    // the whole time; there was simply nothing to see.
+    // These two sit between the input and the first result in the tab order.
+    // With no focus style they read as two presses of Tab where nothing
+    // happens before the results light up.
     &:focus-visible {
       outline: 2px solid var(--suf-color-focus);
       outline-offset: 2px;
     }
   }
-
-  // ---------------------------------------------------------------------------
-  // CLOSE -- a round chip, matching the header's icon buttons
-  //
-  // 38px, a little under the 42px nav icons in _suf-nav.scss. Close to them
-  // rather than matched to them, deliberately: this one sits in a white panel
-  // beside a text field rather than in the navy bar, and at a full 42 it
-  // competed with the field for weight. Still comfortably over the 24px
-  // minimum target size.
 
   // ---------------------------------------------------------------------------
   // SUBMIT -- a filled block, flush to the end of the field
@@ -153,7 +143,7 @@
   // floating shape inside a border and read as two controls in one box.
   //
   // Navy, not red -- red here means the action a visitor came to take, and a
-  // red block would outrank the Reserve buttons further down the page. Grey
+  // red block would outrank the Reserve buttons further down the page. Gray
   // reads as disabled, which is the one thing a submit must not.
   .suf-search__submit {
     align-self: stretch;
@@ -179,6 +169,13 @@
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // CLOSE -- a round chip, matching the header's icon buttons
+  //
+  // 38px, a little under the 42px nav icons in _suf-nav.scss: this one sits in
+  // a white panel beside a text field rather than in the navy bar, and at a
+  // full 42 it competes with the field for weight. Still over the 24px minimum
+  // target size.
   .suf-search__close {
     width: 38px;
     height: 38px;
@@ -190,9 +187,9 @@
     // Navy, matching the submit. The two never light at once, so they read as
     // one vocabulary rather than competing.
     //
-    // NOT A LIGHT GREY: --suf-grey is #dadada and a white glyph on it lands
+    // NOT A LIGHT GRAY: --suf-grey is #dadada and a white glyph on it lands
     // around 1.4:1. If a light disc is wanted, keep #dadada and DROP the white
-    // glyph -- a dark X on a light chip clears contrast. Light grey plus white
+    // glyph -- a dark X on a light chip clears contrast. Light gray plus white
     // does not.
     @media (hover: hover) {
       &:hover {
@@ -250,22 +247,18 @@
     display: flex;
     // The containing block for the stretched link below.
     position: relative;
-    // Top-aligned, not centred. Titles run to two and three lines while the
-    // thumbnail is a fixed 60px, so centring floats the image at a different
+    // Top-aligned, not centered. Titles run to two and three lines while the
+    // thumbnail is a fixed 60px, so centering floats the image at a different
     // height in every row and the left edge stops reading as a column.
     align-items: flex-start;
     gap: var(--suf-space-sm);
     padding: var(--suf-space-sm);
     border: 1px solid var(--suf-color-border);
     border-radius: var(--suf-radius);
-    // --suf-color-surface, which IS white -- named rather than literal because
-    // the separation it draws is the design's, not this component's: the page
-    // is off-white and cards sit on it in white, and that difference is the
-    // only thing distinguishing the two. See the note on the token.
-    //
-    // The panel behind these rows is --suf-color-bg, so without this the cards
-    // were the same colour as the surface under them and only their border
-    // said they were cards.
+    // --suf-color-surface, which IS white, named rather than literal: the
+    // panel behind these rows is --suf-color-bg, and that off-white/white
+    // difference is the only thing making a row read as a card. See the note
+    // on the token.
     background: var(--suf-color-surface);
 
     transition: border-color 0.16s, box-shadow var(--suf-transition);
@@ -326,10 +319,10 @@
 
     // THE WHOLE ROW IS THE TARGET.
     //
-    // The row already promised this -- it takes a border and a tint on hover --
-    // but only the title text was clickable, so the thumbnail and the price
-    // did nothing. This overlays the entire row without touching the markup,
-    // adding a second tab stop, or nesting anything in the anchor.
+    // The row already promises this with its hover treatment, but only the
+    // title is clickable on its own -- the thumbnail and price would do
+    // nothing. An overlay covers the row without touching the markup or adding
+    // a second tab stop.
     //
     // Keyboard selection is unaffected: suf-search.js follows link.href on
     // Enter and never depends on the anchor's own box.
@@ -357,8 +350,8 @@
     //
     // Where :has is unsupported the row-level ring above never matches, and
     // the anchor is the only thing left that can show focus. A ring around the
-    // title is worse than one around the card; it is enormously better than
-    // nothing, which is what tabbing through these results used to give.
+    // title is worse than one around the card, and enormously better than the
+    // nothing a keyboard user would otherwise get.
     //
     // Suppressed wherever :has works, so the two can never both draw.
     &:focus-visible {

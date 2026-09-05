@@ -27,19 +27,14 @@
   // switches to a hamburger: borrowing that number would suggest the eyebrow
   // depends on the nav's layout, and it does not.
   //
-  // BOTH RULES BELOW MUST STAY INSIDE THIS QUERY -- the hidden state and the
-  // .is-in state that reveals it.
+  // BOTH RULES BELOW MUST STAY INSIDE THIS QUERY -- the hidden state as well
+  // as the .is-in that reveals it. Gating only the reveal leaves phones with
+  // `opacity: 0` and nothing to undo it. Same trap as the [data-suf-motion]
+  // gate above.
   //
-  // The hidden state is the dangerous one. If only the reveal were gated,
-  // phones would get `opacity: 0` with nothing left to undo it, and every
-  // eyebrow on every phone would be invisible for good. Gating both means a
-  // phone gets neither, so the eyebrow is simply a normal eyebrow.
-  //
-  // The observer in suf-motion.js still adds .is-in below 1024. That is
-  // deliberate: it lands on a class with no rules attached, which costs
-  // nothing. The alternative -- checking the width in JS too -- would put the
-  // same breakpoint in two files, and they would drift apart on the first
-  // resize.
+  // The observer still adds .is-in below 1024, landing on a class with no
+  // rules attached. Checking the width in JS as well would put this breakpoint
+  // in two files, and they would drift on the first resize.
   @include m.from(m.$bp-lg) {
     // (0,2,0) against `.suf-body .suf-eyebrow` at (0,1,1), so these win without
     // needing to restate the component's own scoping.
