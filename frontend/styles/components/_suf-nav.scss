@@ -253,11 +253,8 @@
     padding: 12px 20px;
     color: var(--suf-navy);
     font-size: 15px;
-    // 700, matching the bar's labels, so the whole nav is one weight with 800
-    // as the current-page mark. It was 600, which is a face this layout does
-    // not preload -- so opening the menu fetched it and the panel reflowed as
-    // it swapped in.
-    font-weight: 700;
+    // A clear step below the 800 current-page mark, or the mark stops reading.
+    font-weight: 600;
     line-height: 1.25;
     text-decoration: none;
     transition: background 0.14s, color 0.14s;
