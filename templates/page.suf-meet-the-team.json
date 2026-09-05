@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "suf",
   "sections": {
@@ -8,7 +17,13 @@
         "heading": "The People Behind the Certification",
         "subhead": "Every Show Up Fitness instructor is a working coach who trains real clients and teaches from experience. When you join a live call or a weekend seminar, these are the people in the room with you.",
         "tier_3": true,
-        "overlap": true
+        "overlap": true,
+        "button_label": "",
+        "button_url": "",
+        "button2_label": "",
+        "button2_url": "",
+        "micro": "",
+        "image_alt": ""
       }
     },
     "team": {
@@ -17,43 +32,49 @@
         "chris": {
           "type": "member",
           "settings": {
+            "photo": "shopify://shop_images/instructor-01.webp",
+            "photo_alt": "Chris Hitchko, founder of Show Up Fitness",
             "name": "Chris Hitchko",
             "role": "Founder",
-            "photo_alt": "Chris Hitchko, founder of Show Up Fitness",
             "bio": "Teaching trainers since 2008, with a decade in the classroom before building Show Up Fitness. Kinesiology degree, author, and the voice behind the YouTube channel that has helped thousands pass their exams. Still leads the Monday mentorship calls himself.",
             "link": "/pages/suf-about",
-            "cue": "Read the Founder's Story",
-            "photo": "shopify://shop_images/instructor-01.webp"
+            "cue": "Read the Founder's Story"
           }
         },
         "jorge": {
           "type": "member",
           "settings": {
+            "photo": "shopify://shop_images/instructor-03.webp",
+            "photo_alt": "Jorge, Show Up Fitness instructor",
             "name": "Jorge",
             "role": "Instructor",
-            "photo_alt": "Jorge, Show Up Fitness instructor",
-            "bio": "Bio to come.",
-            "photo": "shopify://shop_images/instructor-03.webp"
+            "bio": "",
+            "link": "",
+            "cue": ""
           }
         },
         "josh": {
           "type": "member",
           "settings": {
+            "photo": "shopify://shop_images/instructor-02.webp",
+            "photo_alt": "Josh, Show Up Fitness instructor",
             "name": "Josh",
             "role": "Instructor",
-            "photo_alt": "Josh, Show Up Fitness instructor",
-            "bio": "Bio to come.",
-            "photo": "shopify://shop_images/instructor-02.webp"
+            "bio": "",
+            "link": "",
+            "cue": ""
           }
         },
         "meagan": {
           "type": "member",
           "settings": {
+            "photo": "shopify://shop_images/instructor-04.webp",
+            "photo_alt": "Meagan, Show Up Fitness instructor",
             "name": "Meagan",
             "role": "Instructor",
-            "photo_alt": "Meagan, Show Up Fitness instructor",
-            "bio": "Bio to come.",
-            "photo": "shopify://shop_images/instructor-04.webp"
+            "bio": "",
+            "link": "",
+            "cue": ""
           }
         }
       },
@@ -64,6 +85,8 @@
         "meagan"
       ],
       "settings": {
+        "heading": "",
+        "aside": "",
         "overlap": true
       }
     },
@@ -71,11 +94,15 @@
       "type": "suf-cta",
       "settings": {
         "heading": "Learn From Trainers Who Do the Work",
+        "large_heading": false,
         "subhead": "These are the coaches on your live calls, your seminar floor, and your final exam. Start training with them.",
         "button_label": "Start with the SUF-CPT",
         "button_url": "/pages/suf-cpt",
+        "button2_label": "",
+        "button2_url": "",
         "link_label": "Or meet us in person at a weekend seminar",
-        "link_url": "/pages/suf-seminars"
+        "link_url": "/pages/suf-seminars",
+        "micro": ""
       }
     }
   },
