@@ -79,52 +79,62 @@ every pull, not just changed ones.
 **Recovering a clobbered edit:** Online Store → Themes → ⋯ → *Version history*.
 Shopify snapshots on save and keeps roughly 30 days.
 
-### `npm run deploy` PUSHES TO THE THEME
+### `npm run deploy` PUSHES TO A THEME
+
+```
+npm run deploy         # builds CSS, pushes to Sporto - Redesign
+```
+
+**Sporto - Redesign is UNPUBLISHED, and the live theme is Sporto**, which
+nothing in this repo has ever pushed to. Read the roles off
+`shopify theme list` rather than off this file: the redesign has been published
+briefly before, to test things a development theme cannot host — a real
+checkout, a real customer session — and while that was true it was written down
+here as though it were permanent. It is not. Anything asserting the redesign is
+live is stale, whatever else it says.
 
 It was called `preview` until 2026-09-01, and the rename is not cosmetic. The
-script has always pushed to Sporto - Redesign (#000000000000); what changed is
-that **that theme is now published**. The name said preview and the effect was
-deploy, which is the kind of gap that catches someone out late at night.
+script overwrites every file on its target, `config/settings_data.json`
+included, and it does that whether or not anyone is watching. What decides how
+much that matters is the theme id.
 
-```
-npm run deploy         # builds CSS, pushes to the LIVE theme
-```
-
-It carries `--allow-live`, which the CLI requires when the target is published.
-Note what that flag is and is not:
+`--allow-live` is a no-op today, and it is worth knowing what it is and is not:
 
 - `--allow-live` is a PERMISSION. It says "proceed if the target happens to be
-  live". It is a no-op when the theme is not live, so the script keeps working
-  unchanged if a different theme is ever published.
+  live". It does nothing while the target is unpublished, so the script keeps
+  working unchanged either way.
 - `--live` is a TARGET, meaning "push to whatever is live right now". It is
   never wanted in a script. The target here stays the explicit `--theme <id>`.
 
-The flag also removes the confirmation dialog, which until now was the last
-thing standing between a stray push and production. **The only remaining
-protection is that the theme id is written out in `package.json`** — keep it
-that way. The note further down on why an unaimed push script was deleted is
-the same rule, and it is the reason the id is there.
+**The flag also removes the confirmation dialog**, and that half is not a
+no-op. If Sporto - Redesign is ever published, a stray `npm run deploy`
+overwrites production with nothing asked. The protection is the theme id
+written out in `package.json` — keep it that way. The note further down on why
+an unaimed push script was deleted is the same rule, and it is the reason the
+id is there.
 
-Without it the CLI prompts, and in a non-interactive shell — a hook, CI, a
+The dialog is removed on purpose: in a non-interactive shell — a hook, CI, a
 coding agent's tool call — that prompt does not render. It hangs or fails with
 nothing that looks like a question. Same family as the `--fail-level` trap in
 the Theme Check notes below.
 
 ### Showing work to the client without publishing it
 
-Now that the redesign is live, this needs a target that is not the live theme.
-`shopify theme dev` will not do: it creates a *development* theme tied to your
-CLI session and cleaned up automatically, so there is nothing stable to share.
-
-Push to an unpublished theme instead and share its preview from admin — Online
-Store → Themes → that theme → ⋯ → Preview, then the share option in the preview
+`npm run deploy` is how. Sporto - Redesign is unpublished, so pushing to it
+touches no traffic, and its preview is shareable from admin — Online Store →
+Themes → Sporto - Redesign → ⋯ → Preview, then the share option in the preview
 bar. The viewer needs no admin access, and `?view=` URLs work because a preview
 is real Shopify rather than a sandbox.
 
-**There is no script for this yet.** Adding one means creating a staging theme
-and giving it its own `--theme` id; worth doing before the product, cart,
-collection and blog rebuilds, which is the next time work in progress will need
-somewhere to live that is not the live site.
+`shopify theme dev` will not do for this: it creates a *development* theme tied
+to your CLI session and cleaned up automatically, so there is nothing stable to
+share.
+
+**A separate staging theme becomes necessary the day the redesign is
+published**, since the client-preview target and the deploy target would then be
+the same theme. That is worth doing before the product, cart, collection and
+blog rebuilds — the next time work in progress needs somewhere to live that is
+not wherever the client is looking.
 
 ### Testing on a real phone
 
@@ -180,18 +190,16 @@ original script ran `shopify theme push` with no `--theme`, which prompts with a
 list that includes the LIVE theme — one wrong keystroke would have overwritten
 two years of production work. That script is gone and is not what exists today.
 
-The rule it was deleted for still stands, and now matters more rather than
-less: **every push script names its target explicitly.** The current `deploy`
-carries `--theme 000000000000`, and since that theme is live, the id in
-`package.json` is the only thing deciding what gets overwritten. `--allow-live`
-removed the confirmation dialog that used to back it up. Do not replace the id
-with `--live`, and do not remove it and rely on the prompt.
+The rule it was deleted for still stands: **every push script names its target
+explicitly.** The current `deploy` carries `--theme 000000000000`, and that id
+is the only thing deciding what gets overwritten — `--allow-live` removed the
+confirmation dialog that would otherwise back it up. Do not replace the id with
+`--live`, and do not remove it and rely on the prompt.
 
 Pushing sends `config/settings_data.json`, so the seeded suf-nav and suf-footer
 settings travel with it and the pushed theme matches local. It also
-*overwrites* that theme's settings — which, now that the target is published,
-means the live site's. Pull `config/settings_data.json` before pushing if
-anyone has touched the editor since the last deploy.
+*overwrites* that theme's settings. Pull `config/settings_data.json` before
+pushing if anyone has touched the editor since the last deploy.
 
 ### `.shopifyignore` is not `.gitignore`, and the difference costs you
 

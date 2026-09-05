@@ -20,7 +20,7 @@ shopify theme dev    # local server, hot-reloads CSS and sections
 |---|---|
 | `npm run dev` | `sass --watch` → `assets/suf.css` |
 | `npm run css:build` | One-off compressed build |
-| `npm run deploy` | `css:build` then push to **Sporto - Redesign** (#000000000000) — **which is the LIVE theme** |
+| `npm run deploy` | `css:build` then push to **Sporto - Redesign** (#000000000000), the unpublished redesign theme |
 | `npm run lint` | Theme Check |
 | `npm run format` | Prettier — **scoped to `frontend/` + `suf.js` only** |
 
