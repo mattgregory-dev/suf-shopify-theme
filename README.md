@@ -35,7 +35,7 @@ unaimed `shopify theme push` here: the prompt it shows includes the live theme.
 | Layout | Used by | Weight |
 |---|---|---|
 | `layout/theme.liquid` | every inherited template | the full legacy stack: jQuery, Swiper, select2, handlebars, lazysizes, four legacy stylesheets |
-| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js`, the Hanken Grotesk fonts, `content_for_header`. No jQuery and no legacy stylesheets — the last two went with the header rebuild |
+| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js`, the Hanken Grotesk variable font, `content_for_header`. No jQuery and no legacy stylesheets — the last two went with the header rebuild |
 
 A template opts in with `"layout": "suf"` (JSON) or `{% layout 'suf' %}`
 (Liquid). Only `suf-*` sections belong on the suf layout — inherited sections

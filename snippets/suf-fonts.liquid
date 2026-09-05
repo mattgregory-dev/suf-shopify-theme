@@ -2,11 +2,11 @@
   Font declarations, shared by every layout.
 
   Usage:
-    {% render 'suf-fonts', apply: true %}        <- declares faces, applies Arial
+    {% render 'suf-fonts', apply: true %}        <- declares the face, applies Arial
     {% render 'suf-fonts', apply: true, family: "'Hanken Grotesk', Arial, sans-serif" %}
 
-  The faces are always declared; a browser only downloads a font something
-  actually uses, so declaring on a layout that does not apply them costs
+  The face is always declared; a browser only downloads a font something
+  actually uses, so declaring on a layout that does not apply it costs
   nothing. `family` chooses what the applying rules set, which is how Hanken
   Grotesk is live on layout/suf.liquid while layout/theme.liquid stays on
   Arial.
@@ -28,22 +28,18 @@
   became U+FFFD, inflating each ~75% past its declared length. 0 of 15 WOFF
   tables decode. The substitution is lossy, so they cannot be repaired.
 
-  Hanken Grotesk replaces it: OFL, self-hosted, 400/600/700/800/900, ~68 KB.
-  Self-hosted rather than Google's CDN -- two fewer origins on the critical
-  path, and Google Fonts sends visitor IPs to Google.
+  Hanken Grotesk replaces it: OFL, self-hosted, ONE VARIABLE FILE carrying the
+  whole 100-900 weight axis in 34 KB. Self-hosted rather than Google's CDN --
+  two fewer origins on the critical path, and Google Fonts sends visitor IPs to
+  Google.
 
-  WHY 800 IS A REAL FACE. The design asks for it in ~50 places. With only 700
-  declared, engines either render 700 or synthesise a faux-bold by smearing the
-  outlines -- visibly worse at exactly the display sizes this design uses.
-
-  DECLARING A FACE IS FREE; PRELOADING ONE IS NOT. @font-face is lazy -- a file
-  downloads only when something computes to that family AND weight, so an
-  unused weight costs five lines of CSS and zero bytes.
-
-  `preload_tag` in the layout is the opposite -- it fetches at high priority
-  before the browser knows whether anything needs it. Only the weights that
-  paint on first load belong there. See layout/suf.liquid for which two, and
-  why the other three are deliberately left to load on demand.
+  ONE FILE IS WHY EVERY WEIGHT IS SAFE TO USE. The axis interpolates, so any
+  weight is a real instance rather than a faux-bold synthesised by smearing
+  another one's outlines, and reaching for a new weight adds no request. With a
+  file per face it did: the preload list was a judgement call, and a weight
+  above the fold that nobody added to it painted in Arial and swapped a moment
+  later with nothing to warn you. The single preload in layout/suf.liquid is
+  complete by construction.
 
   set_weights. The applying rules set a weight as well as a family, to
   normalise the legacy templates -- wrong for layout/suf.liquid, where `h1, h2`
@@ -64,42 +60,10 @@
 <style>
   @font-face {
     font-family: 'Hanken Grotesk';
-    src: url("{{ 'hanken-grotesk-400.woff2' | asset_url }}") format('woff2');
+    src: url("{{ 'hanken-grotesk-variable.woff2' | asset_url }}") format('woff2');
     font-display: swap;
     font-style: normal;
-    font-weight: 400;
-  }
-
-  @font-face {
-    font-family: 'Hanken Grotesk';
-    src: url("{{ 'hanken-grotesk-600.woff2' | asset_url }}") format('woff2');
-    font-display: swap;
-    font-style: normal;
-    font-weight: 600;
-  }
-
-  @font-face {
-    font-family: 'Hanken Grotesk';
-    src: url("{{ 'hanken-grotesk-700.woff2' | asset_url }}") format('woff2');
-    font-display: swap;
-    font-style: normal;
-    font-weight: 700;
-  }
-
-  @font-face {
-    font-family: 'Hanken Grotesk';
-    src: url("{{ 'hanken-grotesk-800.woff2' | asset_url }}") format('woff2');
-    font-display: swap;
-    font-style: normal;
-    font-weight: 800;
-  }
-
-  @font-face {
-    font-family: 'Hanken Grotesk';
-    src: url("{{ 'hanken-grotesk-900.woff2' | asset_url }}") format('woff2');
-    font-display: swap;
-    font-style: normal;
-    font-weight: 900;
+    font-weight: 100 900;
   }
 
   {%- if apply -%}

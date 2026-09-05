@@ -38,20 +38,14 @@
     {% render 'social-meta-tags' %}
 
     {% comment %}
-      THREE of the five faces. @font-face is lazy, so an unused weight costs
-      nothing -- but PRELOADING IS NOT LAZY, so only what paints on first load
-      belongs here: 400 for body, 700 for the nav labels, 800 for headings.
+      The whole typeface, in one file carrying the 100-900 axis.
 
-      Unpreloaded, a weight that IS above the fold paints in Arial and swaps a
-      moment later, which is the visible jump. RE-CHECK THIS LIST when
-      something above the fold changes weight; nothing warns you.
-
-      600 needs a menu opened and 900 is two uses on two pages, so both stay
-      lazy -- preloading them earned Chrome's "preloaded but not used" warning.
+      It is preloaded because `font-display: swap` paints in Arial and swaps
+      when the font lands, and the preload is what usually gets it there before
+      first paint. Nothing here needs revisiting when the design reaches for a
+      new weight -- one file already covers every one of them.
     {% endcomment %}
-    {{ 'hanken-grotesk-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
-    {{ 'hanken-grotesk-700.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
-    {{ 'hanken-grotesk-800.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'hanken-grotesk-variable.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
 
     {{ 'suf.css' | asset_url | stylesheet_tag }}

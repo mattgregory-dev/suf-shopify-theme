@@ -79,7 +79,7 @@ what it weighs.
 | Layout | Used by | Loads |
 |---|---|---|
 | `layout/theme.liquid` | every inherited template | jQuery, dt-plugins (Swiper), select2, handlebars, dt-theme.js, dT_main*.js, ajax-cart, lazysizes, dt-framework.css, dt-custom.css, swiper, select2.css, `suf.css`, `suf.js` |
-| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js` (which imports `suf-nav`, `suf-motion` and `suf-search`), the Hanken Grotesk fonts, `content_for_header`. jQuery, `dt-framework.css` and `dt-custom.css` are **not** loaded — the file's own header comment says so and why |
+| `layout/suf.liquid` | `page.suf-*` templates | `suf.css`, `suf.js` (which imports `suf-nav`, `suf-motion` and `suf-search`), the Hanken Grotesk variable font, `content_for_header`. jQuery, `dt-framework.css` and `dt-custom.css` are **not** loaded — the file's own header comment says so and why |
 
 A template opts in with a top-level key (JSON) or a tag (Liquid):
 
@@ -424,14 +424,14 @@ means a fresh repository.
 | Asset | Licence | Obligation |
 |---|---|---|
 | jQuery, select2, handlebars, lazysizes, swiper | MIT | keep the licence headers in the minified files; ship a `NOTICE` if extracted |
-| `hanken-grotesk-*.woff2` | SIL OFL 1.1 | licence text ships as [`OFL.txt`](../OFL.txt) in the repo root |
+| `hanken-grotesk-variable.woff2` | SIL OFL 1.1 | licence text ships as [`OFL.txt`](../OFL.txt) in the repo root |
 
 `OFL.txt` is the canonical file from the upstream project, copyright line
 included. It lives at the repo root rather than in `assets/`: Shopify restricts
 which file types `assets/` accepts, and a rejected file breaks `theme push`.
 The repo is the distribution unit, which is where self-hosted fonts normally
 carry their licence. Keep it if the net-new code is ever extracted — the
-obligation travels with the font files.
+obligation travels with the font file.
 
 ### Inherited prefixes worth recognising
 
