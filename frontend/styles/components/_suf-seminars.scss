@@ -397,9 +397,9 @@
   text-transform: uppercase;
 }
 
-// Muted, not the link blue: this is the absence of a focus, and coloring it
-// like the real ones makes three rows look equally decided.
-.suf-semrow__focus--tba {
+// Muted, not the link blue: this occupies the focus cell without claiming to
+// be one.
+.suf-semrow__focus--muted {
   color: var(--suf-color-text-muted);
 }
 

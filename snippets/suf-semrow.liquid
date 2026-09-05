@@ -7,7 +7,7 @@
 
     city        string, required
     date        string, already formatted for display
-    focus       string, blank renders the TBA state
+    focus       string, optional -- blank renders an empty cell
     price       string, already money-formatted
     target      href for the fallback link. Ignored when a product is passed
     sold_out    boolean. Renders a flat row with no panel
@@ -56,7 +56,7 @@
     <div class="suf-semrow__line">
       {%- render 'suf-semcells', city: city, date: date, focus: focus, price: price -%}
       {%- if sold_out -%}
-        <span class="suf-semrow__focus suf-semrow__focus--tba">Sold out</span>
+        <span class="suf-semrow__focus suf-semrow__focus--muted">Sold out</span>
       {%- elsif target != blank -%}
         <a class="suf-semrow__cue" href="{{ target }}">
           {{- cue | default: 'Reserve' | escape }}

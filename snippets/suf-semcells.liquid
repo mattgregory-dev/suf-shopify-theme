@@ -7,7 +7,7 @@
 
     city    string, required
     date    string, already formatted for display
-    focus   string, blank renders the TBA state
+    focus   string, optional -- blank renders an empty cell
     price   string, already money-formatted
 {% endcomment %}
 
@@ -15,14 +15,10 @@
 <span class="suf-semrow__date">{{ date | escape }}</span>
 
 {%- comment -%}
-  Cities are announced before their focus is decided, so an empty value is a
-  normal state rather than a missing one. Left bare it rendered as a blank cell
-  in the middle of the row, which reads as broken rather than as pending.
+  THE SPAN IS EMITTED EVEN WHEN EMPTY. The row is a five-column grid, so
+  dropping the element would pull the price and the chevron left into the wrong
+  columns. An empty grid item still occupies its cell.
 {%- endcomment -%}
-{%- if focus != blank -%}
-  <span class="suf-semrow__focus">{{ focus | escape }}</span>
-{%- else -%}
-  <span class="suf-semrow__focus suf-semrow__focus--tba">Focus TBA</span>
-{%- endif -%}
+<span class="suf-semrow__focus">{{ focus | escape }}</span>
 
 <span class="suf-semrow__price">{{ price }}</span>
