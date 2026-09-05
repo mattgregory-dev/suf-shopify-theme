@@ -58,7 +58,7 @@ them with whatever is on disk, silently and with no record.
 git status              # must be clean, or the pull buries your own work
 npm run pull            # merchant edits land in the working tree
 git diff                # THIS is their work, now visible
-git commit              # content: pull merchant edits from the theme
+git commit              # chore: pull merchant edits from the theme
 ```
 
 The pull is **scoped to templates and settings** on purpose. A blanket pull
@@ -468,6 +468,47 @@ history.
 - **Do not add a `Co-Authored-By` trailer.** Omit it entirely.
 - Subject line, imperative mood, conventional-commit prefix.
 - **Most commits are a subject line and nothing else.**
+
+#### The prefixes, and nothing outside this list
+
+| Type | Use when |
+|---|---|
+| `feat:` | Visitor-facing output is new or improved |
+| `fix:` | Broken output corrected |
+| `docs:` | Documentation only |
+| `style:` | Code formatting only (whitespace, indentation) — not appearance |
+| `refactor:` | Internal restructure, identical output |
+| `perf:` | Performance improvement |
+| `test:` | Adding or fixing tests |
+| `build:` | Build system or dependencies |
+| `ci:` | CI config, lint pipeline, deploy scripts |
+| `chore:` | Maintenance that fits nothing above |
+| `revert:` | Undoing a previous commit |
+
+The spec defines only `feat` and `fix`; the rest is the Angular set that
+everything reads. **Do not invent a twelfth.** A `content:` prefix was once
+written into the pull recipe above and got used exactly once before anyone
+noticed it was not a real type — a doc example is read as an instruction, so a
+wrong one propagates further than a wrong sentence.
+
+#### A pull is `chore:`, whatever came down
+
+**We are recording someone else's decision, not making one.** The change
+already happened, in the theme editor, before the commit existed; the commit is
+bookkeeping. `feat:` would claim authorship of an intent we did not form.
+
+**And we almost never know the why.** A merchant edit arrives as a diff and
+nothing else — no reasoning, no reason to expect any. Writing a message that
+implies intent invites the next reader to go looking for one that was never
+recorded. Say what came down, not why.
+
+That also makes it stable: a typo and a rewritten page both land as `chore:`,
+so nobody has to grade a diff they cannot interpret.
+
+```
+chore: pull merchant edits from the theme        <- when you do not know what changed
+chore: pull the team page edits from the theme   <- when you do
+```
 
 **`git log` is read as a story arc**, scrolled through to see how the work
 moved. That is the job a body has to serve. The moment it stops being
