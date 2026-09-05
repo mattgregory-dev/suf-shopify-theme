@@ -1,0 +1,39 @@
+{% comment %}
+  The one description string, for both the meta description and the social
+  cards.
+
+  Usage:
+    {%- capture meta_description -%}{%- render 'suf-meta-description' -%}{%- endcapture -%}
+
+  ONE SNIPPET BECAUSE TWO PLACES CONSUME IT. snippets/SEO-tags.liquid and
+  snippets/social-meta-tags.liquid both need it, and a page whose search result
+  and whose shared link describe it differently is worse than either alone.
+
+  The chain, best source first:
+
+    page_description        the page's own Search engine listing -> Description,
+                            per page, in admin. Nothing in the repo can set it.
+    shop.description        Online Store -> Preferences -> meta description.
+                            One string for the whole store.
+    the theme setting       a floor, so nothing ever renders bare.
+
+  A SITE-WIDE DEFAULT IS A FLOOR, NOT A TARGET. Search engines treat one
+  description repeated across every page as no description at all, and usually
+  write their own from the page copy instead. What it does buy is the social
+  card: a link shared to Slack or iMessage falls back to this rather than to
+  the shop name, and that is where a bare tag looks worst. Fill in the per-page
+  field wherever the page matters.
+
+  Keep it under about 155 characters. Longer is truncated mid-sentence in a
+  result, which reads worse than a short one.
+{% endcomment %}
+{%- liquid
+  assign d = page_description
+  if d == blank
+    assign d = shop.description
+  endif
+  if d == blank
+    assign d = settings.suf_seo_description
+  endif
+  echo d | strip_newlines | strip
+-%}
