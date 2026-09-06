@@ -610,8 +610,12 @@
       letter-spacing: 0.06em;
     }
 
+    // Every state that turns the label white for the navy bar has to be undone
+    // here, focus included: the drawer is a light panel, so white text on it
+    // reads as the label vanishing rather than as feedback.
     .sufnav__item:hover > .sufnav__label,
-    .sufnav__item.is-active > .sufnav__label {
+    .sufnav__item.is-active > .sufnav__label,
+    .sufnav__label:focus-visible {
       color: var(--suf-navy);
     }
 
