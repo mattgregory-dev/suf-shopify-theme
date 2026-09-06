@@ -53,6 +53,41 @@ function setMenu(open) {
   if (!open) closeAllPanels();
 }
 
+/* ------------------------------------------------- keyboard: drawer focus */
+
+// THE DRAWER IS BEFORE THE BURGER IN THE DOM, so tabbing forward from the
+// burger skips the whole menu and lands in the page behind it -- the drawer
+// opens and the keyboard never reaches it. Reordering the markup would mean
+// rebuilding the bar's layout, so focus is placed deliberately instead: into
+// the drawer when it opens, and out of it at either end.
+//
+// Nothing traps focus. Tabbing past the last row closes the drawer, which is
+// what someone tabbing through a page expects: it gets out of the way rather
+// than holding them in a loop they have to guess their way out of.
+
+function drawerStops() {
+  const menu = nav && nav.querySelector('.sufnav__menu');
+  if (!menu) return [];
+  return Array.from(menu.querySelectorAll('a[href], button:not([disabled])'))
+    // A collapsed submenu is display:none, so its rows are unfocusable and
+    // must not be mistaken for the last stop.
+    .filter((el) => el.offsetParent !== null);
+}
+
+function leaveDrawer(forward) {
+  setMenu(false);
+  // Forward means "carry on into the page". <main> is not focusable by
+  // default; the skip link relies on the same tabindex trick.
+  const main = forward ? document.getElementById('suf-main') : null;
+  if (main) {
+    main.setAttribute('tabindex', '-1');
+    main.focus();
+    return;
+  }
+  // Backward returns to the control that opened the drawer.
+  if (burger) burger.focus();
+}
+
 /* --------------------------------------------------------------- compress */
 
 function initSticky() {
@@ -76,7 +111,13 @@ function init() {
 
   nav.addEventListener('click', (event) => {
     if (event.target.closest('[data-sufnav-burger]')) {
-      setMenu(!nav.classList.contains('is-open'));
+      const open = !nav.classList.contains('is-open');
+      setMenu(open);
+      // Straight to the first row, so the next Tab continues down the drawer.
+      if (open && MOBILE.matches) {
+        const first = drawerStops()[0];
+        if (first) first.focus();
+      }
       return;
     }
 
@@ -133,6 +174,22 @@ function init() {
       if (item.contains(event.relatedTarget)) return;
       setPanel(item, false);
     });
+  });
+
+  nav.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab' || !MOBILE.matches) return;
+    if (!nav.classList.contains('is-open')) return;
+
+    const stops = drawerStops();
+    if (!stops.length) return;
+
+    if (!event.shiftKey && document.activeElement === stops[stops.length - 1]) {
+      event.preventDefault();
+      leaveDrawer(true);
+    } else if (event.shiftKey && document.activeElement === stops[0]) {
+      event.preventDefault();
+      leaveDrawer(false);
+    }
   });
 
   document.addEventListener('keydown', (event) => {
