@@ -169,7 +169,10 @@
   position: absolute;
   inset-inline-start: var(--suf-space-md);
   inset-block-start: -100%;
-  z-index: 10;
+  // Above .sufnav-wrap, which is sticky at 80 and sits later in the DOM. Lower
+  // than that and the link still takes focus on the first Tab -- it just
+  // paints behind the header, so the page looks like it ignored the key.
+  z-index: 100;
   padding: var(--suf-space-sm) var(--suf-space-md);
   background: var(--suf-color-bg);
   border: 2px solid var(--suf-color-focus);
