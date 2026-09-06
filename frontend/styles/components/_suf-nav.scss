@@ -382,10 +382,16 @@
     flex-direction: column;
     flex-shrink: 0;
     gap: 5px;
+    // Both axes: justify-content centers the bars vertically in a column, and
+    // without align-items the 24px bars sit flush against the left edge of the
+    // box, which reads as the button being nudged toward the icons.
+    align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    margin-left: 2px;
+    // Matches the icons' 42px box and their 6px gap, so the burger continues
+    // their rhythm instead of sitting on its own spacing.
+    width: 42px;
+    height: 42px;
+    margin-left: 6px;
     border: 0;
     background: none;
     cursor: pointer;
