@@ -558,7 +558,7 @@
 
   @media (max-width: 900px) {
     .sufnav {
-      gap: 14px;
+      gap: 4px;
       padding: 0 18px;
     }
 
@@ -574,6 +574,7 @@
     // The nav has left the flex row, so the icons take the space it vacated and
     // sit against the burger.
     .sufnav__icons {
+      gap: 10px;
       margin-left: auto;
     }
 
