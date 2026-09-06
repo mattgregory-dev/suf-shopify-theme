@@ -430,22 +430,35 @@
   // Every interactive thing in the navy bar takes a ring. A color change alone
   // is not keyboard feedback anyone can rely on.
   //
-  // White rather than --suf-color-focus, which is a mid-tone against navy and
-  // has to read instantly on the darkest surface here. Negative offset so the
-  // ring sits INSIDE the element: the labels run the full height of the bar,
-  // and a ring outside them is clipped top and bottom.
-  .sufnav__label:focus-visible,
+  // ONE RING FOR THE WHOLE BAR: the focus blue, the same indicator the rest of
+  // the site uses. It carries 4:1 against the navy, past the 3:1 minimum.
+  //
+  // The offset is what has to vary, not the color. Anything sitting OUTSIDE
+  // its element clears the pale disc an icon grows on focus -- a ring drawn
+  // inside that disc is 2:1 and effectively invisible.
   .sufnav__icon:focus-visible,
   .sufnav__burger:focus-visible {
-    outline: 2px solid var(--suf-white);
+    outline: 2px solid var(--suf-color-focus);
+    outline-offset: 3px;
+  }
+
+  // The labels are the exception: they run the full height of the bar, so an
+  // outside ring is clipped top and bottom. Inset instead, against the navy.
+  .sufnav__label:focus-visible {
+    outline: 2px solid var(--suf-color-focus);
     outline-offset: -2px;
   }
 
-  // The icons are the exception, because :focus-visible also turns them into a
-  // near-white disc -- and a white ring on a white disc is no ring at all.
-  // Navy, inset, so it reads against the fill the focus state itself creates.
-  .sufnav__icon:focus-visible {
-    outline-color: var(--suf-navy);
+  // The logo's ring goes on the MARK, not on the link. The link carries the
+  // vertical padding that sets the bar's height, so a ring on it stands 9px
+  // clear above and below the artwork and flush against its sides.
+  .sufnav__logo:focus-visible {
+    outline: none;
+
+    img {
+      outline: 2px solid var(--suf-color-focus);
+      outline-offset: 3px;
+    }
   }
 
   // The stacked menu is a light panel, so the ring flips to the focus blue and
